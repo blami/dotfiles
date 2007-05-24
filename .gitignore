@@ -8,7 +8,7 @@
 .ssh/known_hosts
 .ssh/id*
 .ssh/config_hosts
-.gnupg/
+.gnupg
 .git-credentials
 .gitcookies
 .gitdirs
@@ -28,26 +28,26 @@
 # Local files
 .*_local
 .proxy
-.local/share/vim
+/.local/share/vim
 
 # Directories
-bak
-blog
-desk
-docs
-downl
-mail
-media
-pics
-pub
-public_html
-sandbox
-tmp
-ws
+/bak
+/blog
+/desk
+/docs
+/downl
+/mail
+/media
+/pics
+/pub
+/public_html
+/sandbox
+/tmp
+/ws
 
 # Misc
-.sudo_as_admin_successful
+/.sudo_as_admin_successful
 
 # Windows
-AppData/Local/ElevatedDiagnostics
-AppData/Local/Packages/CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc
+/AppData/Local/ElevatedDiagnostics
+/AppData/Local/Packages/CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc
