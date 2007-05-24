@@ -11,7 +11,11 @@
   "showTerminalTitleInTitlebar": true,
   "tabWidthMode": "equal",
   "snapToGridOnResize": true,
+  "disableAnimations": true,
   "copyOnSelect": true,
+  "copyFormatting": "none",
+  "largePasteWarning": false,
+  "multiLinePasteWarning": false,
   "wordDelimiters": " /\\()\"'-.,:;<>~!@#$%^&*|+=[]{}~?\u2502",
 
   "profiles": [
@@ -23,7 +27,7 @@
       "colorScheme": "blami",
       "closeOnExit": "graceful",
       "cursorColor": "#FFFFFF",
-      "cursorShape": "filledbox",
+      "cursorShape": "filledBox",
       "fontFace": "GoMono NF",
       "fontSize": 13,
       "historySize": 8196,
@@ -111,9 +115,8 @@
     { "keys": [ "alt+shift+right" ],        "command": null },
     { "keys": [ "alt+shift+up" ],           "command": null },
 
-
+    // Remove these
     { "command": "duplicateTab", "keys": [ "ctrl+shift+d" ] },
-    { "command": "openNewTabDropdown", "keys": [ "ctrl+shift+space" ] },
     { "command": "openSettings", "keys": [ "ctrl+," ] },
     { "command": "find", "keys": [ "ctrl+shift+f" ] }
   ],
