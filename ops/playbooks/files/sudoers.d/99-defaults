@@ -1,0 +1,4 @@
+# /etc/sudoers.d/99-defaults - set better defaults
+
+Defaults !env_reset
+Defaults !mail_badpass
