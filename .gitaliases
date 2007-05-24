@@ -6,6 +6,8 @@
 	co = checkout
 	cob = checkout -b
 	ci = commit
+	cis = commit -s
+	si = commit --amend --noedit --signoff
 	un = reset HEAD
 	unstage = reset HEAD
 	pu = push
@@ -17,7 +19,9 @@
 	st = status
 
 	; Log
+	d = describe
 	log1 = log -p1
+	logf = log --all --follow
 
 	; Diff
 	df = diff
