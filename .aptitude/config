@@ -1,0 +1,14 @@
+aptitude "";
+aptitude::Keep-Unused-Pattern "";
+aptitude::Delete-Unused-Pattern "";
+aptitude::UI "";
+aptitude::UI::Advance-On-Action "true";
+aptitude::UI::Exit-On-Last-Close "true";
+aptitude::UI::Flat-View-As-First-View "false";
+aptitude::ProblemResolver "";
+aptitude::ProblemResolver::Allow-Break-Holds "true";
+aptitude::Auto-Upgrade "true";
+aptitude::AutoClean-After-Update "true";
+aptitude::Forget-New-On-Update "true";
+Apt "";
+Apt::Install-Recommends "false";
