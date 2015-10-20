@@ -1,0 +1,20 @@
+#!/bin/sh
+# mkuserdirs - create XDG user directories as in ~/.config/user-dirs.dirs
+
+
+XDG_USER_DIRS=$HOME/.config/user-dirs.dirs
+[ -r $XDG_USER_DIRS ] || exit 1
+
+. $XDG_USER_DIRS
+
+# Create directory if does not exist yet
+# NOTE: BACKUP, MAIL and WS are extensions
+DIRS="DESKTOP DOWNLOAD TEMPLATES PUBLICSHARE DOCUMENTS MUSIC PICTURES VIDEOS BACKUP MAIL WS"
+
+for D in $DIRS ; do
+	eval "XDG_DIR=\$XDG_${D}_DIR"
+	[ -z $XDG_DIR ] && continue
+	if [ ! -d $XDG_DIR ] ; then 
+		mkdir -p $XDG_DIR
+	fi
+done
