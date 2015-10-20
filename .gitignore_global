@@ -1,0 +1,4 @@
+# ~/.gitignore_global: Global .gitignore file
+.DS_Store/
+*.bak
+*.log
