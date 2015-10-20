@@ -1,0 +1,94 @@
+# ~/.sh_profile: Setup shell environment
+# NOTE: This file is sourced always to have same environment on non-login and
+# login shells.
+# NOTE: Don't use export VAR=value as it is not supported in Bourne shell
+
+# {{{ Functions
+# Add existing $1 to $PATH once. Optionally after the last item if $2="after".
+function pathmunge() {
+	[ -d "$1" ] || return
+	case ":${PATH}:" in
+		*:"$1":*) ;;
+		*) [ "$2" = "after" ] && PATH=$PATH:$1 || PATH=$1:$PATH
+	esac
+}
+# }}}
+
+
+# {{{ Umask
+# Set umask for users beyond reserved uid/gids (on my uid >= 100000).
+# NOTE: applies only on users in their own groups.
+if [ $UID -gt 99999 ] && [ "$(id -gn)" = "$(id -un)" ]; then
+	umask 002
+else
+	umask 022
+fi
+# }}}
+
+
+# {{{ Environment defaults
+EDITOR=vim ; export EDITOR
+PAGER=less ; export PAGER
+
+# Debian/Ubuntu developer environment
+DEBFULLNAME="Ondrej Balaz" ; export DEBFULLNAME
+DEBEMAIL="blami@blami.net" ; export DEBEMAIL
+
+# Development environments
+# Python
+VIRTUAL_ENV_DISABLE_PROMPT=1 ; export VIRTUAL_ENV_DISABLE_PROMPT
+# ccache
+USE_CCACHE=1 ; export USE_CCACHE
+# }}}
+
+
+# {{{ Host
+# Hostname if $HOST not set
+if [ -z "$HOST" ]; then
+	HOST=$(hostname) ; export $HOST
+fi
+
+# OS and OS-ARCH
+OS=$(echo "$(uname -s)" | tr '[:upper:]' '[:lower:]')
+OSARCH=$(echo "$(uname -s)-$(uname -m)" | tr '[:upper:]' '[:lower:]')
+export OS
+export OSARCH
+# }}}
+
+
+# {{{ Path
+pathmunge $HOME/bin
+pathmunge $HOME/bin/$OS
+pathmunge $HOME/bin/$OSARCH
+# Cygwin uses cygwin-XX which makes upgrades cumbersome
+[ "${OS:0:6}" = "cygwin" ] && [ -d $HOME/bin/cygwin ] && \
+	pathmunge $HOME/bin/cygwin
+
+export PATH
+# }}}
+
+
+# {{{ Profile in ~/profile.d
+if [ -d $HOME/.profile.d ]; then
+	for p in ~/.profile.d/*.sh ; do
+		if [ -r "$p" ] && [ "${-#*p}" != "$-" ]; then
+			source "$p"
+		else
+			source "$p" >/dev/null 2>&1
+		fi
+	done
+	unset p
+fi
+# }}}
+
+
+# {{{ Local configuration
+[ -r ~/.sh_env_local ] && source ~/.sh_env_local
+[ -r ~/.sh_env_$HOST ] && source ~/.sh_env_$HOST
+# }}}
+
+
+unset -f pathmunge
+
+
+# vim:set ft=sh:

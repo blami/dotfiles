@@ -1,0 +1,10 @@
+# ~/.bash_logout: bash logout command file
+# This file is sourced when a login shell exits
+
+# Clear screen after logout
+if [ "$SHLVL" = 1 ]; then
+	[ -x /usr/bin/clear ] && /usr/bin/clear
+fi
+
+
+# vim:set ft=sh:
