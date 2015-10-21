@@ -1,0 +1,35 @@
+#!/bin/sh
+# proxycmd - HTTP proxy tunnel using GNU netcat
+# Usage: proxycmd <uri>
+
+NC=
+SED=sed
+PROGNAME=$(basename $0)
+
+# Check if NC is in PATH. Store path to nc into NC.
+old_IFS=$IFS ; IFS=:
+for dir in $PATH ; do
+	test -x $dir/nc && NC=$dir/nc
+done
+if [ -z $NC ]; then
+	echo "$PROGNAME: nc not found" 1>&2
+	exit 127
+fi
+IFS=$old_IFS
+unset old_IFS
+
+# TODO Test if nc supports -X (openbsd nc)
+
+# Parse proxy host and port from http_proxy
+HOST=
+PORT=
+
+if [ -z $http_proxy ]; then
+	echo "$PROGNAME: \$http_proxy not set" 1>&2
+	exit 1
+fi
+HOST=$(echo $http_proxy | sed "s/^http[s]*:\/\///" | cut -d: -f1)
+PORT=$(echo $http_proxy | sed "s/^http[s]*:\/\///" | cut -d: -f2)
+[ -z $PORT ] && PORT=8080
+
+$NC -Xconnect -x $HOST:$PORT $*
