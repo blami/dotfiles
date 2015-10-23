@@ -3,9 +3,9 @@
 # {{{ Helper functions
 # NOTE Functions here are prefixed with usr_.
 
-# Set terminal title to ZSH[ws]: user@host <dir>
+# Set terminal title to ZSH[ws]: [user@host] ~
 function hook_term_title() {
-	print -Pn "\e]0;ZSH: %n@%m %~\a"
+	print -Pn "\e]0;ZSH: [%n@%m] %~\a"
 }
 # }}}
 
@@ -67,7 +67,7 @@ source $HOME/.sh_aliases
 
 # {{{ Hooks
 autoload -Uz add-zsh-hook
-add-zsh-hook precmd hook_term_title         # Change terminal title
+add-zsh-hook precmd     hook_term_title     # Change terminal title
 
 # }}}
 
