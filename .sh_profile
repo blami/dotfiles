@@ -83,8 +83,8 @@ fi
 
 
 # {{{ Local configuration
-[ -r ~/.sh_env_local ] && source ~/.sh_env_local
-[ -r ~/.sh_env_$HOST ] && source ~/.sh_env_$HOST
+[ -r ~/.sh_profile_local ] && source ~/.sh_profile_local
+[ -r ~/.sh_profile_$HOST ] && source ~/.sh_profile_$HOST
 # }}}
 
 
