@@ -23,7 +23,9 @@ Plugin 'nvie/vim-flake8'                    " Python PEP8/Flake/Complexity
 
 " Autocompletion
 "Plugin 'Valloric/YouCompleteMe'             " Complex auto-completion
-Plugin 'SirVer/ultisnips'                   " Filetype-based snippets
+if v:version > 704
+    Plugin 'SirVer/ultisnips'               " Filetype-based snippets
+endif
 Plugin 'ctrlpvim/ctrlp.vim'                 " Fuzzy file/buffer finder
 
 call vundle#end()
