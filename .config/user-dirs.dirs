@@ -16,6 +16,6 @@ XDG_MUSIC_DIR="$HOME/media/music"
 XDG_PICTURES_DIR="$HOME/pics"
 XDG_VIDEOS_DIR="$HOME/media/video"
 
-XDG_BACKUP_DIR="$HOME/backup"
+XDG_BACKUP_DIR="$HOME/bak"
 XDG_MAIL_DIR="$HOME/mail"
 XDG_WS_DIR="$HOME/ws"
