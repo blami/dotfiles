@@ -30,6 +30,16 @@ fi
 EDITOR=vim ; export EDITOR
 PAGER=less ; export PAGER
 
+# E-mail check paths
+# NOTE: find all Maildirs under ~/mail
+if [ -d ~/mail ] ; then
+	MAILCHECK=300 ; export MAILCHECK
+#	for d in $(find ~/mail -type d)
+#		MAILPATH=
+fi
+#
+#MAILPATH=~/mail/blami,~/mail/oracle
+
 # Debian/Ubuntu developer environment
 DEBFULLNAME="Ondrej Balaz" ; export DEBFULLNAME
 DEBEMAIL="blami@blami.net" ; export DEBEMAIL
