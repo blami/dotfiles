@@ -43,9 +43,9 @@ defbce              on          # Use current background color for erase
 # Backticks
 # NOTE: Solaris 11 sed compatibility
 backtick 0 60 60 /bin/sh -c 'screen -ls | grep $PPID | sed "s/^[	0-9]*\.\([^	]*\).*/\1/"'
-backtick 1 60 60 $HOME/.screen/ip.sh
-backtick 2 60 60 $HOME/.screen/stor.sh
-backtick 3 60 60 $HOME/.screen/bat.sh
+backtick 1 60 60 $HOME/.screen/scripts/ip.sh
+backtick 2 60 60 $HOME/.screen/scripts/stor.sh
+backtick 3 60 60 $HOME/.screen/scripts/bat.sh
 #backtick 0
 
 # Caption:
