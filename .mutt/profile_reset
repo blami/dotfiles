@@ -32,4 +32,11 @@ my_hdr X-Editor: `vim --version | head -1 | cut -d\( -f1`
 # }}}
 
 
+# {{{ Hooks
+# NOTE: Remove only send-hook as folder-hook is required to switch profiles
+unhook send-hook
+unhook reply-hook
+# }}}
+
+
 # vim:set ft=muttrc:

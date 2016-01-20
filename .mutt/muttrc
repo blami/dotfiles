@@ -9,7 +9,7 @@ set help                                        # Show help lines
 
 
 # {{{ Directories and files
-set folder              = ~/mail                # Root of email folders
+set folder              = ~/mail                # Root of email folders (=)
 set mbox_type           = Maildir               # Use Maildirs
 set header_cache        = ~/mail/.cache/header
 set message_cachedir    = ~/mail/.cache/body
@@ -36,7 +36,7 @@ set delete              = yes                   # Purge deleted without asking
 set bounce              = yes                   # Bounce without asking
 set move                = no                    # Don't move read to $mbox
                                                 # (usefull with offlineimap)
-#set nomark_old                                  # Don't use OLD/NEW marker
+#set nomark_old                                 # Don't use OLD/NEW marker
 set auto_tag                                    # Apply action to all tagged
 set noconfirmappend
 
@@ -48,6 +48,7 @@ set print_command       = muttprint             # Use muttprint
 
 # {{{ Composing
 set use_from                                    # Use Mutt From: header
+set use_envelope_from                           # Use From: in envelope (ISP)
 unset use_domain                                # MDA adds domain, not Mutt
 set recall                                      # Recall drafts
 #set fcc_attach                                  # Keep attachments in sent
@@ -111,9 +112,7 @@ set sidebar_width       = 30
 
 # {{{ Hooks
 # Folder hooks (profiles)
-# TODO add notmuch folder hooks
-folder-hook             =oracle.* source `muttsource ~/.mutt/profile/oracle`
-folder-hook             =blami.* source `muttsource ~/.mutt/profile/blami`
+# NOTE: handled by source_profiles script in Includes section
 
 # Charset hooks
 # Fix broken encoding (Outlook and/or Pine)
@@ -130,15 +129,12 @@ charset-hook            windows-1258 CP1258
 
 
 # {{{ Includes
-source `muttsource ~/.mutt/macros`
-source `muttsource ~/.mutt/colors`
+source `~/.mutt/bin/source ~/.mutt/macros`
+source `~/.mutt/bin/source ~/.mutt/colors`
 
-# Mailboxes and virtual mailboxes
-#source `muttsource ~/.mutt/profile/oracle_mailboxes`
-#source `muttsource ~/.mutt/profile/blami_mailboxes`
-
-# Activate default profile (symlink actually)
-source `muttsource ~/.mutt/profile/default`
+# Profiles (+ activate default)
+source `~/.mutt/bin/source_profiles`
+source `~/.mutt/bin/source ~/.mutt/profile/default`
 # }}}
 
 
