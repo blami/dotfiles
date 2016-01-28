@@ -1,0 +1,4 @@
+#!/bin/sh
+# ~/.mutt/bin/source: Allow Mutt `source' non-existent (yet) files
+
+FILE=$1 ; if [ ! -s "$1" ] ; then FILE=/dev/null ; fi ; echo "$FILE"

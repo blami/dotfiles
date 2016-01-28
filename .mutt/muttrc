@@ -1,0 +1,141 @@
+# ~/.mutt/muttrc: Mutt-kz configuration
+
+# {{{ General
+set charset             = utf-8
+set help                                        # Show help lines
+
+# set shell                                      # Shell to use for escapes
+# }}}
+
+
+# {{{ Directories and files
+set folder              = ~/mail                # Root of email folders (=)
+set mbox_type           = Maildir               # Use Maildirs
+set header_cache        = ~/mail/.cache/header
+set message_cachedir    = ~/mail/.cache/body
+set mailcap_path        = ~/.mutt/mailcap:/etc/mailcap
+
+# Notmuch DB (directory containing .notmuch)
+#set nm_default_uri      = notmuch:///home/blami/mail
+#set virtual_spoolfile   = yes
+
+#set alias_file          =                       # Set in account_*
+unset nosave_empty                              # Keep empty mail files
+# }}}
+
+
+# {{{ Notmuch (mutt-kz)
+
+# }}}
+
+
+# {{{ Actions
+set mail_check          = 1                     # Check for new e-mail every 1m
+set copy                = yes                   # Always save outgoing messages
+set delete              = yes                   # Purge deleted without asking
+set bounce              = yes                   # Bounce without asking
+set move                = no                    # Don't move read to $mbox
+                                                # (usefull with offlineimap)
+#set nomark_old                                 # Don't use OLD/NEW marker
+set auto_tag                                    # Apply action to all tagged
+set noconfirmappend
+
+# Printing
+set print               = ask-yes               # Ask before printing
+set print_command       = muttprint             # Use muttprint
+# }}}
+
+
+# {{{ Composing
+set use_from                                    # Use Mutt From: header
+set use_envelope_from                           # Use From: in envelope (ISP)
+unset use_domain                                # MDA adds domain, not Mutt
+set recall                                      # Recall drafts
+#set fcc_attach                                  # Keep attachments in sent
+# Editing
+#set autoedit                                    # Go right to the editor
+set editor              = vim
+
+# Sending
+#set nm_record           = yes                   # Add sent to Notmuch DB
+#set nm_record_tags      = "+sent -inbox"        # Setup sent tags
+
+# Headers
+#set edit_headers                                # Allow editing headers
+# NOTE: put all my_hdr commands to account_reset file which does unmy_hdr *
+set hdrs                                        # Put my_hdr to messages
+set header                                      # Keep headers when Re/Fwd:
+
+# Reply/Forward
+set reply_to                                    # Use Reply-To: if present
+set metoo                                       # Remove my address when Re:
+set include                                     # Always include orig. message
+set indent_string       = "> "                  # Re: indent quote
+#set fastreply                                   # Reply without asking address
+set abort_unmodified                            # Abort Re/Fwd: if not modified
+set attribution         = "On %d, %n wrote:"
+set forward_format      = "[%a: %s]"            # Forward message subject
+set mime_forward                                # Forward as MIME part
+# }}}
+
+
+# {{{ UI
+# Sorting
+set sort                = threads               # Threads
+set sort_aux            = reverse-last-date-received # Last on top sorting
+set sort_alias          = unsorted              # Keep aliases as in file
+set sort_browser        = unsorted              # Keep unsorted
+# Aliases/Names
+set reverse_alias                               # Resolve names from aliases
+unset reverse_name                              # Ignore my name in message
+# Pager
+set pager_index_lines   = 6                     # Index pager lines (top) + 1
+set pager_stop                                  # Don't skip to next message
+# Headers display
+ignore *
+unignore                from to cc posted-to mail-followup-to subject date \
+                        organization content-type user-agent \
+                        x-mailer x-operating-system x-url x-label
+unhdr_order *
+hdr_order               from to cc subject date
+# Autoview
+set implicit_autoview                           # Implicit mailcap autoview
+# Progress indication
+set read_inc            = 25
+set write_inc           = 25
+set menu_scroll                                 # Scroll by line, not screen
+set tilde                                       # Virtual ~ lines in pager
+# Sidebar
+set sidebar_width       = 30
+# }}}
+
+
+# {{{ Hooks
+# Folder hooks (profiles)
+# NOTE: handled by source_profiles script in Includes section
+
+# Charset hooks
+# Fix broken encoding (Outlook and/or Pine)
+charset-hook            windows-1250 CP1250
+charset-hook            windows-1251 CP1251
+charset-hook            windows-1252 CP1252
+charset-hook            windows-1253 CP1253
+charset-hook            windows-1254 CP1254
+charset-hook            windows-1255 CP1255
+charset-hook            windows-1256 CP1256
+charset-hook            windows-1257 CP1257
+charset-hook            windows-1258 CP1258
+# }}}
+
+
+# {{{ Includes
+source `~/.mutt/bin/source ~/.mutt/macros`
+source `~/.mutt/bin/source ~/.mutt/colors`
+
+# Profiles (+ activate default)
+source `~/.mutt/bin/source_profiles`
+source `~/.mutt/bin/source ~/.mutt/profile/default`
+# }}}
+
+
+# vim:set ft=muttrc:

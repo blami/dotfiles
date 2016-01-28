@@ -1,0 +1,33 @@
+#!/bin/sh
+# ~/.mutt/bin/source_profiles: Generate profiles and point Mutt to source them
+
+# WARN: Profile must not have any underscores in name
+
+LIST=~/.mutt/profile_list
+
+# Profile directory must exist
+[ -d ~/.mutt/profile ] || exit 1
+
+echo "# DO NOT CHANGE THIS AUTO-GENERATED FILE. CHANGES WILL BE LOST" > $LIST
+echo >> $LIST
+
+FILES=$(find ~/.mutt/profile -type f -regex \[^_\]*)
+for f in $FILES ; do
+	# Find profile description line (must be within first 5 lines)
+	profile_line=$(head -5 $f | grep '^# MUTT-PROFILE')
+	[ -z "$profile_line" ] && continue
+
+	# If there's no default profile symlink use the first one
+	if [ ! -L ~/.mutt/profile/default ] ; then
+		ln -s $f ~/.mutt/profile/default
+	fi
+
+	profile=$(basename $f)
+
+	# Output configuration for profile
+	echo folder-hook +${profile}.* source \`~/.mutt/bin/source $f\` >> $LIST
+	echo source \`~/.mutt/bin/source ${f}_mailboxes\` >> $LIST
+	echo >> $LIST
+done
+
+echo $LIST

@@ -1,0 +1,5 @@
+# ~/.mutt/account_reset: Reset account specific settings to default
+
+# NOTE: As GMail as possible key mappings
+
+# vim:set ft=muttrc:

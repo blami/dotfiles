@@ -1,0 +1,42 @@
+# ~/.mutt/profile_reset: Reset profile/account specific settings to default
+# NOTE: This has to be included into each account file to ensure clean
+# environment.
+
+# {{{ Identity
+set realname            = "Ondrej Balaz"
+unset from
+unset signature
+# }}}
+
+
+# {{{ Folders
+unset spoolfile
+unset postponed
+unset record
+# }}}
+
+# Aliases
+unset alias_file
+unalias *
+# }}}
+
+
+# {{{ Headers reset
+unmy_hdr *
+my_hdr User-Agent: `mutt -v | head -1 | cut -d\( -f1`
+my_hdr X-Mailer: `mutt -v | head -1 | cut -d\( -f1`
+my_hdr X-Operating-System: `uname -srp`
+my_hdr X-Editor: `vim --version | head -1 | cut -d\( -f1`
+# NOTE: compface xface.xbm or ffmpeg -i xface.jpeg xface.xface
+#my_hdr X-Face:
+# }}}
+
+
+# {{{ Hooks
+# NOTE: Remove only send-hook as folder-hook is required to switch profiles
+unhook send-hook
+unhook reply-hook
+# }}}
+
+
+# vim:set ft=muttrc:
