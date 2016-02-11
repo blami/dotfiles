@@ -15,7 +15,19 @@ setopt nobeep                               # Disable beeps
 setopt nomail_warning                       # Don't check mail file change
 
 # Input/output
-bindkey -e                                  # Use Emacs-style keybindings
+# Keybindings
+bindkey -e                                  # Use Emacs-style 
+# NOTE: Zsh does not read inputrc (so we need to do same keybindings here)
+bindkey "\e[1~"		beginning-of-line       # Home: BOL
+bindkey "\e[7~"		beginning-of-line
+bindkey "\eOH"		beginning-of-line
+bindkey "\e[H"		beginning-of-line
+bindkey "\e[4~"		end-of-line             # End: EOL
+bindkey "\e[8~"		end-of-line
+bindkey "\eOF"		end-of-line
+bindkey "\e[F"		end-of-line
+bindkey "\e[3~"		delete-char             # Del, Backspace: delete character
+bindkey "\e\e"		kill-whole-line         # Esc-Esc: clear line
 
 setopt noflow_control                       # Disallow ^S/^Q in shell editor
 setopt interactive_comments                 # Allow comments also in shell
