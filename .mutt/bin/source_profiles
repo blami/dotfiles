@@ -5,13 +5,16 @@
 
 LIST=~/.mutt/profile_list
 
+# Detect whether we like find or need gfind
+FIND=gfind
+
 # Profile directory must exist
 [ -d ~/.mutt/profile ] || exit 1
 
 echo "# DO NOT CHANGE THIS AUTO-GENERATED FILE. CHANGES WILL BE LOST" > $LIST
 echo >> $LIST
 
-FILES=$(find ~/.mutt/profile -type f -regex \[^_\]*)
+FILES=$($FIND ~/.mutt/profile -type f -regex \[^_\]*)
 for f in $FILES ; do
 	# Find profile description line (must be within first 5 lines)
 	profile_line=$(head -5 $f | grep '^# MUTT-PROFILE')
