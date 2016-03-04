@@ -6,6 +6,7 @@ log=-v
 
 [diff]
 git=True
+showfunc=True
 
 [email]
 from=blami@blami.net
@@ -20,8 +21,9 @@ prechangegroup.mq-no-pull=! hg qtop > /dev/null 2>&1
 preoutgoing.mq-no-push=! hg qtop > /dev/null 2>&1
 graphlog=
 rebase=
-hgext.convert=
-hgext.gpg=
+convert=
+gpg=
+transplant=
 
 [merge-tools]
 vimdiff.executable=vim
