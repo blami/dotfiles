@@ -1,4 +1,7 @@
 # ~/.mutt/account_reset: Reset account specific settings to default
 
+# {{{ User interface
+color           status          white       blue
+# }}}
 
 # vim:set ft=muttrc:
