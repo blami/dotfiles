@@ -3,7 +3,7 @@
 if has("autocmd")
 
 " {{{ Text files
-au BufNewFile,BufRead           *.txt,README,TODO,DEVEL       set ft=rst
+au BufNewFile,BufRead           README,TODO,DEVEL           set ft=rst
 " }}}
 
 " {{{ Python
