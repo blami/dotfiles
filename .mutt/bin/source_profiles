@@ -5,8 +5,8 @@
 
 LIST=~/.mutt/profile_list
 
-# Detect whether we like find or need gfind
-FIND=gfind
+# TODO detect whether we like find or need gfind
+FIND=find
 
 # Profile directory must exist
 [ -d ~/.mutt/profile ] || exit 1

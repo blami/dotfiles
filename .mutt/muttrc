@@ -36,7 +36,7 @@ set delete              = yes                   # Purge deleted without asking
 set bounce              = yes                   # Bounce without asking
 set move                = no                    # Don't move read to $mbox
                                                 # (usefull with offlineimap)
-#set nomark_old                                 # Don't use OLD/NEW marker
+set mark_old            = no                    # Don't use OLD/NEW marker
 set auto_tag                                    # Apply action to all tagged
 set noconfirmappend
 
@@ -122,9 +122,15 @@ set index_format="%5C %Z %?X?%1X& ? %{%b %d} %-24.24L (%?l?%4l&%4c?) %?M?[%M] ?%
 
 # Sidebar
 set sidebar_visible     = yes
-set sidebar_shortpath   = yes
-set sidebar_folderindent= yes
+#set sidebar_newmail_only = yes
+#set sidebar_shortpath   = yes
+#set sidebar_folderindent= yes
 set sidebar_width       = 30
+
+# Term title
+set ts_enabled          = yes
+set ts_status_format="MUTT: %h [%f %n]"
+
 # }}}
 
 # {{{ Autoview
@@ -132,7 +138,8 @@ set implicit_autoview                           # Implicit mailcap autoview
 auto_view               text/html
 
 # Favor text/plain body parts over html
-alternative_order       text/plain text/enriched text/html
+unalternative_order     *
+alternative_order       text/plain text/enriched text text/html
 # }}}
 
 # {{{ Hooks
@@ -160,6 +167,8 @@ source `~/.mutt/bin/source ~/.mutt/colors`
 # Profiles (+ activate default)
 source `~/.mutt/bin/source_profiles`
 source `~/.mutt/bin/source ~/.mutt/profile/default`
+# Open inbox (workaround mutt bug)
+push <change-folder>$spoolfile<enter>
 # }}}
 
 
