@@ -15,7 +15,7 @@ require(".error")                                   -- error handling
 -- }}}
 
 -- {{{ Theme
-beautiful.init("theme.lua")
+beautiful.init("/home/blami/.config/awesome/theme.lua")
 for s = 1, screen.count() do
     gears.wallpaper.maximized("/home/blami/.config/awesome/wallpaper/" .. s .. ".jpg", s, false)
 end
@@ -49,14 +49,15 @@ end
 -- }}}
 
 -- {{{ Clients
--- Raise next client
-function client_cycle(i)
+function client_focus(i)
     awful.client.focus.byidx(i)
     if client.focus then
         client.focus:raise()
     end
 end
--- Raise previous client
+function client_move()
+
+end
 -- }}}
 
 -- {{{ Menus
@@ -71,7 +72,6 @@ menu_root = awful.menu({ items = {
     { "restart"     , awesome.restart },
     { "logout"      , awesome.quit }
 }})
--- }}}
 -- }}}
 
 -- {{{ Keybindings
@@ -114,11 +114,11 @@ global_keys =  awful.util.table.join(
     awful.key(   { mod },               "#19",          function () tag_viewonly(0) end),
 
     -- Clients
-    awful.key(   { mod },               "Tab",          function () client_cycle(1) end),
-    awful.key(   { mod, shift },        "Tab",          function () client_cycle(-1) end),    
+    awful.key(   { mod },               "Tab",          function () client_focus(1) end),
+    awful.key(   { mod, shift },        "Tab",          function () client_focus(-1) end),
 
     -- Layout
-    awful.key(   { mod },               "Space",        function () awful.layout.inc(l_screen.layouts, 1) end),
+    awful.key(   { mod },               "space",        function () awful.layout.inc(layouts, 1) end),
 
     -- Progs
     awful.key(   { sup },               "l",            function () awful.util.spawn("/usr/bin/xscreensaver-command -lock") end),
@@ -130,6 +130,41 @@ global_keys =  awful.util.table.join(
 client_keys = awful.util.table.join(
     awful.key(   { mod },               "F4",           function (c) c:kill() end)
 )
+-- }}}
+
+-- {{{ Panels
+panel = {}
+
+widget_screen = {}
+widget_tags = {}
+widget_layouts = {}
+
+widget_clock = awful.widget.textclock("%a %b %d %I:%M%p ")
+
+for s = 1, screen.count() do
+    -- Screen widgets
+    widget_screen[s] = wibox.widget.textbox(s)
+    widget_tags[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all)
+    widget_layouts[s] = awful.widget.layoutbox(s)
+
+
+    -- Align widgets
+    local l = wibox.layout.fixed.horizontal()
+    local r = wibox.layout.fixed.horizontal()
+
+    l:add(widget_screen[s])
+    l:add(widget_tags[s])
+    l:add(widget_layouts[s])
+
+    r:add(widget_clock)
+
+    local pl = wibox.layout.align.horizontal()
+    pl:set_left(l)
+    pl:set_right(r)
+
+    panel[s] = awful.wibox({ screen = s, position = "bottom" })
+    panel[s]:set_widget(pl)
+end
 -- }}}
 
 -- {{{ Rules
