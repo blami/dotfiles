@@ -1,22 +1,22 @@
 " ~/.vim/vimrc: Vim configuration
 
 " {{{ General
-set nocompatible                        " Enable Vi-improved extensions
-set autowrite                           " Auto-save file on e.g. :make
-set autoread                            " Watch for outside-Vim file changes
-set hidden                              " Enable hidden buffers
+set nocompatible                                                                " Enable Vi-improved extensions
+set autowrite                                                                   " Auto-save file on e.g. :make
+set autoread                                                                    " Watch for outside-Vim file changes
+set hidden                                                                      " Enable editing multiple files w/o saving changes (hidden buffers)
 set history=1000
 set undolevels=1000
 
 set encoding=utf-8
-set fileformat=unix                     " Always use UNIX line endings
+set fileformat=unix                                                             " Always use UNIX line endings
 " }}}
 
 
 " {{{ Files and directories
 " Swap files
-set nobackup                            " Don't create backups file~
-set noswapfile                          " Don't create swapfiles
+set nobackup                                                                    " Don't create backup files~
+set noswapfile                                                                  " Don't create swapfiles
 set swapsync=fsync
 
 " Temporary directory
@@ -35,68 +35,66 @@ let &dir=tmpdir
 let g:netrw_home=tmpdir
 
 " Filetype handling
-set modeline                            " Enable modeline parser
-set exrc                                " Enable per-project .vimrc loading
-" NOTE: Disabled because of Vundle (see ~/.vim/vundle)
-set filetype=off
-"set filetype=on
+set modeline                                                                    " Enable modeline parser (# vim:)
+set exrc                                                                        " Enable per-project .vimrc loading
+set filetype=off                                                                " Enable filetype plugins selectively
 filetype plugin on
 filetype indent on
 
-set autochdir                           " Update current working directory
-set autoread                            " Automatically re-read file if changed outside Vim
+set noautochdir                                                                 " Don't update current working directory
+set autoread                                                                    " Automatically re-read file if changed outside Vim
 
 " Per-OS binaries and directories
 if has("win32") || has("win64")
-    set shell=C:\Cygwin\bin\bash
+    set shell=C:\Cygwin\bin\zsh
 endif
 " }}}
 
 
 " {{{ Commands
-set wildignore=*.swp,*.bak,*.pyc,*.pyo,*.so,*.a,*.class " Ignore on wildcard completion
+set wildignore=*.swp,*.bak,*.pyc,*.pyo,*.so,*.a,*.dll,*.exe,*.class             " Ignore on wildcard completion
 " }}}
 
 
 " {{{ Editing
 " Indentation
 set smarttab
-set smartindent                         " Do smart indentation (similar to `cindent'), see `indentexpr'
-set autoindent                          " Continue indentation automaticaly
-set copyindent                          " Copy indentation from previous line on auto-indentation
-set expandtab                           " Use appropriate number of spaces instead of Tab
+set smartindent                                                                 " Do smart indentation (similar to `cindent'), see `indentexpr'
+set autoindent                                                                  " Continue indentation automaticaly
+set copyindent                                                                  " Copy indentation from previous line on auto-indentation
+set expandtab                                                                   " Use appropriate number of spaces instead of Tab
 set nojoinspaces
-set nostartofline                       " Keep cursor (if possible) on same column while moving up and down
+set nostartofline                                                               " Keep cursor (if possible) on same column while moving up and down
 set shiftwidth=4
-set shiftround                          " Use multiple of shiftwidth when indenting
+set shiftround                                                                  " Use multiple of shiftwidth when indenting
 set softtabstop=4
 set tabstop=4
 
 " Automated formatting
-set formatoptions=tcroqn                " Automated formating settings
+set formatoptions=tcroqn                                                        " Automated formating settings
 
 " Clipboard
-set clipboard+=unnamed                  " Yanks go to to clipboard
-set go+=a                               " Copy visual buffer to clipboard
+set clipboard+=unnamed                                                          " Yanks go to to clipboard
+set go+=a                                                                       " Copy visual buffer to clipboard
 
 " Backspace
 set backspace=indent,eol,start
 
 " Wrapping
-set nowrap                              " Don't wrap lines (in window)
-set textwidth=79                        " Default text-width is 79 columns
+set nowrap                                                                      " Don't wrap lines (in window)
+set textwidth=79                                                                " Default text-width is 79 columns
 if exists("+colorcolumn")
     set cc=80,120
 endif
 
 " Scrolling
-set scrolloff=3                         " Show at least 3 lines when scrolling
-set sidescrolloff=3
+set scrolloff=5                                                                 " Show at least 5 lines when scrolling
+set sidescrolloff=5                                                             " Show at least 5 columns when scrolling
 
 " Folding
 set foldenable
-set foldmethod=marker
-set foldlevel=100                       " Don't fold anything automatically
+set foldmethod=marker                                                           " Fold by marker
+set foldlevel=100                                                               " Don't fold anything automatically
 set foldopen=block,hor,mark,percent,quickfix,tag
 
 " Restore position in file
@@ -108,55 +106,55 @@ autocmd BufReadPost *
 
 
 " {{{ Search and replace
-set ignorecase                          " Ignore case during searches
-set smartcase                           " Override previous if search pattern contains uppercase characters
-set wrapscan                            " Wrap through document (end->begin, begin->end)
-set hlsearch                            " Hilight search pattern matches in document
+set ignorecase                                                                  " Ignore case during searches
+set smartcase                                                                   " Override previous if search pattern contains uppercase characters
+set wrapscan                                                                    " Wrap through document (end->begin, begin->end)
+set hlsearch                                                                    " Hilight search pattern matches in document
 set incsearch
 " }}}
 
 
 " {{{ User interface
-set background=dark                     " Use dark background by default
-set t_ut=                               " Don't erase background (GNU Screen)
+set background=dark                                                             " Use dark background by default
+set t_ut=                                                                       " Don't erase background (GNU Screen)
 if has("mouse")
-    set mousehide                       " Hide mouse when typing (GUI)
+    set mousehide                                                               " Hide mouse when typing (GUI)
 endif
 if has("title")
-    set title                           " Change terminal title to
-    set titlestring=VIM:\ %t\ %m%r      " VIM: filename [+-=][RO]
+    set title                                                                   " Change terminal title to
+    set titlestring=VIM:\ %t\ %m%r                                              " VIM: filename [+-=][RO]
     set titleold=VIM
 endif
-set noerrorbells                        " Disable error bells
+set noerrorbells                                                                " Disable error bells
 
 " Color scheme
 "colorscheme 
 
-set shortmess-=fmnrt                    " Don't show short message for fmnrwt
-set showmode                            " Show current editor mode in status line (e.g. -- INSERT --)
-set showcmd                             " Show last command in status line
-set ruler                               " Show ruler in status line
-set number                              " Show line numbers
+set shortmess-=fmnrt                                                            " Don't show short message for fmnrwt
+set showmode                                                                    " Show current editor mode in status line (e.g. -- INSERT --)
+set showcmd                                                                     " Show last command in status line
+set ruler                                                                       " Show ruler in status line
+set number                                                                      " Show line numbers
 set numberwidth=4
-set laststatus=2                        " Always show status line
-set cursorline                          " Hilight current line (darker background)
+set laststatus=2                                                                " Always show status line
+set cursorline                                                                  " Hilight current line (darker background)
 
-set splitright                          " When splitting window put the new one to right
-set splitbelow                          " When splitting window put the new one below
+set splitright                                                                  " When splitting window put the new one to right
+set splitbelow                                                                  " When splitting window put the new one below
 
-set ttyfast                             " Fast TTY
+set ttyfast                                                                     " Fast TTY
 
-syntax on                               " Enable syntax hilighting
-set showmatch                           " Show matching pairs
+syntax on                                                                       " Enable syntax hilighting
+set showmatch                                                                   " Show matching pairs
 set matchpairs=(:),{:},[:],<:>
 set matchtime=5
-set list                                " Show Tab, EOL or trailing spaces
+set list                                                                        " Show Tab, EOL or trailing spaces
 set lcs=tab:__,trail:.,extends:$,precedes:^
 
 " Status line
 " NOTE: User colors 1-filename; 2-ro; 3-percentage
 " TODO Show git/hg branch
-set statusline=%-4.4n\ %1*%<%F%m%*\ %y[%{&ff}]\ %2*%r%*\ %=\ %{AutowrapStatus()}\ %v(%c),%l/%L\ [ch=%b,0x%B]\ [off=%ob,0x%O]\ %3*%P%*
+set statusline=%-4.4n\ %1*%<%F%m%*\ %y\ %2*%r%*\ [%{&fenc}]\ [%{&ff}]\ %=\ %{AutowrapStatus()}\ [ch=%b,0x%B]\ [off=%ob,0x%O]\ %v(%c),%l/%L\ %3*%P%*
 
 " GUI specific settings
 if has("gui_running")
@@ -170,12 +168,14 @@ endif
 
 
 " {{{ Includes
+source $HOME/.vim/func.vim                                                      " Support functions
+
+source $HOME/.vim/keymap.vim                                                    " Key mappings
+source $HOME/.vim/filetype.vim                                                  " Filetype plugins
+
 source $HOME/.vim/plugin.vim
 
 source $HOME/.vim/abbrev.vim
-source $HOME/.vim/func.vim
-source $HOME/.vim/filetype.vim
-source $HOME/.vim/keymap.vim
 " }}}
 
 " vim:set fo-=t:

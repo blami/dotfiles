@@ -10,6 +10,8 @@ map <silent>            ;w              :call AutowrapToggle()<RETURN>
 map <silent>            <<              :bp<RETURN>
 map <silent>            >>              :bn<RETURN>
 
+cmap                    w#              w !sudo tee % >/dev/null
+
 " Search
 map <silent>            \               :noh<RETURN>
 
