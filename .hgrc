@@ -1,6 +1,16 @@
 ; ~/.hgrc: Mercurial configuration
 ; vim:set ft=cfg:
 
+[email]
+from=blami@blami.net
+
+[ui]
+ssh=ssh -C
+merge=vimdiff
+ignore=~/.hgignore_global
+username=Ondrej Balaz <blami@blami.net>
+verbose=True
+
 [defaults]
 log=-v
 
@@ -8,29 +18,24 @@ log=-v
 git=True
 showfunc=True
 
-[email]
-from=blami@blami.net
-
-[gpg]
-cmd=gpg
-key=1FCD8C25
+[merge-tools]
+vimdiff.executable=vim
+vimdiff.args=-d $output $other
 
 [extensions]
 mq=
 prechangegroup.mq-no-pull=! hg qtop > /dev/null 2>&1
 preoutgoing.mq-no-push=! hg qtop > /dev/null 2>&1
 graphlog=
-rebase=
+color=
 convert=
 gpg=
 transplant=
+rebase=
+histedit=
+purge=
 
-[merge-tools]
-vimdiff.executable=vim
-vimdiff.args=-d $output $other
-
-[ui]
-merge=vimdiff
-ignore=~/.hgignore_global
-username=Ondrej Balaz <blami@blami.net>
-verbose=True
+; Extensions
+[gpg]
+cmd=gpg
+key=1FCD8C25
