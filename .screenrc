@@ -42,7 +42,7 @@ defbce              on          # Use current background color for erase
 
 # Backticks
 # NOTE: Solaris 11 sed compatibility
-backtick 0 60 60 /bin/sh -c 'screen -ls | grep $PPID | sed "s/^[	0-9]*\.\([^	]*\).*/\1/"'
+#backtick 0 60 60 /bin/sh -c 'screen -ls | grep $PPID | sed "s/^[	0-9]*\.\([^	]*\).*/\1/"'
 backtick 1 60 60 $HOME/.screen/scripts/ip.sh
 backtick 2 60 60 $HOME/.screen/scripts/stor.sh
 backtick 3 60 60 $HOME/.screen/scripts/bat.sh
@@ -57,11 +57,8 @@ backtick 3 60 60 $HOME/.screen/scripts/bat.sh
 #   %M: month name
 #   %d: day number
 #   %c: HH:MM
-caption always "%{= dw}%{= wk}[$USER@%H](%0`)%{= dw} %l | %1` | stor:%2` | bat:%3` %= %{= wk}[%M %d %0c]"
+caption always "%{= dw}%{= wk}[$USER@%H](%S)%{= dw} %l | %1` | stor:%2` | bat:%3` %= %{= wk}[%M %d %0c]"
 hardstatus alwayslastline "%{= gk}%n%f %t%{= dw} | %?%-w%?%{= gk}%n*%f%t%?(%u)%?%{= dw}%?%+w%? %{= dw}"
-
-#indowlist always "%{= wk}[%H](%0`)%{= dw} %-w%{= bw}%n%f*%t%{= dw}%+w%< %= %{= wk}[%M %d %c]%{= dd}"
-#hardstatus alwayslastline "screen [%n%f %t]"
 # }}}
 
 
