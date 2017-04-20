@@ -10,6 +10,15 @@ set undolevels=1000
 
 set encoding=utf-8
 set fileformat=unix                                                             " Always use UNIX line endings
+
+" Terminal
+set ttyfast                                                                     " Fast TTY
+set timeout timeoutlen=750 ttimeoutlen=750                                      " Timeout of multikey :mappings and keycodes (in ms)
+
+" Pathogen
+set sessionoptions-=options                                                     " Don't capture 'runtimepath' when using Vim sessions
+runtime bundles/pathogen/autoload/pathogen.vim                                  " Enable pathogen
+exe pathogen#infect('bundles/{}')
 " }}}
 
 
@@ -44,15 +53,19 @@ filetype indent on
 set noautochdir                                                                 " Don't update current working directory
 set autoread                                                                    " Automatically re-read file if changed outside Vim
 
+" Filename/wildchar completion
+set wildmenu
+set wildmode=list:longest
+
+set wildignore=*.swp,*.bak,*.backup,*.orig,*.new
+set wildignore+=*.out,*.exe,*.so,*.a,*.dll,*.lib,*.jar,*.war,*.manifest
+set wildignore+=*.o,*.obj,*.pyc,*.pyo,*.class,*.luac
+set wildignore+=.git,.hg,.svn,.cvs,.dfgit,*.DS_Store
+
 " Per-OS binaries and directories
 if has("win32") || has("win64")
     set shell=C:\Cygwin\bin\zsh
 endif
-" }}}
-
-
-" {{{ Commands
-set wildignore=*.swp,*.bak,*.pyc,*.pyo,*.so,*.a,*.dll,*.exe,*.class             " Ignore on wildcard completion
 " }}}
 
 
@@ -84,12 +97,12 @@ set backspace=indent,eol,start
 set nowrap                                                                      " Don't wrap lines (in window)
 set textwidth=79                                                                " Default text-width is 79 columns
 if exists("+colorcolumn")
-    set cc=80,120
+    set cc=80,120,160
 endif
 
 " Scrolling
-set scrolloff=5                                                                 " Show at least 5 lines when scrolling
-set sidescrolloff=5                                                             " Show at least 5 columns when scrolling
+set scrolloff=2                                                                 " Show at least 2 lines when scrolling
+set sidescrolloff=8                                                             " Show at least 8 columns when scrolling
 
 " Folding
 set foldenable
@@ -98,10 +111,10 @@ set foldlevel=100                                                               
 set foldopen=block,hor,mark,percent,quickfix,tag
 
 " Restore position in file
-autocmd BufReadPost *
-    \ if line("'\"") > 0 && line("'\"") <= line("$") |
-    \ exe "normal! g`\"" |
-    \ endif
+autocmd! BufReadPost *
+            \ if line("'\"") > 0 && line("'\"") <= line("$") |
+            \     exe "normal! g`\"" |
+            \ endif
 " }}}
 
 
@@ -114,21 +127,34 @@ set incsearch
 " }}}
 
 
+" {{{ Spell checking
+" NOTE: My dotfiles contain .spl files in ~/.vim/spell
+let g:spelllangs=['en', 'cs']                                                   " Available spell languages (for cycling)
+set nospell                                                                     " Globally disable spellcheck by default
+let &g:spelllang=get(g:spelllangs,0)                                            " Set global default spellcheck language
+
+" Custom word list(s)
+let g:spellfile_common=$HOME.'/.vim/spell/common.utf8.add'                      " Not language specific words (e.g. names) used by util#ToggleSpellLang()
+let &spellfile=$HOME.'/.vim/spell/custom-'.&g:spelllang.'.utf8.add,'.g:spellfile_common
+
+" Disable annoying download message
+set eventignore+=SpellFileMissing,
+" }}}
+
+
 " {{{ User interface
 set background=dark                                                             " Use dark background by default
 set t_ut=                                                                       " Don't erase background (GNU Screen)
 if has("mouse")
     set mousehide                                                               " Hide mouse when typing (GUI)
+    set mouse=a
 endif
 if has("title")
     set title                                                                   " Change terminal title to
-    set titlestring=VIM:\ %t\ %m%r                                              " VIM: filename [+-=][RO]
+    set titlestring=VIM:\ [%{hostname()}]\ %t\ %m%r                             " VIM: [hostname] filename [+-=][RO]
     set titleold=VIM
 endif
 set noerrorbells                                                                " Disable error bells
-
-" Color scheme
-"colorscheme 
 
 set shortmess-=fmnrt                                                            " Don't show short message for fmnrwt
 set showmode                                                                    " Show current editor mode in status line (e.g. -- INSERT --)
@@ -136,15 +162,16 @@ set showcmd                                                                     
 set ruler                                                                       " Show ruler in status line
 set number                                                                      " Show line numbers
 set numberwidth=4
-set laststatus=2                                                                " Always show status line
 set cursorline                                                                  " Hilight current line (darker background)
 
 set splitright                                                                  " When splitting window put the new one to right
 set splitbelow                                                                  " When splitting window put the new one below
 
-set ttyfast                                                                     " Fast TTY
-
+set background=dark                                                             " Set dark background
+"colorscheme void256                                                             " Set color scheme
 syntax on                                                                       " Enable syntax hilighting
+set synmaxcol=160                                                               " Highlight only first 120 columns
+
 set showmatch                                                                   " Show matching pairs
 set matchpairs=(:),{:},[:],<:>
 set matchtime=5
@@ -152,30 +179,36 @@ set list                                                                        
 set lcs=tab:__,trail:.,extends:$,precedes:^
 
 " Status line
-" NOTE: User colors 1-filename; 2-ro; 3-percentage
-" TODO Show git/hg branch
-set statusline=%-4.4n\ %1*%<%F%m%*\ %y\ %2*%r%*\ [%{&fenc}]\ [%{&ff}]\ %=\ %{AutowrapStatus()}\ [ch=%b,0x%B]\ [off=%ob,0x%O]\ %v(%c),%l/%L\ %3*%P%*
+" NOTE User colors: 90=active,91=inactive,92=buffer,93=position,94=[RO],95=spell
+set laststatus=2                                                                " Always show status line
+set statusline=
+" left side
+set statusline+=%92*%2.2n%*                                                     " Buffer number
+set statusline+=\ %t%m%94*%r%*                                                  " Filename, modified and RO flags
+set statusline+=\ %92*[%{&ft!=''?&ft:'off'}]%*                                  " Filetype
+set statusline+=\ %<%{&ff}%{&fenc!=''?','.&fenc:''}                             " File format and encoding
+" right side
+set statusline+=%=
+set statusline+=%{&spell!=0?strpart(&spelllang,0,2):''}
+set statusline+=\ ch=%b,0x%B                                                    " Character code
+set statusline+=\ %93*%{matchstr(&fo,'t')!=''?'>'.&tw.'\ ':''}%c,%l/%LL\ %P%*   " Position [>tw] (col,line/lines) all%
 
 " GUI specific settings
 if has("gui_running")
     set guioptions=aAigrp
     " Fonts
-    if has("gui_win32") || has("gui_win64")
-        set guifont=InputMono:h11
+    if has("unix")
+        set guifont=InputMono\ 11
+    elseif has("gui_win32") || has("gui_win64")
+        set guifont=InputMono:h11:cEASTEUROPE
     endif
 endif
 " }}}
 
 
 " {{{ Includes
-source $HOME/.vim/func.vim                                                      " Support functions
-
-source $HOME/.vim/keymap.vim                                                    " Key mappings
-source $HOME/.vim/filetype.vim                                                  " Filetype plugins
-
-source $HOME/.vim/plugin.vim
-
-source $HOME/.vim/abbrev.vim
+source $HOME/.vim/keymap.vim                                                    " Keyboard mappings
+source $HOME/.vim/abbrev.vim                                                    " Abbreviations
 " }}}
 
 " vim:set fo-=t:
