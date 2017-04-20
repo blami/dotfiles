@@ -1,6 +1,10 @@
-" ~/.vim/abbrev.vim: Vim global abbreviations file
+" ~/.vim/abbrev.vim: global abbreviations file
 
-"iab @@              blami@blami.net
-"iab               -- <cr>Ondrej Balaz <blami@blami.net>
+" {{{ Signatures
+iab     ob@         ondrej.balaz@blami.net
+
+
+
+" }}}
 
 " vim:set ft=vim fo-=t:
