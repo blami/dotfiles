@@ -55,12 +55,12 @@ vnoremap                <leader>zau             :sort! iu<CR>
 " Files
 cnoremap                w#                      w !sudo tee % >/dev/null
 " diff
-nnoremap                <leader>dif             :call util#DiffLocal()<CR>
+"nnoremap                <leader>dif             :call keymap#DiffLocal()<CR>
 " directory navigation
 nnoremap                <leader>cd              :lcd %:p:h<CR>:pwd<CR>
 nnoremap                <leader>~               :lcd $HOME<CR>:pwd<CR>
-" utility files
-nnoremap                <leader>todo            :vs $HOME/TODO.md<CR>
+" common files
+"nnoremap                <leader>todo            :vs $HOME/TODO.md<CR>
 " quick save
 if has("gui")
     noremap             <C-s>                   :w<CR>
@@ -112,8 +112,8 @@ inoremap                <F9>                    <ESC>:make<CR>
 nnoremap                <F5>                    :echo "run"
 inoremap                <F5>                    <ESC>:echo "run"
 " pastebin (in normal mode whole file)
-nnoremap                <leader>pb              :call util#Pastebin()<CR>
-vnoremap                <leader>pb              :call util#Pastebin()<CR>
+nnoremap                <leader>pb              :call keymap#Pastebin()<CR>
+vnoremap                <leader>pb              :call keymap#Pastebin()<CR>
 
 
 " Help and documentation

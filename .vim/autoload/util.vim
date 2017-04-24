@@ -1,7 +1,6 @@
-" ~/.vim/autoload/util.vim: Utility functions
+" ~/.vim/autoload/util.vim - utility functions
 
 " {{{ Toggles
-
 " Cycle between line numbers, relative numbers and no numbers.
 func! util#ToggleNumber()
     if &l:number == 1 && &l:relativenumber == 0
@@ -32,5 +31,4 @@ func! util#ToggleSpellLang()
     exe 'setl spellfile='.$HOME.'/.vim/spell/custom-'.&spelllang.'.utf8.add'
                 \ .','.g:spellfile_common
 endfunc
-
 " }}}
