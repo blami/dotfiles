@@ -24,12 +24,6 @@ nnoremap <silent>       <leader>sl              :call util#ToggleSpellLang()<CR>
 nnoremap <silent><expr> <leader>tw              matchstr(&fo,'t') != 't' ? ':setl fo+=t<CR>' : ':setl fo-=t<CR>'
 
 
-" Buffers
-" buffer navigation
-nnoremap <silent>       <                       :bp<CR>
-nnoremap <silent>       >                       :bn<CR>
-
-
 " Editing
 " visual block mode (ctrl+v is bound to paste and ctrl+q doesn't work in tty)
 nnoremap                <C-b>                   <C-v>
@@ -50,31 +44,6 @@ vnoremap                <leader>az              :sort i<CR>
 vnoremap                <leader>za              :sort! i<CR>
 vnoremap                <leader>azu             :sort iu<CR>
 vnoremap                <leader>zau             :sort! iu<CR>
-
-
-" Files
-cnoremap                w#                      w !sudo tee % >/dev/null
-" diff
-"nnoremap                <leader>dif             :call keymap#DiffLocal()<CR>
-" directory navigation
-nnoremap                <leader>cd              :lcd %:p:h<CR>:pwd<CR>
-nnoremap                <leader>~               :lcd $HOME<CR>:pwd<CR>
-" common files
-"nnoremap                <leader>todo            :vs $HOME/TODO.md<CR>
-" quick save
-if has("gui")
-    noremap             <C-s>                   :w<CR>
-    inoremap            <C-s>                   <ESC>:w<CR>i
-    vnoremap            <C-s>                   <ESC>:w<CR>v
-endif
-nnoremap                <F2>                    :w<CR>
-inoremap                <F2>                    <ESC>:w<CR>i
-vnoremap                <F2>                    <ESC>:w<CR>v
-nnoremap                <leader>w               :w<CR>
-nnoremap                <leader>w!              :w!<CR>
-nnoremap                <leader>w#              :w#<CR>
-" quick exit
-nnoremap                <leader>x               :x<CR>
 
 
 " Selection, copy & paste
@@ -102,6 +71,39 @@ nnoremap <silent>       \                       :noh<CR>
 " replace
 nnoremap                <C-h>                   :%s/
 inoremap                <C-h>                   <ESC>:%s/
+
+
+" Buffers
+" buffer navigation
+nnoremap <silent>       <                       :bp<CR>
+nnoremap <silent>       >                       :bn<CR>
+
+
+" Files
+cnoremap                w#                      w !sudo tee % >/dev/null
+" diff
+"nnoremap                <leader>dif             :call keymap#DiffLocal()<CR>
+" directory navigation
+nnoremap                <leader>cd              :lcd %:p:h<CR>:pwd<CR>
+nnoremap                <leader>~               :lcd $HOME<CR>:pwd<CR>
+" common files
+"nnoremap                <leader>todo            :vs $HOME/TODO.md<CR>
+" quick save
+if has("gui")
+    noremap             <C-s>                   :w<CR>
+    inoremap            <C-s>                   <ESC>:w<CR>i
+    vnoremap            <C-s>                   <ESC>:w<CR>v
+endif
+nnoremap                <F2>                    :w<CR>
+inoremap                <F2>                    <ESC>:w<CR>i
+vnoremap                <F2>                    <ESC>:w<CR>v
+nnoremap                <leader>w               :w<CR>
+nnoremap                <leader>w!              :w!<CR>
+nnoremap                <leader>w#              :w#<CR>
+" quick exit
+nnoremap                <leader>x               :x<CR>
+
+
 
 
 " External programs
