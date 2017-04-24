@@ -6,7 +6,7 @@ set autowrite                                                                   
 set autoread                                                                    " Watch for outside-Vim file changes
 set hidden                                                                      " Enable editing multiple files w/o saving changes (hidden buffers)
 set history=1000
-set undolevels=1000
+"set undolevels=1000
 
 set encoding=utf-8
 set fileformat=unix                                                             " Always use UNIX line endings
@@ -17,8 +17,8 @@ set timeout timeoutlen=750 ttimeoutlen=750                                      
 
 " Pathogen
 set sessionoptions-=options                                                     " Don't capture 'runtimepath' when using Vim sessions
-runtime bundles/pathogen/autoload/pathogen.vim                                  " Enable pathogen
-exe pathogen#infect('bundles/{}')
+runtime bundle/pathogen/autoload/pathogen.vim                                   " Enable pathogen
+exe pathogen#infect('bundle/{}')
 " }}}
 
 
@@ -42,6 +42,9 @@ endif
 let &backupdir=tmpdir
 let &dir=tmpdir
 let g:netrw_home=tmpdir
+
+" Undo
+"let &undodir=
 
 " Filetype handling
 set modeline                                                                    " Enable modeline parser (# vim:)
@@ -109,12 +112,6 @@ set foldenable
 set foldmethod=marker                                                           " Fold by marker
 set foldlevel=100                                                               " Don't fold anything automatically
 set foldopen=block,hor,mark,percent,quickfix,tag
-
-" Restore position in file
-autocmd! BufReadPost *
-            \ if line("'\"") > 0 && line("'\"") <= line("$") |
-            \     exe "normal! g`\"" |
-            \ endif
 " }}}
 
 
@@ -124,6 +121,7 @@ set smartcase                                                                   
 set wrapscan                                                                    " Wrap through document (end->begin, begin->end)
 set hlsearch                                                                    " Hilight search pattern matches in document
 set incsearch
+set gdefault                                                                    " Add /g by default
 " }}}
 
 
@@ -162,13 +160,16 @@ set showcmd                                                                     
 set ruler                                                                       " Show ruler in status line
 set number                                                                      " Show line numbers
 set numberwidth=4
+if has("signs")
+    set signcolumn=yes                                                          " Always show sign gutter
+endif
 set cursorline                                                                  " Hilight current line (darker background)
 
 set splitright                                                                  " When splitting window put the new one to right
 set splitbelow                                                                  " When splitting window put the new one below
 
 set background=dark                                                             " Set dark background
-"colorscheme void256                                                             " Set color scheme
+colorscheme blami256                                                            " Set color scheme
 syntax on                                                                       " Enable syntax hilighting
 set synmaxcol=160                                                               " Highlight only first 120 columns
 
@@ -209,6 +210,7 @@ endif
 " {{{ Includes
 source $HOME/.vim/keymap.vim                                                    " Keyboard mappings
 source $HOME/.vim/abbrev.vim                                                    " Abbreviations
+source $HOME/.vim/autocmd.vim                                                   " Autocommands
 " }}}
 
 " vim:set fo-=t:
