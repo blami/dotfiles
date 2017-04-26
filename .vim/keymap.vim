@@ -104,8 +104,6 @@ nnoremap                <leader>w#              :w#<CR>
 nnoremap                <leader>x               :x<CR>
 
 
-
-
 " External programs
 " run makeprg
 nnoremap                <F9>                    :make<CR>
@@ -119,8 +117,15 @@ vnoremap                <leader>pb              :call keymap#Pastebin()<CR>
 
 
 " Help and documentation
-noremap                 <F1>                    :help<space>
-inoremap                <F1>                    <ESC>:help<space>
+noremap                 <F1>                    :help<SPACE>
+inoremap                <F1>                    <ESC>:help<SPACE>
+
+
+" Others
+" leave Ex mode for good
+nnoremap                Q                       <nop>
+
+
 " }}}
 
 
