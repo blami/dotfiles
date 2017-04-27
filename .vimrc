@@ -1,6 +1,6 @@
-" .vimrc: Vim configuration
+" .vimrc - Vim configuration
 
-" NOTE: this file loads ~/.vim/vimrc to avoid direct symlink which can't
+" NOTE this file loads ~/.vim/vimrc to avoid direct symlink which can't
 " be used in Windows
 
 " Use ~/.vim instead of vimfiles on Windows
