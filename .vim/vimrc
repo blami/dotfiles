@@ -1,4 +1,4 @@
-" ~/.vim/vimrc: Vim configuration
+" ~/.vim/vimrc - Vim configuration
 
 " {{{ General
 set nocompatible                                                                " Enable Vi-improved extensions
@@ -11,14 +11,18 @@ set history=1000
 set encoding=utf-8
 set fileformat=unix                                                             " Always use UNIX line endings
 
+" Configuration variables
+let s:vimdir=split(&rtp[0], ',')[0]
+let s:tmpdir='/tmp'
+
 " Terminal
 set ttyfast                                                                     " Fast TTY
 set timeout timeoutlen=750 ttimeoutlen=750                                      " Timeout of multikey :mappings and keycodes (in ms)
 
 " Pathogen
 set sessionoptions-=options                                                     " Don't capture 'runtimepath' when using Vim sessions
-runtime bundle/pathogen/autoload/pathogen.vim                                   " Enable pathogen
-exe pathogen#infect('bundle/{}')
+runtime bundle/pathogen/autoload/pathogen.vim                                   " Add pathogen to runtime path
+exec pathogen#infect('bundle/{}')
 " }}}
 
 
@@ -29,15 +33,12 @@ set noswapfile                                                                  
 set swapsync=fsync
 
 " Temporary directory
-let tmpdir="/tmp"
-if has("win32") || has("win64")
+if has('win32') || has('win64')
     " $TEMP is always set in Windows
     let tmpdir=expand($TEMP)
-elseif has("unix")
+elseif has('unix')
     " if $TMP is set (per-user $TMP) use it, otherwise use /tmp
-    if !empty($TMP)
-        let tmpdir=expand($TMP)
-    endif
+    if !empty($TMP) | let tmpdir=expand($TMP) | endif
 endif
 let &backupdir=tmpdir
 let &dir=tmpdir
@@ -66,7 +67,7 @@ set wildignore+=*.o,*.obj,*.pyc,*.pyo,*.class,*.luac
 set wildignore+=.git,.hg,.svn,.cvs,.dfgit,*.DS_Store
 
 " Per-OS binaries and directories
-if has("win32") || has("win64")
+if has('win32') || has('win64')
     set shell=C:\Cygwin\bin\zsh
 endif
 " }}}
@@ -99,7 +100,7 @@ set backspace=indent,eol,start
 " Wrapping
 set nowrap                                                                      " Don't wrap lines (in window)
 set textwidth=79                                                                " Default text-width is 79 columns
-if exists("+colorcolumn")
+if exists('+colorcolumn')
     set cc=80,120,160
 endif
 
@@ -143,11 +144,11 @@ set eventignore+=SpellFileMissing,
 " {{{ User interface
 set background=dark                                                             " Use dark background by default
 set t_ut=                                                                       " Don't erase background (GNU Screen)
-if has("mouse")
+if has('mouse')
     set mousehide                                                               " Hide mouse when typing (GUI)
     set mouse=a
 endif
-if has("title")
+if has('title')
     set title                                                                   " Change terminal title to
     set titlestring=VIM:\ [%{hostname()}]\ %t\ %m%r                             " VIM: [hostname] filename [+-=][RO]
     set titleold=VIM
@@ -160,7 +161,7 @@ set showcmd                                                                     
 set ruler                                                                       " Show ruler in status line
 set number                                                                      " Show line numbers
 set numberwidth=4
-if has("signs")
+if has('signs')
     set signcolumn=yes                                                          " Always show sign gutter
 endif
 set cursorline                                                                  " Hilight current line (darker background)
@@ -196,12 +197,12 @@ set statusline+=\ ch=%b,0x%B                                                    
 set statusline+=\ %93*%{matchstr(&fo,'t')!=''?'>'.&tw.'\ ':''}%c,%l/%LL\ %P%*   " Position [>tw] (col,line/lines) all%
 
 " GUI specific settings
-if has("gui_running")
+if has('gui_running')
     set guioptions=aAigrp
     " Fonts
-    if has("unix")
+    if has('unix')
         set guifont=InputMono\ 11
-    elseif has("gui_win32") || has("gui_win64")
+    elseif has('gui_win32') || has('gui_win64')
         set guifont=InputMono:h11:cEASTEUROPE
     endif
 endif
