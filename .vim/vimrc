@@ -40,14 +40,14 @@ endif
 " Temporary directory
 if has('win32') || has('win64')
     " $TEMP is always set in Windows
-    let tmpdir=expand($TEMP)
+    let s:tmpdir=expand($TEMP)
 elseif has('unix')
     " if $TMP is set (per-user $TMP) use it, otherwise use /tmp
-    if !empty($TMP) | let tmpdir=expand($TMP) | endif
+    if !empty($TMP) | let s:tmpdir=expand($TMP) | endif
 endif
-let &backupdir=tmpdir
-let &dir=tmpdir
-let g:netrw_home=tmpdir
+let &backupdir=s:tmpdir
+let &dir=s:tmpdir
+let g:netrw_home=s:tmpdir
 
 " Undo
 "let &undodir=
