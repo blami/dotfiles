@@ -12,7 +12,7 @@ set encoding=utf-8
 set fileformat=unix                                                             " Always use UNIX line endings
 
 " Configuration variables
-let s:vimdir=split(&rtp[0], ',')[0]
+let s:vimrcdir=split(&rtp[0], ',')[0]
 let s:tmpdir='/tmp'
 
 " Terminal
@@ -31,6 +31,11 @@ exec pathogen#infect('bundle/{}')
 set nobackup                                                                    " Don't create backup files~
 set noswapfile                                                                  " Don't create swapfiles
 set swapsync=fsync
+
+" Vim info file
+if has('win32') || has('win64')
+    set viminfo+=n$HOME/.viminfo                                                " Use same ~/.viminfo as Cygwin
+endif
 
 " Temporary directory
 if has('win32') || has('win64')
@@ -189,7 +194,7 @@ set statusline+=%92*%2.2n%*                                                     
 set statusline+=\ %t%m%94*%r%*                                                  " Filename, modified and RO flags
 set statusline+=\ %92*[%{&ft!=''?&ft:'off'}]%*                                  " Filetype
 set statusline+=\ %<%{&ff}%{&fenc!=''?','.&fenc:''}                             " File format and encoding
-set statusline+=\ %96*-%*                                                       " Buffer specific status information
+set statusline+=\ %96*%{bufstatus#StatusPage()}%*                               " Buffer specific status information
 " right side
 set statusline+=%=
 set statusline+=%{&spell!=0?strpart(&spelllang,0,2):''}

@@ -22,6 +22,9 @@ nnoremap <silent>       <leader>s               :setl invspell<CR>
 nnoremap <silent>       <leader>sl              :call util#ToggleSpellLang()<CR>
 " toggle formatting options parameter t (textwidth)
 nnoremap <silent><expr> <leader>tw              matchstr(&fo,'t') != 't' ? ':setl fo+=t<CR>' : ':setl fo-=t<CR>'
+" toggle buffer status in statusline
+noremap  <silent>       <F4>                    :call bufstatus#TogglePage('+')<CR>
+inoremap <silent>       <F4>                    <ESC>:call bufstatus#TogglePage('+')<CR>a
 
 
 " Editing
