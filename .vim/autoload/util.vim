@@ -19,12 +19,12 @@ func! util#ToggleSpellLang()
     if &spell == 0 | return | endif
 
     " Find spelllang index in g:spelllangs (-1 if not present)
-    let l:i = index(g:spelllangs, &spelllang)
+    let i = index(g:spelllangs, &spelllang)
     " If index is unset set it to the first item, otherwise cycle
-    if l:i < 0
-        let l:i = 0
+    if i < 0
+        let i = 0
     else
-        let l:i = l:i + 1 == len(g:spelllangs) ? 0 : l:i + 1
+        let i = i + 1 == len(g:spelllangs) ? 0 : i + 1
     endif
     " Set spelllang and spellfile
     exe 'setl spelllang='.get(g:spelllangs, l:i)
