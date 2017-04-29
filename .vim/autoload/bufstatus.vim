@@ -1,14 +1,18 @@
 " ~/.vim/autoload/bufstatus.vim - buffer specific status in statusline
 
+" Buffer status provides basic functionality to manage a dictionary of
+" functions (pages) that return status strings relevant to buffer.
+
 " {{{ Buffer status
-" Add given funcref that returns a page to bufstatus under given id.
-func bufstatus#AddPage(id, funcref)
+" Add page to buffer status.
+func bufstatus#AddPage(id, func)
     if !exists('b:bufstatus') | let b:bufstatus = {} | endif
-    let b:bufstatus[a:id] = a:funcref
+    if type(a:func) == v:t_func
+       let b:bufstatus[a:id] = a:func
+    endif
 endfunc
 
-" Toggle buffer status pages. Argument can be '+' for next, '-' for previous or
-" actual id of status page.
+" Toggle buffer status current page ('+' next, '-' prev or '<ID>').
 func bufstatus#TogglePage(arg)
     if !exists('b:bufstatus') || empty(b:bufstatus) | return | endif
     " If current id is not set yet or isn't valid use the first item
@@ -17,14 +21,12 @@ func bufstatus#TogglePage(arg)
         let b:bufstatus_cur = keys(b:bufstatus)[0] | return
     endif
 
-    " Toggle to given id if exists otherwise error?
     if a:arg != '-' && a:arg != '+'
         if index(ids, a:arg) != -1
             let b:bufstatus_cur = a:arg
         endif
         return
     endif
-
     " Toggle to next or previous item (cycle if bound is reached)
     let i = index(ids, b:bufstatus_cur)
     if a:arg == '+' | let i += 1 | elseif a:arg == '-' | let i -= 1 | endif
@@ -33,7 +35,7 @@ func bufstatus#TogglePage(arg)
     let b:bufstatus_cur = ids[i]
 endfunc
 
-" Execute currently selected status function and return result.
+" Return currently selected page output.
 func bufstatus#StatusPage()
     if !exists('b:bufstatus') || empty(b:bufstatus) | return '-' | endif
     if !exists('b:bufstatus_cur')
