@@ -14,6 +14,9 @@ function hook_term_title() {
 setopt nobeep                               # Disable beeps
 setopt nomail_warning                       # Don't check mail file change
 
+# Custom Functions path
+[ -d $HOME/.zsh ] && FPATH=$FPATH:$HOME/.zsh
+
 # Input/output
 # Keybindings
 bindkey -e                                  # Use Emacs-style 
@@ -86,14 +89,9 @@ add-zsh-hook precmd     hook_term_title     # Change terminal title
 
 # {{{ Prompt
 setopt prompt_subst
-
-# Prompt widgets
-
-
-# Prompt
 autoload -Uz promptinit
 promptinit
-prompt adam1
+prompt blami
 # }}}
 
 
