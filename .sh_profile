@@ -70,7 +70,7 @@ export OSARCH
 pathmunge $HOME/bin
 pathmunge $HOME/bin/$OS
 pathmunge $HOME/bin/$OSARCH
-# Cygwin uses cygwin-XX which makes upgrades cumbersome
+#Cygwin uses cygwin-XX which makes upgrades cumbersome
 [ "${OS:0:6}" = "cygwin" ] && [ -d $HOME/bin/cygwin ] && \
 	pathmunge $HOME/bin/cygwin
 
