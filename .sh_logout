@@ -1,4 +1,4 @@
-# ~/.bash_logout: bash logout command file
+# ~/.bash_logout - Shell logout command file
 # This file is sourced when a login shell exits
 
 # Clear screen after logout

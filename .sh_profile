@@ -1,4 +1,4 @@
-# ~/.sh_profile: Setup shell environment
+# ~/.sh_profile - Setup shell environment
 # NOTE: This file is sourced always to have same environment on non-login and
 # login shells.
 # NOTE: Don't use export VAR=value as it is not supported in Bourne shell
