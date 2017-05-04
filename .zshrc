@@ -1,26 +1,21 @@
-# ~/.zshrc: Zsh resource file
-
-# {{{ Helper functions
-# NOTE Functions here are prefixed with usr_.
-
-# Set terminal title to ZSH[ws]: [user@host] ~
-function hook_term_title() {
-	print -Pn "\e]0;ZSH: [%n@%m] %~\a"
-}
-# }}}
-
+# ~/.zshrc - Zsh resource file
 
 # {{{ General
 setopt nobeep                               # Disable beeps
 setopt nomail_warning                       # Don't check mail file change
 
-# Custom Functions path
-[ -d $HOME/.zsh ] && FPATH=$FPATH:$HOME/.zsh
+# Function path
+# NOTE Add all uppercasse starting subdirectories in ~/.zsh to FPATH
+if [ -d $HOME/.zsh ]; then
+    for fdir in $HOME/.zsh/[[:upper:]]*; do
+        [ -d $fdir ] && fpath=($fdir $fpath)
+    done
+fi
 
 # Input/output
 # Keybindings
-bindkey -e                                  # Use Emacs-style 
-# NOTE: Zsh does not read inputrc (so we need to do same keybindings here)
+bindkey -e                                  # Use Emacs-style keybindings
+# NOTE Zsh does not read inputrc (so we need to do same keybindings here)
 bindkey "\e[1~"		beginning-of-line       # Home: BOL
 bindkey "\e[7~"		beginning-of-line
 bindkey "\eOH"		beginning-of-line
@@ -81,9 +76,13 @@ source $HOME/.sh_aliases
 
 
 # {{{ Hooks
+# Set terminal title to ZSH[ws]: [user@host] ~
+function hook_term_title() {
+	print -Pn "\e]0;ZSH: [%n@%m] %~\a"
+}
+
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd     hook_term_title     # Change terminal title
-
 # }}}
 
 

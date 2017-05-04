@@ -1,3 +1,3 @@
-# ~/.zlogin: Zsh before-logout script
+# ~/.zlogin - Zsh before-logout script
 
 source $HOME/.sh_logout

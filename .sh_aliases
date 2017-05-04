@@ -1,4 +1,4 @@
-# ~/.sh_aliases: Shell aliases
+# ~/.sh_aliases - Shell aliases
 # NOTE: .sh_aliases is shared between Zsh and Bash (and possibly other shells)
 
 # Shell guard
