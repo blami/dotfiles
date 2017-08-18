@@ -1,0 +1,99 @@
+# ~/.sh_funcs - Shell functions
+
+# {{{ Files and Directories
+# $ .. [n]: navigate up n directories (n defaults to 1)
+function .. {
+    local dir='.'
+    for i in $(seq ${1:-1}); do target="$dir/.." ; done
+    cd $dir
+}
+# }}}
+
+
+# {{{ Networking
+# $ proxy [id|-]: Set proxy according to ~/.proxy; Argument `-' unsets proxy.
+function proxy {
+    if [ $# -gt 1 ]; then
+        2>&1 echo "error: too many arguments"
+
+    elif [ $# -eq 1 ] && [ "$1" != "-" ]; then
+        # Read ~/.proxy file and set proxy
+        local id host no unused
+        local cur_id
+        if [ ! -r $HOME/.proxy ]; then
+            2>&1 echo "error: ~/.proxy does not exist"
+        fi
+        while read -r id host no unused; do
+            # Skip commented out and empty lines
+            [ -z "$id" ] || [ "${id:0:1}" == "#" ] && continue
+            if [ -z "$host" ]; then
+                2>&1 echo "error: $id record is invalid, skipping"
+                continue
+            fi
+            if [ "$id" = "$1" ]; then
+                http_proxy=$host
+                https_proxy=$host
+                ftp_proxy=$host
+                socks_proxy=$host
+                no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
+                [ ! -z "$no" ] && no_proxy=$no_proxy,$no
+
+                # Store selected proxy for validation and PS1 purposes
+                cur_id=$id
+                break
+            fi
+        done <$HOME/.proxy
+        if [ -z "$cur_id" ]; then
+            2>&1 echo "error: proxy $1 not found"
+            return 1
+        fi
+        PROXY_ID=$cur_id
+
+    elif [ $# -eq 1 ] && [ "$1" == "-" ]; then
+        # Clean-up proxy settings
+        http_proxy=
+        https_proxy=
+        ftp_proxy=
+        socks_proxy=
+        no_proxy=
+
+        PROXY_ID=
+
+    else
+        # Print out proxy settings
+        if [ -z "$http_proxy" ]; then
+            echo "direct://"
+        else
+            echo $http_proxy
+        fi
+    fi
+
+    # Export information
+    HTTP_PROXY=$http_proxy
+    HTTPS_PROXY=$https_proxy
+    FTP_PROXY=$ftp_proxy
+    SOCKS_PROXY=$socks_proxy
+    NO_PROXY=$no_proxy
+
+    export HTTP_PROXY HTTPS_PROXY FTP_PROXY SOCKS_PROXY NO_PROXY
+    export http_proxy https_proxy ftp_proxy socks_proxy no_proxy
+    export PROXY_ID
+
+    return 0
+}
+# }}}
+
+
+# {{{ Includes
+# Local configuration
+# NOTE: Script should include only <self>_local and <self>_$HOST, other files
+# are sourced from ~/.<shell>rc
+[ -r $HOME/.sh_funcs_local ] && source $HOME/.sh_funcs_local
+[ -r $HOME/.sh_funcs_$HOST ] && source $HOME/.sh_funcs_$HOST
+
+# Clear exit code (if any optional file doesn't exist)
+builtin true
+# }}}
+
+
+# vim:set ft=sh:

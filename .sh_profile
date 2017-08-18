@@ -18,7 +18,7 @@ function pathmunge() {
 # {{{ Umask
 # Set umask for users beyond reserved uid/gids (on my uid >= 100000).
 # NOTE: applies only on users in their own groups.
-if [ $UID -gt 99999 ] && [ "$(id -gn)" = "$(id -un)" ]; then
+if [ $UID -gt 1000 ] && [ "$(id -gn)" = "$(id -un)" ]; then
 	umask 002
 else
 	umask 022
@@ -27,52 +27,38 @@ fi
 
 
 # {{{ Environment defaults
-EDITOR=vim ; export EDITOR
-PAGER=less ; export PAGER
+EDITOR=vim
+VISUAL=vim
+PAGER=less
 
 # E-mail check paths
 # NOTE: find all Maildirs under ~/mail
-if [ -d ~/mail ] ; then
-	MAILCHECK=300 ; export MAILCHECK
-#	for d in $(find ~/mail -type d)
-#		MAILPATH=
-fi
-#
-#MAILPATH=~/mail/blami,~/mail/oracle
+# TODO
 
 # Debian/Ubuntu developer environment
-DEBFULLNAME="Ondrej Balaz" ; export DEBFULLNAME
-DEBEMAIL="blami@blami.net" ; export DEBEMAIL
-
-# Development environments
-# Python
-VIRTUAL_ENV_DISABLE_PROMPT=1 ; export VIRTUAL_ENV_DISABLE_PROMPT
-# ccache
-USE_CCACHE=1 ; export USE_CCACHE
+DEBFULLNAME="Ondrej Balaz"
+DEBEMAIL="blami@blami.net"
 # }}}
 
 
 # {{{ Host
 # Hostname if $HOST not set
 if [ -z "$HOST" ]; then
-	HOST=$(hostname) ; export $HOST
+	HOST=$(hostname)
 fi
 
 # OS and OS-ARCH
 OS=$(echo "$(uname -s)" | tr '[:upper:]' '[:lower:]')
-OSARCH=$(echo "$(uname -s)-$(uname -m)" | tr '[:upper:]' '[:lower:]')
-export OS
-export OSARCH
+[ "${OS:0:6}" == "cygwin" ] && OS="cygwin" # use cygwin instead of cygwin-XX
+OSARCH=$(echo "$OS-$(uname -m)" | tr '[:upper:]' '[:lower:]')
 # }}}
 
 
 # {{{ Path
-pathmunge $HOME/bin
+pathmunge $HOME/bin/$HOST
 pathmunge $HOME/bin/$OS
 pathmunge $HOME/bin/$OSARCH
-#Cygwin uses cygwin-XX which makes upgrades cumbersome
-[ "${OS:0:6}" = "cygwin" ] && [ -d $HOME/bin/cygwin ] && \
-	pathmunge $HOME/bin/cygwin
+pathmunge $HOME/bin
 
 export PATH
 # }}}
@@ -92,9 +78,15 @@ fi
 # }}}
 
 
-# {{{ Local configuration
-[ -r ~/.sh_profile_local ] && source ~/.sh_profile_local
-[ -r ~/.sh_profile_$HOST ] && source ~/.sh_profile_$HOST
+# {{{ Includes
+# Local configuration
+# NOTE: Script should include only <self>_local and <self>_$HOST, other files
+# are sourced from ~/.<shell>rc
+[ -r $HOME/.sh_profile_local ] && source $HOME/.sh_profile_local
+[ -r $HOME/.sh_profile_$HOST ] && source $HOME/.sh_profile_$HOST
+
+# Clear exit code (if any optional file doesn't exist)
+builtin true
 # }}}
 
 

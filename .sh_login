@@ -3,13 +3,4 @@
 # NOTE: Shared between various shells
 
 
-# {{{ Fortune Cookie
-# }}}
-
-# {{{ Screen
-# Do I have any screen sessions on this machine?
-# }}}
-
-
-
 # vim:set ft=sh:
