@@ -1,0 +1,59 @@
+# ~/.inputrc - readline init file
+
+# {{{ User
+set editing-mode vi
+set show-mode-in-prompt off
+
+# Completion
+# NOTE Ignore case and make - and _ equal on tab completion
+set completion-ignore-case on
+set completion-map-case on
+set page-completions on
+set show-all-if-ambiguous on
+set show-all-if-unmodified on
+# Ask before displaying > 50 items
+set completion-query-items 50
+
+# Misc
+set bell-style none
+set horizontal-scroll-mode off
+set blink-matching-paren on
+set colored-completion-prefix on
+# Color and mark filetypes in listing
+set colored-stats on
+set visible-stats on
+set mark-directories on
+# }}}
+
+# {{{ UTF-8
+set meta-flag on
+# Enable 8-bit input and output, don't strip 8th bit
+set input-meta on
+set output-meta on
+set convert-meta off
+# }}}
+
+# {{{ Key bindings
+# TODO Add Emacs like bindings
+$if mode=vi
+    # Insert key
+    #"\e[2~":        quoted-insert
+    "\e[2~":        
+
+# Delete key
+"\e[3~":        delete-char
+
+# Home/End keys
+"\eOH":         beginning-of-line
+"\e[H":         beginning-of-line
+"\e[7~":        beginning-of-line
+"\e[1~":        beginning-of-line
+"\eOF":         end-of-line
+"\e[F":         end-of-line
+"\e[8~":        end-of-line
+"\e[4~":        end-of-line
+
+# Up/Down keys
+"\e[A":         history-search-backward
+"\e[B":         history-search-forward
+# }}}
