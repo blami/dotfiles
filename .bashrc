@@ -33,7 +33,7 @@ shopt -s lithist                        # in n-line stmts use \n instead of ;
 shopt -s histappend                     # append history instead of overwrite
 shopt -s histreedit
 HISTCONTROL=ignoreboth:erasedups
-HISTSIZE=5000
+HISTSIZE=1000
 HISTIGNORE='&:logout:exit:clear:reset:history'
 HISTFILESIZE=$HISTSIZE
 [ -d $HOME/.history ] && HISTFILE=$HOME/.history/bash_history.$HOST
