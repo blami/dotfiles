@@ -8,8 +8,8 @@
 # absolute path. No other format is supported.
 
 XDG_DESKTOP_DIR="$HOME/desk"
-XDG_DOWNLOAD_DIR="$HOME/download"
-XDG_TEMPLATES_DIR="$HOME/templ"
+XDG_DOWNLOAD_DIR="$HOME/downl"
+XDG_TEMPLATES_DIR="$HOME/tmpl"
 XDG_PUBLICSHARE_DIR="$HOME/pub"
 XDG_DOCUMENTS_DIR="$HOME/docs"
 XDG_MUSIC_DIR="$HOME/media/music"
@@ -18,4 +18,5 @@ XDG_VIDEOS_DIR="$HOME/media/video"
 
 XDG_BACKUP_DIR="$HOME/bak"
 XDG_MAIL_DIR="$HOME/mail"
+XDG_NOTE_DIR="$HOME/note"
 XDG_WS_DIR="$HOME/ws"
