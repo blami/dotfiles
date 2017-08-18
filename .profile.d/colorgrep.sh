@@ -1,4 +1,4 @@
-# ~/.profile.d/colorgrep.sh: Colorize GNU grep output
+# ~/.profile.d/colorgrep.sh - Colorize GNU grep output
 
 # Skip configuration for non-interactive shells
 [ -z "$PS1" ] && return
@@ -16,7 +16,6 @@ for colors in "$HOME/.GREP_COLORS.$TERM" \
 done
 
 if [ ! -z "$GREP_COLORS" ]; then
-	# Apply colors and set aliases
 	for grep in "grep" "egrep" "fgrep" \
 		"ggrep" "gegrep" "gfgrep"; do
 
