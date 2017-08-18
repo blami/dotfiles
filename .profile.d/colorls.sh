@@ -1,4 +1,4 @@
-# ~/.profile.d/colorls.sh: Colorize ls output
+# ~/.profile.d/colorls.sh - Colorize ls output
 
 # Skip configuration for non-interactive shells
 [ -z "$PS1" ] && return
