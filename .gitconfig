@@ -1,45 +1,40 @@
-; ~/.gitconfig: Git configuration
+; ~/.gitconfig - Git configuration
 
 [user]
-name = Ondrej Balaz
-email = blami@blami.net
-signingkey = 1FCD8C25
-
-[alias]
-st = status
-br = branch
-co = checkout
-ci = commit
-mt = mergetool
-l = log
+	name = Ondrej Balaz
+	email = blami@blami.net
+	signingkey = 1FCD8C25
 
 [core]
-; use vim directly (hybrid configuration for Unix/Cygwin)
-editor = vim
-excludesfile = /home/blami/.gitignore_global
+	; use vim directly (hybrid configuration for Unix/Cygwin)
+	editor = vim
+	excludesfile = /home/blami/.gitignore_global
 
 [color]
-filemode = false
-branch = auto
-diff = auto
-interactive = auto
-status = auto
-ui = auto
-pager = true
-
-[rebase]
-autosquash = true
-
-[include]
-path = ~/.gitconfig_cygwin
-; Include local configuration file
-path = ~/.gitconfig_local
+	filemode = false
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
+	ui = auto
+	pager = true
 
 [merge]
-tool = vimdiff
+	tool = vimdiff
 
 [push]
-default = matching
+	default = matching
+
+[rebase]
+	autosquash = true
+
+[include]
+	path = ~/.gitaliases
+	; Include local configuration file
+	path = ~/.gitconfig_local
 
 [sendemail]
-from = Ondrej Balaz <blami@blami.net>
+	from = Ondrej Balaz <blami@blami.net>
+
+
+# vim:set ft=gitconfig:

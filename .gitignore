@@ -1,4 +1,26 @@
+.dfgit
 .ssh/keys/
 .ssh/id_*
-.mutt/profile_list
-.mutt/profile/oracle*
+.git-credentials
+.solstudio
+
+# History directory
+.history/
+
+# Local files
+.*_local
+
+# Directories
+bak
+desk
+docs
+downl
+mail
+media
+notes
+pics
+pub
+public_html
+templ
+tmp
+ws

@@ -1,0 +1,16 @@
+; ~/.gitaliases - useful Git aliases
+
+[alias]
+    # Short aliases
+    cl = clone
+    pu = push
+    ci = commit
+    co = checkout
+    df = diff
+    st = status
+
+    #
+    log1 = log -p1
+
+
+; vim:set ft=gitconfig:
