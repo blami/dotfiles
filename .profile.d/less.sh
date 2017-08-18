@@ -1,5 +1,14 @@
-# ~/.profile.d/less.sh - Read from lesspipe
+# ~/.profile.d/less.sh - less pager configuration
 
-if [ -x /usr/bin/lesspipe.sh ]; then
-	LESSOPEN="${LESSOPEN-||/usr/bin/lesspipe.sh %s}" ; export LESSOPEN
+# History
+if [ -d $HOME/.history ]; then
+    LESSHISTSIZE=1000
+    LESSHISTFILE=~/.history/lesshst.$HOST
+
+    export LESSHISTSIZE
+    export LESSHISTFILE
 fi
+
+# TODO Create lessopen/lessclose scripts
+unset LESSOPEN
+unset LESSCLOSE
