@@ -34,11 +34,9 @@ set convert-meta off
 # }}}
 
 # {{{ Key bindings
-# TODO Add Emacs like bindings
-$if mode=vi
-    # Insert key
-    #"\e[2~":        quoted-insert
-    "\e[2~":        
+# TODO Add Emacs like bindings for vim modes
+# Insert key
+"\e[2~":        quoted-insert
 
 # Delete key
 "\e[3~":        delete-char
