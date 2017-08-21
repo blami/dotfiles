@@ -1,13 +1,10 @@
 # ~/.profile.d/less.sh - less pager configuration
 
 # History
-if [ -d $HOME/.history ]; then
-    LESSHISTSIZE=1000
-    LESSHISTFILE=~/.history/lesshst.$HOST
-
-    export LESSHISTSIZE
-    export LESSHISTFILE
-fi
+LESSHISTSIZE=1000
+LESSHISTFILE=$HOME/.lesshst.$HOST
+export LESSHISTSIZE
+export LESSHISTFILE
 
 # TODO Create lessopen/lessclose scripts
 unset LESSOPEN

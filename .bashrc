@@ -25,9 +25,6 @@ set -o vi                               # use emacs style editing
 
 
 # {{{ History
-# Create history directory (used by other software than bash too)
-[ ! -e $HOME/.history ] && mkdir $HOME/.history
-
 shopt -s cmdhist                        # store n-line stmts as 1-line
 shopt -s lithist                        # in n-line stmts use \n instead of ;
 shopt -s histappend                     # append history instead of overwrite
@@ -36,7 +33,7 @@ HISTCONTROL=ignoreboth:erasedups
 HISTSIZE=1000
 HISTIGNORE='&:logout:exit:clear:reset:history'
 HISTFILESIZE=$HISTSIZE
-[ -d $HOME/.history ] && HISTFILE=$HOME/.history/bash_history.$HOST
+HISTFILE=$HOME/.bash_history.$HOST
 
 # Share history between multiple sessions on same machine
 # See: _promptcmd() below
