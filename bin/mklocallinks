@@ -1,0 +1,38 @@
+#!/bin/bash
+# mklocallinks - make .sh_*_local links pointing to suffixed config files
+
+# Usage: mkllocallinks <suffix|->
+# If suffix is - it will just delete any known .<config_file>_local which are
+# symlinks. If suffix is anything else and .<config_file>_<suffix> exists, it
+# will be linked to .<config_file>_local (if symlink exists it will be
+# updated).
+
+# Considered local files (relative to ~)
+read -r -d '' FILES <<- EOF
+    .sh_aliases
+    .sh_funcs
+    .sh_profile
+    .gitconfig
+EOF
+
+if [ $# -ne 1 ]; then
+    >&2 echo "usage: mklocallinks <suffix>|-"
+    exit 1
+fi
+SUFFIX=$1
+
+cd $HOME
+for F in $FILES; do
+    # If suffix is - and <config_file>_local is symlink, just delete it
+    if [ $SUFFIX == "-" ] && [ -L ${F}_local ]; then
+        rm ${F}_local
+        continue
+
+    # Otherwise create/update symlink (if config file exists)
+    elif [ -e ${F}_${SUFFIX} ]; then
+        # If local symlink already exists delete it
+        [ -L ${F}_local ] && rm ${F}_local
+
+        ln -s ${F}_${SUFFIX} ${F}_local
+    fi
+done
