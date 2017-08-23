@@ -86,9 +86,6 @@ shopt -s no_empty_cmd_completion        # don't complete from empty line
 [ -r $HOME/.sh_funcs ] && source $HOME/.sh_funcs
 [ -r $HOME/.sh_aliases ] && source $HOME/.sh_aliases
 
-# Login script
-[ -r $HOME/.sh_login ] && source $HOME/.sh_login
-
 # Clear exit code (if any optional file doesn't exist)
 builtin true
 # }}}
