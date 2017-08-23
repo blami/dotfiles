@@ -30,6 +30,7 @@ alias ws="cd $HOME/ws"
 
 
 # {{{ Command history
+alias c='clear'
 alias clr='clear'
 alias h='history'                       # list history
 alias he='history -a'                   # export history
