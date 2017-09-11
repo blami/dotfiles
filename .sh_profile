@@ -80,10 +80,14 @@ fi
 
 # {{{ Includes
 # Local configuration
-# NOTE: Script should include only <self>_local and <self>_$HOST, other files
-# are sourced from ~/.<shell>rc
 [ -r $HOME/.sh_profile_local ] && source $HOME/.sh_profile_local
 [ -r $HOME/.sh_profile_$HOST ] && source $HOME/.sh_profile_$HOST
+
+# Other files (interactive functions, aliases, etc.)
+# NOTE Only bare files should be sourced, _local/_$HOST variant is sourced
+# from them.
+[ -r $HOME/.sh_funcs ] && source $HOME/.sh_funcs
+[ -r $HOME/.sh_aliases ] && source $HOME/.sh_aliases
 
 # Clear exit code (if any optional file doesn't exist)
 builtin true
