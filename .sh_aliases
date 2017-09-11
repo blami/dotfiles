@@ -17,6 +17,7 @@ done
 
 
 # {{{ Directories & Files
+alias rm='rm -i'
 alias l='ls -a'
 alias ll='ls -la'
 alias l.='ls -d .*'

@@ -46,31 +46,63 @@ shopt -s checkjobs                      # check background jobs on exit
 shopt -s checkwinsize                   # update LINES/COLUMNS
 shopt -s interactive_comments           # allow comments in interactive shell
 
+PS1='$ '
 PS2='    '
 PS3='#?> '
 
-
 # Prompt command
 prompt_command() {
-    local exit_code=$?
-    # Share history between sessions (disabled for convenience)
-    #builtin history -a ; builtin history -c ; builtin history -r
+    local ret=$?
+    # Share history between sessions
+    builtin history -a ; builtin history -c ; builtin history -r
 
-    # Setup prompt variables
-    # ----------------------
-    # Working directory
-    local pwd=${PWD/$HOME/\~}
+    # Setup prompt
+    # ------------
+    # HH:MM user[@host] [()] pwd
+    # [ret] $ _
+
+    # Date
+    local date=$(date +%R)
+
+    # User and host
     local user=$USER
+    local host=$HOST
+
+    # Work directory
+    local pwd=$PWD
+    pwd=${pwd/$HOME/\~}
+    [ -L $HOME ] && pwd=${pwd/$(readlink -m $HOME)/\~}
+    # When longer than 4 items 
+    local pwdl=${pwd//[^\/]} ; pwdl=${#pwdl}
+    if [ $pwdl -gt 3 ]; then
+        IFS='/' ; pwd=($pwd) ; unset IFS
+        pwd="${pwd[0]}/${pwd[1]}...${pwd[$(($pwdl-1))]}/${pwd[$(($pwdl))]}"
+    fi
+
+    [ $ret == 0 ] && ret=
+    local sign="\$" ; [ $EUID -eq 0 ] && sign="\#"
+
+    # Date
+    local date=$(date +%R)
+
+    # User
+    local user=$USER
+    [ ! -z "$SSH_CONNECTION" ] && user="$user@$HOST"
+
+    # Working directory (substitute home portion with ~)
+    # NOTE If pwd is over five components keep first and last two
 
     # Xterm title
+    # -----------
     case "$TERM" in
-        xterm*|rxvt*) echo -ne "\033]0;SH: [$HOST] $pwd\a" ;;
+        xterm*|rxvt*) echo -ne "\e]0;SH: [$HOST] $pwd\a" ;;
     esac
 
     # Prompt
-    # NOTE: Use echo -e for lines
-    echo -e "\n$(date +%R) $user $pwd"
-    PS1="\$ "
+    # ------
+    # NOTE: Use echo -e for lines, on completion only PS1 will be printed
+    echo -e "\n${date} ${user} ${pwd}"
+    PS1="${ret}${sign} "
 }
 PROMPT_COMMAND=prompt_command           # command to run before each prompt
 # }}}
@@ -80,15 +112,6 @@ PROMPT_COMMAND=prompt_command           # command to run before each prompt
 shopt -s no_empty_cmd_completion        # don't complete from empty line
 # }}}
 
-
-# {{{ Includes
-# Interactive functions and aliases
-[ -r $HOME/.sh_funcs ] && source $HOME/.sh_funcs
-[ -r $HOME/.sh_aliases ] && source $HOME/.sh_aliases
-
-# Clear exit code (if any optional file doesn't exist)
-builtin true
-# }}}
 
 
 # vim:set ft=sh:
