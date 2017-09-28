@@ -6,22 +6,22 @@
 " {{{ Buffer status
 " Add page to buffer status.
 func bufstatus#AddPage(id, func)
-    if !exists('b:bufstatus') | let b:bufstatus = {} | endif
+    if !exists("b:bufstatus") | let b:bufstatus = {} | endif
     if type(a:func) == v:t_func
        let b:bufstatus[a:id] = a:func
     endif
 endfunc
 
-" Toggle buffer status current page ('+' next, '-' prev or '<ID>').
+" Toggle buffer status current page ("+" next, "-" prev or "<ID>").
 func bufstatus#TogglePage(arg)
-    if !exists('b:bufstatus') || empty(b:bufstatus) | return | endif
-    " If current id is not set yet or isn't valid use the first item
+    if !exists("b:bufstatus") || empty(b:bufstatus) | return | endif
+    " If current id is not set yet or isn"t valid use the first item
     let ids = keys(b:bufstatus)
-    if !exists('b:bufstatus_cur') || index(ids, b:bufstatus_cur) == -1
+    if !exists("b:bufstatus_cur") || index(ids, b:bufstatus_cur) == -1
         let b:bufstatus_cur = keys(b:bufstatus)[0] | return
     endif
 
-    if a:arg != '-' && a:arg != '+'
+    if a:arg != "-" && a:arg != "+"
         if index(ids, a:arg) != -1
             let b:bufstatus_cur = a:arg
         endif
@@ -29,7 +29,7 @@ func bufstatus#TogglePage(arg)
     endif
     " Toggle to next or previous item (cycle if bound is reached)
     let i = index(ids, b:bufstatus_cur)
-    if a:arg == '+' | let i += 1 | elseif a:arg == '-' | let i -= 1 | endif
+    if a:arg == "+" | let i += 1 | elseif a:arg == "-" | let i -= 1 | endif
     if i == len(ids) | let i = 0 | elseif i < 0 | let i = len(ids) - 1 | endif
 
     let b:bufstatus_cur = ids[i]
@@ -37,8 +37,8 @@ endfunc
 
 " Return currently selected page output.
 func bufstatus#StatusPage()
-    if !exists('b:bufstatus') || empty(b:bufstatus) | return '-' | endif
-    if !exists('b:bufstatus_cur')
+    if !exists("b:bufstatus") || empty(b:bufstatus) | return "-" | endif
+    if !exists("b:bufstatus_cur")
         let b:bufstatus_cur = keys(b:bufstatus)[0]
     endif
 
@@ -46,7 +46,7 @@ func bufstatus#StatusPage()
     if type(b:bufstatus[b:bufstatus_cur]) == v:t_func
         return b:bufstatus[b:bufstatus_cur]()
     endif
-    return '-'
+    return "-"
 endfunc
 " }}}
 

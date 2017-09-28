@@ -50,30 +50,28 @@ vnoremap                <leader>zau             :sort! iu<CR>
 
 
 " Selection, copy & paste
-" NOTE Windows-ish as Vim in tty/terminal catches ctrl+c anyway
-" select all
-noremap                 <C-a>                   gggH<C-o>G
-inoremap                <C-a>                   <ESC>gg<C-o>gH<C-o>G
-xnoremap                <C-a>                   <ESC>ggVG
-cnoremap                <C-a>                   <ESC>gggH<C-o>G
+"noremap                 <C-a>                   gggH<C-o>G
+"inoremap                <C-a>                   <ESC>gg<C-o>gH<C-o>G
+"xnoremap                <C-a>                   <ESC>ggVG
+"cnoremap                <C-a>                   <ESC>gggH<C-o>G
 " copy & paste
-vnoremap                <C-x>                   "+x
-vnoremap                <S-DEL>                 "+x
-vnoremap                <C-c>                   "+y
-vnoremap                <C-INS>                 "+y
-noremap                 <C-v>                   "+gP
-noremap                 <S-INS>                 "+gP
+"vnoremap                <C-x>                   "+x
+"vnoremap                <S-DEL>                 "+x
+"vnoremap                <C-c>                   "+y
+"vnoremap                <C-INS>                 "+y
+"noremap                 <C-v>                   "+gP
+"noremap                 <S-INS>                 "+gP
 " command mapping
-cnoremap                <C-v>                   <C-r>+
-cnoremap                <S-INS>                 <C-r>+
+"cnoremap                <C-v>                   <C-r>+
+"cnoremap                <S-INS>                 <C-r>+
 
 
 " Search and replace
 nnoremap                <F3>                    n
 nnoremap <silent>       \                       :noh<CR>
 " replace
-nnoremap                <C-h>                   :%s/
-inoremap                <C-h>                   <ESC>:%s/
+"nnoremap                <C-h>                   :%s/
+"inoremap                <C-h>                   <ESC>:%s/
 
 
 " Buffers

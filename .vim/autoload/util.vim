@@ -27,8 +27,23 @@ func! util#ToggleSpellLang()
         let i = i + 1 == len(g:spelllangs) ? 0 : i + 1
     endif
     " Set spelllang and spellfile
-    exe 'setl spelllang='.get(g:spelllangs, l:i)
-    exe 'setl spellfile='.$HOME.'/.vim/spell/custom-'.&spelllang.'.utf8.add'
-                \ .','.g:spellfile_common
+    exe "setl spelllang=".get(g:spelllangs, l:i)
+    exe "setl spellfile=".$HOME."/.vim/spell/custom-".&spelllang.".utf8.add"
+                \ .",".g:spellfile_common
+endfunc
+" }}}
+
+
+" {{{ Misc
+" Restore position in file.
+func! util#RestoreFilePosition()
+    " TODO Add variable for this
+    if &ft =~ "gitcommit\|hgcommit"
+        echomsg "triggered"
+        return
+    endif
+    if line("'\"") > 0 && line("'\"") <= line("$")
+        exe "normal! g'\""
+    endif
 endfunc
 " }}}
