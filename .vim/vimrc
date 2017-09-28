@@ -203,6 +203,7 @@ set statusline+=\ %93*%{matchstr(&fo,'t')!=''?'>'.&tw.'\ ':''}%c,%l/%LL\ %P%*   
 
 " GUI specific settings
 if has('gui_running')
+    behave xterm                                                                " Xterm behavior in Windows/X11
     set guioptions=aAigrp
     " Fonts
     if has('unix')
@@ -213,6 +214,9 @@ if has('gui_running')
 endif
 " }}}
 
+"" Temporary stuff
+let g:syntastic_mode_map = {
+    \ "mode": "passive" }
 
 " {{{ Includes
 source $HOME/.vim/keymap.vim                                                    " Keyboard mappings
