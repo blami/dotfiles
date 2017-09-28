@@ -23,7 +23,8 @@
 	tool = vimdiff
 
 [push]
-	default = matching
+	# Push branches manually one by one
+	default = simple
 
 [rebase]
 	autosquash = true
