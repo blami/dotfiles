@@ -7,9 +7,19 @@
     ci = commit
     co = checkout
     df = diff
+    dc = diff --cached
     st = status
+    br = branch
+    re = rebase
+    sh = stash
+    rs = reset
+    un = reset HEAD
 
-    #
+    # File aliases
+    unstage = reset HEAD
+    diffc = diff --cached
+
+    # Log aliases
     log1 = log -p1
 
 
