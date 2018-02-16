@@ -1,9 +1,0 @@
-# ~/.sh_login - Shell login command file
-# This file is sourced only by login shells _AFTER_ .sh_profile
-# NOTE: Shared between various shells
-
-# Print out tmux sessions
-echo LOGIN DONE
-
-
-# vim:set ft=sh:
