@@ -1,0 +1,27 @@
+# Created by blami <blami@blami.net>
+
+#
+# 
+# host:~ $ _
+#
+
+
+prompt_blami_help () {
+  cat <<EOH
+EOH
+}
+
+prompt_blami_setup () {
+    PS1=$'\n'"%n@%m"$'\n'"%1~ %(#.#.$) "
+    PS2=""
+    PS3=""
+    PS4=""
+    RPROMPT=""
+    prompt_opts=(cr subst percent)
+}
+
+prompt_blami_preview () {
+    prompt_preview_theme blami "$@"
+}
+
+prompt_blami_setup "$@"
