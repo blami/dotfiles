@@ -27,9 +27,6 @@
 [[ -z "$PS1" ]] && return
 echo "DEBUG: i am .zshrc"
 
-# Add ~/.zsh to $fpath
-fpath=(~/.zsh ~/.zsh/functions $fpath)
-
 
 # {{{ General
 # Allow use of unset variables
@@ -101,6 +98,8 @@ setopt promptsubst
 autoload -Uz promptinit
 promptinit
 prompt blami
+
+# Add postcmd hook to sync history
 # }}}
 
 

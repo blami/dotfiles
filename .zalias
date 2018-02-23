@@ -25,6 +25,8 @@ alias mkdir='mkdir -p'                  # create parent directories
 alias path='echo -e ${PATH//:/\\n}'
 alias ws="cd $HOME/ws"
 alias etc='cd /etc'
+
+# Function
 # }}}
 
 
@@ -100,3 +102,4 @@ builtin true
 # }}}
 
 
+# vim:set ft=zsh:
