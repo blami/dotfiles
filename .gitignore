@@ -4,8 +4,10 @@
 .git-credentials
 .solstudio
 
-# History directory
-.history/
+# History
+.zsh_history*
+.bash_history*
+.lesshst*
 
 # Local files
 .*_local
