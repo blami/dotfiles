@@ -3,14 +3,18 @@
 .ssh/id_*
 .git-credentials
 .solstudio
+.netrc
+.viminfo
 
 # History
 .zsh_history*
 .bash_history*
 .lesshst*
+.zcompdump*
 
 # Local files
 .*_local
+.proxy
 
 # Directories
 bak
