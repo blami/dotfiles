@@ -1,27 +1,98 @@
 # Created by blami <blami@blami.net>
 
+# Prompt components explanation:
 #
-# 
-# host:~ $ _
-#
+#  .- 24h time
+#  |     .- date in format DDday.MM
+#  |     |     .- any tasks for today?
+#  |     |     |     .- user, color is EUID
+#  |     |     |     |    .- host, color is ssh
+#  |     |     |     |    |   .- host health/readiness
+#  |     |     |     |    |   |
+#  |     |     |     |    |   |         .- project environment
+#  |     |     |     |    |   |         |     .- shortened path
+#  |     |     |     |    |   |         |     |       .- vcs branch
+#  v     v     v     v    v   v         v     v       v  color is dirtiness
+# (23:55 31m.12[!])-(user@host[●][ 1])-([env:]~../docs[ ±master])
+# [255 ][&2 ]docs $ _
+#  ^     ^   ^    ^
+#  |     |   |    `- pound sign ($ user, # root)
+#  |     |   ` pwd name
+#  |     `- bg jobs
+#  `- last cmd exit code
 
 
-prompt_blami_help () {
+# Prompt widgets
+prompt_blami_date() {
+    local dow='M'
+    local task='!'
+    echo -n "%D{%H:%M %d${dow}.%m}${task}"
+}
+
+prompt_blami_host() {
+    # If HOST_STATE is set print dot in different color
+
+    local state='●'
+    echo -n "%n@%m${state}"
+}
+
+prompt_blami_dir() {
+    # Print work directory
+
+    local env=
+    local wd='%~'
+    local vcs=' ±master'
+    echo -n "${env}${wd}${vcs}"
+}
+
+
+
+prompt_blami_setup() {
+    prompt_opts=(cr subst percent)
+
+    # Colors
+
+    # Widgets
+    prompt_blami_widgets=(
+        prompt_blami_date
+        prompt_blami_host
+        prompt_blami_dir
+    )
+
+    # Hook to re-calculate prompt
+    autoload -Uz add-zsh-hook
+    add-zsh-hook precmd prompt_blami_precmd
+}
+
+prompt_blami_precmd() {
+    setopt localoptions noxtrace
+
+    # Build PS1 from widgets
+    PS1=
+    for f in $prompt_blami_widgets; do
+        local w=$($f)
+        [ -z $w ] && continue
+        [ ! -z $PS1 ] && PS1+="-"
+        PS1+="(${w})"
+    done
+
+    PS2=
+    PS3=
+    PS4=
+    RPS1='x'
+}
+
+prompt_blami_help() {
   cat <<EOH
 EOH
 }
 
-prompt_blami_setup () {
-    PS1=$'\n'"%n@%m"$'\n'"%1~ %(#.#.$) "
-    PS2=""
-    PS3=""
-    PS4=""
-    RPROMPT=""
-    prompt_opts=(cr subst percent)
-}
-
-prompt_blami_preview () {
+prompt_blami_preview() {
     prompt_preview_theme blami "$@"
 }
 
+
 prompt_blami_setup "$@"
+
+
+# vim:set ft=zsh:
