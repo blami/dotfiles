@@ -1,0 +1,13 @@
+#!/bin/zsh
+# ~/.zsh/functions/pathmunge - add to $PATH just once
+
+pathmunge () {
+    [ -d "$1" ] || return
+    case ":${PATH}:" in
+        *:"$1":*) ;;
+        *) [ "$2" = "after" ] && PATH=$PATH:$1 || PATH=$1:$PATH
+    esac
+}
+
+
+pathmunge $@
