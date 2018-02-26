@@ -1,7 +1,5 @@
 #!/bin/zsh
 
-echo "DEBUG: i am functions/proxy"
-
 
 proxy () {
     if [ $# -gt 1 ]; then
