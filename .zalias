@@ -19,14 +19,17 @@ alias l='ls -a'
 alias ll='ls -la'
 alias l.='ls -d .*'
 alias la='ls -a'
-alias lt='ls -At1 && echo "--- Oldest ---"'
-alias ltr='ls -Art1 && echo "--- Newest ---"'
+alias lO='ls -At1 && echo "--- Oldest ---"'
+alias lN='ls -Art1 && echo "--- Newest ---"'
+alias lt='tree -L 2 -d'
 alias mkdir='mkdir -p'                  # create parent directories
 alias path='echo -e ${PATH//:/\\n}'
 alias ws="cd $HOME/ws"
 alias etc='cd /etc'
 
-# Function
+# Disable globbing for some commands
+alias find='noglob find'
+alias grep='noglob grep'
 # }}}
 
 
@@ -55,6 +58,7 @@ alias q='exit'
 
 # {{{ Network
 alias httph='curl -I -L'                # show HTTP headers (URL must follow)
+alias pem='openssl x509 -noout -text -in'
 # }}}
 
 
@@ -82,7 +86,7 @@ alias dfgit="git --git-dir=$HOME/.dfgit --work-tree=$HOME" # dfgit for .dfgit
 
 
 # {{{ Typos
-# NOTE: These are only typo corrections for typos I do very often
+# NOTE These are only typo corrections for typos I do very often
 alias exot='exit'
 alias exut='exit'
 alias ccd='cd'
@@ -92,8 +96,6 @@ alias sl='ls'
 
 # {{{ Includes
 # Local configuration
-# NOTE: Script should include only <self>_local and <self>_$HOST, other files
-# are sourced from ~/.<shell>rc
 [ -r $HOME/.zalias_local ] && . $HOME/.zalias_local
 [ -r $HOME/.zalias_$HOST ] && . $HOME/.zalias_$HOST
 
