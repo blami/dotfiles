@@ -1,7 +1,6 @@
 # ~/.zprofile - Z shell profile
 # NOTE This file is sourced only for login shells
 
-echo "DEBUG: i am .zprofile"
 
 # {{{ Hostname
 [ -z $HOST ] && HOST=$(hostname)
@@ -26,7 +25,6 @@ unset _uname
 # {{{ Umask
 # Set umask 002 for uids >=1000 and having their own group
 [ $UID -ge 1000 ] && [ $UID -eq $GID ] && umask 002 || umask 022
-umask
 # }}}
 
 
@@ -37,8 +35,7 @@ umask
 
 
 # {{{ Temporary directory
-# NOTE: This is for systems without TMPDIR set from PAM (or without PAM)
-# TMPDIR=
+# NOTE This is for systems without TMPDIR set from PAM (or without PAM)
 # }}}
 
 
@@ -65,7 +62,10 @@ CLICOLOR=1
 
 # {{{ Function path
 # Add ~/.zsh to $fpath
-fpath=(~/.zsh ~/.zsh/functions $fpath)
+fpath=(~/.zsh ~/.zsh/funcs $fpath)
+# Autoload all functions in files marked as executable
+for f in ~/.zsh/funcs/*(N-.x:t); autoload -Uz $f
+builtin unset -v f
 # }}}
 
 
@@ -76,20 +76,22 @@ pathmunge $HOME/bin/$HOST
 pathmunge $HOME/bin/$OSARCH
 pathmunge $HOME/bin/$OS
 pathmunge $HOME/bin
-
 export PATH
-# TODO Source snippets in ~/.profile.d
+
+# Source snippets in ~/.profile.d
+[ -d ~/.profile.d ] && for s in ~/.profile.d/*.sh; source $s
+builtin unset -v s
 # }}}
 
 
 # {{{ Includes
 # Local configuration
-[ -r ~/.zshenv_local ] && . ~/.zshenv_local
-[ -r ~/.zshenv_$HOST ] && . ~/.zshenv_$HOST
+[ -r ~/.zprofile_local ] && . ~/.zprofile_local
+[ -r ~/.zprofile_$HOST ] && . ~/.zprofile_$HOST
 
 # Clear exit code (if any file doesn't exist)
 builtin true
 # }}}
 
 
-# vim:set ft=sh:
+# vim:set ft=zsh:

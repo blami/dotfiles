@@ -25,7 +25,6 @@
 
 # Skip this file for non-interactive shells
 [[ -z "$PS1" ]] && return
-echo "DEBUG: i am .zshrc"
 
 
 # {{{ General
@@ -86,6 +85,12 @@ setopt hash_dirs
 # Set vi editing mode
 setopt zle
 bindkey -v
+# Set ESC after-press delay to 0.1s
+KEYTIMEOUT=1
+
+# Change cursor color based on Vi mode
+zle-keymap-select () {
+}
 
 unsetopt correct
 unsetopt beep
@@ -94,12 +99,15 @@ unsetopt list_beep
 
 
 # {{{ Prompt
+# Allow substitutions and have RPROMPT only on last line
 setopt promptsubst
+setopt transientrprompt
 autoload -Uz promptinit
 promptinit
 prompt blami
 
-# Add postcmd hook to sync history
+# Pre-cmd hook to sync history and update terminal title
+
 # }}}
 
 
@@ -134,8 +142,8 @@ setopt completeinword
 
 # {{{ Includes
 # Local configuration
-[ -r ~/.zshenv_local ] && . ~/.zshenv_local
-[ -r ~/.zshenv_$HOST ] && . ~/.zshenv_$HOST
+[ -r ~/.zprofile_local ] && . ~/.zprofile_local
+[ -r ~/.zprofile_$HOST ] && . ~/.zprofile_$HOST
 
 # Additional files
 [ -r ~/.zalias ] && . ~/.zalias
