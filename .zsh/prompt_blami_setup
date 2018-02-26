@@ -21,19 +21,15 @@
 #  |     `- bg jobs
 #  `- last cmd exit code
 
+# Dependencies
+zmodload -i zsh/datetime
 
-# Prompt widgets
-prompt_blami_date() {
-    local dow='M'
-    local task='!'
-    echo -n "%D{%H:%M %d${dow}.%m}${task}"
-}
 
 prompt_blami_host() {
     # If HOST_STATE is set print dot in different color
 
     local state='●'
-    echo -n "%n@%m${state}"
+    echo -n "%n%F{blue}@%f%m${state}"
 }
 
 prompt_blami_dir() {
@@ -51,13 +47,7 @@ prompt_blami_setup() {
     prompt_opts=(cr subst percent)
 
     # Colors
-
-    # Widgets
-    prompt_blami_widgets=(
-        prompt_blami_date
-        prompt_blami_host
-        prompt_blami_dir
-    )
+    PS_COLOR_SEP='blue'
 
     # Hook to re-calculate prompt
     autoload -Uz add-zsh-hook
@@ -67,14 +57,45 @@ prompt_blami_setup() {
 prompt_blami_precmd() {
     setopt localoptions noxtrace
 
-    # Build PS1 from widgets
-    PS1=
-    for f in $prompt_blami_widgets; do
-        local w=$($f)
-        [ -z $w ] && continue
-        [ ! -z $PS1 ] && PS1+="-"
-        PS1+="(${w})"
-    done
+    # Date
+    local date_dow=$(strftime %w $EPOCHSECONDS)
+    local date_day=umtwhfs ; date_day=${date_day:$date_dow:1}
+    [ $date_dow -gt 0 ] && [ $date_dow -lt 6 ] && \
+        date_dow="%F{cyan}$date_day%f" || date_dow="%F{magenta}$date_day%f"
+    local date="%F{cyan}%D{%H:%M %m-%d}%f${date_dow}"
+
+    # User and host
+    local host=
+    [ $EUID -eq 0 ] && host+="%F{red}%n%f" || host+="%F{green}%n%f"
+    host+="%F{blue}@%f"
+    # TODO set HOST_ALIAS in .zprofile (and that goes to xterm title too)
+    host+="%m"
+    case $HOST_STATUS in
+        0) host+="%F{green}●%f" ;;
+        1) host+="%F{red}●%f" ;;
+    esac
+    # TODO load?
+
+    # Environment, working directory, vcs
+    local wd="%~"
+    [ -w $PWD ] && wd="%F{cyan}${wd}%f" || wd="%F{magenta}${wd}%f"
+    # TODO
+    wd+=' %F{red}±%fmaster'
+
+    # Last retval
+    #local ret="%{?
+
+
+
+    PS1="
+%F{blue}(%f${date}%F{blue})-(%f${host}%F{blue})-(%f${wd}%F{blue})%f
+$ "
+    #for f in $prompt_blami_widgets; do
+    #    local w=$($f)
+    #    [ -z $w ] && continue
+    #   [ ! -z $PS1 ] && PS1+="%F{blue}-%f"
+    #   PS1+="%F{blue}(%f${w}%F{blue})%f"
+    #done
 
     PS2=
     PS3=
