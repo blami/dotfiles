@@ -25,24 +25,6 @@
 zmodload -i zsh/datetime
 
 
-prompt_blami_host() {
-    # If HOST_STATE is set print dot in different color
-
-    local state='●'
-    echo -n "%n%F{blue}@%f%m${state}"
-}
-
-prompt_blami_dir() {
-    # Print work directory
-
-    local env=
-    local wd='%~'
-    local vcs=' ±master'
-    echo -n "${env}${wd}${vcs}"
-}
-
-
-
 prompt_blami_setup() {
     prompt_opts=(cr subst percent)
 
@@ -57,20 +39,22 @@ prompt_blami_setup() {
 prompt_blami_precmd() {
     setopt localoptions noxtrace
 
-    # Date
-    local date_dow=$(strftime %w $EPOCHSECONDS)
-    local date_day=umtwhfs ; date_day=${date_day:$date_dow:1}
-    [ $date_dow -gt 0 ] && [ $date_dow -lt 6 ] && \
-        date_dow="%F{cyan}$date_day%f" || date_dow="%F{magenta}$date_day%f"
-    local date="%F{cyan}%D{%H:%M %m-%d}%f${date_dow}"
+    # Date (23:55 31m.12)
+    local _date_dow=$(strftime %w $EPOCHSECONDS)
+    local _date_day='umtwhfs' ; _date_day=${_date_day:$_date_dow:1}
+    [ $_date_dow -gt 0 ] && [ $_date_dow -lt 6 ] && \
+        _date_dow="%F{cyan}$_date_day%f" || \
+        _date_dow="%F{magenta}$_date_day%f"
 
-    # User and host
+    local date="%D{%H:%M %d}${_date_dow}%D{%m}"
+
+    # Host (user@host[●][ 1])
     local host=
     [ $EUID -eq 0 ] && host+="%F{red}%n%f" || host+="%F{green}%n%f"
     host+="%F{blue}@%f"
     # TODO set HOST_ALIAS in .zprofile (and that goes to xterm title too)
-    host+="%m"
-    case $HOST_STATUS in
+    host+="${HOSTNICK:-%m}"
+    case $HOSTOK in
         0) host+="%F{green}●%f" ;;
         1) host+="%F{red}●%f" ;;
     esac
@@ -86,16 +70,21 @@ prompt_blami_precmd() {
     #local ret="%{?
 
 
+    # Build PS1 prompt
+    PS1=
+    ws=($date $host $wd)
+    for w in "$ws[@]" ; do
+        [ ! -z $PS1 ] && PS1+='%F{blue}-%f'
+        PS1+="%F{blue}(%f$w%F{blue})%f"
+    done
+    builtin unset -v w
+    PS1=$'\n'$PS1$'\n'
+    #
+    PS1+="%(?..%F{red}%?%f )%1(j.%F{blue}&%j%f .)"
+    # TODO replace by last component of $cwd[-1]
+    PS1+="%F{blue}%1d%f "
+    PS1+="%F{blue}%(#.#.$)%f "
 
-    PS1="
-%F{blue}(%f${date}%F{blue})-(%f${host}%F{blue})-(%f${wd}%F{blue})%f
-$ "
-    #for f in $prompt_blami_widgets; do
-    #    local w=$($f)
-    #    [ -z $w ] && continue
-    #   [ ! -z $PS1 ] && PS1+="%F{blue}-%f"
-    #   PS1+="%F{blue}(%f${w}%F{blue})%f"
-    #done
 
     PS2=
     PS3=
