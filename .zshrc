@@ -82,8 +82,9 @@ setopt hash_dirs
 
 
 # {{{ Editing
-# Set vi editing mode
+zmodload -i zsh/zle
 setopt zle
+# Set vi editing mode
 bindkey -v
 # Set ESC after-press delay to 0.1s
 KEYTIMEOUT=1
@@ -104,10 +105,8 @@ setopt promptsubst
 setopt transientrprompt
 autoload -Uz promptinit
 promptinit
-prompt blami
-
-# Pre-cmd hook to sync history and update terminal title
-
+# NOTE Moved to the end of file to ensure prompt_precmd hook is last
+#prompt blami
 # }}}
 
 
@@ -129,6 +128,13 @@ setopt hist_no_store
 # Ignore all duplicates (not only previous/next)
 setopt hist_ignore_all_dups
 setopt hist_expire_dups_first
+
+# Sync history between sessions
+autoload -Uz add-zsh-hook
+hist_precmd () {
+    #builtin fc -RI
+}
+add-zsh-hook precmd hist_precmd
 # }}}
 
 
@@ -142,13 +148,17 @@ setopt completeinword
 
 # {{{ Includes
 # Local configuration
-[ -r ~/.zprofile_local ] && . ~/.zprofile_local
-[ -r ~/.zprofile_$HOST ] && . ~/.zprofile_$HOST
+[ -r ~/.zshrc_local ] && . ~/.zshrc_local || builtin true
+[ -r ~/.zshrc_$HOST ] && . ~/.zshrc_$HOST || builtin true
 
 # Additional files
-[ -r ~/.zalias ] && . ~/.zalias
-[ -r ~/.zbindkey ] && . ~/.zbindkey
-
-# Clear exit code (if any file doesn't exist)
-builtin true
+[ -r ~/.zalias ] && . ~/.zalias || builtin true
+[ -r ~/.zbindkey ] && . ~/.zbindkey || builtin true
 # }}}
+
+
+# NOTE Moved to the end of file to ensure prompt_precmd hook is last
+prompt blami
+
+
+# vim:set ft=zsh:
