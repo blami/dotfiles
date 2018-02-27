@@ -5,6 +5,11 @@
 # {{{ Hostname
 [ -z $HOST ] && HOST=$(hostname)
 [ -z $HOSTNAME ] && HOSTNAME=$HOST
+
+# TODO Host nickname (no long $HOST in prompt XTerm title)
+HOSTNICK=$HOST
+# Host status (0-good, 1-bad, unset don't show)
+HOSTOK=
 # }}}
 
 
