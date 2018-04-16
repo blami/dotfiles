@@ -22,7 +22,6 @@
 # ^X* -> expand word
 #
 
-
 # Skip this file for non-interactive shells
 [[ -z "$PS1" ]] && return
 
@@ -51,7 +50,7 @@ MAILCHECK=
 # {{{ Expansion, Globbing & Scripting
 setopt globdots
 setopt no_case_glob
-setopt extended_glob
+setopt no_extended_glob
 
 # Redirection - don't clobber with >; allow multiple redirections
 unsetopt clobber
@@ -88,10 +87,6 @@ setopt zle
 bindkey -v
 # Set ESC after-press delay to 0.1s
 KEYTIMEOUT=1
-
-# Change cursor color based on Vi mode
-zle-keymap-select () {
-}
 
 unsetopt correct
 unsetopt beep

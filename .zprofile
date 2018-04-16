@@ -1,7 +1,6 @@
 # ~/.zprofile - Z shell profile
 # NOTE This file is sourced only for login shells
 
-
 # {{{ Hostname
 [ -z $HOST ] && HOST=$(hostname)
 [ -z $HOSTNAME ] && HOSTNAME=$HOST
@@ -10,6 +9,7 @@
 HOSTNICK=$HOST
 # Host status (0-good, 1-bad, unset don't show)
 HOSTOK=
+export HOSTNICK HOSTOK
 # }}}
 
 
@@ -24,6 +24,7 @@ case "$OS" in
 esac
 OSARCH=$OS-$_uname[2]
 unset _uname
+export OS OSARCH
 # }}}
 
 
@@ -36,6 +37,7 @@ unset _uname
 # {{{ Super-user
 # If user is not root set $SUDO to 'sudo'
 [ $EUID != 0 ] && SUDO=sudo || SUDO=
+export SUDO
 # }}}
 
 
@@ -50,27 +52,22 @@ VISUAL=vim
 PAGER=less
 LESSHISTFILE=-
 #BROWSER=~/bin/browser
+export EDITOR VISUAL PAGER LESSHISTFILE
 
 # Irssi variables
 IRCNICK='blami'
 IRCUSER='blami'
+export IRCNICK IRCUSER
 
 # Debian/Ubuntu development environment
 DEBFULLNAME='Ondrej Balaz'
 DEBEMAIL='blami@blami.net'
 UBUMAIL='Ondrej Balaz <blami@blami.net>'
+export DEBFULLNAME DEBEMAIL UBUMAIL
 
 # Color output on MacOS X
 CLICOLOR=1
-# }}}
-
-
-# {{{ Function path
-# Add ~/.zsh to $fpath
-fpath=(~/.zsh ~/.zsh/funcs $fpath)
-# Autoload all functions in files marked as executable
-for f in ~/.zsh/funcs/*(N-.x:t); autoload -Uz $f
-builtin unset -v f
+export CLICOLOR
 # }}}
 
 

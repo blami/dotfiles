@@ -1,0 +1,13 @@
+#!/bin/zsh
+# ~/.zsh/functions/cwdlst - output last component of current working directory
+
+# Usage: cwdlast
+
+cwdlast () {
+    local cwd=${PWD/$HOME/\~}
+    [ -L $HOME ] && cwd=${cwd/$(readlink -m $HOME)/\~}
+
+    echo ${cwd/*\//}
+}
+
+cwdlast $@

@@ -9,12 +9,14 @@ alias NALL='2>&1|/dev/null'             # no stdout+stderr
 alias P='2>&1|$PAGER'                   # pipe all to pager (expand in shell)
 alias L='|wc -l'                        # count lines
 alias T='|tail -f'                      # tail and follow
-[ $OS != "sunos" ] && alias G="|grep" || alias G="|ggrep" # pipe to grep
+[ $OS != 'sunos' ] && alias G='|grep' || alias G='|ggrep' # pipe to grep
 # }}}
 
 
 # {{{ Directories & Files
 alias rm='rm -i'
+# Color ls output if LS_COLOR set
+[ ! -z $LS_COLORS ] && alias ls='ls --color=auto'
 alias l='ls -a'
 alias ll='ls -la'
 alias l.='ls -d .*'
@@ -42,7 +44,21 @@ alias hi='history -n'                   # import history
 # }}}
 
 
+# {{{ Grep
+# Color grep output if GREP_COLORS set
+if [ ! -z $GREP_COLORS ]; then
+    greps=('grep' 'egrep' 'fgrep')
+    [ $OS = 'sunos' ] && greps=('ggrep' 'gegrep' 'gfgrep')
+    for grep in $greps; do
+        alias $grep="$grep --color=auto"
+    done
+    unset grep greps
+fi
+# }}}
+
+
 # {{{ Text editing
+alias vi='vim'
 alias tn='tr -d "\n"'                   # trim newlines
 # }}}
 
