@@ -9,9 +9,8 @@
 
 # Considered local files (relative to ~)
 read -r -d '' FILES <<- EOF
-    .sh_aliases
-    .sh_funcs
-    .sh_profile
+    .zaliases
+    .zprofile
     .gitconfig
 EOF
 
