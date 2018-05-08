@@ -9,7 +9,7 @@ alias NALL='2>&1|/dev/null'             # no stdout+stderr
 alias P='2>&1|$PAGER'                   # pipe all to pager (expand in shell)
 alias L='|wc -l'                        # count lines
 alias T='|tail -f'                      # tail and follow
-[ $OS != 'sunos' ] && alias G='|grep' || alias G='|ggrep' # pipe to grep
+[ "$OS" != 'sunos' ] && alias G='|grep' || alias G='|ggrep' # pipe to grep
 # }}}
 
 
@@ -79,6 +79,7 @@ alias pem='openssl x509 -noout -text -in'
 
 
 # {{{ Admin commands
+alias tmux='tmux -u'
 alias t='tmux'
 # }}}
 

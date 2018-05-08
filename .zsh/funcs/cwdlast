@@ -1,5 +1,5 @@
-#!/bin/zsh
-# ~/.zsh/functions/cwdlst - output last component of current working directory
+#!/usr/bin/zsh
+# ~/.zsh/funcs/cwdlst - output last component of current working directory
 
 # Usage: cwdlast
 
