@@ -1,5 +1,5 @@
-#!/bin/zsh
-# ~/.zsh/functions/pathmunge - add to $PATH just once
+#!/usr/bin/zsh
+# ~/.zsh/funcs/pathmunge - add to $PATH just once
 
 pathmunge () {
     [ -d "$1" ] || return

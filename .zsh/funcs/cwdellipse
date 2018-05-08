@@ -1,5 +1,5 @@
-#!/bin/zsh
-# ~/.zsh/functions/cwdellipse - output ellipsized current working directory
+#!/usr/bin/zsh
+# ~/.zsh/funcs/cwdellipse - output ellipsized current working directory
 
 # Usage: cwdellipse MAXLEN
 # Where MAXLEN is maximal length (in path components) to NOT be ellipsized.
