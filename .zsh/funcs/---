@@ -1,0 +1,14 @@
+#!/usr/bin/zsh
+# ~/.zsh/funcs/--- - draw a horizontal red line in terminal window
+
+# Usage: ---
+
+autoload -U colors
+colors
+
+--- () {
+    [ -z $COLUMNS ] && return
+    printf "$fg[red]-%.0s$fg[default]" {1..$COLUMNS}
+}
+
+--- $@
