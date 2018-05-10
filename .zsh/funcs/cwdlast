@@ -7,7 +7,9 @@ cwdlast () {
     local cwd=${PWD/$HOME/\~}
     [ -L $HOME ] && cwd=${cwd/$(readlink -m $HOME)/\~}
 
-    echo ${cwd/*\//}
+    cwd=${cwd/*\//}
+    [ -z $cwd ] && cwd=/
+    echo $cwd
 }
 
 cwdlast $@
