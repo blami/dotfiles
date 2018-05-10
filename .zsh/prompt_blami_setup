@@ -37,11 +37,11 @@ function zle-line-init zle-keymap-select {
 
     case $KEYMAP in
         vicmd)
-            RPROMPT="%F{$C_O}N%f"
+            RPROMPT="%B%F{$C_O}N%f%b"
             print -rn -- $terminfo[cvvis]
             ;;
         viins|main)
-            RPROMPT="%F{green}I%f"
+            RPROMPT="%B%F{green}I%f%b"
             print -rn -- $terminfo[cnorm]
             ;;
     esac
@@ -69,9 +69,9 @@ prompt_blami_precmd() {
     # New-line
     local NL=$'\n'
     # Section begin, end and separator
-    local SB="%F{${C_O}}(%f"
-    local SE="%F{${C_O}})%f"
-    local SS="%F{${C_O}}-%f"
+    local SB="%B%F{${C_O}}(%f%b"
+    local SE="%B%F{${C_O}})%f%b"
+    local SS="%B%F{${C_O}}-%f%b"
 
     PS1=${NL}
 
@@ -82,7 +82,8 @@ prompt_blami_precmd() {
         s|u) dow="%F{magenta}${dow}%f" ;;
         *) dow="%F{cyan}${dow}%f" ;;
     esac
-    PS1+="${SB}%F{${C_O}}%D{%H:%M %d}%f${dow}%F{$C_O}%D{%m}%f${SE}"
+    # NOTE No need to bold $dow as whole line is made bold
+    PS1+="${SB}%B%F{${C_O}}%D{%H:%M %d}%f${dow}%F{$C_O}%D{%m}%f%b${SE}"
 
     # User and hostname
     # -----------------
@@ -94,7 +95,8 @@ prompt_blami_precmd() {
         1) host_ok="%F{red}●%f" ;;
     esac
     local host_os="%F{white}${OS:0:1:u}%f"
-    PS1+="${SS}${SB}%F{green}%n${host}%f${host_ok}${host_os}${SE}"
+    # NOTE No need to bold host_ok as whole line is made bold
+    PS1+="${SS}${SB}%B%F{green}%n${host}%f${host_ok}${host_os}%b${SE}"
 
     # Working directory
     # -----------------
@@ -118,26 +120,26 @@ prompt_blami_precmd() {
         #vcs_info
         #[ ! -z ${vcs_info_msg_0_} ] && vcs=" ${vcs_info_msg_0_}"
 
-        PS1+="${SS}${SB}${env}${cwd}${vcs}${SE}"
+        PS1+="${SS}${SB}%B${env}${cwd}${vcs}%b${SE}"
     fi
 
     PS1+=${NL}
 
     # Return value
     # ------------
-    PS1+="%(?..%F{red}%? %f)"
+    PS1+="%(?..%B%F{red}%? %f%b)"
 
     # Background jobs
     # ---------------
-    PS1+="%1(j.%F{$C_O}&%j %f.)"
+    PS1+="%1(j.%B%F{$C_O}&%j %f%b.)"
 
     # Working directory name
     # ----------------------
-    PS1+="%F{$cwd_color}${cwd_ln}${cwd_name}%f "
+    PS1+="%B%F{$cwd_color}${cwd_ln}${cwd_name}%f%b "
 
     # Pound
     # -----
-    PS1+="%F{$C_O}%0(#.#.$)%f "
+    PS1+="%B%F{$C_O}%0(#.#.$)%f%b "
 
 
     # Set sub-prompts
