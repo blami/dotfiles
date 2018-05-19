@@ -7,6 +7,6 @@
 # Add ~/.zsh to $fpath
 fpath=(~/.zsh ~/.zsh/funcs $fpath)
 # Autoload all functions in files marked as executable
-for f in ~/.zsh/funcs/*(N-.x:t); autoload -Uz $f
+for f in ~/.zsh/funcs/*(N-.x:t); autoload -Uz -- $f
 builtin unset -v f
 # }}}
