@@ -30,6 +30,10 @@ zmodload -i zsh/datetime
 autoload -Uz vcs_info
 autoload -Uz cwdlast cwdellipse
 
+# {{{ Vi-mode status
+# NOTE Need to set RPROMPT for zle-line-init (first prompt)
+RPROMPT=" "
+
 function zle-line-init zle-keymap-select {
     # Color setup for outlines
     local C_O=${prompt_blami_color0}
@@ -56,7 +60,9 @@ TRAPWINCH() {
 
 zle -N zle-line-init
 zle -N zle-keymap-select
-export KEYTIMEOUT=1
+# NOTE This is already done in .zshrc
+#export KEYTIMEOUT=1
+# }}}
 
 
 prompt_blami_precmd() {
@@ -141,12 +147,11 @@ prompt_blami_precmd() {
     # -----
     PS1+="%B%F{$C_O}%0(#.#.$)%f%b "
 
-
     # Set sub-prompts
     PS2=
     PS3=
     PS4=
-    #RPS1=
+    zle && zle -R
 }
 
 prompt_blami_setup() {

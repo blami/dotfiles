@@ -86,7 +86,7 @@ setopt zle
 # Set vi editing mode
 bindkey -v
 # Set ESC after-press delay to 0.1s
-KEYTIMEOUT=1
+export KEYTIMEOUT=1
 
 unsetopt correct
 unsetopt beep
