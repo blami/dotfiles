@@ -1,14 +1,31 @@
 # ~/.zbindkey - Z shell key bindings
 # NOTE This file is sourced only for interactive shells from .zshrc
 
+# Force vi bindings
+bindkey -v
 
 # {{{ Command line editing
+# Home/End (all terminals)
+bindkey             '\e[1~' beginning-of-line
+bindkey             '\e[4~' end-of-line
+bindkey             '\e[7~' beginning-of-line
+bindkey             '\e[8~' end-of-line
+bindkey             '\eOH'  beginning-of-line
+bindkey             '\eOF'  end-of-line
+bindkey             '\e[H'  beginning-of-line
+bindkey             '\e[F'  end-of-line
+# Delete
+bindkey             '\e[3~' delete-char
 # }}}
 
 # {{{ History
-bindkey -M vicmd '^r'       history-incremental-search-backward
-bindkey -M viins '^r'       history-incremental-search-backward
+bindkey             '^r'    history-incremental-search-backward
+bindkey             '^p'    up-history
+bindkey             '^n'    down-history
+# }}}
 
+# {{{ Completion
+bindkey             '^i'    expand-or-complete-prefix
 # }}}
 
 
