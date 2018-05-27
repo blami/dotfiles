@@ -94,7 +94,13 @@ prompt_blami_precmd() {
     # User and hostname
     # -----------------
     local host=${HOSTNICK:-$HOST}
-    [ ! -z $SSH_CONNECTION ] && host="%U@%u${host}" || host="@${host}"
+    local title_host=$host
+    if [ ! -z $SSH_CONNECTION ]; then
+        host="%U@%u${host}"
+        title_host="@${title_host}"
+    else
+        host="@${host}"
+    fi
     local host_ok=
     case $HOSTOK in
         0) host_ok="%F{green}●%f" ;;
@@ -148,10 +154,19 @@ prompt_blami_precmd() {
     PS1+="%B%F{$C_O}%0(#.#.$)%f%b "
 
     # Set sub-prompts
-    PS2=
-    PS3=
-    PS4=
-    zle && zle -R
+    # PS2 - secondary prompt (e.g. for loop)
+    # PS3 - selection prompt
+    # PS4 - execution trace prompt
+    PS2="%B%F{green}%_%f%F{$C_O}>%f%b "
+    PS3="%B%F{green}#%f%F{$C_O}?%f%b "
+    PS4="%B%F{green}%N %I%f%F{$C_O}+%f%b "
+
+    # Set window title
+    case $TERM in
+        *xterm*|*rxvt)
+            print -Pn "\e]0;SH: [${title_host}] ${cwd_ln}${cwd_name}\a"
+            ;;
+    esac
 }
 
 prompt_blami_setup() {
