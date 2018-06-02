@@ -1,0 +1,6 @@
+#!/bin/zsh
+
+PYTHON_HOME=/cygdrive/c/Devel/python3
+export PYTHON_HOME
+
+noglob cmd \C "$PYTHON_HOME/python.exe" $@
