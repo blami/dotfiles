@@ -15,16 +15,22 @@ export HOSTNICK HOSTOK
 
 # {{{ OS
 # Sets $OS and $OSARCH variables
-_uname=$(uname -sm) ; _uname=(${(@s/ /)_uname:l})
+_uname=$(uname -smr) ; _uname=(${(@s/ /)_uname:l})
 OS=$_uname[1]
 case "$OS" in
     cygwin*)            OS=cygwin ;;
     linux-android)      OS=android ;;
     darwin*)            OS=macosx ;;
 esac
-OSARCH=$OS-$_uname[2]
+OSARCH=$OS-$_uname[3]
+
+# Set $WSL=1 if microsoft is detected in kernel release string
+# NOTE Matching against lowercase as lowercased above (:l).
+WSL=
+[ ! -z ${(MS)_uname[2]##microsoft} ] && WSL=1
+
 unset _uname
-export OS OSARCH
+export OS OSARCH WSL
 # }}}
 
 
