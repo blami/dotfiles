@@ -49,6 +49,10 @@ export SUDO
 
 # {{{ Temporary directory
 # NOTE This is for systems without TMPDIR set from PAM (or without PAM)
+if [ -z "$TMPDIR" ]; then
+    TMPDIR=/tmp
+    export TMPDIR
+fi
 # }}}
 
 
@@ -77,18 +81,24 @@ export CLICOLOR
 # }}}
 
 
-# {{{ Profile
+# {{{ PATH and profile
 autoload -Uz pathmunge
-# Setup PATH
+
+# In WSL remove native Windows paths from PATH first
+if [ ! -z "$WSL" ]; then
+    PATH=$(echo $PATH | tr ':' '\n' | grep -v '/mnt/[a-z]/' | tr '\n' ':')
+fi
+
+# Source snippets in ~/.profile.d
+[ -d ~/.profile.d ] && for s in ~/.profile.d/*.sh; source $s
+builtin unset -v s
+
+# Setup PATH in ~ always as last component
 pathmunge $HOME/bin/$HOST
 pathmunge $HOME/bin/$OSARCH
 pathmunge $HOME/bin/$OS
 pathmunge $HOME/bin
 export PATH
-
-# Source snippets in ~/.profile.d
-[ -d ~/.profile.d ] && for s in ~/.profile.d/*.sh; source $s
-builtin unset -v s
 # }}}
 
 
