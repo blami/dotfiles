@@ -14,8 +14,10 @@ for colors in "$HOME/.GREP_COLORS.$TERM" \
 
     [ -r $colors ] && GREP_COLORS=$(cat $colors | head -n1) && break
 done
+builtin unset -v colors
 
 [ -z "$GREP_COLORS" ] && return
 export GREP_COLORS
+
 
 # vim:set ft=zsh:

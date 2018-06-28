@@ -13,3 +13,7 @@ for colors in "$HOME/.LESS_COLORS.$TERM" \
 
 	[ -r "$colors" ] && source $colors && break
 done
+builtin unset -v colors
+
+
+# vim:set ft=zsh:
