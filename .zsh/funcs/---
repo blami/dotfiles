@@ -9,6 +9,7 @@ colors
 --- () {
     [ -z $COLUMNS ] && return
     printf "$fg[red]-%.0s$fg[default]" {1..$COLUMNS}
+    printf "\n"
 }
 
 --- $@
