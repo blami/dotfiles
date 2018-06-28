@@ -3,6 +3,9 @@
 
 # Usage: proxy PROXY
 
+# Format of ~/.proxy
+# id    proxy_host  no_proxy_domains
+
 proxy () {
     if [ $# -gt 1 ]; then
         2>&1 echo "error: too many arguments"
