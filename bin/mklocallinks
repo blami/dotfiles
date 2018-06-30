@@ -9,9 +9,8 @@
 
 # Considered local files (relative to ~)
 read -r -d '' FILES <<- EOF
-    .zaliases
+    .zalias
     .zprofile
-    .gitconfig
 EOF
 
 if [ $# -ne 1 ]; then
