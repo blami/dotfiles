@@ -1,0 +1,37 @@
+#!/usr/bin/zsh
+# ~/.zsh/funcs/git - git wrapper that uses different configs per directory
+
+# Usage: git ...
+
+# Format of ~/.gitconfigs:
+# NOTE As first match wins its necessary to put more specific entries above the
+# less specific ones.
+#
+# /path/to/foo      ~/.gitconfig_foo
+# /path/to          ~/.gitconfig_to
+
+git () {
+    local git=$(builtin which -p git)
+    local args=
+
+    if [ -r $HOME/.gitconfigmap ]; then
+        # Read ~/.gitconfs and check whether current PWD has special config
+        # NOTE First match breaks loop so put more specific ones below
+        local dir conf
+        while read -r basedir conf unused; do
+            # Skip commented out and empty lines
+            [ -z "$basedir" ] || [ "${basedir:0:1}" = "#" ] && continue
+            if [ -z "$conf" ]; then
+                2>&1 echo "error: invalid ~/.gitconfs entry for $dir"
+                continue
+            fi
+            if [ "${PWD##${basedir}}" != "${PWD}" ]; then
+                args=("-c" "include.path=$conf")
+                break
+            fi
+        done <$HOME/.gitconfigmap
+    fi
+    $git $args $@
+}
+
+git $@
