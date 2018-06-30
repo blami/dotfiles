@@ -172,19 +172,21 @@ EXEC            01;32               # execute permission
 .ogx            01;35
 
 # Documents
-.pdf            00;32
-.ps             00;32
-.txt            00;32
-.patch          00;32
-.diff           00;32
-.log            00;32
-.tex            00;32
-.doc            00;32
-.xls            00;32
-.ppt            00;32
-.odt            00;32
-.ods            00;32
-.odp            00;32
+.pdf            00;33
+.ps             00;33
+.txt            00;33
+.md             00;33
+.rst            00;33
+.patch          00;33
+.diff           00;33
+.log            00;33
+.tex            00;33
+.doc            00;33
+.xls            00;33
+.ppt            00;33
+.odt            00;33
+.ods            00;33
+.odp            00;33
 
 # Audio formats
 .aac            00;36
