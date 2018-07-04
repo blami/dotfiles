@@ -169,7 +169,7 @@ set numberwidth=4
 if has('signs')
     set signcolumn=yes                                                          " Always show sign gutter
 endif
-set cursorline                                                                  " Hilight current line (darker background)
+set nocursorline                                                                " Speed-up, don't highlight current line
 
 set splitright                                                                  " When splitting window put the new one to right
 set splitbelow                                                                  " When splitting window put the new one below
@@ -207,9 +207,9 @@ if has('gui_running')
     set guioptions=aAigrp
     " Fonts
     if has('unix')
-        set guifont=InputMono\ 11
+        set guifont=Go\ Mono\ 11
     elseif has('gui_win32') || has('gui_win64')
-        set guifont=InputMono:h11:cEASTEUROPE
+        set guifont=Go\ Mono:h11:cEASTEUROPE
     endif
 endif
 " }}}
