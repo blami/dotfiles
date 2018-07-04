@@ -18,5 +18,4 @@ XDG_VIDEOS_DIR="$HOME/media/video"
 
 XDG_BACKUP_DIR="$HOME/bak"
 XDG_MAIL_DIR="$HOME/mail"
-XDG_NOTE_DIR="$HOME/note"
 XDG_WS_DIR="$HOME/ws"
