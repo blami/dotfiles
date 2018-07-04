@@ -86,7 +86,7 @@ autoload -Uz pathmunge
 
 # In WSL remove native Windows paths from PATH first
 if [ ! -z "$WSL" ]; then
-    PATH=$(echo $PATH | tr ':' '\n' | grep -v '/mnt/[a-z]/' | tr '\n' ':')
+    PATH=$(echo $PATH | tr ':' '\n' | grep -v '/mnt/[a-z]/' | paste -s -d:)
 fi
 
 # Source snippets in ~/.profile.d
