@@ -119,6 +119,26 @@ EXEC            01;32               # execute permission
 .7z             01;31
 .rz             01;31
 
+# Documents
+.pdf            00;33
+.ps             00;33
+.txt            00;33
+.md             00;33
+.rst            00;33
+.patch          00;33
+.diff           00;33
+.log            00;33
+.tex            00;33
+.doc            00;33
+.xls            00;33
+.ppt            00;33
+.odt            00;33
+.ods            00;33
+.odp            00;33
+.gddoc          00;33
+.gdsheet        00;33
+.gdslides       00;33
+
 # Images
 .jpg            01;35
 .jpeg           01;35
@@ -171,40 +191,22 @@ EXEC            01;32               # execute permission
 .ogv            01;35
 .ogx            01;35
 
-# Documents
-.pdf            00;33
-.ps             00;33
-.txt            00;33
-.md             00;33
-.rst            00;33
-.patch          00;33
-.diff           00;33
-.log            00;33
-.tex            00;33
-.doc            00;33
-.xls            00;33
-.ppt            00;33
-.odt            00;33
-.ods            00;33
-.odp            00;33
-
 # Audio formats
-.aac            00;36
-.au             00;36
-.flac           00;36
-.mid            00;36
-.midi           00;36
-.mka            00;36
-.mp3            00;36
-.mpc            00;36
-.ogg            00;36
-.ra             00;36
-.wav            00;36
-
+.aac            00;35
+.au             00;35
+.flac           00;35
+.mid            00;35
+.midi           00;35
+.mka            00;35
+.mp3            00;35
+.mpc            00;35
+.ogg            00;35
+.ra             00;35
+.wav            00;35
 # http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
-.axa            00;36
-.oga            00;36
-.spx            00;36
-.xspf           00;36
+.axa            00;35
+.oga            00;35
+.spx            00;35
+.xspf           00;35
 
 # }}}
