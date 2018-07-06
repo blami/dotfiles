@@ -5,7 +5,11 @@ for goroot in "$HOME/.local/go" \
     "/opt/google/go" \
     "/cygdrive/c/devel/go"; do
 
-    [ -d "$goroot" ] && pathmunge $goroot/bin after
+    if [ -d "$goroot" ]; then
+        pathmunge $goroot/bin after
+        export PATH
+        break
+    fi
 done
 builtin unset -v goroot
 

@@ -6,7 +6,6 @@ if [ ! -z "$WSL" ]; then
     #DOCKER_TLS_VERIFY=1
     #DOCKER_CERT_PATH=/mnt/C/ProgramData/docker/certs.d
 
-    export DOCKER_HOST
-    #export DOCKER_TLS_VERIFY DOCKER_CERT_PATH
+    export DOCKER_HOST #DOCKER_TLS_VERIFY DOCKER_CERT_PATH
 fi
 
