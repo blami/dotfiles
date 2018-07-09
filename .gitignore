@@ -1,5 +1,11 @@
 .dfgit
-.ssh
+.ssh/keys/
+.ssh/ctrl/
+.ssh/agent/
+.ssh/authorized_keys
+.ssh/known_hosts
+.ssh/id*
+.ssh/config_hosts
 .git-credentials
 .solstudio
 .netrc
