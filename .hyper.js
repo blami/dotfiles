@@ -13,11 +13,11 @@ module.exports = {
     },
 
     // Misc
-    scrollback: 4096,
+    scrollback: 8192,
     updateChannel: 'stable',
 
     // Font
-    fontSize: 12,
+    fontSize: 15,
     fontFamily: '"Go Mono", monospace',
     fontWeight: 'normal',
     fontWeightBold: 'bold',
@@ -28,7 +28,7 @@ module.exports = {
 
     foregroundColor: '#f8f8f2',
     backgroundColor: '#282a36',
-    selectionColor: '#5af78e',
+    selectionColor: 'rgba(90, 247, 142, 0.5)',
     cursorColor: '#5af78e',
     cursorAccentColor: '#000',
 
@@ -51,11 +51,11 @@ module.exports = {
       lightWhite: '#e6e6e6',
     },
 
-    borderColor: '#282a36',
+    borderColor: '#44475a',
 
     css: '',
     termCSS: '',
-    padding: '12px 14px',
+    padding: '2px 4px',
 
     showHamburgerMenu: '',
     showWindowControls: '',
