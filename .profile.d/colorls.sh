@@ -28,3 +28,6 @@ if [ -n "$COLORS" ]; then
     # If shell is Zsh export also ZLSCOLORS
     [ -n $ZSH_VERSION ] && export ZLSCOLORS=$LS_COLORS
 fi
+
+
+# vim:set ft=zsh:
