@@ -1,4 +1,5 @@
 .dfgit
+.config/tc/wincmd.key
 .ssh/keys/
 .ssh/ctrl/
 .ssh/agent/
@@ -39,4 +40,3 @@ ws
 
 # Misc
 .sudo_as_admin_successful
-TODO.md
