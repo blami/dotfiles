@@ -10,7 +10,14 @@
 # Considered local files (relative to ~)
 read -r -d '' FILES <<- EOF
     .zalias
+    .zbindkey
+    .zlogin
+    .zlogout
     .zprofile
+    .zshrc
+    .gitconfig
+    .hgrc
+    .tmux.conf
 EOF
 
 if [ $# -ne 1 ]; then
