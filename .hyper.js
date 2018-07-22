@@ -3,7 +3,7 @@
 module.exports = {
   config: {
     // Shell
-    shell: 'ubuntu1804.exe',
+    shell: 'wsl.exe',
     shellArgs: [],
     defaultSSHApp: true,
 
@@ -17,7 +17,7 @@ module.exports = {
     updateChannel: 'stable',
 
     // Font
-    fontSize: 15,
+    fontSize: 14,
     fontFamily: '"Go Mono", monospace',
     fontWeight: 'normal',
     fontWeightBold: 'bold',
@@ -67,6 +67,11 @@ module.exports = {
 
   // Keymaps
   keymaps: {
+      // Panes
+      'pane:splitVertical':     'ctrl+shift+|',
+      'pane:splitHorizontal':   'ctrl+shift+-',
+      'pane:prev':              [ 'ctrl+shift+up', 'ctrl+shift+left' ],
+      'pane:next':              [ 'ctrl+shift+down', 'ctrl+shift+right'],
   },
 
   // Plugins
