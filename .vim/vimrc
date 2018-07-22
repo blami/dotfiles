@@ -209,7 +209,7 @@ if has('gui_running')
     if has('unix')
         set guifont=Go\ Mono\ 11
     elseif has('gui_win32') || has('gui_win64')
-        set guifont=Go\ Mono:h11:cEASTEUROPE
+        set guifont=Go\ Mono:h10.5:cEASTEUROPE
     endif
 endif
 " }}}
