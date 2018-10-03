@@ -4,7 +4,7 @@
 APT_LISTS=/etc/apt/sources.list\ /etc/apt/sources.list.d/*.list
 URLS=$(grep -h '^# GPG:' $APT_LISTS | sed 's/^.*: //')
 
-for URL in "$URLS"; do
+for URL in $URLS; do
     echo "Getting key $URL..."
-    wget -qO- "$URL" | apt-key add -
+    wget --no-check-certificate -qO- "$URL" | apt-key add -
 done
