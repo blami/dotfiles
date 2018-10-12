@@ -8,6 +8,7 @@
     co = checkout
     df = diff
     dc = diff --cached
+    dh = diff HEAD^ HEAD
     st = status
     br = branch
     re = rebase
