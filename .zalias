@@ -74,7 +74,15 @@ alias q='exit'
 
 # {{{ Network
 alias httph='curl -I -L'                # show HTTP headers (URL must follow)
+
+# OpenSSL Certificates
+# See: https://www.sslshopper.com/article-most-common-openssl-commands.html
+# Print details about PEM/CSR
 alias pem='openssl x509 -noout -text -in'
+alias csr='openssl req -noout -text -verify -in'
+# Explode PKCS7 and PKCS12 bundles to PEM
+alias p7b='openssl pkcs7 -inform der -noout -text -in'
+alias p12b='openssl pkcs12 -inform der -noout -text -in'
 # }}}
 
 
