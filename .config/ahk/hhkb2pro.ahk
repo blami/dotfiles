@@ -3,7 +3,7 @@
 
 #InstallKeybdHook
 
-; Right Opt shortcuts (NOTE Right Opt is in fact swapped with Right <> due to DIP)
+; Right Opt shortcuts (NOTE Right Opt is swapped with Right <> due to DIP)
 ; Right Opt + a,d,f - Volume +, -, mute toggle
 RWin & a::Send {Volume_Down}
 RWin & s::Send {Volume_Up}
