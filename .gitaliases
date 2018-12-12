@@ -4,6 +4,7 @@
 	# Short aliases
 	cl = clone
 	pu = push
+	pf = push --force
 	ci = commit
 	co = checkout
 	df = diff
