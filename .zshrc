@@ -14,7 +14,7 @@
 # Explanation of used options:
 # http://zsh.sourceforge.net/Doc/Release/Options.html
 # http://zsh.sourceforge.net/Doc/Release/Parameters.html
-# 
+#
 # vared
 # =ls -> /bin/ls
 # =(ls) -> filename(output of ls)
@@ -127,7 +127,7 @@ setopt hist_expire_dups_first
 # Sync history between sessions
 autoload -Uz add-zsh-hook
 hist_precmd () {
-    #builtin fc -RI
+    # builtin fc -RI
 }
 add-zsh-hook precmd hist_precmd
 # }}}
