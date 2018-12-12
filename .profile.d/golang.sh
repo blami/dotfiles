@@ -13,5 +13,10 @@ for goroot in "$HOME/.local/go" \
 done
 builtin unset -v goroot
 
+# Set GOPATH to $HOME/ws/go
+GOPATH=$HOME/ws/go
+[ -d "$GOPATH/bin" ] && pathmunge $GOPATH/bin after
+export GOPATH PATH
+
 
 # vim:set ft=zsh:
