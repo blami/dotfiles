@@ -41,11 +41,11 @@ function zle-line-init zle-keymap-select {
 
     case $KEYMAP in
         vicmd)
-            RPROMPT="%B%F{$C_O}N%f%b"
+            RPROMPT="%B%F{$C_O}-N-%f%b"
             print -rn -- $terminfo[cvvis]
             ;;
         viins|main)
-            RPROMPT="%B%F{green}I%f%b"
+            RPROMPT="%B%F{green}-I-%f%b"
             print -rn -- $terminfo[cnorm]
             ;;
     esac
@@ -176,8 +176,8 @@ prompt_blami_setup() {
     # -----------
     # 0 - outlines color for EUID >0
     # 1 - outlines color for EUID =0
-    prompt_blami_color0=${1:-'blue'}
-    prompt_blami_color1=${2:-'magenta'}
+    prompt_blami_color0=${1:-'cyan'}
+    prompt_blami_color1=${2:-'red'}
 
     # Set vcs_info style
     zstyle ':vcs_info:*' enable git hg
