@@ -15,7 +15,7 @@
 	rs = reset
 	un = reset HEAD
 	fe = fetch
-	pu = pull
+	pl = pull
 
 	# File aliases
 	unstage = reset HEAD
