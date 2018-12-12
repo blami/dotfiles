@@ -67,7 +67,7 @@ TERM xterm-debian
 
 # Generic
 RESET           0                   # reset
-DIR             01;34               # directory
+DIR             00;34               # directory
 LINK            01;36               # symbolic link
 MULTIHARDLINK   00                  # file with more than one link
 FIFO            40;33               # pipe
