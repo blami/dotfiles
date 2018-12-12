@@ -1,26 +1,28 @@
-; ~/.gitaliases - useful Git aliases
+; ~/.gitaliases - Useful Git aliases
 
 [alias]
-    # Short aliases
-    cl = clone
-    pu = push
-    ci = commit
-    co = checkout
-    df = diff
-    dc = diff --cached
-    st = status
-    br = branch
-    re = rebase
-    sh = stash
-    rs = reset
-    un = reset HEAD
+	# Short aliases
+	cl = clone
+	pu = push
+	ci = commit
+	co = checkout
+	df = diff
+	dc = diff --cached
+	st = status
+	br = branch
+	re = rebase
+	sh = stash
+	rs = reset
+	un = reset HEAD
+	fe = fetch
+	pu = pull
 
-    # File aliases
-    unstage = reset HEAD
-    diffc = diff --cached
+	# File aliases
+	unstage = reset HEAD
+	diffc = diff --cached
 
-    # Log aliases
-    log1 = log -p1
+	# Log aliases
+	log1 = log -p1
 
 
 ; vim:set ft=gitconfig:
