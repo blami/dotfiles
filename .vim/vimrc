@@ -20,6 +20,7 @@ set ttyfast                                                                     
 set timeout timeoutlen=750 ttimeoutlen=750                                      " Timeout of multikey :mappings and keycodes (in ms)
 
 " Pathogen
+source $HOME/.vim/bundle.vim                                                    " Include bundle options before running pathogen
 set sessionoptions-=options                                                     " Don't capture 'runtimepath' when using Vim sessions
 runtime bundle/pathogen/autoload/pathogen.vim                                   " Add pathogen to runtime path
 exec pathogen#infect('bundle/{}')
@@ -66,14 +67,14 @@ set autoread                                                                    
 set wildmenu
 set wildmode=list:longest
 
-set wildignore=*.swp,*.bak,*.backup,*.orig,*.new
-set wildignore+=*.out,*.exe,*.so,*.a,*.dll,*.lib,*.jar,*.war,*.manifest
+set wildignore=*.swp
+set wildignore+=*.out,*.exe,*.so,*.a,*.dll,*.lib,*.jar,*.war,*.pyc,*.pyo
 set wildignore+=*.o,*.obj,*.pyc,*.pyo,*.class,*.luac
-set wildignore+=.git,.hg,.svn,.cvs,.dfgit,*.DS_Store
+set wildignore+=.git,.hg,.svn,.cvs,.dfgit,*.DS_Store,__pycache__
 
 " Per-OS binaries and directories
 if has('win32') || has('win64')
-    set shell=C:\Cygwin\bin\zsh
+    set shell=bash.exe
 endif
 " }}}
 
@@ -159,6 +160,7 @@ if has('title')
     set titleold=VIM
 endif
 set noerrorbells                                                                " Disable error bells
+set belloff=all                                                                 " Disable all kinds of bells
 
 set shortmess-=fmnrt                                                            " Don't show short message for fmnrwt
 set showmode                                                                    " Show current editor mode in status line (e.g. -- INSERT --)
@@ -175,8 +177,8 @@ set splitright                                                                  
 set splitbelow                                                                  " When splitting window put the new one below
 
 set background=dark                                                             " Set dark background
-colorscheme blami256                                                            " Set color scheme
 syntax on                                                                       " Enable syntax hilighting
+colorscheme blami256                                                            " Set color scheme
 set synmaxcol=160                                                               " Highlight only first 160 columns
 
 set showmatch                                                                   " Show matching pairs
@@ -214,14 +216,12 @@ if has('gui_running')
 endif
 " }}}
 
-"" Temporary stuff
-let g:syntastic_mode_map = {
-    \ "mode": "passive" }
 
 " {{{ Includes
 source $HOME/.vim/keymap.vim                                                    " Keyboard mappings
 source $HOME/.vim/abbrev.vim                                                    " Abbreviations
 source $HOME/.vim/autocmd.vim                                                   " Autocommands
 " }}}
+
 
 " vim:set fo-=t:
