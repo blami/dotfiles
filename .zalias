@@ -58,7 +58,9 @@ fi
 
 
 # {{{ Text editing
+alias vim='nvim'                        # use Neovim
 alias vi='vim'
+alias v='vim'
 alias tn='tr -d "\n"'                   # trim newlines
 # }}}
 
