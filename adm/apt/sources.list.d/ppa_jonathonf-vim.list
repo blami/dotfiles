@@ -1,0 +1,8 @@
+# /etc/apt/sources.list.d/ppa_jonathonf-vim: Latest stable Vim PPA
+# GPG: https://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x8CF63AD3F06FC659
+
+deb     http://ppa.launchpad.net/jonathonf/vim/ubuntu       bionic              main
+#deb-src http://ppa.launchpad.net/jonathonf/vim/ubuntu       bionic              main
+
+
+# vim:set ft=debsources:
