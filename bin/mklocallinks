@@ -15,7 +15,6 @@ read -r -d '' FILES <<- EOF
     .zlogout
     .zprofile
     .zshrc
-    .gitconfig
     .hgrc
     .tmux.conf
 EOF
