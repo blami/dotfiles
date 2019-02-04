@@ -23,7 +23,7 @@
 	tool = vimdiff
 
 [push]
-	# Push branches manually one by one
+	; Push branches manually one by one
 	default = simple
 
 [rebase]
@@ -32,6 +32,10 @@
 [include]
 	path = ~/.gitaliases
 	; Include local configuration file
+	; NOTE ~/.gitconfig_local contains mainly includeIf statemens pointing to
+	; per-directory configuration:
+	; [includeIf "gitdir:~/ws/work/"]
+	;     path = ~/.gitconfig_work
 	path = ~/.gitconfig_local
 
 [sendemail]
