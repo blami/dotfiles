@@ -1,0 +1,21 @@
+#!/bin/bash
+# wsluncasedirs - set case sensitivity flag on dir recursively
+
+if $# -lt 2; then
+    >&2 echo "wsluncasedirs DIR..."
+    exit 1
+fi
+
+DIRS=${@:-.}
+# TODO Absolute path to cdrive (how to get that if not /mnt/c...)
+FSUTIL="fsutil.exe file"
+
+find $DIRS -type d -exec readlink -f {} \; | while read d ;
+do
+    out=$($FSUTIL queryCaseSensitiveInfo "$(wslpath -w "$d")" \
+        | sed 's/\\/\\\\/g' | sed 's/^.*\(enabled\|disabled\)\..*$/\1/')
+    >&2 echo $d ... $out
+    if [ $out = "enabled" ]; then
+        $FSUTIL setCaseSensitiveInfo "$(wslpath -w "$d")" disable
+    fi
+done
