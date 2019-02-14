@@ -1,5 +1,6 @@
 Windows
 =======
+This document contains various useful notes for Microsoft Windows 10.
 
 Boot
 ====
@@ -41,6 +42,7 @@ Recreate ESD + MSR
   bcdedit /store BCD /set {default} systemroot \Windows
   ```
 
+
 Drivers
 =======
 This section describes how to solve some driver issues.
@@ -56,5 +58,18 @@ drivers. To override Windows/Vendor driver version:
 - Open Properties and go to Driver tab, click "Update Driver".
 - Click "Browse My Computer" and navigate to extracted directory.
 - If needed point Windows to proper .inf file.
-- As Windows would replace driver automatically use wushowhide.diagcab to
+- As Windows would replace driver automatically use [wushowhide.diagcab] to
   Hide "Intel Corporation - Extension" update
+
+[wushowhide.diagcab]: https://support.microsoft.com/en-sg/help/3073930/how-to-temporarily-prevent-a-driver-update-from-reinstalling-in-window
+
+
+Issues
+======
+
+Aggressive CPU Throttling
+-------------------------
+Since build 1709 there are no more *Performance* and other *Power Modes*, only
+*Balanced*. Sometimes laptop gets very slow when asleep. To avoid that (e.g.
+when in dock click battery icon in system tray and pull slider to *Maximum
+Performance*.
