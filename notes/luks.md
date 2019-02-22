@@ -2,6 +2,7 @@ LUKS Device Encryption
 ======================
 This describes how to encrypt device using LUKS.
 
+
 Randomizing Drive
 -----------------
 Good practice is to fill drive with noise so in event of attack is less
@@ -17,6 +18,7 @@ obvious where are encrypted data.
         | \
         dd of=/dev/drive bs=2M
 
+
 Encrypting Drive
 ----------------
 To encrypt drive use command ``cryptsetup luksFormat``:
@@ -26,6 +28,7 @@ To encrypt drive use command ``cryptsetup luksFormat``:
         --iter-time 2000 \
         --use-random \
         --verify-passphrase luksFormat /dev/drive
+
 
 /etc/crypttab
 -------------
