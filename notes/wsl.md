@@ -1,28 +1,17 @@
-Windows Update
-==============
+Windows Subsystem for Linux
+===========================
+This document contains various useful notes for WSL.
 
-Enable Insider Builds
----------------------
-- Run gpedit.msc
-- Go Local Computer Policy > Administrative Templates > Windows Components >
-  Data Collection and Preview Builds
-- Toggle user control over Insider builds to Enabled.
+### Notes ###
+`LxRunOffline.exe`    - manage multiple Linux distros (not using this)
+`wslconfig.exe`       - WSL manager built in to windows
+`wsl.exe`             - Default distro manager
 
-
-WSL Setup
-=========
-
-Notes
------
-LxRunOffline.exe    - manage multiple Linux distros (not using this)
-wslconfig.exe       - WSL manager built in to windows
-wsl.exe             - Default distro manager
-
-Links
------
+### Links ###
 https://docs.microsoft.com/en-us/windows/wsl/wsl-config
 
-Install Ubuntu and setup user
+
+Install Ubuntu and Setup User
 -----------------------------
 - Install Ubuntu (not Ubuntu X.Y) from Windows Store
 - If you want different uid just create user `foo` and then create new real
@@ -39,12 +28,13 @@ Install Ubuntu and setup user
 - `# do-release-upgrade -d`
 - Re-open as new user
 
-Optionally configure /etc/wsl.conf to share directories outside WSL:
+Optionally configure /etc/wsl.conf to share directories outside WSL (case off
+is necessary for WSL to play nice with Windows tools like MSVC):
 
     [automount]
     enabled = true
     root = /mnt/
-    options = "metadata,umask=2,fmask=1"
+    options = "metadata,umask=2,fmask=1,case=off"
     mountFsTab = true
 
     [network]
@@ -56,12 +46,16 @@ Optionally configure /etc/wsl.conf to share directories outside WSL:
 - `# apt-get install git vim-nox tmux ...`
 - `$ umask 002 ; git clone github://dotfiles`
 
-Docker for Windows communicating with WSL Docker
-================================================
-- In Windows Docker enable non-TLS port 2375
-- Setup docker by exporting DOCKER_HOST to 'localhost'
-- Disable port 2375 for external incoming connections to secure it
 
+Docker for Windows
+------------------
+Following are tips for Windows native Docker and WSL docker.io package
+interaction.
+
+### Firewall Setup ###
+- In Windows Docker enable non-TLS port 2375
+- Setup docker by exporting `DOCKER_HOST` to 'localhost'
+- Disable port 2375 for external incoming connections to secure it
 - Enable non-TLS port
 - Go to Windows Defender Firewall with Advanced Security
     -> Inbound Rules
@@ -70,9 +64,15 @@ Docker for Windows communicating with WSL Docker
     -> TCP, 2375
     -> Allow the connection if it is secure
 
+### Drive Sharing ###
+- In Windows if user is not local (AD) create a local account. (Even if AD
+  login to Docker will work sharing will not work unless in corporate network)
+- In Docker share dialog put local account credentials
+- Add read/write permission for local account to any relevant directory
+
 
 Issues
-======
+------
 - Executable stack issue: ``cannot enable executable stack as shared object
   requires: Invalid argument``
   - ``$ apt-get install execstack``
