@@ -4,10 +4,10 @@
 
 if [ ! -z "$WSL" ]; then
 
-# Add ~/bin/wsl
+# Add ~/bin/wsl to PATH
 [ -d ~/bin/wsl ] && pathmunge ~/bin/wsl after
 
-# Add Windows utilities (e.g. fsutil, wslconf...) to PATH
+# Add Windows utilities (e.g. fsutil.exe, wslconf.exe...) to PATH
 for dir in "/mnt/c/Windows/System32" \
     "/mnt/c/Windows" \
     "/mnt/c/Windows/System32/wbem" \
@@ -17,10 +17,13 @@ for dir in "/mnt/c/Windows/System32" \
     [ -d $dir ] && pathmunge $dir after
 done
 
-# Add development tools in C:\Devel
-for dir in "/mnt/c/Devel/cmake/bin" \
+# Add development tools in C:\Devel to PATH
+# NOTE: This is generally safe as Windows binaries must be executed with .exe
+for dir in "/mnt/c/Devel/python3" \
+    "/mnt/c/Devel/python3/Scripts" \
     "/mnt/c/Devel/go/bin" \
-    "/mnt/c/Devel/nodejs/bin"; do
+    "/mnt/c/Devel/node/bin" \
+    "/mnt/c/Devel/cmake/bin" ; do
 
     [ -d $dir ] && pathmunge $dir after
 done
