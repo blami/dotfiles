@@ -1,5 +1,19 @@
 Windows
 =======
+This document contains various useful notes for Microsoft Windows 10.
+
+
+Setup
+-----
+This section describes basic steps to do after installing Windows 10.
+
+### Development Environment ###
+- Run `powershell.exe` as Administrator and enable script execution (this can
+  lead to security issues):
+  ```
+  PS C:\> Set-ExecutionPolicy -ExecutionPolicy Unrestricted
+  ```
+
 
 PowerShell
 ==========
@@ -9,12 +23,11 @@ PowerShell
   ```
 
 Boot
-====
+----
 To fix various issues with boot use Win10 recovery ISO (on thumbdrive), go to
 "Repair this PC" and "Troubleshooting". From there run "Command Line".
 
-Recreate ESD + MSR
-------------------
+### Recreate ESD + MSR ###
 - Run `diskpart` and delete ESD (SYSTEM) and MSR partitions
 - Create new ones:
   ```
@@ -48,12 +61,17 @@ Recreate ESD + MSR
   bcdedit /store BCD /set {default} systemroot \Windows
   ```
 
+
 Drivers
-=======
+-------
 This section describes how to solve some driver issues.
 
-Intel Drivers
--------------
+### Thunderbolt Dock ###
+When dock doesn't see external peripherals it's probably not authorized device.
+In system tray should be Thunderbolt icon to authorize Dock. Once done it
+should start seeing devices.
+
+### Intel Drivers ###
 In some cases vendors don't allow to install newer version of Intel GPU
 drivers. To override Windows/Vendor driver version:
 
@@ -63,5 +81,17 @@ drivers. To override Windows/Vendor driver version:
 - Open Properties and go to Driver tab, click "Update Driver".
 - Click "Browse My Computer" and navigate to extracted directory.
 - If needed point Windows to proper .inf file.
-- As Windows would replace driver automatically use wushowhide.diagcab to
+- As Windows would replace driver automatically use [wushowhide.diagcab] to
   Hide "Intel Corporation - Extension" update
+
+[wushowhide.diagcab]: https://support.microsoft.com/en-sg/help/3073930/how-to-temporarily-prevent-a-driver-update-from-reinstalling-in-window
+
+
+Issues
+------
+
+### Aggressive CPU Throttling ###
+Since build 1709 there are no more *Performance* and other *Power Modes*, only
+*Balanced*. Sometimes laptop gets very slow when asleep. To avoid that (e.g.
+when in dock click battery icon in system tray and pull slider to *Maximum
+Performance*.
