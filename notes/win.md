@@ -1,6 +1,13 @@
 Windows
 =======
 
+PowerShell
+==========
+- Run `powershell.exe` as Administrator and execute:
+  ```
+  Set-ExecutionPolicy RemoteSigned
+  ```
+
 Boot
 ====
 To fix various issues with boot use Win10 recovery ISO (on thumbdrive), go to
