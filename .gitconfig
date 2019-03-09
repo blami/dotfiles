@@ -6,8 +6,8 @@
 	signingkey = 1FCD8C25
 
 [core]
-	; use vim directly (hybrid configuration for Unix/Cygwin)
-	editor = vim
+	# Use neovim directly (hybrid configuration for Unix/Cygwin)
+	editor = nvim
 	excludesfile = /home/blami/.gitignore_global
 
 [color]
@@ -22,6 +22,9 @@
 [merge]
 	tool = vimdiff
 
+[mergetool "vimdiff"]
+	cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c '$wincmd J'
+
 [push]
 	# Push branches manually one by one
 	default = simple
@@ -31,7 +34,7 @@
 
 [include]
 	path = ~/.gitaliases
-	; Include local configuration file
+	# Include local configuration file
 	path = ~/.gitconfig_local
 
 [sendemail]
