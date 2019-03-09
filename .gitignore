@@ -1,9 +1,9 @@
 .dfgit
 .config/tc/wincmd.key
 .config/nvim/plugins/*/
-.ssh/keys/
-.ssh/ctrl/
-.ssh/agent/
+.ssh/keys
+.ssh/ctrl
+.ssh/agent
 .ssh/authorized_keys
 .ssh/known_hosts
 .ssh/id*
