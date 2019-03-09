@@ -95,14 +95,6 @@ alias t='tmux'
 
 
 # {{{ Coding
-# Python virtual environment
-alias venv="[ ! -d ./venv_$OSARCH ] && \
-	virtualenv ./venv_$OSARCH ; \
-	source ./venv_$OSARCH/bin/activate"
-alias venv3="[ ! -d ./venv3_$OSARCH ] && \
-	virtualenv -p python3 ./venv3_$OSARCH ; \
-	source ./venv3_$OSARCH/bin/activate"
-
 # VCS
 # Git
 alias g='git'
