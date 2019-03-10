@@ -15,13 +15,13 @@ proxy () {
         local id host no unused
         local cur_id
         if [ ! -r $HOME/.proxy ]; then
-            2>&1 echo "error: ~/.proxy does not exist"
+            (>&2 echo "error: ~/.proxy does not exist")
         fi
         while read -r id host no unused; do
             # Skip commented out and empty lines
             [ -z "$id" ] || [ "${id:0:1}" = "#" ] && continue
             if [ -z "$host" ]; then
-                2>&1 echo "error: $id record is invalid, skipping"
+                (>&2 echo "error: $id record is invalid, skipping")
                 continue
             fi
             if [ "$id" = "$1" ]; then
@@ -38,7 +38,7 @@ proxy () {
             fi
         done <$HOME/.proxy
         if [ -z "$cur_id" ]; then
-            2>&1 echo "error: proxy $1 not found"
+            (>&2 echo "error: proxy $1 not found")
             return 1
         fi
         PROXY_ID=$cur_id
