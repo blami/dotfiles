@@ -81,6 +81,17 @@ set magic                                               " Turn on magic for rege
 " }}}
 
 
+" {{{ Spell checking
+let g:spelllangs=['en', 'cs']                           " Available spell languages (for cycling)
+set nospell                                             " Globally disable spellcheck by default
+
+" Custom word list(s)
+let &spelllang=get(g:spelllangs, 0)
+let &spellfile=$HOME."/.config/nvim/spell/".&g:spelllang.".utf8.add,,"
+            \ .$HOME."/.config/nvim/spell/common.utf8.add"
+" }}}
+
+
 " {{{ User Interface
 set laststatus=2                                        " Always show last status
 set showmode                                            " Show current MODE
