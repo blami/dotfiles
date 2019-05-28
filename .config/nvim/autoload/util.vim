@@ -28,8 +28,9 @@ func! util#ToggleSpellLang()
     endif
     " Set spelllang and spellfile
     exe "setl spelllang=".get(g:spelllangs, l:i)
-    exe "setl spellfile=".$HOME."/.vim/spell/custom-".&spelllang.".utf8.add"
-                \ .",".g:spellfile_common
+    exe "setl spellfile="
+                \ .$HOME."/.config/nvim/spell/".&spelllang.".utf8.add,,"
+                \ .$HOME."/.config/nvim/spell/common.utf8.add"
 endfunc
 " }}}
 

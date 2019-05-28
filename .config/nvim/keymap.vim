@@ -54,6 +54,11 @@ vnoremap                <leader>zau             :sort! iu<CR>
 " }}}
 
 
+" {{{ Spell checking
+nnoremap                <leader>sa              zg
+nnoremap                <leader>sac             3zg
+" }}}
+
 " {{{ Selection, copy & paste
 "noremap                 <C-a>                   gggH<C-o>G
 "inoremap                <C-a>                   <ESC>gg<C-o>gH<C-o>G
@@ -111,6 +116,8 @@ nnoremap                <leader>w!              :w!<CR>
 nnoremap                <leader>w#              :w#<CR>
 " Quick exit
 nnoremap                <leader>x               :x<CR>
+" NerdTree
+nnoremap                `                       :NERDTreeFind<CR>
 " }}}
 
 
