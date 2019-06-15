@@ -1,0 +1,8 @@
+# /etc/apt/sources.list.d/ppa_ansible.list: Latest Ansible PPA
+# GPG: https://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367
+
+deb     http://ppa.launchpad.net/ansible/ansible/ubuntu       bionic              main
+#deb-src http://ppa.launchpad.net/ansible/ansible/ubuntu       bionic              main
+
+
+# vim:set ft=debsources:
