@@ -1,0 +1,33 @@
+{
+  "suggest.autoTrigger": "none",
+  "suggest.floatEnable": false,
+
+
+  "diagnostic.errorSign": "",
+  "diagnostic.warningSign": "",
+  "diagnostic.infoSign": "",
+  "diagnostic.hintSign": "",
+
+  "languageserver": {
+    "golang": {
+      "command": "gopls",
+      "rootPatterns": ["go.mod", ".git/"],
+      "filetypes": ["go"]
+    },
+
+    "python": {
+      "command": "python3",
+      "args": [
+        "-mpyls"
+      ],
+      "rootPatterns": ["setup.py", ".git/"],
+      "filetypes": ["python"],
+      "settings": {
+        "pyls": {
+          "jedi_completion": { "enabled": true },
+          "pycodestyle": { "enabled": true }
+        }
+      }
+    }
+  }
+}

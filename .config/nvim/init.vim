@@ -65,7 +65,7 @@ set foldopen=block,hor,mark,percent,quickfix,tag        " Open fold on those act
 
 
 " {{{ Clipboard
-set clipboard=unnamedplus
+set clipboard=unnamedplus                               " Use system clipboard
 " TODO Configure g:clipboard
 " }}}
 
@@ -94,9 +94,10 @@ let &spellfile=$HOME."/.config/nvim/spell/".&g:spelllang.".utf8.add,,"
 
 " {{{ User Interface
 set laststatus=2                                        " Always show last status
+set cmdheight=2                                         " Command line height 2 (better message display)
 set showmode                                            " Show current MODE
 set showcmd                                             " Show command
-"set shortmess+=m
+set shortmess+=c
 set ruler                                               " Show current line/column
 set number                                              " Show line numbers
 set numberwidth=4
@@ -190,9 +191,12 @@ set shada='500,<50,@100,h                               " See :help shada
 " Backup and swap files
 set nobackup                                            " Override current file (don't rename)
 set swapfile                                            " Write swap and undo file
-set updatetime=2000                                     " Save swap file if no activity for 2s
+set updatetime=600                                      " Save swap file if no activity for 1s
 set undofile
 set undolevels=1000
+
+" Filetype plugin
+filetype plugin indent on                               " Enable filetype detection
 
 " OS-specific paths and tools
 if has('win32')
@@ -202,7 +206,7 @@ endif
 
 
 " {{{ Includes
-source $HOME/.config/nvim/plugins.vim
+source $HOME/.config/nvim/plug.vim
 source $HOME/.config/nvim/keymap.vim
 source $HOME/.config/nvim/autocmd.vim
 source $HOME/.config/nvim/abbrev.vim

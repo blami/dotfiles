@@ -1,7 +1,7 @@
 " Language:     Vim help file
 " Maintainer:   Ondrej Balaz
 
-setlocal noexpandtab
+setl noexpandtab
 
 if exists("+colorcolumn")
     set cc=+1
