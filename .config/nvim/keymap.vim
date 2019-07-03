@@ -26,8 +26,8 @@ inoremap <silent>       <F4>                    <ESC>:call bufstatus#TogglePage(
 " Toggle between light and dark colors
 noremap  <silent>       <leader>bg              :let &background = (&background=="dark" ? "light" : "dark")<CR>
 " Toggle NERDTree
-noremap  <silent>       <F11>                   :NERDTreeToggle<CR>
-inoremap <silent>       <F11>                   <ESC>:NERDTreeToggle<CR>i
+"noremap  <silent>       <F11>                   :NERDTreeToggle<CR>
+"inoremap <silent>       <F11>                   <ESC>:NERDTreeToggle<CR>i
 " }}}
 
 
@@ -86,6 +86,11 @@ nnoremap <silent>       \                       :noh<CR>
 " }}}
 
 
+" {{{ Autocompletion
+inoremap <silent><expr> <C-space>               coc#refresh()
+" }}}
+
+
 " {{{ Buffers and Tabs
 " Buffer navigation
 nnoremap <silent>       <                       :bp<CR>
@@ -116,8 +121,6 @@ nnoremap                <leader>w!              :w!<CR>
 nnoremap                <leader>w#              :w#<CR>
 " Quick exit
 nnoremap                <leader>x               :x<CR>
-" NerdTree
-nnoremap                `                       :NERDTreeFind<CR>
 " }}}
 
 
