@@ -9,10 +9,17 @@ skip_global_compinit=1
 
 
 # {{{ Function path
-# NOTE $fpath doesn't inherit between shells. I use my funcs in zprofile too.
-# Add ~/.zsh to $fpath
-fpath=(~/.zsh ~/.zsh/funcs $fpath)
-# Autoload all functions in files marked as executable
-for f in ~/.zsh/funcs/*(N-.x:t); autoload -Uz -- $f
+# NOTE $fpath doesn't inherit between shells but needed in .zprofile
+
+# Add ~/.zsh_local and ~/.zsh to $fpath and autoload functions
+# NOTE Make sure directories are in opposite order
+for p in ~/.zsh ~/.zsh_local; do
+    [ -d $p ] || continue
+    [ -d $p/funcs ] || continue
+
+    fpath=($p $p/funcs $fpath)
+    for f in ~/.zsh/funcs/*(N-.x:t); autoload -Uz -- $f
+done
+
 builtin unset -v f
 # }}}
