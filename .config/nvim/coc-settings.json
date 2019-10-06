@@ -20,7 +20,7 @@
       "args": [
         "-mpyls"
       ],
-      "rootPatterns": ["setup.py", ".git/"],
+      "rootPatterns": ["pyproject.toml", "setup.py", ".git/"],
       "filetypes": ["python"],
       "settings": {
         "pyls": {
