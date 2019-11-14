@@ -21,7 +21,6 @@ set autoread                                            " Re-read file when chan
 " Compatible mode options
 set cpoptions=aABceFs_
 
-
 " Error handling
 set noerrorbells                                        " Disable error bells
 set belloff=all
@@ -96,7 +95,9 @@ let &spellfile=$HOME."/.config/nvim/spell/".&g:spelllang.".utf8.add,,"
 set laststatus=2                                        " Always show last status
 set showmode                                            " Show current MODE
 set showcmd                                             " Show command
+set cmdheight=2                                         " Better message display
 "set shortmess+=m
+set shortmess+=c
 set ruler                                               " Show current line/column
 set number                                              " Show line numbers
 set numberwidth=4
@@ -109,11 +110,13 @@ set switchbuf+=useopen,usetab                           " Re-use open window/tab
 " Scrolling
 set scrolloff=2                                         " Show at least 2 lines above/below
 set sidescrolloff=8                                     " Show at least 8 columns left/right
+set scrolljump=5                                        " Jump by 5 lines when cursor leaves screen
 
 " Status
 set statusline=
 " Status left side
 set statusline+=%92*%2.2n%*
+set statusline+=\ %95*%{status#ShowMode()}%*            " Mode
 set statusline+=\ %t%m%94*%r%*
 set statusline+=\ %92*[%{&ft!=''?&ft:'off'}]%*          " Filetype
 set statusline+=\ %<%{&ff}%{&fenc!=''?','.&fenc:''}     " File format and encoding
@@ -121,8 +124,12 @@ set statusline+=\ %96*%{bufstatus#StatusPage()}%*       " Buffer specific status
 " Status right side
 set statusline+=%=
 set statusline+=%{&spell!=0?strpart(&spelllang,0,2):''}
+set statusline+=\ %97*%{status#ShowPaste()}%*           " Paste status
 set statusline+=\ ch=%b,0x%B                            " Character code
 set statusline+=\ %93*%{matchstr(&fo,'t')!=''?'>'.&tw.'\ ':''}%c,%l/%LL\ %P%* " Position [>tw] (col,line/lines) all%
+
+" Tabs
+set showtabline=2
 
 " Title
 if has('title')
@@ -157,7 +164,7 @@ endif
 
 
 " {{{ Colors and Highlighting
-"colors blami
+colors space-vim-dark
 set background=dark                                     " Set dark background
 syntax on
 set termguicolors
