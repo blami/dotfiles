@@ -54,22 +54,27 @@ vnoremap                <leader>zau             :sort! iu<CR>
 " }}}
 
 
+" {{{ Completion
+inoremap <silent><expr> <C-space>               coc#refresh()
+" }}}
+
+
 " {{{ Spell checking
 nnoremap                <leader>sa              zg
 nnoremap                <leader>sac             3zg
 " }}}
 
 " {{{ Selection, copy & paste
-"noremap                 <C-a>                   gggH<C-o>G
-"inoremap                <C-a>                   <ESC>gg<C-o>gH<C-o>G
-"xnoremap                <C-a>                   <ESC>ggVG
-"cnoremap                <C-a>                   <ESC>gggH<C-o>G
+noremap                 <C-a>                   gggH<C-o>G
+inoremap                <C-a>                   <ESC>gg<C-o>gH<C-o>G
+xnoremap                <C-a>                   <ESC>ggVG
+cnoremap                <C-a>                   <ESC>gggH<C-o>G
 " copy & paste
 "vnoremap                <C-x>                   "+x
 "vnoremap                <S-DEL>                 "+x
-"vnoremap                <C-c>                   "+y
+vnoremap                <C-c>                   "+y
 "vnoremap                <C-INS>                 "+y
-"noremap                 <C-v>                   "+gP
+noremap                 <C-v>                   "+gP
 "noremap                 <S-INS>                 "+gP
 " command mapping
 "cnoremap                <C-v>                   <C-r>+
@@ -81,8 +86,8 @@ nnoremap                <leader>sac             3zg
 nnoremap                <F3>                    n
 nnoremap <silent>       \                       :noh<CR>
 " replace
-"nnoremap                <C-h>                   :%s/
-"inoremap                <C-h>                   <ESC>:%s/
+"nnoremap                <C-r>                   :%s/
+"inoremap                <C-r>                   <ESC>:%s/
 " }}}
 
 
@@ -90,6 +95,7 @@ nnoremap <silent>       \                       :noh<CR>
 " Buffer navigation
 nnoremap <silent>       <                       :bp<CR>
 nnoremap <silent>       >                       :bn<CR>
+" Tab navigation
 " }}}
 
 
