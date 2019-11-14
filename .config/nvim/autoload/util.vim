@@ -40,11 +40,17 @@ endfunc
 func! util#RestoreFilePosition()
     " TODO Add variable for this
     if &ft =~ "gitcommit\|hgcommit"
-        echomsg "triggered"
         return
     endif
     if line("'\"") > 0 && line("'\"") <= line("$")
         exe "normal! g'\""
     endif
+endfunc
+
+" Paste helper for terminal bracketed mode.
+func! util#XTermPasteBegin()
+    set pastetoggle=<Esc>[201~
+    set paste
+    return ""
 endfunc
 " }}}
