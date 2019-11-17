@@ -11,7 +11,7 @@ venv () {
     fi
 
     # Find interpreter (default is just 'python') and its major.minor version.
-    local python=$(whence -cap ${1:-python})
+    local python=$(whence -cap ${1:-python}|head -1)
     local ver=$($python -c 'import sys;print("%s%s" % sys.version_info[:2])')
     local venv="${2:-.}/venv${ver}_${OSARCH}"
 
