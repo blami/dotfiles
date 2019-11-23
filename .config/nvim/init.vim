@@ -119,7 +119,7 @@ set statusline+=\ %95*%{status#ShowMode()}%*            " Mode
 set statusline+=\ %t%m%94*%r%*
 set statusline+=\ %92*[%{&ft!=''?&ft:'off'}]%*          " Filetype
 set statusline+=\ %<%{&ff}%{&fenc!=''?','.&fenc:''}     " File format and encoding
-set statusline+=\ %96*%{bufstatus#StatusPage()}%*       " Buffer specific status information
+set statusline+=\ %96*%{status#StatusPage()}%*       " Buffer specific status information
 " Status right side
 set statusline+=%=
 set statusline+=%{&spell!=0?strpart(&spelllang,0,2):''}
@@ -163,7 +163,7 @@ endif
 
 
 " {{{ Colors and Highlighting
-"colors space-vim-dark
+colors blami
 set background=dark                                     " Set dark background
 syntax on
 set termguicolors
@@ -211,7 +211,7 @@ endif
 
 
 " {{{ Includes
-source $HOME/.config/nvim/plugins.vim
+source $HOME/.config/nvim/plug.vim
 source $HOME/.config/nvim/keymap.vim
 source $HOME/.config/nvim/autocmd.vim
 source $HOME/.config/nvim/abbrev.vim

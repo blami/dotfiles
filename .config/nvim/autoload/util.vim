@@ -34,6 +34,11 @@ func! util#ToggleSpellLang()
 endfunc
 " }}}
 
+" {{{ Keybindings
+" Run built program
+func! util#Run()
+endfunc
+" }}} 
 
 " {{{ Misc
 " Restore position in file.

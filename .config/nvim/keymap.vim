@@ -55,7 +55,7 @@ vnoremap                <leader>zau             :sort! iu<CR>
 
 
 " {{{ Completion
-inoremap <silent><expr> <C-space>               coc#refresh()
+"inoremap <silent><expr> <C-space>               coc#refresh()
 " }}}
 
 
@@ -72,9 +72,9 @@ cnoremap                <C-a>                   <ESC>gggH<C-o>G
 " copy & paste
 "vnoremap                <C-x>                   "+x
 "vnoremap                <S-DEL>                 "+x
-vnoremap                <C-c>                   "+y
+"vnoremap                <C-c>                   "+y
 "vnoremap                <C-INS>                 "+y
-noremap                 <C-v>                   "+gP
+"noremap                 <C-v>                   "+gP
 "noremap                 <S-INS>                 "+gP
 " command mapping
 "cnoremap                <C-v>                   <C-r>+
@@ -88,11 +88,6 @@ nnoremap <silent>       \                       :noh<CR>
 " replace
 "nnoremap                <C-r>                   :%s/
 "inoremap                <C-r>                   <ESC>:%s/
-" }}}
-
-
-" {{{ Autocompletion
-inoremap <silent><expr> <C-space>               coc#refresh()
 " }}}
 
 
@@ -135,11 +130,11 @@ nnoremap                <leader>x               :x<CR>
 nnoremap                <F9>                    :make<CR>
 inoremap                <F9>                    <ESC>:make<CR>
 " Make and run program
-nnoremap                <F5>                    :echo "run"
-inoremap                <F5>                    <ESC>:echo "run"
+nnoremap                <F5>                    :call util#Run()<CR>
+inoremap                <F5>                    <ESC>:call util#Run()<CR>
 " Pastebin (in normal mode whole file)
-nnoremap                <leader>pb              :call keymap#Pastebin()<CR>
-vnoremap                <leader>pb              :call keymap#Pastebin()<CR>
+nnoremap                <leader>pb              :call util#Gist()<CR>
+vnoremap                <leader>pb              :call util#Gist()<CR>
 " }}}
 
 
