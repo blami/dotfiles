@@ -18,3 +18,6 @@ setl commentstring=//\ %s
 
 " File Matching
 setl suffixesadd=.go
+
+" Keybindings
+nnoremap            <F5>                    :w<bar>exec '!go run '.shellescape('%')<CR>
