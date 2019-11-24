@@ -211,7 +211,7 @@ endif
 
 
 " {{{ Includes
-source $HOME/.config/nvim/plug.vim
+source $HOME/.config/nvim/plugins.vim
 source $HOME/.config/nvim/keymap.vim
 source $HOME/.config/nvim/abbrev.vim
 
