@@ -34,17 +34,19 @@ func! util#ToggleSpellLang()
 endfunc
 " }}}
 
-" {{{ Keybindings
-" Run built program
+" {{{ Callables
+" Run built program (F5) by utilizing function registered by ftplugin.
 func! util#Run()
+    echomsg "No run routine has been set"
 endfunc
 " }}} 
 
 " {{{ Misc
-" Restore position in file.
-func! util#RestoreFilePosition()
-    " TODO Add variable for this
-    if &ft =~ "gitcommit\|hgcommit"
+" Restore cursor position in file.
+func! util#RestoreCursorPosition()
+    " TODO Store types in global variable
+    let ignoreft = ["gitcommit", "hgcommit"]
+    if index(ignoreft, &ft) >= 0
         return
     endif
     if line("'\"") > 0 && line("'\"") <= line("$")
