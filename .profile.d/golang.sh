@@ -18,5 +18,9 @@ GOPATH=$HOME/ws/go
 [ -d "$GOPATH/bin" ] && pathmunge $GOPATH/bin after
 export GOPATH PATH
 
+# Set GO111MODULE to auto (use go.mod if exists)
+GO111MODULE=auto
+export GO111MODULE
+
 
 # vim:set ft=zsh:
