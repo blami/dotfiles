@@ -213,8 +213,10 @@ endif
 " {{{ Includes
 source $HOME/.config/nvim/plug.vim
 source $HOME/.config/nvim/keymap.vim
-source $HOME/.config/nvim/autocmd.vim
 source $HOME/.config/nvim/abbrev.vim
+
+" Register global autocmds
+source $HOME/.config/nvim/autocmd.vim
 " }}}
 
 

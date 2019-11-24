@@ -2,7 +2,7 @@
 
 " {{{ General
 " Restore cursor position
-autocmd! BufReadPost * call util#RestoreFilePosition()
+autocmd! BufReadPost * call util#RestoreCursorPosition()
 " Do not use default ftplugins
 autocmd! BufReadPre,BufNewFile * let b:did_ftplugin = 1
 

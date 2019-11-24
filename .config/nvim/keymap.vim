@@ -21,8 +21,8 @@ nnoremap <silent>       <leader>sl              :call util#ToggleSpellLang()<CR>
 " Toggle formatting options parameter t (textwidth)
 nnoremap <silent><expr> <leader>tw              matchstr(&fo,'t') != 't' ? ':setl fo+=t<CR>' : ':setl fo-=t<CR>'
 " Toggle buffer status in statusline
-noremap  <silent>       <F4>                    :call bufstatus#TogglePage('+')<CR>
-inoremap <silent>       <F4>                    <ESC>:call bufstatus#TogglePage('+')<CR>a
+noremap  <silent>       <F4>                    :call status#TogglePage('+')<CR>
+inoremap <silent>       <F4>                    <ESC>:call status#TogglePage('+')<CR>a
 " Toggle between light and dark colors
 noremap  <silent>       <leader>bg              :let &background = (&background=="dark" ? "light" : "dark")<CR>
 " Toggle NERDTree
@@ -51,6 +51,13 @@ vnoremap                <leader>az              :sort i<CR>
 vnoremap                <leader>za              :sort! i<CR>
 vnoremap                <leader>azu             :sort iu<CR>
 vnoremap                <leader>zau             :sort! iu<CR>
+" Clone paragraph under cursor
+nnoremap                <leader>cp              yap<S-}>p
+" Pairing quotes move cursor inside
+" TODO Evaluate this whether useful or annoying, might be useful for braces.
+inoremap                ""                      ""<Left>
+inoremap                ''                      ''<Left>
+inoremap                ``                      ``<Left>
 " }}}
 
 
@@ -64,11 +71,16 @@ nnoremap                <leader>sa              zg
 nnoremap                <leader>sac             3zg
 " }}}
 
+
 " {{{ Selection, copy & paste
+" Reselect last selected block
+nnoremap                gV                      `[v`]
+" Select all
 noremap                 <C-a>                   gggH<C-o>G
 inoremap                <C-a>                   <ESC>gg<C-o>gH<C-o>G
 xnoremap                <C-a>                   <ESC>ggVG
 cnoremap                <C-a>                   <ESC>gggH<C-o>G
+" TODO Revisit below mappings for GUI
 " copy & paste
 "vnoremap                <C-x>                   "+x
 "vnoremap                <S-DEL>                 "+x
@@ -95,7 +107,11 @@ nnoremap <silent>       \                       :noh<CR>
 " Buffer navigation
 nnoremap <silent>       <                       :bp<CR>
 nnoremap <silent>       >                       :bn<CR>
-" Tab navigation
+" Tabs
+nnoremap <silent>       <C-t>                   :tabnew<CR>
+nnoremap <silent>       <C-w>                   :tabclose<CR>
+nnoremap <silent>       <C-PageUp>              :tabp<CR>
+nnoremap <silent>       <C-PageDown>            :tabn<CR>
 " }}}
 
 
@@ -133,7 +149,7 @@ inoremap                <F9>                    <ESC>:make<CR>
 nnoremap                <F5>                    :call util#Run()<CR>
 inoremap                <F5>                    <ESC>:call util#Run()<CR>
 " Pastebin (in normal mode whole file)
-nnoremap                <leader>pb              :call util#Gist()<CR>
+nnoremap                <leader>gis             :call util#Gist()<CR>
 vnoremap                <leader>pb              :call util#Gist()<CR>
 " }}}
 
