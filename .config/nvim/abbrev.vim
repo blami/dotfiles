@@ -6,6 +6,7 @@ iab     @(c)        Copyright (c) <C-R>=strftime("%Y")<CR>
 iab     mdy         <C-R>=strftime("%B %d, %Y")<CR>
 " }}}
 
+
 " {{{ Typos
 iab     adn         and
 iab     teh         the

@@ -39,7 +39,16 @@ endfunc
 func! util#Run()
     echomsg "No run routine has been set"
 endfunc
-" }}} 
+
+" Execute given command in given directory and return a tuple of exit code and
+" output
+func! util#Exec(cmd, ...) abort
+    let l:err = 0
+    let l:out = ''
+
+    return [l:err, l:out]
+endfunc
+" }}}
 
 " {{{ Misc
 " Restore cursor position in file.
