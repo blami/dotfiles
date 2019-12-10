@@ -2,6 +2,7 @@
 # NOTE: This uses pathmunge
 
 for androidroot in "$HOME/.local/android" \
+    "$HOME/.local/$OSARCH/android" \
     "/opt/google/android" \
     "/cygdrive/c/devel/android"; do
 

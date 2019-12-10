@@ -2,6 +2,7 @@
 # NOTE: This uses pathmunge
 
 for goroot in "$HOME/.local/go" \
+    "$HOME/.local/$OSARCH/go" \
     "/opt/google/go" \
     "/cygdrive/c/devel/go"; do
 
