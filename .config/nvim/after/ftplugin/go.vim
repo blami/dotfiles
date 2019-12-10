@@ -1,7 +1,6 @@
 " Language: Go
 " Maintainer: Ondrej Balaz
 
-" Neovim/plugin ftplugins are disabled. See autocmd.vim.
 "if exists("b:did_ftplugin") | finish | endif
 "let b:did_ftplugin = 1
 
@@ -19,5 +18,7 @@ setl commentstring=//\ %s
 " File Matching
 setl suffixesadd=.go
 
+" Autocommands
+
 " Keybindings
-nnoremap            <F5>                    :w<bar>exec '!go run '.shellescape('%')<CR>
+nnoremap <buffer>   <F5>                    :w<bar>exec '!go run '.shellescape('%')<CR>

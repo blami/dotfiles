@@ -109,9 +109,10 @@ nnoremap <silent>       <                       :bp<CR>
 nnoremap <silent>       >                       :bn<CR>
 " Tabs
 nnoremap <silent>       <C-t>                   :tabnew<CR>
-nnoremap <silent>       <C-w>                   :tabclose<CR>
-nnoremap <silent>       <C-PageUp>              :tabp<CR>
-nnoremap <silent>       <C-PageDown>            :tabn<CR>
+nnoremap <silent>       <C-t>w                  :tabclose<CR>
+" Make tab navigation similar to window navigation
+nnoremap <silent>       <C-t><left>             :tabp<CR>
+nnoremap <silent>       <C-t><right>            :tabn<CR>
 " }}}
 
 
