@@ -1,9 +1,9 @@
-" ~/.config/nvim/plugin.vim - Neovim plugins configuration
+" ~/.vim/plugin.vim - plugins configuration
 
 " {{{ Plugins
 " Install plugins to .local/share/ as they are not configuration
 " NOTE: using silent! to silence `git is missing` on Windows
-silent! call plug#begin("$HOME/.local/share/nvim/pack")
+silent! call plug#begin("$HOME/.local/share/vim")
 
 " Autocompletion & lining
 "Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -28,7 +28,7 @@ call plug#end()
 " Autocompletion & linting
 
 let g:neosnippet#disable_runtime_snippets = { '_': 1 }
-let g:neosnippet#snippets_directory = '~/.config/nvim/snippets'
+let g:neosnippet#snippets_directory = '~/.vim/snippets'
 
 " Version control
 " NOTE Only show signs for git and Mercurial

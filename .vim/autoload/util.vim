@@ -14,6 +14,20 @@ func! util#ToggleNumber()
     endif
 endfunc
 
+" Toggle line wrapping (both 'fo' and 'tw').
+func! util#ToggleLineWrap()
+    if matchstr(&fo, 't') != 't'
+        let &l:tw = get(b:, 'orig_tw', 0)
+        setl fo+=t
+    else
+        setl fo-=t
+        if &tw != 0
+            let b:orig_tw = &tw
+            setl tw=0
+        endif
+    endif
+endfunc
+
 " Enable spell and cycle spelllangs present in g:spellangs.
 func! util#ToggleSpellLang()
     if &spell == 0 | return | endif
@@ -29,8 +43,8 @@ func! util#ToggleSpellLang()
     " Set spelllang and spellfile
     exe "setl spelllang=".get(g:spelllangs, l:i)
     exe "setl spellfile="
-                \ .$HOME."/.config/nvim/spell/".&spelllang.".utf8.add,,"
-                \ .$HOME."/.config/nvim/spell/common.utf8.add"
+                \ .$HOME."/.vim/spell/".&spelllang.".utf8.add,,"
+                \ .$HOME."/.vim/spell/common.utf8.add"
 endfunc
 " }}}
 
