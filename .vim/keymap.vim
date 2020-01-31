@@ -1,4 +1,4 @@
-" ~/.config/nvim/keymap: Neovim keyboard mappings
+" ~/.vim/keymap.vim: Keyboard mappings
 
 " Leader key to `,'
 let mapleader = ","
@@ -9,11 +9,16 @@ let maplocalleader = ",,"
 " Mode                  Mapping                 Command
 " -----------------------------------------------------------------------------
 
+" {{{ General
+nnoremap <silent>       <leader>rc              :source $MYVIMRC<CR>
+" }}}
+
+
 " {{{ Toggles
 " NOTE All toggles are local to buffer
 nnoremap <silent>       <leader>n               :call util#ToggleNumber()<CR>
 nnoremap <silent>       <leader>nn              :setl nonumber norelativenumber<CR>
-nnoremap <silent>       <leader>p               :setl invpaste<CR>
+nnoremap                <leader>p               :setl invpaste<CR>
 nnoremap <silent>       <leader>l               :setl invlist<CR>
 " Toggle spellcheck and spellcheck language
 nnoremap <silent>       <leader>s               :setl invspell<CR>

@@ -1,7 +1,7 @@
 " .vimrc - Vim configuration
 
 " NOTE this file loads ~/.vim/vimrc to avoid direct symlink which can't
-" be used in Windows
+" be used on Windows
 
 " Use ~/.vim instead of vimfiles on Windows
 if has('win32') || has('win64')

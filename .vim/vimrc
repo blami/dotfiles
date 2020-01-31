@@ -1,4 +1,4 @@
-" ~/.config/nvim/init.vim - Neovim configuration
+" ~/.vim/vimrc - Vim configuration
 
 " {{{ General
 " Encodings and formats
@@ -13,13 +13,14 @@ set modeline                                            " Process 'vim:' modelin
 set exrc                                                " Per-project .vimrc loading
 set secure                                              " No autocmd in per-project .vimrc
 set hidden                                              " Hide buffers instead of closing
-filetype plugin on
-filetype indent on
 set noautochdir                                         " Don't cd to file directory
 set autoread                                            " Re-read file when changed outside
+" Filetype plugin
+filetype plugin on
+filetype indent on
 
 " Compatible mode options
-set cpoptions=aABceFs_
+set cpoptions=aABceFs
 
 " Error handling
 set noerrorbells                                        " Disable error bells
@@ -64,7 +65,7 @@ set foldopen=block,hor,mark,percent,quickfix,tag        " Open fold on those act
 
 
 " {{{ Clipboard
-set clipboard=unnamedplus                               " Use system clipboard
+set clipboard^=unnamed,unnamedplus                      " Use system clipboard
 " TODO Configure g:clipboard
 " }}}
 
@@ -86,8 +87,8 @@ set nospell                                             " Globally disable spell
 
 " Custom word list(s)
 let &spelllang=get(g:spelllangs, 0)
-let &spellfile=$HOME."/.config/nvim/spell/".&g:spelllang.".utf8.add,,"
-            \ .$HOME."/.config/nvim/spell/common.utf8.add"
+let &spellfile=$HOME."/.vim/spell/".&g:spelllang.".utf8.add,"
+            \ .$HOME."/.vim/spell/common.utf8.add"
 " }}}
 
 
@@ -119,7 +120,7 @@ set statusline+=\ %95*%{status#ShowMode()}%*            " Mode
 set statusline+=\ %t%m%94*%r%*
 set statusline+=\ %92*[%{&ft!=''?&ft:'off'}]%*          " Filetype
 set statusline+=\ %<%{&ff}%{&fenc!=''?','.&fenc:''}     " File format and encoding
-set statusline+=\ %96*%{status#StatusPage()}%*       " Buffer specific status information
+set statusline+=\ %96*%{status#StatusPage()}%*          " Buffer specific status information
 " Status right side
 set statusline+=%=
 set statusline+=%{&spell!=0?strpart(&spelllang,0,2):''}
@@ -133,12 +134,12 @@ set showtabline=2
 " Title
 if has('title')
     set title
-    set titlestring=NVIM:\ [%{hostname()}]\ %t\ %m%r    " NVIM: [hostname] filename [+-=][RO]
-    set titleold=NVIM
+    set titlestring=VIM:\ [%{hostname()}]\ %t\ %m%r     " VIM: [hostname] filename [+-=][RO]
+    set titleold=VIM
 endif
 
 " Terminal
-" NOTE Neovim always sets ttyfast
+set ttyfast
 set timeout timeoutlen=750                              " Key mapping sequence timeout (ms)
 set ttimeout ttimeoutlen=50                             " Key code sequence timeout (ms)
 set lazyredraw                                          " Don't redraw on registers and macros
@@ -163,10 +164,14 @@ endif
 
 
 " {{{ Colors and Highlighting
-colors blami
+set termguicolors
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+set t_Co=256
 set background=dark                                     " Set dark background
 syntax on
-set termguicolors
+"colors blami
+
 set synmaxcol=200                                       " Highlight only first 200 columns
 set colorcolumn=80,120                                  " Highlight wrap columns
 set nocursorline                                        " Don't highlight line with cursor
@@ -185,38 +190,44 @@ set listchars=tab:__,trail:.,extends:$,precedes:^       " How to show non-printa
 
 
 " {{{ Files and Directories
-let s:confdir=split(&rtp[0], ',')[0]                    " Neovim config dir (init.vim)
+let g:confdir=split(&rtp, ',')[0]                       " Vim config dir (vimrc)
+let g:localdirs = ["plugins", "spell", "tmp"]
+
+" Generate local directories if does not exist yet
+" TODO Check on Windows
+for d in g:localdirs
+    if !isdirectory($HOME."/.local/share/vim/".d)
+        call mkdir($HOME."/.local/share/vim/".d, "p")
+    endif
+endfor
+
 
 " Command history
 set history=4000
 
-" Shared session data (former .viminfo)
-set shada='500,<50,@100,h                               " See :help shada
-
 " Backup and swap files
-set nobackup                                            " Override current file (don't rename)
+set backup                                              " Override current file (don't rename)
+set backupdir=$HOME/.local/share/vim/tmp
 set swapfile                                            " Write swap and undo file
+set directory=$HOME/.local/share/vim/tmp
 set updatetime=600                                      " Save swap file if no activity for 1s
 set undofile
 set undolevels=1000
-
-" Filetype plugin
-filetype plugin indent on                               " Enable filetype detection
+set undodir=$HOME/.local/share/vim/tmp
 
 " OS-specific paths and tools
-if has('win32')
+if has('win64')                                         " WSL is available only on Win64
     set shell=bash.exe
 endif
 " }}}
 
-
 " {{{ Includes
-source $HOME/.config/nvim/plugs.vim
-source $HOME/.config/nvim/keymap.vim
-source $HOME/.config/nvim/abbrev.vim
+source $HOME/.vim/plugins.vim
+source $HOME/.vim/keymap.vim
+source $HOME/.vim/abbrev.vim
 
 " Register global autocmds
-source $HOME/.config/nvim/autocmd.vim
+source $HOME/.vim/autocmd.vim
 " }}}
 
 
