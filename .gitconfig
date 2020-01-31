@@ -6,8 +6,7 @@
 	signingkey = 1FCD8C25
 
 [core]
-	# Use neovim directly (hybrid configuration for Unix/Cygwin)
-	editor = nvim
+	editor = vim
 	excludesfile = /home/blami/.gitignore_global
 
 [color]
@@ -23,7 +22,7 @@
 	tool = vimdiff
 
 [mergetool "vimdiff"]
-	cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c '$wincmd J'
+	cmd = vim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c '$wincmd J'
 
 [push]
 	; Push branches manually one by one
