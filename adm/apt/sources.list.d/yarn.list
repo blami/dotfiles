@@ -1,0 +1,7 @@
+# /etc/apt/sources.list.d/yarn.list - Official Yarn APT repository
+# GPG: https://dl.yarnpkg.com/debian/pubkey.gpg
+
+deb     https://dl.yarnpkg.com/debian/                      stable              main
+
+
+# vim:set ft=debsources:

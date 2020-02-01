@@ -1,8 +1,0 @@
-# /etc/apt/sources.list.d/ppa_neovim.list: Latest stable NeoVim PPA
-# GPG: https://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x55F96FCF8231B6DD
-
-deb     http://ppa.launchpad.net/neovim-ppa/stable/ubuntu   bionic              main
-#deb-src http://ppa.launchpad.net/neovim-ppa/stable/ubuntu   bionic              main
-
-
-# vim:set ft=debsources:
