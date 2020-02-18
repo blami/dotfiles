@@ -1,12 +1,12 @@
-" Language: HTML
-" Maintainer: Ondrej Balaz
+"Language: HTML
+"Maintainer: Ondrej Balaz
 
 "if exists("b:did_ftplugin") | finish | endif
 "let b:did_ftplugin = 1
 
-" Formatting
+"Formatting
 setl expandtab shiftwidth=2 softtabstop=2 tabstop=4
 setl fo-=t
 
-" File Matching
+"File Matching
 setl suffixesadd=.htm,.html

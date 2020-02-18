@@ -1,10 +1,9 @@
-" ~/.vim/autoload/statuspages.vim - buffer specific status in statusline
+"Utility functions for statusline
 
-" {{{ Status Pages
-" Status pages are bufers that can hold additional information relevant to
-" e.g. currently opened buffer.
+"Status pages are bufers that can hold additional information relevant to
+"e.g. currently opened buffer.
 
-" Add page to buffer status.
+"Add page to buffer status.
 func status#AddPage(id, func)
     if !exists("b:statuspages") | let b:statuspages = {} | endif
     if type(a:func) == v:t_func
@@ -12,7 +11,7 @@ func status#AddPage(id, func)
     endif
 endfunc
 
-" Toggle buffer status current page ("+" next, "-" prev or "<ID>").
+"Toggle buffer status current page ("+" next, "-" prev or "<ID>").
 func status#TogglePage(arg)
     if !exists("b:statuspages") || empty(b:statuspages) | return | endif
     " If current id is not set yet or isn"t valid use the first item
@@ -35,7 +34,7 @@ func status#TogglePage(arg)
     let b:statuspages_cur = ids[i]
 endfunc
 
-" Return currently selected page output.
+"Return currently selected page output.
 func status#StatusPage()
     if !exists("b:statuspages") || empty(b:statuspages) | return "-" | endif
     if !exists("b:statuspages_cur")
@@ -48,13 +47,8 @@ func status#StatusPage()
     endif
     return "-"
 endfunc
-" }}}
 
-" {{{ Status Functions
-
-" Status functions are always shown 
-
-" Show current mode in single-letter form.
+"Show current mode in single-letter form.
 func! status#ShowMode()
     " Consult :help mode()
     let currentmode={
@@ -85,7 +79,7 @@ func! status#ShowMode()
     endtry
 endfunc
 
-" Show paste mode flag.
+"Show paste mode flag.
 func! status#ShowPaste()
     if &paste
         return 'P'
@@ -93,8 +87,3 @@ func! status#ShowPaste()
         return ' '
     endif
 endfunc
-" }}}
-
-
-" {{{ Common status page functions
-" }}}
