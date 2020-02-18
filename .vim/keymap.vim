@@ -52,11 +52,6 @@ vnoremap                <leader>azu             :sort iu<CR>
 vnoremap                <leader>zau             :sort! iu<CR>
 "Clone paragraph under cursor
 nnoremap                <leader>cp              yap<S-}>p
-"Pairing quotes move cursor inside
-"TODO Evaluate this whether useful or annoying, might be useful for braces.
-inoremap                ""                      ""<Left>
-inoremap                ''                      ''<Left>
-inoremap                ``                      ``<Left>
 
 "Completion
 "inoremap <silent><expr> <C-space>               coc#refresh()
