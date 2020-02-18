@@ -1,11 +1,11 @@
-" Language: JavaScript
-" Maintainer: Ondrej Balaz
+"Language: JavaScript
+"Maintainer: Ondrej Balaz
 
 "if exists("b:did_ftplugin") | finish | endif
 "let b:did_ftplugin = 1
 
-" Formatting
+"Formatting
 setl expandtab
 
-" File Matching
+"File Matching
 setl suffixesadd=.js

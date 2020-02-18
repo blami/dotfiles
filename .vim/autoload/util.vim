@@ -1,7 +1,6 @@
-" ~/.vim/autoload/util.vim - utility functions
+"General utility functions
 
-" {{{ Toggles
-" Cycle between line numbers, relative numbers and no numbers.
+"Cycle between line numbers, relative numbers and no numbers.
 func! util#ToggleNumber()
     if &l:number == 1 && &l:relativenumber == 0
         setl nonumber
@@ -14,21 +13,7 @@ func! util#ToggleNumber()
     endif
 endfunc
 
-" Toggle line wrapping (both 'fo' and 'tw').
-func! util#ToggleLineWrap()
-    if matchstr(&fo, 't') != 't'
-        let &l:tw = get(b:, 'orig_tw', 0)
-        setl fo+=t
-    else
-        setl fo-=t
-        if &tw != 0
-            let b:orig_tw = &tw
-            setl tw=0
-        endif
-    endif
-endfunc
-
-" Enable spell and cycle spelllangs present in g:spellangs.
+"Enable spell and cycle spelllangs present in g:spellangs.
 func! util#ToggleSpellLang()
     if &spell == 0 | return | endif
 
@@ -46,28 +31,29 @@ func! util#ToggleSpellLang()
                 \ .$HOME."/.vim/spell/".&spelllang.".utf8.add,,"
                 \ .$HOME."/.vim/spell/common.utf8.add"
 endfunc
-" }}}
 
-" {{{ Callables
-" Run built program (F5) by utilizing function registered by ftplugin.
+"Run built program (F5) by utilizing function registered by ftplugin.
 func! util#Run()
     echomsg "No run routine has been set"
 endfunc
 
-" Execute given command in given directory and return a tuple of exit code and
-" output
+"Execute given command in given directory and return a tuple of exit code and
+"output.
 func! util#Exec(cmd, ...) abort
-    let l:err = 0
-    let l:out = ''
+    let l:out = call('system', [a:cmd] + a:000)
+    let l:err = v:shell_error
 
     return [l:err, l:out]
 endfunc
-" }}}
 
-" {{{ Misc
-" Restore cursor position in file.
+"Generate comment based on current filetype.
+func! util#Comment(str) abort
+    return printf(&commentstring, a:str)
+endfunc
+
+"Restore cursor position in file.
 func! util#RestoreCursorPosition()
-    " TODO Store types in global variable
+    "TODO Store types in global variable
     let ignoreft = ["gitcommit", "hgcommit"]
     if index(ignoreft, &ft) >= 0
         return
@@ -77,10 +63,9 @@ func! util#RestoreCursorPosition()
     endif
 endfunc
 
-" Paste helper for terminal bracketed mode.
+"Paste helper for terminal bracketed mode.
 func! util#XTermPasteBegin()
     set pastetoggle=<Esc>[201~
     set paste
     return ""
 endfunc
-" }}}

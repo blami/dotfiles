@@ -1,8 +1,8 @@
-" Language: Gitconfig
-" Maintainer: Ondrej Balaz
+"Language: Gitconfig
+"Maintainer: Ondrej Balaz
 
 "if exists("b:did_ftplugin") | finish | endif
 "let b:did_ftplugin = 1
 
-" Formatting
+"Formatting
 setl noexpandtab
