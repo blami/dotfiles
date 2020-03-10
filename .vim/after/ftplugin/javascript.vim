@@ -5,7 +5,8 @@
 "let b:did_ftplugin = 1
 
 "Formatting
-setl expandtab
+setl expandtab shiftwidth=2 softtabstop=2 tabstop=4
+setl tw=119
 
 "File Matching
 setl suffixesadd=.js
