@@ -31,7 +31,7 @@ noremap  <silent>       <leader>bg              :let &background = (&background=
 "inoremap <silent>       <F11>                   <ESC>:NERDTreeToggle<CR>i
 
 "Editing
-"Visual block mode (ctrl+v is bound to paste and ctrl+q doesn't work in tty)
+"Visual block mode (ctrl+v is bound and ctrl+q doesn't work in tty)
 nnoremap                <C-b>                   <C-v>
 vnoremap                <leader>b               <ESC><C-v>
 "Backspace deletes selection
@@ -64,8 +64,8 @@ nnoremap                <leader>sac             3zg
 "Reselect last selected block
 nnoremap                gV                      `[v`]
 "Select all
-noremap                 <C-a>                   gggH<C-o>G
-inoremap                <C-a>                   <ESC>gg<C-o>gH<C-o>G
+"noremap                 <C-a>                   gggH<C-o>G
+"inoremap                <C-a>                   <ESC>gg<C-o>gH<C-o>G
 xnoremap                <C-a>                   <ESC>ggVG
 cnoremap                <C-a>                   <ESC>gggH<C-o>G
 "TODO Revisit below mappings for GUI
@@ -129,8 +129,8 @@ inoremap                <F9>                    <ESC>:make<CR>
 nnoremap                <F5>                    :call util#Run()<CR>
 inoremap                <F5>                    <ESC>:call util#Run()<CR>
 "Pastebin (in normal mode whole file)
-nnoremap                <leader>gis             :call util#Gist()<CR>
-vnoremap                <leader>pb              :call util#Gist()<CR>
+"nnoremap                <leader>gt              :call util#Gist()<CR>
+"vnoremap                <leader>pb              :call util#Gist()<CR>
 
 "Help and documentation
 noremap                 <F1>                    :help<SPACE>
