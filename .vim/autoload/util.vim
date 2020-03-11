@@ -1,7 +1,7 @@
 "General utility functions
 
 "Cycle between line numbers, relative numbers and no numbers.
-func! util#ToggleNumber()
+func! util#ToggleNumber() abort
     if &l:number == 1 && &l:relativenumber == 0
         setl nonumber
         setl relativenumber
@@ -14,7 +14,7 @@ func! util#ToggleNumber()
 endfunc
 
 "Enable spell and cycle spelllangs present in g:spellangs.
-func! util#ToggleSpellLang()
+func! util#ToggleSpellLang() abort
     if &spell == 0 | return | endif
 
     " Find spelllang index in g:spelllangs (-1 if not present)
@@ -32,8 +32,13 @@ func! util#ToggleSpellLang()
                 \ .$HOME."/.vim/spell/common.utf8.add"
 endfunc
 
+"Consistently highlight words like TODO FIXME NOTE etc. no matter which
+"syntax file is loaded.
+func! util#HighlightAnnotations() abort
+endfunc
+
 "Run built program (F5) by utilizing function registered by ftplugin.
-func! util#Run()
+func! util#Run() abort
     echomsg "No run routine has been set"
 endfunc
 
@@ -42,7 +47,6 @@ endfunc
 func! util#Exec(cmd, ...) abort
     let l:out = call('system', [a:cmd] + a:000)
     let l:err = v:shell_error
-
     return [l:err, l:out]
 endfunc
 
@@ -52,7 +56,7 @@ func! util#Comment(str) abort
 endfunc
 
 "Restore cursor position in file.
-func! util#RestoreCursorPosition()
+func! util#RestoreCursorPosition() abort
     "TODO Store types in global variable
     let ignoreft = ["gitcommit", "hgcommit"]
     if index(ignoreft, &ft) >= 0

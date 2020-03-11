@@ -4,7 +4,7 @@
 "e.g. currently opened buffer.
 
 "Add page to buffer status.
-func status#AddPage(id, func)
+func status#AddPage(id, func) abort
     if !exists("b:statuspages") | let b:statuspages = {} | endif
     if type(a:func) == v:t_func
        let b:statuspages[a:id] = a:func
@@ -12,7 +12,7 @@ func status#AddPage(id, func)
 endfunc
 
 "Toggle buffer status current page ("+" next, "-" prev or "<ID>").
-func status#TogglePage(arg)
+func status#TogglePage(arg) abort
     if !exists("b:statuspages") || empty(b:statuspages) | return | endif
     " If current id is not set yet or isn"t valid use the first item
     let ids = keys(b:statuspages)
@@ -35,7 +35,7 @@ func status#TogglePage(arg)
 endfunc
 
 "Return currently selected page output.
-func status#StatusPage()
+func status#StatusPage() abort
     if !exists("b:statuspages") || empty(b:statuspages) | return "-" | endif
     if !exists("b:statuspages_cur")
         let b:statuspages_cur = keys(b:statuspages)[0]
@@ -49,7 +49,7 @@ func status#StatusPage()
 endfunc
 
 "Show current mode in single-letter form.
-func! status#ShowMode()
+func! status#ShowMode() abort
     " Consult :help mode()
     let currentmode={
         \ 'n'      : 'N',
