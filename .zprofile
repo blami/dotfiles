@@ -93,6 +93,8 @@ fi
 [ -d ~/.profile.d ] && for s in ~/.profile.d/*.sh; source $s
 builtin unset -v s
 
+# Setup PATH in ~/local
+pathmunge $HOME/local/bin
 # Setup PATH in ~ always as last component
 pathmunge $HOME/bin/$HOST
 pathmunge $HOME/bin/$OSARCH
