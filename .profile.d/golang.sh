@@ -14,8 +14,9 @@ for goroot in "$HOME/.local/go" \
 done
 builtin unset -v goroot
 
-# Set GOPATH to $HOME/ws/go
-GOPATH=$HOME/ws/go
+# Set GOPATH to $HOME/go
+# NOTE: GOPATH I still love you for installing tools
+GOPATH=$HOME/go
 [ -d "$GOPATH/bin" ] && pathmunge $GOPATH/bin after
 export GOPATH PATH
 
