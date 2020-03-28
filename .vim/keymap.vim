@@ -19,13 +19,16 @@ nnoremap <silent>       <leader>l               :setl invlist<CR>
 "Toggle spellcheck and spellcheck language
 nnoremap <silent>       <leader>s               :setl invspell<CR>
 nnoremap <silent>       <leader>sl              :call util#ToggleSpellLang()<CR>
-"Toggle formatting options parameter t (textwidth)
+"Toggle formatting options parameters t(ext) and c(comment) textwidth
 nnoremap <silent><expr> <leader>tw              matchstr(&fo,'t') != 't' ? ':setl fo+=t<CR>' : ':setl fo-=t<CR>'
+nnoremap <silent><expr> <leader>cw              matchstr(&fo,'c') != 'c' ? ':setl fo+=c<CR>' : ':setl fo-=c<CR>'
 "Toggle buffer status in statusline
 noremap  <silent>       <F4>                    :call status#TogglePage('+')<CR>
 inoremap <silent>       <F4>                    <ESC>:call status#TogglePage('+')<CR>a
 "Toggle between light and dark colors
 noremap  <silent>       <leader>bg              :let &background = (&background=="dark" ? "light" : "dark")<CR>
+"Togle QuickFix
+noremap  <silent>       <leader>e               :call util#ToggleList("Quickfix List", "c")<CR>
 "Toggle NERDTree
 "noremap  <silent>       <F11>                   :NERDTreeToggle<CR>
 "inoremap <silent>       <F11>                   <ESC>:NERDTreeToggle<CR>i
@@ -126,8 +129,8 @@ nnoremap                <leader>x               :x<CR>
 nnoremap                <F9>                    :make<CR>
 inoremap                <F9>                    <ESC>:make<CR>
 "Make and run program
-nnoremap                <F5>                    :call util#Run()<CR>
-inoremap                <F5>                    <ESC>:call util#Run()<CR>
+"nnoremap                <F5>                    :call util#Run()<CR>
+"inoremap                <F5>                    <ESC>:call util#Run()<CR>
 "Pastebin (in normal mode whole file)
 "nnoremap                <leader>gt              :call util#Gist()<CR>
 "vnoremap                <leader>pb              :call util#Gist()<CR>

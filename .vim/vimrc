@@ -12,9 +12,6 @@ set secure                                              "No autocmd in per-proje
 set hidden                                              "Hide buffers instead of closing
 set noautochdir                                         "Don't cd to file directory
 set autoread                                            "Re-read file when changed outside
-"Filetype plugin
-filetype plugin on
-filetype indent on
 
 "Files and Directories
 let g:confdir=split(&rtp, ',')[0]                       "Vim config dir (vimrc)
@@ -153,7 +150,10 @@ set statusline+=\ %96*%{status#StatusPage()}%*          "Buffer specific status 
 set statusline+=%=
 set statusline+=%{&spell!=0?strpart(&spelllang,0,2):''}
 set statusline+=\ ch=%b,0x%B                            "Character code
-set statusline+=\ %93*%{matchstr(&fo,'t')!=''?'>'.&tw.'\ ':''}%c,%l/%LL\ %P%* "Position [>tw] (col,line/lines) all%
+set statusline+=\ %93*%{matchstr(&fo,'c')!=''?'#':''}   "Comment-only wrapping enable flag
+set statusline+=\%{matchstr(&fo,'t')!=''?'>':''}        "Text wrapping enable flag
+set statusline+=\%{matchstr(&fo,'[tc]')!=''?&tw.'\ ':''} "Text width
+set statusline+=\%c,%l/%LL\ %P%* "Position [>tw] (col,line/lines) all%
 
 "Tabs
 set showtabline=2
@@ -180,11 +180,12 @@ endif
 "GUI
 if has('gui_running')
     behave xterm
+    set guioptions=cM                                   "Hide menu, toolbar and scrollbars
     "Fonts
     if has('unix')
-        set guifont=Go\ Mono\ NF\ 11
+        set guifont=GoMono\ NF\ 11
     elseif has('win32')
-        set guifont=Go\ Mono\ NF:h10.5:cEASTEUROPE
+        set guifont=GoMono\ NF:h12:cEASTEUROPE
     endif
 endif
 
@@ -212,6 +213,10 @@ set list                                                "Show non-printable char
 "set listchars=tab:__,trail:.,extends:$,precedes:^       "How to show non-printable chars
 set lcs=tab:⯈\ ,trail:·,eol:¬,extends:$,precedes:^      "How to show non-printable chars
 
+"Filetype plugins
+"NOTE: This has to be here to not pull menu.vim in before guiopts=M is set
+filetype plugin on
+filetype indent on
 
 "Includes
 source $HOME/.vim/plugins.vim
