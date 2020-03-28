@@ -60,6 +60,7 @@ fi
 # {{{ Text editing
 alias vi='vim'
 alias v='vim'
+alias vimn='vim -u NONE'                # vim without configuration
 alias tn='tr -d "\n"'                   # trim newlines
 # }}}
 
