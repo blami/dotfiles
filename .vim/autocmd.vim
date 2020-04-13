@@ -9,7 +9,8 @@ autocmd! BufReadPost * call util#RestoreCursorPosition()
 "Restore cursor style after leaving
 autocmd! VimLeave * set guicursor=a:block-blinkoff0
 
-
+"Refresh help tags
+autocmd! VimEnter * :helptags ~/.vim/doc
 
 "Do not use default ftplugins
 "autocmd! BufReadPre,BufNewFile * let b:did_ftplugin = 1
