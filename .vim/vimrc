@@ -95,17 +95,18 @@ set history=4000
 let g:netrw_home=$HOME."/.local/share/vim"
 
 "Backup and swap files
-set backup                                              "Override current file (don't rename)
-set backupdir=$HOME/.local/share/vim/tmp
-set swapfile                                            "Write swap and undo file
-set directory=$HOME/.local/share/vim/tmp
-set updatetime=600                                      "Save swap file if no activity for 1s
+set nobackup                                            "Override current file (don't rename)
+"set backupdir=$HOME/.local/share/vim/tmp
+set noswapfile                                          "Don't write swap file
+"set directory=$HOME/.local/share/vim/tmp
+"set updatetime=600                                      "Save swap file if no activity for 1s
 set undofile
 set undolevels=1000
 set undodir=$HOME/.local/share/vim/tmp
+set viminfo='100,<50,s10,h,n$HOME/.viminfo
 
 "OS-specific paths and tools
-if has('win64')                                         "WSL is available only on Win64
+if has('win32')                                         "WSL is available only on Win64
     set shell=bash.exe
 endif
 
@@ -123,7 +124,7 @@ set signcolumn=yes                                      "Show sign gutter column
 "Wild menu
 set wildmenu
 set wildmode=list:longest,list:full
-set wildignore+=*.o,*.obj,*.a,*.so,*.pyc,*.gem
+set wildignore+=*.o,*.obj,*.a,*.so,*.pyc,*.gem,*.exe,*.dll
 set wildignore+=.DS_Store,*.jpg,*.png,*.gif,*.svg,*.psd,*.ai,*.ttf,*.otf,*.woff,*.woff2,*.eot
 set wildignore+=.git,.gitkeep
 
