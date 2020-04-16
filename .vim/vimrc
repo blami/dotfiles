@@ -197,7 +197,7 @@ let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 set t_Co=256
 set background=dark                                     "Set dark background
 syntax on
-"colors blami
+colors space
 set synmaxcol=200                                       "Highlight only first 200 columns
 set colorcolumn=80,120                                  "Highlight wrap columns
 set nocursorline                                        "Don't highlight line with cursor
