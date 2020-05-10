@@ -1,3 +1,5 @@
+"Vim configuration
+
 "Encodings and formats
 if has('vim_starting')
     set encoding=utf-8
@@ -15,13 +17,18 @@ set autoread                                            "Re-read file when chang
 
 "Files and Directories
 let g:confdir=split(&rtp, ',')[0]                       "Vim config dir (vimrc)
-let g:localdirs = ["plugins", "spell", "tmp"]
+let g:localdir=$HOME."/.local/share/vim"
+
+"Add localdir to rtp and packpath
+let &rtp.=",".g:localdir
+if has("packages")
+    let &packpath.=",".g:localdir
+endif
 
 "Generate local directories if does not exist yet
-"TODO Check on Windows
-for d in g:localdirs
-    if !isdirectory($HOME."/.local/share/vim/".d)
-        call mkdir($HOME."/.local/share/vim/".d, "p")
+for d in ["spell", "tmp", "pack"]
+    if !isdirectory(g:localdir."/".d)
+        call mkdir(g:localdir."/".d, "p")
     endif
 endfor
 
@@ -87,22 +94,21 @@ set nospell                                             "Globally disable spellc
 let &spelllang=get(g:spelllangs, 0)
 let &spellfile=$HOME."/.vim/spell/".&g:spelllang.".utf8.add,"
             \ .$HOME."/.vim/spell/common.utf8.add"
-"Add %HOME/.local/share/vim to &rtp so it shows in spellfile download dialog
-let &rtp.=",".$HOME."/.local/share/vim"
+"NOTE: g:localdir will popup in spell download menu (created and added to &rtp above)
 
 "Command and .netrw history
 set history=4000
-let g:netrw_home=$HOME."/.local/share/vim"
+let g:netrw_home=g:localdir
 
 "Backup and swap files
 set nobackup                                            "Override current file (don't rename)
-"set backupdir=$HOME/.local/share/vim/tmp
+"let &backupdir=g:localdir.'/tmp'
 set noswapfile                                          "Don't write swap file
-"set directory=$HOME/.local/share/vim/tmp
+"let &directory=g:localdir.'/tmp'
 "set updatetime=600                                      "Save swap file if no activity for 1s
 set undofile
 set undolevels=1000
-set undodir=$HOME/.local/share/vim/tmp
+let &undodir=g:localdir.'/tmp'
 set viminfo='100,<50,s10,h,n$HOME/.viminfo
 
 "OS-specific paths and tools
@@ -220,9 +226,9 @@ filetype plugin on
 filetype indent on
 
 "Includes
-source $HOME/.vim/plugins.vim
 source $HOME/.vim/keymap.vim
 source $HOME/.vim/abbrev.vim
+source $HOME/.vim/pack.vim
 
 "Register global autocmds
 source $HOME/.vim/autocmd.vim
