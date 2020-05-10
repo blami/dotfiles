@@ -67,8 +67,8 @@ TERM xterm-debian
 
 # Generic
 RESET           0                   # reset
-DIR             00;34               # directory
-LINK            00;36               # symbolic link
+DIR             01;34               # directory
+LINK            01;36               # symbolic link
 MULTIHARDLINK   00                  # file with more than one link
 FIFO            40;33               # pipe
 SOCK            01;35               # socket
@@ -120,13 +120,15 @@ EXEC            01;32               # execute permission
 .rz             01;31
 
 # Documents
+.nfo            00;33
+.diz            00;33
 .pdf            00;33
 .ps             00;33
 .txt            00;33
 .md             00;33
 .rst            00;33
-.patch          00;33
-.diff           00;33
+.htm            00;33
+.html           00;33
 .log            00;33
 .tex            00;33
 .doc            00;33
@@ -138,6 +140,25 @@ EXEC            01;32               # execute permission
 .gddoc          00;33
 .gdsheet        00;33
 .gdslides       00;33
+.hlp            00;33
+
+# Code
+.go             01;37
+.py             01;37
+.js             01;37
+.jsx            01;37
+.ts             01;37
+.tsx            01;37
+.rb             01;37
+.c              01;37
+.cpp            01;37
+.cxx            01;37
+.h              01;37
+.hpp            01;37
+.idl            01;37
+.patch          01;37
+.diff           01;37
+.makefile       01;37
 
 # Images
 .jpg            01;35
