@@ -1,7 +1,7 @@
 ; ~/.gitaliases - Useful Git aliases
 
 [alias]
-	# Short aliases
+	# Shortcuts
 	cl = clone
 	pu = push
 	pf = push --force
@@ -23,8 +23,19 @@
 	unstage = reset HEAD
 	diffc = diff --cached
 
+	# Rebase
+	ir = "!git rebase -i `git merge-base master HEAD`"
+
+	# Code review
+	pr = difftool origin/master...
+
 	# Log aliases
 	log1 = log -p1
+
+	# Upstream aliases
+	up = remote add upstream
+	uf = fetch upstream
+	ur = rebase upstream/master
 
 
 ; vim:set ft=gitconfig:
