@@ -26,10 +26,10 @@ func! util#ToggleSpellLang() abort
         let i = i + 1 == len(g:spelllangs) ? 0 : i + 1
     endif
     "Set spelllang and spellfile
-    exe "setl spelllang=".get(g:spelllangs, l:i)
-    exe "setl spellfile="
-                \ .$HOME."/.vim/spell/".&spelllang.".utf8.add,,"
-                \ .$HOME."/.vim/spell/common.utf8.add"
+    exe 'setl spelllang='.get(g:spelllangs, l:i)
+    exe 'setl spellfile='
+                \ .$HOME.'/.vim/spell/'.&spelllang.'.utf8.add,,'
+                \ .$HOME.'/.vim/spell/common.utf8.add'
 endfunc
 
 function! util#ToggleList(bufname, pfx)
@@ -67,8 +67,9 @@ func! util#Exec(cmd, ...) abort
     "set shellcmdflag=/C
 
     try
-        let l:cmd = join(map(copy(a:cmd), "shellescape(v:val)"), " ")
-        let l:out = call("system", [l:cmd] + a:000)
+        let l:cmd = join(map(copy(a:cmd), 'shellescape(v:val)'), ' ')
+        let l:out = call('system', [l:cmd] + a:000)
+        echo l:out
         let l:rc = v:shell_error
     finally
         "Recover shell variables
@@ -81,32 +82,37 @@ func! util#Exec(cmd, ...) abort
 endfunc
 
 "Execute cmd, pass buffer to its STDIN and on errors pass output to errfunc.
-func! util#ExecBuffer(cmd, errfunc) abort
+func! util#ExecBuffer(cmd) abort
 endfunc
 
 "Execute given cmd, pass buffer to its STDIN and replace buffer with its
 "STDOUT. On errors pass output to errfunc.
-func! util#ExecReplaceBuffer(cmd, errfunc) abort
+func! util#ExecReplaceBuffer(cmd) abort
 endfunc
 
 "Execute given cmd on buffer file (of tmpfile name) and replace buffer with
 "contents of tmpfile after cmd finishes. On errors pass output to errfunc.
-func! util#ExecReplaceBufferFile(cmd, tmpfile, errfunc) abort
-    "Write buffer to a temporary file of given name
-    call writefile(getline(1, "$"), a:tmpfile)
+func! util#ExecReplaceBufferFile(cmd, tmpfile) abort
+    "Write buffer to a temporary file of given name, don't run autocommands
+    "
+    exe 'noautocmd silent write!' a:tmpfile
 
     "Store window
     let l:winview = winsaveview()
 
     " Run given command
-    let [l:rc, l:out] = call(function("util#Exec"), [a:cmd])
+    call add(a:cmd, a:tmpfile)
+    let [l:rc, l:out] = call(function('util#Exec'), [a:cmd])
     if l:rc
-        "TODO Print errors let caller pass function name to do so
+        "TODO pass errors to caller
         echo "errors:" l:out
         call delete(a:tmpfile)
         return
     endif
 
+    "Ignore events so Vim doesn't reload filetype plugins, etc.
+    let l:eventignore = &eventignore
+    let &eventignore = 'all'
     "Remove undo point caused by BufWritePre
     try | silent undojoin | catch | endtry
     "Update file
@@ -115,14 +121,13 @@ func! util#ExecReplaceBufferFile(cmd, tmpfile, errfunc) abort
     call rename(a:tmpfile, expand('%'))
     call setfperm(expand('%'), l:fperm)
     silent edit!
+    let &eventignore = l:eventignore
     let &fileformat = l:fileformat
     let &syntax = &syntax
 
     "Restore window
     call winrestview(l:winview)
 endfunc
-
-
 
 "Generate comment based on current filetype.
 func! util#Comment(str) abort
@@ -132,7 +137,7 @@ endfunc
 "Restore cursor position in file.
 func! util#RestoreCursorPosition() abort
     "TODO Store types in global variable
-    let ignoreft = ["gitcommit", "hgcommit"]
+    let ignoreft = ['gitcommit', 'hgcommit']
     if index(ignoreft, &ft) >= 0
         return
     endif
@@ -145,5 +150,5 @@ endfunc
 func! util#XTermPasteBegin()
     set pastetoggle=<Esc>[201~
     set paste
-    return ""
+    return ''
 endfunc

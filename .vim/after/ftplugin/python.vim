@@ -17,3 +17,13 @@ setl indentkeys-=0#
 "File Matching
 setl suffixesadd=.py
 setl wildignore+=*.pyc
+
+"Language Server
+"TODO Guard this by something that checks if vim-lsp is installed
+if executable('pyls')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'pyls',
+        \ 'cmd': {server_info->['pyls']},
+        \ 'whitelist': ['python'],
+        \ })
+endif
