@@ -1,6 +1,5 @@
 .dfgit
 .config/tc/wincmd.key
-.config/nvim/plugins/*/
 .ssh/keys
 .ssh/ctrl
 .ssh/agent
@@ -11,6 +10,7 @@
 .git-credentials
 .solstudio
 .netrc
+.vim/doc/tags
 .viminfo
 .cache
 .rnd
