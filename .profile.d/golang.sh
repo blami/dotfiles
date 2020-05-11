@@ -1,7 +1,13 @@
 # ~/.profile.d/golang.sh - Setup golang environment
 # NOTE: This uses pathmunge
 
-for goroot in "$HOME/.local/go" \
+# Set GOPATH to $HOME/.local/go
+# NOTE: $GOPATH I still love you (but only) for installing tools
+[ -d $HOME/.local/go ] || mkdir -p $HOME/.local/go
+GOPATH=$HOME/.local/go
+
+# NOTE: On systems where I don't have root I tend to merge $GOROOT and $GOPATH
+for goroot in "$GOPATH" \
     "$HOME/.local/$OSARCH/go" \
     "/opt/google/go" \
     "/cygdrive/c/devel/go"; do
@@ -13,11 +19,6 @@ for goroot in "$HOME/.local/go" \
     fi
 done
 builtin unset -v goroot
-
-# Set GOPATH to $HOME/go
-# NOTE: GOPATH I still love you for installing tools
-GOPATH=$HOME/go
-[ -d "$GOPATH/bin" ] && pathmunge $GOPATH/bin after
 export GOPATH PATH
 
 # Set GO111MODULE to auto (use go.mod if exists)
