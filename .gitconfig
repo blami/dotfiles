@@ -5,9 +5,15 @@
 	email = blami@blami.net
 	signingkey = 1FCD8C25
 
+[sendemail]
+	from = Ondrej Balaz <blami@blami.net>
+
 [core]
 	editor = vim
 	excludesfile = /home/blami/.gitignore_global
+
+[http]
+	cookiefile = /mnt/c/Users/blami/.gitcookies
 
 [color]
 	filemode = false
@@ -34,14 +40,13 @@
 [include]
 	path = ~/.gitaliases
 	# Include local configuration file
-	# NOTE ~/.gitconfig_local contains mainly includeIf statemens pointing to
-	# per-directory configuration:
+	path = ~/.gitconfig_local
+	# Include ~/.gitdirs file
+	# NOTE ~/.gitdirs contains ONLY includeIf statemens pointing to a 
+	# per-directory configs:
 	# [includeIf "gitdir:~/ws/work/"]
 	#     path = ~/.gitconfig_work
-	path = ~/.gitconfig_local
-
-[sendemail]
-	from = Ondrej Balaz <blami@blami.net>
+	path = ~/.gitdirs
 
 
 # vim:set ft=gitconfig:
