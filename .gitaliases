@@ -1,38 +1,39 @@
 ; ~/.gitaliases - Useful Git aliases
 
 [alias]
-	# Shortcuts
+	; Basics
 	cl = clone
-	pu = push
-	pf = push --force
-	ci = commit
 	co = checkout
 	cob = checkout -b
-	df = diff
-	dc = diff --cached
-	st = status
-	br = branch
-	re = rebase
-	sh = stash
-	rs = reset
+	ci = commit
 	un = reset HEAD
-	fe = fetch
-	pl = pull
-
-	# File aliases
 	unstage = reset HEAD
-	diffc = diff --cached
+	pu = push
+	puf = push --force
+	pl = pull
+	fe = fetch
 
-	# Rebase
-	ir = "!git rebase -i `git merge-base master HEAD`"
+	; Status
+	st = status
 
-	# Code review
-	pr = difftool origin/master...
-
-	# Log aliases
+	; Log
 	log1 = log -p1
 
-	# Upstream aliases
+	; Diff
+	df = diff
+	dc = diff --cached
+	diffc = diff --cached
+	coderev = difftool origin/master...
+
+	; Branches and tags
+	br = branch
+	brclean = "!git branch --merged | grep -v \"\\*\" | grep -v master | grep -v dev | xargs -n 1 git branch -d"
+
+	; Rebase
+	re = rebase
+	rei = "!git rebase -i `git merge-base master HEAD`"
+
+	; Upstream
 	up = remote add upstream
 	uf = fetch upstream
 	ur = rebase upstream/master
