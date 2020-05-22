@@ -14,11 +14,11 @@ skip_global_compinit=1
 # Add ~/.zsh_local and ~/.zsh to $fpath and autoload functions
 # NOTE Make sure directories are in opposite order
 for p in ~/.zsh ~/.zsh_local; do
-    [ -d $p ] || continue
-    [ -d $p/funcs ] || continue
-
-    fpath=($p $p/funcs $fpath)
-    for f in ~/.zsh/funcs/*(N-.x:t); autoload -Uz -- $f
+    for d in "$p/zle" "$p/funcs" "$p"; do
+        [ -d $d ] || continue
+        fpath=($d $fpath)
+        for f in ~/.zsh/funcs/*(N-.x:t); autoload -Uz -- $f
+    done
 done
 
 builtin unset -v f
