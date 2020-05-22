@@ -1,6 +1,5 @@
 # ~/.zalias - Z-shell aliases
 
-
 # {{{ Output redirects
 alias NERR='2>|/dev/null'               # no stderr
 alias NOUT='&>|/dev/null'               # no stdout
@@ -26,12 +25,21 @@ alias lN='ls -Art1 && echo "--- Newest ---"'
 alias lt='tree -L 2 -d'
 alias mkdir='mkdir -p'                  # create parent directories
 alias path='echo -e ${PATH//:/\\n}'
+
+# Directory shortcuts
 alias ws="cd $HOME/ws"
+alias doc="cd $HOME/docs"
+alias sand="cd $HOME/ws/sandbox"
 alias etc='cd /etc'
 
 # Disable globbing for some commands
 alias find='noglob find'
 alias grep='noglob grep'
+
+# Checksums
+alias sha='shasum -a 256'
+alias sha1='shasum -a 1'
+alias md5='md5sum'
 # }}}
 
 
@@ -65,6 +73,15 @@ alias tn='tr -d "\n"'                   # trim newlines
 # }}}
 
 
+# {{{ Date and time
+alias d='date +"%a, %b %d, %Y %H:%M:%S%z%Z (day:%j, week:%V) %t%s"'
+alias dutc='TZ=UTC d'
+alias dcz='TZ=Europe/Prague d'
+alias dny='TZ=America/New_York d'
+alias djp='TZ=Asia/Tokyo d'
+# }}}
+
+
 # {{{ Processes
 alias psmem10='ps aux | sort -nr -k 4 | head -10'
 alias pscpu10='ps aux | sort -nr -k 3 | head -10'
@@ -75,7 +92,11 @@ alias q='exit'
 
 
 # {{{ Network
+alias ports='netstat -tulanp'           # show listen ports
 alias httph='curl -I -L'                # show HTTP headers (URL must follow)
+[ -x /usr/bin/python3 ] && alias serve='python3 -m http.server' # serve current directory on port 8000
+
+alias wget='wget -c'                    # resume downloads
 
 # OpenSSL Certificates
 # See: https://www.sslshopper.com/article-most-common-openssl-commands.html
@@ -91,15 +112,15 @@ alias p12b='openssl pkcs12 -inform der -noout -text -in'
 # {{{ Admin commands
 alias tmux='tmux -u'
 alias t='tmux'
-# }}}
+alias ta='tmux a'
 
+# System commands
+# }}}
 
 # {{{ Coding
 # VCS
 # Git
 alias g='git'
-alias gc='git commit'
-alias gs='git status'                   # git status (hides GhostScript)
 alias dfgit="git --git-dir=$HOME/.dfgit --work-tree=$HOME" # dfgit for .dfgit
 # }}}
 
