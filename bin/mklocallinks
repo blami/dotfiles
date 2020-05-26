@@ -17,6 +17,7 @@ read -r -d '' FILES <<- EOF
     .zshrc
     .zsh
     .hgrc
+    .gitconfig
     .tmux.conf
 EOF
 
