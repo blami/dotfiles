@@ -9,26 +9,26 @@ zmodload zsh/mapfile
 # enough and called once on login...
 # TODO Add colors...
 motd () {
-    [ -r $1 ] || return
-    local color
+    [ ! -z $1 ] && [ -r $1 ] || return 1
 
-    local lines=( "${(f)mapfile[$1]}" )
-    # Local database of fortunes
-    local db
-    local msg
-    db=()
-    for line in $lines; do
+    # Process file
+    local file=( "${(f)mapfile[$1]}" )
+    local db=()
+    local quote
+    for line in $file; do
         if [ "${line// /}" = "%" ]; then
-            [ ! -z "$msg" ] && db+=($msg)
-            msg=
+            [ ! -z "$quote" ] && db+=("$quote")
+            quote=
             continue
         fi
-        [ -z "$msg" ] && msg="$line" || msg="$msg\n$line"
+        [ -z "$quote" ] && quote="$line" || quote="$quote\n$line"
     done
+    # There are no quotes in database, exit
+    [ ${#db[@]} -ne 0 ] || return 2
 
-    # Pick random quote
-    msg=$db[${RANDOM}%${#db}+1]
-    print $msg
+    # Pick random quote and print it
+    quote=$db[${RANDOM}%${#db}+1]
+    print $quote
 }
 
 motd $@
