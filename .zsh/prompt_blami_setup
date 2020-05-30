@@ -2,21 +2,22 @@
 
 # Prompt components explanation:
 #
-#  .- 24h time
-#  |     .- date in format DD.MM
-#  |     | .- day of the week (weekend is red)
-#  |     | |
-#  |     | |     .- user
-#  |     | |     |   .- @ is underline for SSH connection
-#  |     | |     |   |.- host (HOST_NICKNAME if set)
-#  |     | |     |   ||   .- host health/readiness
-#  |     | |     |   ||   |.- host OS
-#  |     | |     |   ||   ||   .- environment (.env)
-#  |     | |     |   ||   ||   |     |  .- shortened path
-#  |     | |     |   ||   ||   |     |  |        .- vcs info
-#  v     v v     v   vv   vv   v     v  v        v
-# (23:55 31w12)-(user@host●L)-([env:][@]~..di/r[ ±master])
-# [255 ][&2 ][@]dir $ _                                                 -I-
+# .- 24h time
+# |     .- date in format DD.MM
+# |     | .- day of the week (weekend is red)
+# |     | |
+# |     | |   .- user
+# |     | |   |   .- @ (@> for SSH connection)
+# |     | |   |   |.- host (HOST_NICKNAME if set)
+# |     | |   |   ||   .- host HOSTOK
+# |     | |   |   ||   |
+# |     | |   |   ||   |  .- environment (.env)
+# |     | |   |   ||   |  |     .- symlink
+# |     | |   |   ||   |  |     |  .- shortened path
+# |     | |   |   ||   |  |     |  |       .- vcs branch
+# v     v v   v   vv   v  v     v  v       v
+# 23:55 31w12 user@host● [env:][@]~..di/r[ master]
+# [255 ][&2 ][@]dir $ _
 # ^     ^    ^  ^   ^
 # |     |    |  |   `- pound (EUID=0 is #)
 # |     |    |  `- last path component
@@ -32,30 +33,25 @@ autoload -Uz cwdlast cwdellipse
 
 # {{{ Vi-mode status
 # NOTE Need to set RPROMPT for zle-line-init (first prompt)
-RPROMPT=" "
+RPROMPT=""
 
 function zle-line-init zle-keymap-select {
     # Color setup for outlines
     local C_O=${prompt_blami_color0}
     [ $EUID -eq 0 ] && C_O=${prompt_blami_color1}
 
-    case $KEYMAP in
-        vicmd)
-            RPROMPT="%B%F{$C_O}-N-%f%b"
-            print -rn -- $terminfo[cvvis]
-            ;;
-        viins|main)
-            RPROMPT="%B%F{green}-I-%f%b"
-            print -rn -- $terminfo[cnorm]
-            ;;
-    esac
+    #case $KEYMAP in
+    #    vicmd)
+    #        RPROMPT="%B%F{$C_O}-N-%f%b"
+    #        print -rn -- $terminfo[cvvis]
+    #        ;;
+    #    viins|main)
+    #        RPROMPT="%B%F{green}-I-%f%b"
+    #       print -rn -- $terminfo[cnorm]
+    #       ;;
+    #esac
     zle reset-prompt
     zle && zle -R
-}
-
-TRAPWINCH() {
-  zle reset-prompt
-  zle &&  zle -R
 }
 
 zle -N zle-line-init
@@ -68,55 +64,65 @@ zle -N zle-keymap-select
 prompt_blami_precmd() {
     setopt localoptions noxtrace
 
+    #local C_DB="%F{8}
+
+    # Background start/end
+    local BGS=""
+    local BGE=""
+    if [ $EUID -eq 0 ]; then BGS="%K{1}"; BGE="%k"; fi
+
     # Color setup for outlines
-    local C_O=${prompt_blami_color0}
+    #local C_O=${prompt_blami_color0}
     [ $EUID -eq 0 ] && C_O=${prompt_blami_color1}
 
     # New-line
     local NL=$'\n'
     # Section begin, end and separator
-    local SB="%B%F{${C_O}}(%f%b"
-    local SE="%B%F{${C_O}})%f%b"
-    local SS="%B%F{${C_O}}-%f%b"
+    #local SB="%B%F{${C_O}}(%f%b"
+    #local SE="%B%F{${C_O}})%f%b"
+    #local SS="%B%F{${C_O}}-%f%b"
 
-    PS1=${NL}
+    #local SB="%K{1}%F{8}"
+    #local SE="%f%k"
+
+    PS1="${NL}"
 
     # Date
     # ----
     local dow="umtwhfs" ; dow=${dow:$(strftime %w $EPOCHSECONDS):1}
     case $dow in
-        s|u) dow="%F{magenta}${dow}%f" ;;
-        *) dow="%F{cyan}${dow}%f" ;;
+        s|u) dow="${dow}" ;;
+        *) dow="${dow}" ;;
     esac
-    # NOTE No need to bold $dow as whole line is made bold
-    PS1+="${SB}%B%F{${C_O}}%D{%H:%M %d}%f${dow}%F{$C_O}%D{%m}%f%b${SE}"
+    # TODO Make delimiter . if alarm set?
+    local del=':'
+    PS1+="%D{%H}${del}%D{%M} %D{%d}${dow}%D{%m} " #"
 
     # User and hostname
     # -----------------
     local host=${HOSTNICK:-$HOST}
     local title_host=$host
     if [ ! -z $SSH_CONNECTION ]; then
-        host="%U@%u${host}"
+        host="@>${host}"
         title_host="@${title_host}"
     else
         host="@${host}"
     fi
     local host_ok=
     case $HOSTOK in
-        0) host_ok="%F{green}●%f" ;;
-        1) host_ok="%F{red}●%f" ;;
+        0) host_ok="●" ;;
+        1) host_ok="●" ;;
     esac
-    local host_os="%F{white}${OS:0:1:u}%f"
-    # NOTE No need to bold host_ok as whole line is made bold
-    PS1+="${SS}${SB}%B%F{green}%n${host}%f${host_ok}${host_os}%b${SE}"
+    local host_os="${OS:0:1:u}"
+    PS1+="%n${host}${host_ok} " #"
 
     # Working directory
     # -----------------
-    # NOTE This is applied below in Working directory name section too
+    # NOTE This is applied below in "Working directory name" section too
     local cwd_ln=
     [ -L $PWD ] && cwd_ln="@"
-    local cwd_color=cyan
-    [ ! -w $PWD ] && cwd_color=magenta
+    #local cwd_color=8
+    #[ ! -w $PWD ] && cwd_color=11
     local cwd_name=$(cwdlast)
 
     # Handle prompt length better, this can still overlap
@@ -125,41 +131,40 @@ prompt_blami_precmd() {
         local env=
 
         # Current working directory elipsized
-        local cwd="%F{$cwd_color}${cwd_ln}$(cwdellipse)%f"
+        local cwd="${cwd_ln}$(cwdellipse)"
 
         # VCS
         local vcs=
-        #vcs_info
-        #[ ! -z ${vcs_info_msg_0_} ] && vcs=" ${vcs_info_msg_0_}"
+        vcs_info; [ ! -z ${vcs_info_msg_0_} ] && vcs=" ${vcs_info_msg_0_}"
 
-        PS1+="${SS}${SB}%B${env}${cwd}${vcs}%b${SE}"
+        PS1+="${env}${cwd}${vcs}"
     fi
 
     PS1+=${NL}
 
     # Return value
     # ------------
-    PS1+="%(?..%B%F{red}%? %f%b)"
+    PS1+="%(?..%K{1}%F{0}%?%f%k )"
 
     # Background jobs
     # ---------------
-    PS1+="%1(j.%B%F{$C_O}&%j %f%b.)"
+    PS1+="%1(j.&%j .)"
 
     # Working directory name
     # ----------------------
-    PS1+="%B%F{$cwd_color}${cwd_ln}${cwd_name}%f%b "
+    PS1+="${cwd_ln}${cwd_name} "
 
     # Pound
     # -----
-    PS1+="%B%F{$C_O}%0(#.#.$)%f%b "
+    PS1+="%0(#.#.$) "
 
     # Set sub-prompts
     # PS2 - secondary prompt (e.g. for loop)
     # PS3 - selection prompt
     # PS4 - execution trace prompt
-    PS2="%B%F{green}%_%f%F{$C_O}>%f%b "
-    PS3="%B%F{green}#%f%F{$C_O}?%f%b "
-    PS4="%B%F{green}%N %I%f%F{$C_O}+%f%b "
+    PS2="%_> "
+    PS3="#? "
+    PS4="%N %I+ "
 
     # Set window title
     case $TERM in
@@ -182,7 +187,7 @@ prompt_blami_setup() {
     # Set vcs_info style
     zstyle ':vcs_info:*' enable git hg
     zstyle ':vcs_info:*' use-simple true
-    zstyle ':vcs_info:*' formats "±% %b %u"
+    zstyle ':vcs_info:*' formats "% %b"
 
     # Hook to re-calculate prompt
     autoload -Uz add-zsh-hook
