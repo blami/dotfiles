@@ -14,7 +14,7 @@
 # |     | |   |   ||   |  .- environment (.env)
 # |     | |   |   ||   |  |     .- symlink
 # |     | |   |   ||   |  |     |  .- shortened path
-# |     | |   |   ||   |  |     |  |       .- vcs branch
+# |     | |   |   ||   |  |     |  |       .- vcs branch (red if dirty)
 # v     v v   v   vv   v  v     v  v       v
 # 23:55 31w12 user@host● [env:][@]~..di/r[ master]
 # [255 ][&2 ][@]dir $ _
