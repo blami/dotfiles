@@ -18,12 +18,15 @@ setl indentkeys-=0#
 setl suffixesadd=.py
 setl wildignore+=*.pyc
 
+"Keybindings
+
+"Autocommands
+
 "Language Server
-"TODO Guard this by something that checks if vim-lsp is installed
-if executable('pyls')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'pyls',
-        \ 'cmd': {server_info->['pyls']},
-        \ 'whitelist': ['python'],
-        \ })
+if exists('g:lsp_loaded') && executable('pyls')
+    autocmd User lsp_setup call lsp#register_server({
+            \ 'name': 'pyls',
+            \ 'cmd': {server_info->['pyls']},
+            \ 'whitelist': ['python'],
+            \ })
 endif

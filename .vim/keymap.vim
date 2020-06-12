@@ -1,5 +1,7 @@
 "Keyboard mappings
 
+"NOTE Language specific mappings are in after/ftplugin/*
+
 "Leader key to `,'
 let mapleader = ","
 let g:mapleader = ","
@@ -55,9 +57,6 @@ vnoremap                <leader>azu             :sort iu<CR>
 vnoremap                <leader>zau             :sort! iu<CR>
 "Clone paragraph under cursor
 nnoremap                <leader>cp              yap<S-}>p
-
-"Completion
-"inoremap <silent><expr> <C-space>               coc#refresh()
 
 "Spell-checking
 nnoremap                <leader>sa              zg
@@ -128,9 +127,6 @@ nnoremap                <leader>x               :x<CR>
 "Run `make'
 nnoremap                <F9>                    :make<CR>
 inoremap                <F9>                    <ESC>:make<CR>
-"Make and run program
-"nnoremap                <F5>                    :call util#Run()<CR>
-"inoremap                <F5>                    <ESC>:call util#Run()<CR>
 "Pastebin (in normal mode whole file)
 "nnoremap                <leader>gt              :call util#Gist()<CR>
 "vnoremap                <leader>pb              :call util#Gist()<CR>
