@@ -152,8 +152,20 @@ setopt completeinword
 # }}}
 
 
+# {{{ Prompt
+TRAPWINCH() {
+    zle reset-prompt
+    zle && zle -R
+}
+
+#TMOUT=1
+TRAPALRM() {
+    zle reset-prompt
+    zle && zle -R
+}
+
 # NOTE Moved to the end of file to ensure prompt_precmd hook is last
 prompt blami
-
+# }}}
 
 # vim:set ft=zsh:
