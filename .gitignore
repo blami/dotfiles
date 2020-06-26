@@ -1,5 +1,6 @@
 .dfgit
 .config/tc/wincmd.key
+.config/tc/wcx_ftp.ini
 .ssh/keys
 .ssh/ctrl
 .ssh/agent
@@ -9,6 +10,8 @@
 .ssh/config_hosts
 .gnupg/
 .git-credentials
+.gitcookies
+.gitdirs
 .solstudio
 .netrc
 .vim/doc/tags
@@ -25,6 +28,7 @@
 # Local files
 .*_local
 .proxy
+.local/share/vim
 
 # Directories
 bak
