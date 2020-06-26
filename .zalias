@@ -4,6 +4,7 @@
 alias NERR='2>|/dev/null'               # no stderr
 alias NOUT='&>|/dev/null'               # no stdout
 alias NALL='2>&1|/dev/null'             # no stdout+stderr
+alias LOG='2>&1|tee '                   # stdout+stderr also to file (name...)
 
 alias P='2>&1|$PAGER'                   # pipe all to pager (expand in shell)
 alias L='|wc -l'                        # count lines
@@ -14,8 +15,13 @@ alias T='|tail -f'                      # tail and follow
 
 # {{{ Directories & Files
 alias rm='rm -i'
-# Color ls output if LS_COLOR set
-[ ! -z $LS_COLORS ] && alias ls='ls --color=auto'
+# Check if we have coreutils `ls`, if so order directories first
+if [ ! -z "$(ls --version | grep coreutils)" ]; then
+    # Color ls output if LS_COLOR set
+    [ ! -z $LS_COLORS ] \
+        && alias ls='ls --color=auto --group-directories-first' \
+        || alias ls='ls --group-directories-first'
+fi
 alias l='ls -a'
 alias ll='ls -la'
 alias l.='ls -d .*'
@@ -28,7 +34,6 @@ alias path='echo -e ${PATH//:/\\n}'
 
 # Directory shortcuts
 alias ws="cd $HOME/ws"
-alias src="cd $HOME/ws/src"
 alias doc="cd $HOME/docs"
 alias sand="cd $HOME/ws/sandbox"
 alias etc='cd /etc'
@@ -115,7 +120,7 @@ alias tmux='tmux -u'
 alias t='tmux'
 alias ta='tmux a'
 
-# System commands
+# System commands (systemctl, etc.)
 # }}}
 
 # {{{ Coding
