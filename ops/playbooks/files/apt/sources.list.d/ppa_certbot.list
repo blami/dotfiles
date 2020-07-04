@@ -1,0 +1,8 @@
+# /etc/apt/sources.list.d/ppa_certbot: Latest stable Certbot PPA
+# GPG: https://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x7BF576066ADA65728FC7E70A8C47BE8E75BCA694
+
+deb http://ppa.launchpad.net/certbot/certbot/ubuntu bionic main
+#deb-src http://ppa.launchpad.net/certbot/certbot/ubuntu bionic main
+
+
+# vim:set ft=debsources fo-=tc:
