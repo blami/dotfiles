@@ -1,12 +1,12 @@
 "Packages
 
-call pack#begin(g:localdir)
+"call pack#begin(g:localdir)
 "packreg('plugins', 'prabirshrestha/async.vim')
 "packreg('plugins', 'prabirshrestha/asyncomplete.vim')
 "packreg('plugins', 'prabirshrestha/vim-lsp')
 "packreg('plugins', 'prabirshrestha/asyncomplete-lsp.vim')
 
-call pack#end()
+"call pack#end()
 
 
 "General

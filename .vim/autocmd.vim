@@ -7,7 +7,7 @@ autocmd Syntax * call hl#HighlightColors()
 "Restore cursor position
 autocmd! BufReadPost * call util#RestoreCursorPosition()
 "Restore cursor style after leaving
-autocmd! VimLeave * set guicursor=a:block-blinkoff0
+"autocmd! VimLeave * set guicursor=a:block-blinkoff0
 
 "Refresh help tags
 autocmd! VimEnter * :helptags ~/.vim/doc
