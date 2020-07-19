@@ -1,8 +1,0 @@
-# /etc/apt/sources.list.d/ppa_longsleep-golang: Latest stable Go PPA
-# GPG: https://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x52B59B1571A79DBC054901C0F6BC817356A3D45E
-
-deb                 http://ppa.launchpad.net/longsleep/golang-backports/ubuntu bionic       main
-#deb-src             http://ppa.launchpad.net/longsleep/golang-backports/ubuntu bionic       main
-
-
-# vim:set ft=debsources fo-=tc:

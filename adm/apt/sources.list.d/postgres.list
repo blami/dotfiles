@@ -1,7 +1,0 @@
-# /etc/apt/sources.list.d/postgres.list - Official PostgreSQL APT repository
-# GPG: https://www.postgresql.org/media/keys/ACCC4CF8.asc
-
-deb                 http://apt.postgresql.org/pub/repos/apt             bionic-pgdg         main
-
-
-# vim:set ft=debsources fo-=t:

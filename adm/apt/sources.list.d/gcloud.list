@@ -1,7 +1,0 @@
-# /etc/apt/sources.list.d/gcloud.list - Google Cloud Platform APT repository
-# GPG: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-
-deb                 https://packages.cloud.google.com/apt               cloud-sdk           main
-
-
-# vim:set ft=debsources fo-=t:
