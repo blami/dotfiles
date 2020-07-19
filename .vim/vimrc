@@ -5,6 +5,7 @@ if has('vim_starting')
     set encoding=utf-8
     scriptencoding utf-8
 endif
+set fileencodings=ucs-bom,utf-8,default,latin2
 set fileformats=unix,dos                                "<EOL> formats that will be tried
 
 "File reading/handling
@@ -202,8 +203,10 @@ let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 set t_Co=256
 set background=dark                                     "Set dark background
-syntax on
-colors space
+if &t_Co > 1
+    syntax on
+    colors space
+endif
 set synmaxcol=200                                       "Highlight only first 200 columns
 set colorcolumn=80,120                                  "Highlight wrap columns
 set nocursorline                                        "Don't highlight line with cursor
@@ -234,4 +237,6 @@ source $HOME/.vim/pack.vim
 source $HOME/.vim/autocmd.vim
 
 
-"vim:set fo-=t:
+"vim:set ft=vimrc,fo-=t:
+
+
