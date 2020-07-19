@@ -57,6 +57,10 @@ vnoremap                <leader>azu             :sort iu<CR>
 vnoremap                <leader>zau             :sort! iu<CR>
 "Clone paragraph under cursor
 nnoremap                <leader>cp              yap<S-}>p
+"Blockquote (>) or comment out (#, or // for commentstring) visual selection
+vnoremap                <leader>>               :s/^/><CR>:nohl<CR>
+vnoremap                <leader>#               :s/^/#<CR>:nohl<CR>
+vnoremap                <leader>//              :s/^/\=printf(&commentstring, submatch(0))<CR>:nohl<CR>
 
 "Spell-checking
 nnoremap                <leader>sa              zg
