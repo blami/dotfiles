@@ -95,8 +95,8 @@ prompt_blami_precmd() {
         *) dow="${dow}" ;;
     esac
     # TODO Make delimiter . if alarm set?
-    local del=':'
-    PS1+="%D{%H}${del}%D{%M} %D{%d}${dow}%D{%m} " #"
+    local dlm=':'
+    PS1+="%D{%H}${dlm}%D{%M} %D{%d}${dow}%D{%m} " #"
 
     # User and hostname
     # -----------------
@@ -110,8 +110,8 @@ prompt_blami_precmd() {
     fi
     local host_ok=
     case $HOSTOK in
-        0) host_ok="●" ;;
         1) host_ok="●" ;;
+        *) host_ok="●" ;;
     esac
     local host_os="${OS:0:1:u}"
     PS1+="%n${host}${host_ok} " #"
