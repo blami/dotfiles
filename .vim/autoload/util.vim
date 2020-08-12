@@ -129,11 +129,6 @@ func! util#ExecReplaceBufferFile(cmd, tmpfile) abort
     call winrestview(l:winview)
 endfunc
 
-"Generate comment based on current filetype.
-func! util#Comment(str) abort
-    return printf(&commentstring, a:str)
-endfunc
-
 "Restore cursor position in file.
 func! util#RestoreCursorPosition() abort
     "TODO Store types in global variable

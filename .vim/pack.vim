@@ -1,6 +1,8 @@
 "Packages
 
-"call pack#begin(g:localdir)
+"Initialize pack extension, add localdir to syspath?
+"call pack#Init(g:localdir)
+
 "packreg('plugins', 'prabirshrestha/async.vim')
 "packreg('plugins', 'prabirshrestha/asyncomplete.vim')
 "packreg('plugins', 'prabirshrestha/vim-lsp')

@@ -178,6 +178,8 @@ set ttyfast
 set timeout timeoutlen=750                              "Key mapping sequence timeout (ms)
 set ttimeout ttimeoutlen=50                             "Key code sequence timeout (ms)
 set lazyredraw                                          "Don't redraw on registers and macros
+"Issues with vim starting in -- REPLACE -- mode
+set t_u7=                                               "Disable request cursor position
 
 "Mouse
 if has('mouse')
@@ -238,5 +240,3 @@ source $HOME/.vim/autocmd.vim
 
 
 "vim:set ft=vimrc,fo-=t:
-
-
