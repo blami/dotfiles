@@ -32,6 +32,7 @@
 
 # Directories
 bak
+blog
 desk
 docs
 downl
@@ -40,7 +41,7 @@ media
 pics
 pub
 public_html
-templ
+sandbox
 tmp
 ws
 
