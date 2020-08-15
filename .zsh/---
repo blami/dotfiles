@@ -1,5 +1,5 @@
 #!/usr/bin/zsh
-# ~/.zsh/funcs/--- - draw a horizontal red line in terminal window
+# ~/.zsh/--- - draw a horizontal red line in terminal window
 
 # Usage: ---
 

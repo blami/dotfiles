@@ -1,5 +1,5 @@
 #!/usr/bin/zsh
-# ~/.zsh/funcs/proxy - set proxy based on ~/.proxy contents
+# ~/.zsh/proxy - set proxy based on ~/.proxy contents
 
 # Usage: proxy PROXY
 

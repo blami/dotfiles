@@ -1,5 +1,5 @@
 #!/usr/bin/zsh
-# ~/.zsh/funcs/motd - Print MOTD
+# ~/.zsh/motd - Print MOTD
 
 # Usage: motd [/path/to/db]
 

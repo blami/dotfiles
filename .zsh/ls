@@ -1,5 +1,5 @@
 #!/usr/bin/zsh
-# ~/.zsh/funcs/ls - ls command wrapper
+# ~/.zsh/ls - ls command wrapper
 
 # Usage: ls [args...]
 
