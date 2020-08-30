@@ -8,7 +8,7 @@
 # |     | |
 # |     | |   .- user
 # |     | |   |   .- @ (@> for SSH connection)
-# |     | |   |   |.- host (HOST_NICKNAME if set)
+# |     | |   |   |.- host (HOSTNICK if set)
 # |     | |   |   ||   .- host HOSTOK
 # |     | |   |   ||   |
 # |     | |   |   ||   |  .- environment (.env)
