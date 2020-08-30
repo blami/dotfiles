@@ -16,6 +16,7 @@ function ssh_agent {
     SSH_AGENT_PID=$(ssh_agent_readenv "SSH_AGENT_PID")
 }
 
+[ -d $HOME/.ssh/agent ] || mkdir -p $HOME/.ssh/agent
 if [ -f "${SSH_AGENT_ENV}" ]; then
     # Read safely SSH_AUTH_SOCK and SSH_AGENT_PID
     SSH_AUTH_SOCK=$(ssh_agent_readenv "SSH_AUTH_SOCK")
