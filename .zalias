@@ -30,6 +30,7 @@ alias lO='ls -At1 && echo "--- Oldest ---"'
 alias lN='ls -Art1 && echo "--- Newest ---"'
 alias lt='tree -L 2 -d'
 alias mkdir='mkdir -p'                  # create parent directories
+alias rf='rm -rf'
 alias path='echo -e ${PATH//:/\\n}'
 
 # Directory shortcuts
