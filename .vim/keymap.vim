@@ -66,6 +66,10 @@ vnoremap                <leader>//              :s/^/\=printf(&commentstring, su
 nnoremap                <leader>sa              zg
 nnoremap                <leader>sac             3zg
 
+"Code completion
+"TODO Improve this and make it binding only when lsp-asyncomplete loaded
+inoremap <expr>         <F2>                    asyncomplete#force_refresh()
+
 "Selection, copy & paste
 "Reselect last selected block
 nnoremap                gV                      `[v`]
@@ -87,6 +91,7 @@ cnoremap                <C-a>                   <ESC>gggH<C-o>G
 "cnoremap                <S-INS>                 <C-r>+
 
 "Search and replace
+"TODO Improve and only find the next match if search was done before
 nnoremap                <F3>                    n
 nnoremap <silent>       \                       :noh<CR>
 "nnoremap                <C-r>                   :%s/
@@ -118,9 +123,9 @@ if has("gui")
     inoremap            <C-s>                   <ESC>:w<CR>i
     vnoremap            <C-s>                   <ESC>:w<CR>v
 endif
-nnoremap                <F2>                    :w<CR>
-inoremap                <F2>                    <ESC>:w<CR>i
-vnoremap                <F2>                    <ESC>:w<CR>v
+"nnoremap                <F2>                    :w<CR>
+"inoremap                <F2>                    <ESC>:w<CR>i
+"vnoremap                <F2>                    <ESC>:w<CR>v
 nnoremap                <leader>w               :w<CR>
 nnoremap                <leader>w!              :w!<CR>
 nnoremap                <leader>w#              :w#<CR>

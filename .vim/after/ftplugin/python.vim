@@ -16,7 +16,7 @@ setl indentkeys-=0#
 
 "File Matching
 setl suffixesadd=.py
-setl wildignore+=*.pyc
+setl wildignore+=*.pyc,*.pyo
 
 "Keybindings
 
@@ -28,5 +28,11 @@ if exists('g:lsp_loaded') && executable('pyls')
             \ 'name': 'pyls',
             \ 'cmd': {server_info->['pyls']},
             \ 'whitelist': ['python'],
+            \ 'workspace_config': {'pyls': {'plugins': {
+            \   'black': {'enabled': v:true},
+            \   'pycodestyle': {'enabled': v:true},
+            \   'pylint': {'enabled': v:true},
+            \ }}},
             \ })
+    autocmd BufWritePre <buffer> LspDocumentFormatSync
 endif
