@@ -1,0 +1,145 @@
+// profiles.json - Windows Terminal configuration
+{
+  "$schema": "https://aka.ms/terminal-profiles-schema",
+
+  "defaultProfile": "{2c4de342-38b7-51cf-b940-2309a097f518}",
+  "alwaysShowTabs": true,
+  "initialCols": 120,
+  "initialRows": 30,
+  "requestedTheme": "system",
+  "showTabsInTitlebar": true,
+  "showTerminalTitleInTitlebar": true,
+  "tabWidthMode": "equal",
+  "snapToGridOnResize": true,
+  "copyOnSelect": true,
+  "wordDelimiters": " /\\()\"'-.,:;<>~!@#$%^&*|+=[]{}~?\u2502",
+
+  "profiles": [
+    {
+      "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",
+      "name": "Ubuntu",
+      "icon": "%USERPROFILE%\\.local\\share\\icons\\ubuntu.ico",
+      "startingDirectory": "%USERPROFILE%",
+      "colorScheme": "blami",
+      "closeOnExit": "graceful",
+      "cursorColor": "#FFFFFF",
+      "cursorShape": "filledbox",
+      "fontFace": "GoMono NF",
+      "fontSize": 13,
+      "historySize": 8196,
+      "padding": "8, 8, 8, 8",
+      "snapOnInput": true,
+      "useAcrylic": false
+    },
+    {
+      "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+      "name": "PowerShell",
+      "commandline": "powershell.exe"
+    },
+    {
+      "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+      "name": "cmd",
+      "commandline": "cmd.exe"
+    },
+    {
+      "guid": "{b453ae62-4e3d-5e58-b989-0a998ec441b8}",
+      "hidden": true,
+      "name": "Azure Cloud Shell",
+      "source": "Windows.Terminal.Azure"
+    }
+  ],
+
+  "keybindings": [
+    // General
+    { "keys": [ "ctrl+shift+enter" ],       "command": "newTab" },
+    { "keys": [ "ctrl+shift+space" ],       "command": "openNewTabDropdown" },
+    { "keys": [ "ctrl+tab" ],               "command": "nextTab" },
+    { "keys": [ "ctrl+shift+tab" ],         "command": "prevTab" },
+    { "keys": [ "ctrl+shift+backspace" ],   "command": "closePane" },
+    { "keys": [ "alt+f4" ],                 "command": "closeWindow" },
+    { "keys": [ "alt+enter" ],              "command": "toggleFullscreen" },
+    { "keys": [ "ctrl+-" ],                 "command": "decreaseFontSize" },
+    { "keys": [ "ctrl+=" ],                 "command": "increaseFontSize" },
+    { "keys": [ "ctrl+0" ],                 "command": "resetFontSize" },
+
+    { "keys": [ "shift+pgup" ],             "command": "scrollUpPage" },
+    { "keys": [ "shift+pgdn" ],             "command": "scrollDownPage" },
+
+    { "keys": [ "ctrl+shift+-" ],           "command": { "action": "splitPane", "split": "horizontal" } },
+    { "keys": [ "ctrl+shift+\\" ],          "command": { "action": "splitPane", "split": "vertical" } },
+    { "keys": [ "ctrl+shift+down" ],        "command": { "action": "moveFocus", "direction": "down" } },
+    { "keys": [ "ctrl+shift+left" ],        "command": { "action": "moveFocus", "direction": "left" } },
+    { "keys": [ "ctrl+shift+right" ],       "command": { "action": "moveFocus", "direction": "right" } },
+    { "keys": [ "ctrl+shift+up" ],          "command": { "action": "moveFocus", "direction": "up" } },
+
+    { "keys": [ "shift+insert"],            "command": "paste" },
+
+    // Remove default keybidnigns
+    { "keys": [ "ctrl+shift+t" ],           "command": null },
+    { "keys": [ "ctrl+shift+w" ],           "command": null },
+    { "keys": [ "f11" ],                    "command": null },
+    { "keys": [ "ctrl+shift+c"],            "command": null },
+    { "keys": [ "ctrl+shift+v"],            "command": null },
+    { "keys": [ "ctrl+shift+pgdn" ],        "command": null },
+    { "keys": [ "ctrl+shift+pgup" ],        "command": null },
+    { "keys": [ "ctrl+shift+down" ],        "command": null },
+    { "keys": [ "ctrl+shift+up" ],          "command": null },
+    { "keys": [ "ctrl+shift+1" ],           "command": null },
+    { "keys": [ "ctrl+shift+2" ],           "command": null },
+    { "keys": [ "ctrl+shift+3" ],           "command": null },
+    { "keys": [ "ctrl+shift+4" ],           "command": null },
+    { "keys": [ "ctrl+shift+5" ],           "command": null },
+    { "keys": [ "ctrl+shift+6" ],           "command": null },
+    { "keys": [ "ctrl+shift+7" ],           "command": null },
+    { "keys": [ "ctrl+shift+8" ],           "command": null },
+    { "keys": [ "ctrl+shift+9" ],           "command": null },
+    { "keys": [ "ctrl+alt+1" ],             "command": null },
+    { "keys": [ "ctrl+alt+2" ],             "command": null },
+    { "keys": [ "ctrl+alt+3" ],             "command": null },
+    { "keys": [ "ctrl+alt+4" ],             "command": null },
+    { "keys": [ "ctrl+alt+5" ],             "command": null },
+    { "keys": [ "ctrl+alt+6" ],             "command": null },
+    { "keys": [ "ctrl+alt+7" ],             "command": null },
+    { "keys": [ "ctrl+alt+8" ],             "command": null },
+    { "keys": [ "ctrl+alt+9" ],             "command": null },
+    { "keys": [ "alt+down" ],               "command": null },
+    { "keys": [ "alt+left" ],               "command": null },
+    { "keys": [ "alt+right" ],              "command": null },
+    { "keys": [ "alt+up" ],                 "command": null },
+    { "keys": [ "alt+shift+down" ],         "command": null },
+    { "keys": [ "alt+shift+left" ],         "command": null },
+    { "keys": [ "alt+shift+right" ],        "command": null },
+    { "keys": [ "alt+shift+up" ],           "command": null },
+
+
+    { "command": "duplicateTab", "keys": [ "ctrl+shift+d" ] },
+    { "command": "openNewTabDropdown", "keys": [ "ctrl+shift+space" ] },
+    { "command": "openSettings", "keys": [ "ctrl+," ] },
+    { "command": "find", "keys": [ "ctrl+shift+f" ] }
+  ],
+
+  "schemes": [
+    {
+      "name": "blami",
+      "foreground": "#b2b2b2",
+      "background": "#212026",
+      "black": "#292b2e",
+      "red": "#d26487",
+      "green": "#35a8a5",
+      "yellow": "#b89f33",
+      "blue": "#7590db",
+      "purple": "#a15ea7",
+      "cyan": "#544a65",
+      "white": "#5b5b5b",
+      "brightBlack": "#44505c",
+      "brightRed": "#f2241f",
+      "brightGreen": "#67b11d",
+      "brightYellow": "#dc752f",
+      "brightBlue": "#4f97d7",
+      "brightPurple": "#bc6ec5",
+      "brightCyan": "#2d9574",
+      "brightWhite": "#cdcdcd"
+    }
+  ]
+
+}
