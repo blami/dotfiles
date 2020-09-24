@@ -47,3 +47,7 @@ ws
 
 # Misc
 .sudo_as_admin_successful
+
+# Windows
+AppData/Local/ElevatedDiagnostics
+AppData/Local/Packages/CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc
