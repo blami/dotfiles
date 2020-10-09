@@ -9,7 +9,7 @@
 
 # {{{ Hostname
 host=${HOSTNICK:-$HOST}
-[ -z "$SSH_CONNECTION" ] || host="$host>"
+[ -z "$SSH_CONNECTION" ] || host=">$host"
 # }}}
 
 # Print date in same format as 'blami' Zsh prompt uses
