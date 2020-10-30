@@ -24,6 +24,10 @@
 	ui = auto
 	pager = true
 
+# NOTE: Using Vim plugin instead of this.
+[commit]
+	template = ~/.gitmessage
+
 [merge]
 	tool = vimdiff
 
