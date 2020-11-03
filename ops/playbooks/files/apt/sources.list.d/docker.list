@@ -1,7 +1,7 @@
 # /etc/apt/sources.list.d/docker.list - Official Docker APT repository
 # GPG: https://download.docker.com/linux/ubuntu/gpg
 
-deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
+deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
 
 
 # vim:set ft=debsources fo-=t:
