@@ -569,6 +569,7 @@ if &background ==# 'dark'
     hi scalaInstanceDeclaration ctermfg=249 ctermbg=NONE guifg=#b2b2b2 guibg=NONE guisp=NONE cterm=NONE gui=NONE
     hi scalaInterpolation ctermfg=29 ctermbg=NONE guifg=#2d9574 guibg=NONE guisp=NONE cterm=NONE gui=NONE
     hi markdownItalic ctermfg=243 ctermbg=NONE guifg=#727272 guibg=NONE guisp=NONE cterm=NONE,italic gui=NONE,italic
+    hi markdownBold ctermfg=252 ctermbg=NONE guifg=#cdcdcd guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
     hi markdownH1 ctermfg=32 ctermbg=NONE guifg=#4f97d7 guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
     hi markdownH2 ctermfg=29 ctermbg=NONE guifg=#2d9574 guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
     hi markdownH3 ctermfg=70 ctermbg=NONE guifg=#67b11d guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
@@ -1181,6 +1182,7 @@ if get(g:, "space_vim_filetype_hi_groups", 1)
   hi scalaInstanceDeclaration ctermfg=60 ctermbg=NONE guifg=#655370 guibg=NONE guisp=NONE cterm=NONE gui=NONE
   hi scalaInterpolation ctermfg=29 ctermbg=NONE guifg=#24775c guibg=NONE guisp=NONE cterm=NONE gui=NONE
   hi markdownItalic ctermfg=60 ctermbg=NONE guifg=#504259 guibg=NONE guisp=NONE cterm=NONE,italic gui=NONE,italic
+  hi markdownBold ctermfg=252 ctermbg=NONE guifg=#83758c guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
   hi markdownH1 ctermfg=32 ctermbg=NONE guifg=#3a81c3 guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
   hi markdownH2 ctermfg=29 ctermbg=NONE guifg=#24775c guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
   hi markdownH3 ctermfg=70 ctermbg=NONE guifg=#67b11d guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
