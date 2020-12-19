@@ -233,7 +233,7 @@ filetype indent on
 "Includes
 source $HOME/.vim/keymap.vim
 source $HOME/.vim/abbrev.vim
-source $HOME/.vim/pack.vim
+source $HOME/.vim/packs.vim
 
 "Register global autocmds
 source $HOME/.vim/autocmd.vim
