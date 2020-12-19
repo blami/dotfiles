@@ -150,6 +150,7 @@ set statusline=
 set statusline+=%92*%2.2n%*
 set statusline+=\ %95*%{status#ShowMode()}%*            "Mode
 set statusline+=%{status#ShowPaste()}                   "Paste status
+set statusline+=%{status#ShowAutofmt()}                 "Autoformat status
 set statusline+=\ %t%m%94*%r%*
 set statusline+=\ %92*[%{&ft!=''?&ft:'off'}]%*          "Filetype
 set statusline+=\ %<%{&ff}%{&fenc!=''?','.&fenc:''}     "File format and encoding
