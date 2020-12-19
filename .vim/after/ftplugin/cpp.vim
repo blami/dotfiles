@@ -4,6 +4,10 @@
 "if exists("b:did_ftplugin") | finish | endif
 let b:did_ftplugin = 1
 
+"Formatting
+setl textwidth=119
+setl colorcolumn=120
+
 "File Matching
 setl suffixesadd=.cpp,.cxx,.c++,.h,.hpp,.hxx,.h++
 
@@ -16,4 +20,5 @@ if exists('g:lsp_loaded') && executable('clangd')
             \ 'cmd': {server_info->['clangd', '-background-index']},
             \ 'whitelist': ['cpp'],
             \ })
+    autocmd BufWritePre <buffer> call util#LspDocumentFormatSync()
 endif

@@ -141,6 +141,14 @@ func! util#RestoreCursorPosition() abort
     endif
 endfunc
 
+"If noautofmt is 0 call LspDocumentFormatSync. I use noautofmt flag to avoid
+"autoformatting on e.g. old projects (to keep them consistent).
+func! util#LspDocumentFormatSync() abort
+    if !get(b:, 'noautofmt', 0)
+        LspDocumentFormatSync
+    endif
+endfunc
+
 "Paste helper for terminal bracketed mode.
 func! util#XTermPasteBegin()
     set pastetoggle=<Esc>[201~

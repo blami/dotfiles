@@ -17,6 +17,7 @@ nnoremap <silent>       <leader>rc              :source $MYVIMRC<CR>
 nnoremap <silent>       <leader>n               :call util#ToggleNumber()<CR>
 nnoremap <silent>       <leader>nn              :setl nonumber norelativenumber<CR>
 nnoremap                <leader>p               :setl invpaste<CR>
+nnoremap <silent>       <leader>f               :let b:noautofmt = get(b:, 'noautofmt', 0) ? 0 : 1<CR>
 nnoremap <silent>       <leader>l               :setl invlist<CR>
 "Toggle spellcheck and spellcheck language
 nnoremap <silent>       <leader>s               :setl invspell<CR>
@@ -68,7 +69,7 @@ nnoremap                <leader>sac             3zg
 
 "Code completion
 "TODO Improve this and make it binding only when lsp-asyncomplete loaded
-inoremap <expr>         <F2>                    asyncomplete#force_refresh()
+inoremap <expr>         <S-Tab>                 asyncomplete#force_refresh()
 
 "Selection, copy & paste
 "Reselect last selected block
