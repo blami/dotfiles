@@ -18,4 +18,5 @@ if exists('g:lsp_loaded') && executable('clangd')
             \ 'cmd': {server_info->['clangd', '-background-index']},
             \ 'whitelist': ['c'],
             \ })
+    autocmd BufWritePre <buffer> call autofmt#Format()
 endif

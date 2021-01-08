@@ -31,6 +31,8 @@ if exists('g:lsp_loaded') && executable('gopls')
             \ 'cmd': {server_info->['gopls']},
             \ 'whitelist': ['go'],
             \ })
-    autocmd BufWritePre <buffer> LspDocumentFormatSync
-    autocmd BufWritePre <buffer> call execute('LspCodeActionSync source.organizeImports')
+
+    autocmd BufWritePre <buffer> call autofmt#Format(
+            \ 'LspCodeActionSync source.organizeImports'
+            \ )
 endif

@@ -34,5 +34,6 @@ if exists('g:lsp_loaded') && executable('pyls')
             \   'pylint': {'enabled': v:true},
             \ }}},
             \ })
-    autocmd BufWritePre <buffer> LspDocumentFormatSync
+
+    autocmd BufWritePre <buffer> call autofmt#Format()
 endif

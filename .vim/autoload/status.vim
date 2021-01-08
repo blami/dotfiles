@@ -81,9 +81,11 @@ endfunc
 
 "Show paste mode flag.
 func! status#ShowPaste()
-    if &paste
-        return ''
-    else
-        return ' '
-    endif
+    return &paste ? '' : ''
+endfunc
+
+"Show autoformatting flag. I use b:noautofmt to NOT trigger Lsp or other
+"means of autoformatting on write. Not handy when working on legacy stuff.
+func! status#ShowAutofmt()
+    return get(b:, 'noautofmt', 0) ? '' : ''
 endfunc
