@@ -20,5 +20,5 @@ if exists('g:lsp_loaded') && executable('clangd')
             \ 'cmd': {server_info->['clangd', '-background-index']},
             \ 'whitelist': ['cpp'],
             \ })
-    autocmd BufWritePre <buffer> call util#LspDocumentFormatSync()
+    autocmd BufWritePre <buffer> call autofmt#Format()
 endif
