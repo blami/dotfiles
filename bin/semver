@@ -1,0 +1,111 @@
+#!/bin/bash
+# semver.sh - Manipulate semantic versions
+# Copyright (c) Ondrej Balaz. Licensed under UNLICENSE.
+
+# TODO Put usage variable here so those who read script can quickly see how to
+# use it.
+HELP=$(cat <<EOF
+$0 - Manipulate semantic versions
+Usage: $0 [-Mmprb] [VERSION]            bump version
+       $0 VERSION "<","=",">" VERSION   compare two versions
+
+Options:
+  -M +|+N|N       bump major by 1, N or set to N
+  -m +|+N|N       bump minor by 1, N or set to N
+  -p +|+N|N       bump patch by 1, N or set to N
+  -r +|+N|N|.P|P  bump pre-release last part by 1, N, set to N or append .P or
+                  set entire pre-release to P (use "" to clear pre-release)
+  -b +|+N|N|.P|P  bump build last part by 1, N, set to N or append .P or set
+                  entire build to P (use "" to clear build)
+  -h              show this message and exit
+
+Bumping certain version number will reset all components next to it unless they
+are explicitely bumped as well in same call (in such case their original values
+will be used as a base). Bumping pre-release and build with +, N or +N argument
+will only work if last .part is numeric.
+
+NOTE: N must always be zero or positive integer, P can be either integer or
+string composed of digits, ASCII letters nad dashes.
+
+Copyright (c) Ondrej Balaz. Licensed under UNLICENSE license.
+Downloads and bug-reports: https://github.com/blami/scripts
+EOF
+)
+
+# Regular expressions (see https://semver.org/)
+# Semantic version building blocks
+RE_VERSION="(0|[1-9][[:digit:]]*)"
+RE_PRERELEASE="(0|[1-9][[:digit:]]*|[[:digit:]]*[a-zA-Z-][0-9a-zA-Z-]*)"
+RE_BUILD="([0-9a-zA-Z-]+)"
+# Semantic version
+RE_SEMVER="^"
+RE_SEMVER+="${RE_VERSION}\.${RE_VERSION}\.${RE_VERSION}" # major.minor.patch
+RE_SEMVER+="(-(${RE_PRERELEASE}(\.${RE_PRERELEASE})?))?" # -pre-release
+RE_SEMVER+="(\+(${RE_BUILD}(\.${RE_BUILD})*))?"          # +build
+RE_SEMVER+="$"
+
+# Functions
+
+parse_semver() {
+    # Parse given $1 into an array variable named $2 as (major, minor, patch, 
+    # pre-release, build). Return 0 if $2 is valid semver otherwise 1.
+    local -n out=$2
+    if [[ $1 =~ $RE_SEMVER ]]; then
+        out=("${BASH_REMATCH[1]}"   # major
+             "${BASH_REMATCH[2]}"   # minor
+             "${BASH_REMATCH[3]}"   # patch
+             "${BASH_REMATCH[5]}"   # pre-release (all components)
+             "${BASH_REMATCH[10]}") # build (all components)
+        return 0
+    fi
+    return 1
+}
+
+
+# Main
+declare -A changeset
+err=0
+
+# Process arguments
+while getopts "hM:m:p:r:b:" OPT; do
+    case "$OPT" in
+    h)
+        echo "$HELP" ; exit 0
+        ;;
+    M|m|p)
+        re="^(\+|\+?${RE_VERSION})$"
+        if [[ ! $OPTARG =~ $re ]]; then
+            >&2 echo "$0: illegal -$OPT value -- $OPTARG" ; err=1
+        fi
+        changeset[$OPT]=$OPTARG
+        ;;
+    r|b)
+        case "$OPT" in
+            r) re=$RE_PRERELEASE ;;
+            b) re=$RE_BUILD ;;
+        esac
+        re="^(\+|\+?${RE_VERSION}|\.?${re}(\.${re})*)?$"
+        if [[ ! $OPTARG =~ $re ]]; then
+            >&2 echo "$0: illegal -$OPT value -- $OPTARG" ; err=1
+        fi
+        changeset[$OPT]=$OPTARG
+        ;;
+    esac
+done ; shift $((OPTIND-1))
+# Populate positional arguments, if in bump mode and no arguments, read STDIN
+if [[ $# -gt 1 && $# -ne 3 ]]; then
+    >&2 echo "$0: invalid number of positional arguments" ; err=1
+elif [[ $# -eq 3 && ${#changeset[@]} -ne 0 ]]; then
+    >&2 echo "$0: illegal use of -Mmprb in version comparison mode" ; err=1
+fi
+[ $# -ne 0 ] && arg1=$1 || read arg1 ; arg2=$3 ; argop=$2
+# Validate 
+
+
+echo $arg1 $argop $arg2
+
+if [ $err -ne 0 ]; then
+    echo -e "Run $0 -h to see how to use this script." ; exit 1
+fi
+unset re
+echo ${changeset[@]}
