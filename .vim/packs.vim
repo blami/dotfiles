@@ -28,4 +28,3 @@ hi LspHintText          guifg=#cdcdcd
 let g:lsp_highlights_enabled = 1                        "highlight signs
 let g:lsp_fold_enabled=0                                "disable code folding
 let g:asyncomplete_auto_popup = 0                       "No autopopup
-
