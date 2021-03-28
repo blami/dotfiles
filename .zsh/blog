@@ -1,0 +1,58 @@
+#!/usr/bin/zsh
+# ~/.zsh/blog - create new blog post
+
+BLOG_POSTS=~/blog/_posts
+
+blog () {
+    [ $# -lt 1 ] && {
+        cat <<EOF
+Usage: $0 [-t tag] [-d date] [-p] [--] An Awesome Title
+  -d DATE  set post date (format is "YYYY-MM-DD HH:MM:SS +ZZZZ")
+  -t TAG   add tag, use multiple times for multiple tags
+  -p       make post published
+EOF
+        return 1
+    }
+    [ -d "$BLOG_POSTS" ] || {
+        >&2 echo "error: $BLOG_POSTS doesn't exist!"
+        return 1
+    }
+
+    # Parse -d, -t and -p arguments, don't parse any argument after --
+    local published="false"
+    local tags=()
+    local date
+    while getopts d:t:p opt; do
+        case $opt in
+        d) date="--date=$OPTARG" ;;
+        t) tags+=("$OPTARG") ;;
+        p) published="true" ;;
+        *) >&2 echo "error: invalid option ${@:$OPTIND:1}" ; return 1 ;;
+        esac
+    done
+    # Shift away -- too; if present
+    shift $OPTIND-1 ; [[ "$1" == "--" ]] && shift 1
+
+    local title="$@"
+    local date=( $(date +%Y-%m-%d\ %H:%M:%S\ %z $date) )
+    local file="${BLOG_POSTS}/${date[1]}-${(L)title:gs/ /-/}.md"
+
+    # If file doesn't exits, create it
+    if [ ! -e "$file" ] ; then
+        cat >$file <<EOF
+---
+title: $title
+date: $date
+tags: $tags
+published: $published
+---
+
+
+EOF
+    fi
+
+    # Open in editor
+    [ -n "$EDITOR" ] && "$EDITOR" "$file"
+}
+
+blog $@
