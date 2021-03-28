@@ -1,0 +1,4 @@
+#!/bin/sh
+# mvuid, mvgid - Move given user/group id to different one, reown all files.
+
+echo NOT IMPLEMENTED YET
