@@ -1,0 +1,93 @@
+"The problem with object-oriented languages is they’ve got all this implicit environment that they carry around with them. You wanted a banana but what you got was a gorilla holding the banana and the entire jungle."
+	-- Joe Armstrong, creator of Erlang
+%
+"If a feature is sometimes dangerous, and there is a better option, then always use the better option."
+	-- Douglas Crockford, author of JavaScript: The Good Parts
+%
+"Simplicity is prerequisite for reliability."
+	-- Edsger W. Dijkstra, computer scientist and educator
+%
+"The computing scientist's main challenge is not to get confused by the complexities of his own making."
+	-- E. W. Dijkstra
+%
+"There are two ways of constructing a software design: One way is to make it so simple that there are obviously no deficiencies and the other way is to make it so complicated that there are no obvious deficiencies."
+	-- C.A.R. Hoare, The 1980 ACM Turing Award Lecture
+%
+"Sometimes, the elegant implementation is just a function. Not a method. Not a class. Not a framework. Just a function."
+	-- John Carmack, creator of DOOM (https://twitter.com/ID_AA_Carmack/status/53512300451201024)
+%
+"Gear is the ultimate procrastination."
+	-- Max Joseph, filmmaker
+%
+"Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it."
+	-- Brian W. Kernighan & P. J. Plauger, authors of The Elements of Programming Style
+%
+"We could, for instance, begin with cleaning up our language by no longer calling a bug a bug but by calling it an error. It is much more honest because it squarely puts the blame where it belongs, viz. with the programmer who made the error. The animistic metaphor of the bug that maliciously sneaked in while the programmer was not looking is intellectually dishonest as it disguises that the error is the programmer's own creation. The nice thing of this simple change of vocabulary is that it has such a profound effect: while, before, a program with only one bug used to be "almost correct", afterwards a program with an error is just "wrong" (because in error)."
+	-- E. W. Dijkstra, http://www.cs.utexas.edu/users/EWD/transcriptions/EWD10xx/EWD1036.html
+%
+"A monad is a monoid in the category of endofunctors, what's the problem?"
+	-- James Iry, fictionally quoting Philip Wadler, paraphrasing Saunders Mac Lane, co-founder of category theory.
+%
+"All told, a monad in X is just a monoid in the category of endofunctors of X, with product × replaced by composition of endofunctors and unit set by the identity endofunctor."
+	-- Saunders Mac Lane, co-founder of category theory
+%
+"A program that produces incorrect results twice as fast is infinitely slower."
+	-- John Osterhout
+%
+"She was the first machine man built that assisted the power of his brain instead of the strength of his arm."
+	-- Rear Admiral Grace Murray Hopper, speaking about the Mark I
+%
+"…what was really required was a description of the data and a statement of the relationships between the data sets. … We must state relationships, not procedures."
+	-- Rear Admiral Grace Murray Hopper, speaking of The Language Structures Group
+%
+"[The Analytical Engine] might act upon other things besides number, were objects found whose mutual fundamental relations could be expressed by those of the abstract science of operations … the engine might compose elaborate and scientific pieces of music of any degree of complexity or extent."
+	-- Ada Lovelace, 1842
+%
+"Software during the early days … was regarded as an art and as magic, not a science. I had always believed that both art and science were involved in its creation, but at that time most thought otherwise. … thus I began to use the term “software engineering” … It was an ongoing joke for a long time."
+	-- Margaret Hamilton, Director of Apollo Flight Computer Programming: https://medium.com/@verne/margaret-hamilton-the-engineer-who-took-the-apollo-to-the-moon-7d550c73d3fa
+%
+"So what I said in that talk was: When we define a subtype, it ought to have the same behavior as the supertype, as far as anybody using it could tell. A very simple idea, but nobody had said that before. This is known now as the Liskov Substitution Principle—it developed a life of its own! [laughs.]"
+	-- Barbara Liskov, computer scientist, on OOPSLA (1987): http://ethw.org/Oral-History:Barbara_Liskov_(2001)
+%
+"When my students leave, I mourn."
+	-- Barbara Liskov, computer scientist: http://ethw.org/Oral-History:Barbara_Liskov_(2001)
+%
+"From then on, when anything went wrong with a computer, we said it had bugs in it."
+	-- Rear Admiral Grace Murray Hopper, on the extraction of a moth from the Mark II
+%
+"Granted that the actual mechanism is unerring in its processes, the cards may give it wrong orders."
+	-- Ada Lovelace
+%
+"The best way to get the right answer on the Internet is not to ask a question, it's to post the wrong answer."
+	-- attributed to Ward Cunningham, quoted as Cunningham's Law
+%
+"Some people prefer not to commingle the functional, lambda-calculus part of a language with the parts that do side effects. It seems they believe in the separation of Church and State."
+	-- Guy Steele, coauthor of the Lambda Papers.
+%
+"Thus, programs must be written for people to read, and only incidentally for machines to execute."
+	-- Hal Abelson, SICP
+%
+"Functional programmer: (noun) One who names variables 'x', names functions 'f', and names code patterns 'zygohistomorphic prepromorphism'"
+	-- James Iry
+%
+"The most depressing thing about life as a programmer, I think, is if you’re faced with a chunk of code that either someone else wrote or, worse still, you wrote yourself but no longer dare to modify. That’s depressing."
+	-- Simon Peyton Jones
+%
+"The explicit teaching of thinking is no trivial task, but who said that the teaching of programming is? In our terminology, the more explicitly thinking is taught, the more of a scientist the programmer will become."
+	-- Edsger Dijkstra
+%
+"A parser for things / Is a function from strings / To lists of pairs / Of things and strings"
+	-- Fritz Ruehr
+%
+"Every good idea will be discovered twice: once by a logician and once by a computer scientist."
+	-- Philip Wadler
+%
+"The functional programmer sounds rather like a mediæval monk, denying himself the pleasures of life in the hope that it will make him virtuous."
+	-- John Hughes, Why Functional Programming Matters
+%
+"It is not only not right, it is not even wrong."
+	-- apocryphal, attributed to Wolfgang Pauli
+%
+"Precision diminishes the likelihood of truth, but often increases the pragmatic value of a belief if it is true."
+	-- Bertrand Russell
+%
