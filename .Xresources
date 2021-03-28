@@ -20,8 +20,8 @@ Xft.hintstyle:          hintslight
 ! {{{ URxvt
 URxvt.termName:         xterm-256color
 URxvt.loginShell:       false
-URxvt.font:             xft:Input Mono:pixelsize=14
-URxvt.boldFont:         xft:Input Mono:pixelsize=14
+URxvt.font:             xft:GoMono NF:pixelsize=14
+URxvt.boldFont:         xft:GoMono NF:pixelsize=14
 URxvt.inputMethod:      ibus
 URxvt.print-pipe:       cat > /dev/null
 URxvt.urgentOnBell:     true
