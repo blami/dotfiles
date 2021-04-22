@@ -24,7 +24,9 @@
 	ui = auto
 	pager = true
 
-# NOTE: Using Vim plugin instead of this.
+[init]
+	defaultbranch = main
+
 [commit]
 	template = ~/.gitmessage
 
