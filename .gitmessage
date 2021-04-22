@@ -11,9 +11,9 @@
 #
 # Further paragraphs come after blank lines.
 #
-# - Bullet points are okay, too
+# * Bullet points are okay, too
 #
-# - Typically a hyphen or asterisk is used for the bullet, followed by a
-#   single space, with blank lines in between.
+# * Typically a hyphen or asterisk is used for the bullet, followed by a
+# single space, with blank lines in between.
 #
 # Resolves: #123
