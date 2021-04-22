@@ -37,8 +37,11 @@
 	cmd = vim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c '$wincmd J'
 
 [push]
-	; Push branches manually one by one
+	# Push branches manually one by one
 	default = simple
+
+[pull]
+	ff = only
 
 [rebase]
 	autosquash = true
