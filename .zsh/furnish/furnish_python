@@ -1,0 +1,19 @@
+# Install Python packages listed in ... using yarn as a user-global packages.
+
+furnish_python () {
+    pip3 install --user \
+        black \
+        isort \
+        mypy \
+        pylint \
+        python-lsp-server \
+        python-lsp-black \
+        pyls-isort \
+        mypy-ls \
+        pytest \
+        sphinx
+}
+
+furnish_python $@
+
+# vim:set ft=zsh:
