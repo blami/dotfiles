@@ -1,0 +1,57 @@
+#!/usr/bin/zsh
+# ~/.zsh/furnish - simple plugin framework to furnish a new machine/account
+# with non-distribution things (such as vim plugins, go/python/node tools,
+# etc.)
+
+# Usage: furnish [plugin ...]
+# NOTE: If no plugin names are given all plugins will run.
+
+# Plugins have to reside in same directory as this script and follow naming
+# pattern `furnish_<plugin>` (e.g. furnish_vim)
+
+furnish () {
+    setopt localoptions
+
+    # Get all plugins
+    declare -A plugins
+    for i in ${${(%):-%x}:h}/furnish_*; do
+        # TODO Is it possible to do this directly?
+        local k=${${i:t}#"furnish_"} ; plugins[$k]=$i
+    done
+
+    # Process commandline
+    while getopts l opt; do
+        case $opt in
+        l) echo "available plugins: ${(k)plugins}" ; return ;;
+        *) >&2 echo "error: invalid option ${@:$OPTIND:1}" ; return 1 ;;
+        esac
+    done
+    shift $OPTIND-1 ; [[ "$1" == "--" ]] && shift 1
+    # Autoload all needed plugins
+    local loaded_plugins=()
+    if [ $# -eq 0 ]; then
+        loaded_plugins=( ${(k)plugins} )
+    else
+        for i in $@; do
+            [ -z ${plugins[$i]+x} ] && {
+                >&2 echo "error: plugin \"$i\" not found" ; return 1
+            }
+            loaded_plugins+=$i
+        done
+    fi
+    # TODO unfunction if function is set?
+    for i in ${loaded_plugins[@]}; do autoload -U ${plugins[$i]}; done
+
+    # Run plugins
+    # NOTE: Not runing directly with autoload to be able to unfunction nicely
+    for i in ${loaded_plugins[@]}; do
+        echo "Furnish $i"
+        furnish_$i;
+    done
+
+    # NOTE: Plugins must not have any sub-functions in order to make this work,
+    # I just live with that
+    for i in ${loaded_plugins[@]}; do unfunction furnish_$i; done
+}
+
+furnish $@
