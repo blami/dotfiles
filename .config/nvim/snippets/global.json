@@ -1,0 +1,7 @@
+{
+  "copyright": {
+    "prefix": "copyright",
+    "body": "$LINE_COMMENT Copyright (c) Ondrej Balaz. All rights reserved.",
+    "description": "Copyright block"
+  }
+}
