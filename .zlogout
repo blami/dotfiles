@@ -1,6 +1,5 @@
 # ~/.zlogout: Z shell logout script
 
-
 # {{{ Includes
 # Local configuration
 [ -r $HOME/.zlogout_local ] && . $HOME/.zlogout_local
