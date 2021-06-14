@@ -57,7 +57,7 @@ fi
 
 
 # {{{ Misc environment
-if (( $+commands[nvim] ))
+if (( $+commands[nvim] )); then
     EDITOR=nvim
     VISUAL=nvim
 else
