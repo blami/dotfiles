@@ -19,7 +19,8 @@ if &background ==# 'dark'
     hi NonText          guifg=#44505c   guibg=NONE
     hi Visual           guifg=NONE      guibg=#544a65
     hi LineNr           guifg=#44505c   guibg=#212026
-    hi CursorLineNr     guifg=#bc6ec5   guibg=NONE
+    hi CursorLine       guifg=NONE      guibg=NONE
+    hi CursorLineNr     guifg=#b2b2b2   guibg=#212026
     hi SignColumn       guifg=#44505c   guibg=#212026
     hi ColorColumn      guifg=NONE      guibg=#212026
     hi FoldColumn       guifg=#bc6ec5   guibg=NONE
@@ -29,7 +30,7 @@ if &background ==# 'dark'
 
     hi MatchParen       guifg=#67b11d   guibg=NONE
 
-    "Search
+    "Selection and search
     hi IncSearch        guifg=#e18254   guibg=#292b2e   gui=reverse
 
     "Status, tabs and split
@@ -37,7 +38,7 @@ if &background ==# 'dark'
     hi StatusLine       guibg=#b2b2b2   guifg=#5d4d7a
     hi StatusLineNC     guibg=#727272   guifg=#34323e
     hi VertSplit        guibg=#727272   guifg=#34323e
-    
+
     "Popup and wildmenu
     hi Pmenu            guifg=#9a9aba   guibg=#34323e
     hi PmenuSel         guifg=NONE      guibg=#5e5079
@@ -78,13 +79,61 @@ if &background ==# 'dark'
     hi String           guifg=#2d9574
     hi Structure        guifg=#4495b4
     hi Tag              guifg=#e18254
+    hi Title            guifg=#2d9574
     hi Todo             guifg=#e18254   guibg=#212026
     hi Type             guifg=#ce537a
     hi Typedef          guifg=#b1951d
 
+    hi Underlined       guifg=NONE      guibg=NONE      gui=underline
+    hi Strikethrough    guifg=NONE      guibg=NONE      gui=strikethrough
 
-    hi Underlined       guifg=#bc6ec5
-    
+    "Language specific (MUST BE LINK TO "Syntax)
+
+    "Plugins
+    "LSP
+    hi LspDiagnosticsDefaultError       guifg=#f2241f   guibg=#212026
+    hi LspDiagnosticsVirtualTextError   guifg=#f2241f   guibg=NONE
+"LspDiagnosticsDefaultError xxx guifg=#f2241f guibg=#212026
+"CompeDocumentation xxx links to NormalFloat
+"LspDiagnosticsDefaultHint xxx guifg=LightGrey
+"LspDiagnosticsVirtualTextHint xxx links to LspDiagnosticsDefaultHint
+"LspDiagnosticsFloatingHint xxx links to LspDiagnosticsDefaultHint
+"LspDiagnosticsSignHint xxx links to LspDiagnosticsDefaultHint
+"LspDiagnosticsVirtualTextError xxx links to LspDiagnosticsDefaultError
+"LspDiagnosticsFloatingError xxx links to LspDiagnosticsDefaultError
+"LspDiagnosticsSignError xxx links to LspDiagnosticsDefaultError
+"LspDiagnosticsDefaultWarning xxx guifg=Orange
+"LspDiagnosticsVirtualTextWarning xxx links to LspDiagnosticsDefaultWarning
+"LspDiagnosticsFloatingWarning xxx links to LspDiagnosticsDefaultWarning
+"LspDiagnosticsSignWarning xxx links to LspDiagnosticsDefaultWarning
+"LspDiagnosticsDefaultInformation xxx guifg=LightBlue
+"LspDiagnosticsVirtualTextInformation xxx links to LspDiagnosticsDefaultInformation
+"LspDiagnosticsFloatingInformation xxx links to LspDiagnosticsDefaultInformation
+"LspDiagnosticsSignInformation xxx links to LspDiagnosticsDefaultInformation
+"               xxx cleared
+"LspDiagnosticsUnderlineError xxx cterm=underline gui=underline guisp=Red
+"LspDiagnosticsUnderlineWarning xxx cterm=underline gui=underline guisp=Orange
+"LspDiagnosticsUnderlineInformation xxx cterm=underline gui=underline guisp=LightBlue
+"LspDiagnosticsUnderlineHint xxx cterm=underline gui=underline guisp=LightGrey
+"GitGutterAddInvisible xxx ctermfg=242 ctermbg=242 guifg=bg guibg=#212026
+"GitGutterChangeInvisible xxx ctermfg=242 ctermbg=242 guifg=bg guibg=#212026
+"GitGutterDeleteInvisible xxx ctermfg=242 ctermbg=242 guifg=bg guibg=#212026
+"GitGutterChangeDeleteInvisible xxx links to GitGutterChangeInvisible
+"GitGutterAdd   xxx ctermbg=242 guibg=#212026
+"GitGutterChange xxx ctermbg=242 guibg=#212026
+"GitGutterDelete xxx ctermfg=12 ctermbg=242 guifg=Blue guibg=#212026
+"GitGutterChangeDelete xxx links to GitGutterChange
+"GitGutterAddLine xxx links to DiffAdd
+"GitGutterChangeLine xxx links to DiffChange
+"GitGutterDeleteLine xxx links to DiffDelete
+"GitGutterChangeDeleteLine xxx links to GitGutterChangeLine
+"GitGutterAddLineNr xxx links to CursorLineNr
+"GitGutterChangeLineNr xxx links to CursorLineNr
+"GitGutterDeleteLineNr xxx links to CursorLineNr
+"GitGutterChangeDeleteLineNr xxx links to CursorLineNr
+"GitGutterAddIntraLine xxx cterm=reverse gui=reverse
+"GitGutterDeleteIntraLine xxx cterm=reverse gui=reverse
+"
 else
     "Light theme
     hi! Normal          guifg=#655370   guibg=#eee8d5

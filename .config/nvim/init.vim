@@ -144,6 +144,7 @@ set numberwidth=4
 
 "Text
 set colorcolumn=80,120                                  "Highlight columns 80,120 (ftplugin overrides)
+set cursorline                                          "Highlight line with cursor (only using that to CursorLine)
 "set cursorline                                          "Highlight line cursor is on
 set hlsearch                                            "Highlight search matches
 set list                                                "Show non-printable characters
@@ -169,7 +170,7 @@ set statusline+=%{g:curwin==winnr()?'\ ':''}            "(space)
 set statusline+=%t%m%r                                  "Filename, modified, ro/rw
 set statusline+=\ %2*[%{&ft!=''?&ft:'-'}]%*             "Filetype
 set statusline+=%{winwidth(0)>80?'\ '.&ff.(&fenc!=''?','.&fenc.'\ ':''):''} "File format and encoding
-set statusline+=%2*%{winwidth(0)>80&&g:curwin==winnr()?'PAGE':''}%* "TODO Per-buffer page (only active window)
+set statusline+=%2*%{winwidth(0)>80&&g:curwin==winnr()?blami#statusline#Page():''}%* "Per-buffer status page (only active window)
 "Status right side
 set statusline+=%=
 set statusline+=%{&spell!=0?strpart(&spelllang,0,2).'\ ':''} "Spell checker language
