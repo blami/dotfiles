@@ -1,0 +1,14 @@
+#!/usr/bin/zsh
+# ~/.zsh/freload - reload function(s)
+
+# Usage: freload [function ...]
+
+freload() {
+    while (( $# )); do
+        unfunction $1
+        autoload -U $1
+        shift
+    done
+}
+
+freload $@
