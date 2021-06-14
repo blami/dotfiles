@@ -19,8 +19,11 @@ nnoremap    <silent>                <leader>pp              :echoerr 'toggle pas
 nnoremap    <silent>                <leader>l               :setl invlist<CR>
 nnoremap    <silent>                <leader>s               :setl invspell<CR>
 nnoremap    <silent>                <leader>n               :call blami#toggle#Number()<CR>
-"NOTE toggle per-buffer autofmt that controls LSP document formatting
+"Toggle per-buffer autofmt that controls LSP document formatting
 nnoremap    <silent><expr>          <leader>f               get(b:,'autofmt',0)==0?':let b:autofmt=1<CR>':':let b:autofmt=0<CR>'
+"Toggle per-buffer status pages
+map         <silent>                [p                      :call blami#statusline#PageToggle('-')<CR>
+map         <silent>                ]p                      :call blami#statusline#PageToggle('+')<CR>
 
 noremap     <silent>                <leader>bg              :let &bg=(&bg=='dark'?'light':'dark')<CR>
 
@@ -28,8 +31,8 @@ noremap     <silent>                <leader>bg              :let &bg=(&bg=='dark
 nnoremap    <silent><expr>          <leader>F               &foldlevel==100?':setl foldlevel=0<CR>':':setl foldlevel=100<CR>'
 
 "Buffers and tabs
-map         <silent>                [[                      :bprevious<CR>
-map         <silent>                ]]                      :bnext<CR>
+map         <silent>                [b                      :bprevious<CR>
+map         <silent>                ]b                      :bnext<CR>
 map         <silent>                <C-t>                   :tabnew<CR>
 map         <silent>                [t                      :tabprevious<CR>
 map         <silent>                ]t                      :tabnext<CR>

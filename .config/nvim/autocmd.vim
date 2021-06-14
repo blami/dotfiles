@@ -19,7 +19,7 @@ autocmd Filetype,TermEnter * :call blami#statusline#Save()
 "Show statusline UserN highlights only in active window
 autocmd VimEnter,WinEnter,BufWinEnter *
             \ let g:curwin=winnr() |
-            \ call blami#statusline#Set()
+            \ call blami#statusline#Refresh()
 
 
 
