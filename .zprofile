@@ -57,8 +57,13 @@ fi
 
 
 # {{{ Misc environment
-EDITOR=vim
-VISUAL=vim
+if (( $+commands[nvim] ))
+    EDITOR=nvim
+    VISUAL=nvim
+else
+    EDITOR=vim
+    VISUAL=vim
+fi
 PAGER=less
 LESSHISTFILE=-
 #BROWSER=~/bin/browser
@@ -78,6 +83,10 @@ export DEBFULLNAME DEBEMAIL UBUMAIL
 # Color output on MacOS X
 CLICOLOR=1
 export CLICOLOR
+
+# Screen reader mode (no fancy prompt, per-app settings in nvim, tmux, etc.)
+SR=0
+export SR
 # }}}
 
 

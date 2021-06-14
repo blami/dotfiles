@@ -26,6 +26,7 @@ alias l='ls -a'
 alias ll='ls -la'
 alias l.='ls -d .*'
 alias la='ls -a'
+alias lsd='ls -ld *(-/DN)'
 alias lO='ls -At1 && echo "--- Oldest ---"'
 alias lN='ls -Art1 && echo "--- Newest ---"'
 alias lt='tree -L 2 -d'
@@ -73,6 +74,7 @@ fi
 
 
 # {{{ Text editing
+(( $+commands[nvim] )) && alias vim='nvim'
 alias vi='vim'
 alias v='vim'
 alias vimn='vim -u NONE'                # vim without configuration
@@ -101,7 +103,7 @@ alias q='exit'
 # {{{ Network
 alias ports='netstat -tulanp'           # show listen ports
 alias httph='curl -I -L'                # show HTTP headers (URL must follow)
-[ -x /usr/bin/python3 ] && alias serve='python3 -m http.server' # serve current directory on port 8000
+(( $+commands[python3] )) && alias serve='python3 -m http.server' # serve current directory on port 8000
 
 alias wget='wget -c'                    # resume downloads
 

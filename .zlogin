@@ -1,6 +1,5 @@
 # ~/.zlogin: Z shell login script
 
-
 # {{{ Includes
 # Local configuration
 [ -r $HOME/.zlogin_local ] && . $HOME/.zlogin_local
