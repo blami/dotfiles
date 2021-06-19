@@ -9,7 +9,6 @@
 	from = Ondrej Balaz <blami@blami.net>
 
 [core]
-	editor = vim
 	excludesfile = /home/blami/.gitignore_global
 
 [http]

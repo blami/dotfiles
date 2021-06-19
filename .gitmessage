@@ -2,12 +2,12 @@
 
 # Capitalized, short (50 chars or less) summary
 #
-# More detailed explanatory text. Wrap it to about 72 characters. In some
-# contexts, the first line is treated as the subject of an email and the
-# rest of the text as the body.
+# More detailed explanatory text. Wrap it to about 72 characters. In
+# some contexts, the first line is treated as the subject of an email
+# and the rest of the text as the body.
 #
-# Write your commit message in the imperative: "Fix bug" and not "Fixed bug"
-# or "Fixes bug."
+# Write your commit message in the imperative: "Fix bug" and not "Fixed
+# bug" or "Fixes bug."
 #
 # Further paragraphs come after blank lines.
 #
