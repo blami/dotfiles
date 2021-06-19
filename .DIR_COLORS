@@ -145,6 +145,7 @@ EXEC            01;32               # execute permission
 # Code
 .go             01;37
 .py             01;37
+.pl             01;37
 .js             01;37
 .jsx            01;37
 .ts             01;37
@@ -159,6 +160,9 @@ EXEC            01;32               # execute permission
 .patch          01;37
 .diff           01;37
 .makefile       01;37
+.mk             01;37
+.vim            01;37
+.lua            01;37
 
 # Images
 .jpg            01;35
