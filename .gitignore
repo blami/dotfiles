@@ -1,6 +1,12 @@
 .dfgit
+.config/nvim/doc/tags
 .config/tc/wincmd.key
 .config/tc/wcx_ftp.ini
+.config/weechat/certs/*.pem
+.config/weechat/sec.conf
+.config/weechat/logs
+.config/weechat/xfer
+.config/weechat/*.log
 .ssh/keys
 .ssh/ctrl
 .ssh/agent
@@ -14,7 +20,6 @@
 .gitdirs
 .solstudio
 .netrc
-.vim/doc/tags
 .viminfo
 .cache
 .rnd
@@ -28,7 +33,7 @@
 # Local files
 .*_local
 .proxy
-/.local/share/vim
+/.local/share/nvim
 
 # Directories
 /bak
