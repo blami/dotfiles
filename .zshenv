@@ -1,6 +1,8 @@
 # ~/.zshenv - Z shell environment
 # NOTE This file is source before everything else and anytime
 
+# Don't source systemwide config
+unsetopt GLOBAL_RCS
 # Don't run compinit on Debian/Ubuntu
 skip_global_compinit=1
 
