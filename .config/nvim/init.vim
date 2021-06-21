@@ -101,7 +101,8 @@ set smartcase                                           "Keep case when searchin
 set wrapscan                                            "Wrap around searches (begin<->end)
 set incsearch                                           "Incremental search (search as you type)
 set gdefault                                            "Add /g by default, invert by adding /g
-set inccommand=nosplit                                  "Visual feedback when substituting with :s
+"NOTE Causes issues with plugins/autoload scripts...
+"set inccommand=nosplit                                  "Visual feedback when substituting with :s
 
 "Folding
 set foldenable
