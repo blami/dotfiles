@@ -11,16 +11,13 @@ autocmd BufReadPost *
 autocmd CmdWinEnter *       setl nonumber signcolumn= colorcolumn= statusline=%t\ %=%2*%c,%l/%LL%*\ %P 
 autocmd TermOpen *          setl nonumber signcolumn= colorcolumn= statusline=\[Terminal\]\ %2*%t%*\ %=%2*%c,%l/%LL%*\ %P
 
-
-"NOTE This has to be done after all messing with statusline
-"Remember statusline of each window in w:statusline
-autocmd Filetype,TermEnter * :call blami#statusline#Save()
 "Store current window number to g:curwin
-"Show statusline UserN highlights only in active window
+"Run statusline helpers to hide UserN highlights in non-active windows
 autocmd VimEnter,WinEnter,BufWinEnter *
             \ let g:curwin=winnr() |
-            \ call blami#statusline#Refresh()
-
+            \ call blami#statusline#Enter()
+autocmd WinLeave *
+            \ call blami#statusline#Leave()
 
 
 "{{{ Plugins

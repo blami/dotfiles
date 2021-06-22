@@ -105,23 +105,23 @@ endfunc
 
 
 "{{{ Autocommand helpers
-"Save window's local &statusline for each window in w:statusline
-"NOTE Filetype * seems to be the best place to do this
-func! blami#statusline#Save() abort
-    for i in range(1, winnr('$'))
-        if !has_key(getwinvar(i, ''), 'statusline')
-            "TODO maybe save only if it not matches global &statusline?
-            call setwinvar(i, 'statusline', getwinvar(i, '&statusline'))
-            call blami#statusline#Refresh()
-        endif
-    endfor
+"Leave helper that stores window statusline upon leaving so that Enter helper
+"can restore highlighted statusline later when buffer is in active window.
+func! blami#statusline#Leave() abort
+    "Save statusline if it was not saved yet or if it differs from last saved
+    if !has_key(getbufvar(bufnr(), ''), 'statusline')
+                \ || getbufvar(bufnr(), 'statusline') != getbufvar(bufnr(), '&statusline')
+        call setbufvar(bufnr(), 'statusline', getbufvar(bufnr(), '&statusline')) 
+    endif
 endfunc
 
-"Refresh &statusline in each window and apply UserN highlights only in active.
-func! blami#statusline#Refresh() abort
-    for i in range(1, winnr('$'))
-        if has_key(getwinvar(i, ''), 'statusline')
-            let statusline=getwinvar(i, 'statusline')
+"Enter helper that sets &statusline in each window, in non-active ones it 
+"removes UserN highlights and in active restores highlighted b:statusline.
+func! blami#statusline#Enter() abort
+    for i in blami#util#Winnrs('r')
+        let bufnr = winbufnr(i)
+        if has_key(getbufvar(bufnr, ''), 'statusline')
+            let statusline=getbufvar(bufnr, 'statusline')
             call setwinvar(i, '&statusline', g:curwin==i?statusline:substitute(statusline,'%[1-9]\?\*','','g')) |
         endif
     endfor
