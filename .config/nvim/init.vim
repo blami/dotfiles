@@ -183,6 +183,8 @@ set statusline+=%{matchstr(&fo,'t')!=''?'>':''}         "Text wrapping flag
 set statusline+=%{matchstr(&fo,'[tc]')!=''?&tw:''}      "Text width if t or c in &fo
 set statusline+=%{matchstr(&fo,'[tc]')!=''?'\ ':''}     "(space)"
 set statusline+=%c,%l/%LL%*\ %P                         "Ruler
+"NOTE This is used by blami#statusline#Refresh() in case of non-Filetyped windows
+let g:statusline=&statusline
 
 "Tab line
 set showtabline=1                                       "Show tabline only when more tabs are open

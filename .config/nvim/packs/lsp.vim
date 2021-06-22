@@ -5,14 +5,18 @@
 set completeopt=menuone,noselect
 
 lua << EOF
-require'compe'.setup {
-    enabled = true;
-    source = {
-        nvim_lsp = true;
-        vsnip = true;
+local ok, compe = pcall(require, 'compe')
+if ok then
+    compe.setup {
+        enabled = true;
+        source = {
+            nvim_lsp = true;
+            vsnip = true;
+        }
     }
-}
+    vim.g.compe_enabled = true
+end
 EOF
 
-inoremap <silent><expr> <C-Space> compe#complete()
-inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+"inoremap <silent><expr> <C-Space> compe#complete()
+"inoremap <silent><expr> <CR>      compe#confirm('<CR>')
