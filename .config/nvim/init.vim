@@ -228,5 +228,8 @@ endif
 filetype plugin on
 filetype indent on
 
+"blami Lua module
+lua blami=require('blami')
+
 "NOTE All other configs are sourced from ~/after/plugin/source.vim to have plugins loaded
 "}}}

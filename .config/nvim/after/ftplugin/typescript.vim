@@ -14,7 +14,7 @@ setl suffixesadd=.ts,.tsx
 
 "Autocommands
 autocmd BufWritePre <buffer>
-            \ lua require'blami.lsp'.autoformat_sync(
+            \ lua blami.lsp.autoformat_sync(
             \   1000,
             \   {}
             \ )
@@ -22,7 +22,10 @@ autocmd BufWritePre <buffer>
 "Language server
 if !get(s:, 'loaded', v:false)
 lua << EOF
-require'lspconfig'.tsserver.setup{}
+lspconfig = blami.prequire('lspconfig')
+if lspconfig then
+    lspconfig.tsserver.setup{}
+end
 EOF
 let s:loaded = v:true
 "NOTE This file is shared between typescript and typescriptreact filetypes

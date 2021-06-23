@@ -10,10 +10,12 @@ function lsp.autoformat_sync(timeout, actions)
         params.context = context
 
         local resp = vim.lsp.buf_request_sync(0, method, params, timeout)
-        for _, v in next, resp, nil do
-            local result = v.result
-            if result and result[1] then
-                vim.lsp.util.apply_workspace_edit(result[1].edit)
+        if resp ~= nil then 
+            for _, v in next, resp, nil do
+                local result = v.result
+                if result and result[1] then
+                    vim.lsp.util.apply_workspace_edit(result[1].edit)
+                end
             end
         end
     end

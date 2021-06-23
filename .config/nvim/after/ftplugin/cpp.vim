@@ -22,7 +22,7 @@ setl suffixesadd=.cpp,.cxx,.c++,.h,.hpp,.hxx,.h++
 
 "Autocommands
 autocmd BufWritePre <buffer>
-            \ lua require'blami.lsp'.autoformat_sync(
+            \ lua blami.lsp.autoformat_sync(
             \   1000,
             \   {}
             \ )
@@ -30,7 +30,10 @@ autocmd BufWritePre <buffer>
 "Language server
 if !get(s:, 'loaded', v:false)
 lua << EOF
-require'lspconfig'.clangd.setup{}
+lspconfig = blami.prequire('lspconfig')
+if lspconfig then
+    lspconfig.clangd.setup{}
+end
 EOF
 let s:loaded = v:true
 doautocmd FileType cpp

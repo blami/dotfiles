@@ -25,7 +25,7 @@ nnoremap    <buffer>                <localleader>t          :call blami#ftplugin
 
 "Autocommands
 autocmd BufWritePre <buffer>
-            \ lua require'blami.lsp'.autoformat_sync(
+            \ lua blami.lsp.autoformat_sync(
             \   1000,
             \   {['textDocument/codeAction'] = {source = {organizeImports = true}}}
             \ )
@@ -33,7 +33,10 @@ autocmd BufWritePre <buffer>
 "Language server
 if !get(s:, 'loaded', v:false)
 lua << EOF
-require'lspconfig'.gopls.setup{}
+lspconfig = blami.prequire('lspconfig')
+if lspconfig then
+    lspconfig.gopls.setup{}
+end
 EOF
 let s:loaded = v:true
 doautocmd FileType go

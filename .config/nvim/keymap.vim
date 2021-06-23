@@ -50,14 +50,19 @@ nnoremap    <silent>                \                       :noh<CR>
 
 "Files and directories
 "Change directory to current buffer directory
+if exists('g:loaded_nerd_tree')
 noremap     <silent>                `                       :NERDTreeToggleVCS<CR>
+endif
 nnoremap    <silent>                <leader>cdb             :cd %:p:h<CR>
 "}}}
 
 
 "{{{ Completion and snippets
 "Completion
-"TODO
+if exists('g:loaded_compe')
+inoremap    <silent><expr>          <C-Space>               compe#complete()
+inoremap    <silent><expr>          <CR>                    compe#confirm('<CR>')
+endif
 
 "Snippets
 "TODO
@@ -100,5 +105,3 @@ nnoremap                            <leader>sac             3zg
 "Handy when editing ro files, use sudo
 cmap                                w#                      w !sudo -S tee % >/dev/null
 "}}}
-
-"NOTE Mappings relevant to filetypes are in after/ftplugin/*.vim
