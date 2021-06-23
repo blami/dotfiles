@@ -5,8 +5,8 @@
 set completeopt=menuone,noselect
 
 lua << EOF
-local ok, compe = pcall(require, 'compe')
-if ok then
+compe = blami.prequire("compe")
+if compe then
     compe.setup {
         enabled = true;
         source = {
@@ -14,9 +14,8 @@ if ok then
             vsnip = true;
         }
     }
-    vim.g.compe_enabled = true
+
+    -- compe doesn't set g:loaded_compe, useful for keymap.vim
+    vim.g.loaded_compe = 1
 end
 EOF
-
-"inoremap <silent><expr> <C-Space> compe#complete()
-"inoremap <silent><expr> <CR>      compe#confirm('<CR>')
