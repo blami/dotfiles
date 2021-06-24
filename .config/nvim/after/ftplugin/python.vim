@@ -21,6 +21,7 @@ setl suffixesadd=.py
 setl wildignore+=*.pyc,*.pyo
 
 "Keybindings
+nnoremap    <buffer><silent>        <localleader>t          :call blami#ftplugin#SwitchFile('^\(test_\)\@!\(.*\)\.py$', '\2_test.py', '^test_\(.*\)\.py$', '\1.py')<CR>
 
 "Autocommands
 autocmd BufWritePre <buffer>
@@ -37,9 +38,8 @@ if lspconfig then
     lspconfig.pylsp.setup{
         settings = {
             pylsp = { plugins = {
-                -- TODO configure these to 119 line length and reasonable defaults
-                pylint = {enabled = true},
-                pylsp_black = {enabled = true},
+                pylint = {enabled = true},          -- ~/.pylintrc or per-project
+                pylsp_black = {enabled = true},     -- ~/.black or per-project
                 pylsp_isort = {enabled = true},
                 ["mypy-ls"] = {enabled = true, strict=false},
 
