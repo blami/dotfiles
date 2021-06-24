@@ -21,7 +21,7 @@ setl commentstring=//\ %s
 setl suffixesadd=.go
 
 "Keybindings
-nnoremap    <buffer>                <localleader>t          :call blami#ftplugin#SwapFile('.go', '_test.go') 
+nnoremap    <buffer><silent>        <localleader>t          :call blami#ftplugin#SwitchFile('^\(.*\)\(_test\)\@<!.go$', '\1_test.go', '^\(.*\)_test.go$', '\1.go')<CR>
 
 "Autocommands
 autocmd BufWritePre <buffer>

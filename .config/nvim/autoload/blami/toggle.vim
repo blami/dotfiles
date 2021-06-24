@@ -25,7 +25,7 @@ func! blami#toggle#List(prefix) abort
     if winnr() != winnr | wincmd p | endif
 endfunc
 
-"Toggle line numbers, relative numbers and nothing
+"Toggle line numbers, relative numbers and nothing.
 func! blami#toggle#Number() abort
     if &l:number == 1 && &l:relativenumber == 0
         setl nonumber relativenumber
