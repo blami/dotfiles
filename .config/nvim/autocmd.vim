@@ -14,10 +14,14 @@ autocmd TermOpen *          setl nonumber signcolumn= colorcolumn= statusline=\[
 "Store current window number to g:curwin
 "Run statusline helpers to hide UserN highlights in non-active windows
 autocmd VimEnter,WinEnter,BufWinEnter *
-            \ let g:curwin=winnr() |
-            \ call blami#statusline#Enter()
+            \ if nvim_win_get_config(0).relative=="" |
+            \   let g:curwin=winnr() |
+            \   call blami#statusline#Enter() |
+            \ endif
 autocmd WinLeave *
-            \ call blami#statusline#Leave()
+            \ if nvim_win_get_config(0).relative=="" |
+            \   call blami#statusline#Leave() |
+            \ endif
 
 
 "{{{ Plugins
