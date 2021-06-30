@@ -60,7 +60,6 @@ endfunc
 
 
 "{{{ Statusline pages
-
 "Add page. If id is 0, new id will be current length of page list.
 func blami#statusline#PageAdd(id, value) abort
     if !exists('b:statuspage') | let b:statuspage = {} | endif
