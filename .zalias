@@ -101,6 +101,7 @@ alias q='exit'
 
 
 # {{{ Network
+alias curl='curl -w "\nstatus=%{http_code} %{redirect_url} size=%{size_download} time=%{time_total} content-type=%{content_type}\n"'
 alias ports='netstat -tulanp'           # show listen ports
 alias httph='curl -I -L'                # show HTTP headers (URL must follow)
 (( $+commands[python3] )) && alias serve='python3 -m http.server' # serve current directory on port 8000
