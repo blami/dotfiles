@@ -24,10 +24,12 @@ case "$OS" in
 esac
 OSARCH=$OS-$_uname[3]
 
-# Set $WSL=1 if microsoft is detected in kernel release string
-# NOTE Matching against lowercase as lowercased above (:l).
+# Set $WSL to non-zero (WSL version 1 or 2); use WSL exported variables for
+# detection rather than kernel string in uname.
 WSL=
-[ ! -z ${(MS)_uname[2]##microsoft} ] && WSL=1
+if [ ! -z "$WSL_DISTRO_NAME" ]; then
+    [ ! -z "$WSL_INTEROP" ] && WSL=2 || WSL=1
+fi
 
 unset _uname
 export OS OSARCH WSL
