@@ -28,7 +28,7 @@ of this repository).
   - `til`   - clone of my [til](https://github.com/blami/til) repo
   - `papers -> drive/papers` - interesting papers
 - `downl/`  - downloads
-  - `archive/` - archived downloads
+  - `arch/` - archived downloads
 - `drive/`  - cloud drive directory (synced by daemon e.g. `rclone`)
 - `local -> .local/` - home variant of `/usr/local`
   - `go/`   - my local `$GOPATH`, only for tools
@@ -36,15 +36,16 @@ of this repository).
 - `media/`  - multimedia files like music or videos I momentarily need
 - `ops/`    - ops related stuff
   - `playbooks/` - Ansible playbooks to setup my workstation/VM/WSL, etc.
-- `pics -> drive/pics` - pictures like my avatar or favorite memes
+- `pics/`   - pictures
+- `music/`  - music
+- `videos/` - videos
 - `pub/`
 - `public_html/` - contents of `://host/~blami` if host runs webserver
 - `sandbox/` - [sandbox][] directory for various experiments
 - `tmpl/`   - all sorts of [templates][] of licenses, Makefiles, etc.
-- `ws/`     - [workspace][] where most of my work (and leisure) lives
+- `src/`     - [workspace][] where most of my work (and leisure) lives
 - `.config` - XDG\_CONFIG directory with all configs
 - `.profile.d` - snippets sourced by Zsh on start to setup env vars, etc.
-- `.vim`    - Vim configuration files
 - `.zsh[_local]/` - various custom zsh commands, widgets and prompts
 - `.zsh*` - zsh dotfiles
 
@@ -74,3 +75,6 @@ variants. These are plugin files that make sense only in certain environment
 exists and that might override certain options. At work or in various other
 places I use `_place` naming convention and then my own `bin/mklocallinks`
 script to symlink `_place` to `_local`.
+
+## Windows Setup
+`powershell -ep Bypass bin\bootstrap.ps1`

@@ -35,7 +35,7 @@ alias rf='rm -rf'
 alias path='echo -e ${PATH//:/\\n}'
 
 # Directory shortcuts
-alias ws="cd $HOME/ws"
+alias src="cd $HOME/src"
 alias doc="cd $HOME/docs"
 alias sand="cd $HOME/ws/sandbox"
 alias etc='cd /etc'
