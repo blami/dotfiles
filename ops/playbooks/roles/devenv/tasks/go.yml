@@ -1,0 +1,25 @@
+---
+# Install Go packages and golangci-lint to GOPATH.
+
+# TODO Check if go is present; version is high enough and if not skip the rest?
+
+- name: Installing Go packages to GOPATH
+  shell:
+    chdir: "{{ my_user.home }}"
+    # NOTE Force GOPATH to same location as in ~/.profile.d/go.sh
+    # TODO Decide whether to enforce @latest here or move @* to go_packages
+    cmd: |
+      umask {{ my_user.umask }}
+      GOPATH={{ my_user.home }}/.local/go
+      go install {{ item }}@latest
+  with_items: "{{ go_packages }}"
+
+# Install golangci-lint latest version to GOPATH.
+# NOTE Can't go install; see https://golangci-lint.run/usage/install/#install-from-source
+- name: Installing golangci-lint to GOPATH
+  shell:
+    chdir: "{{ my_user.home }}"
+    cmd: |
+      umask {{ my_user.umask }}
+      GOPATH={{ my_user.home }}/.local/go
+      curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin

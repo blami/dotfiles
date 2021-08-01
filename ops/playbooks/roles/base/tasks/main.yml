@@ -1,0 +1,16 @@
+---
+# Basic OS level setup without considering how and who will use host.
+# Installs basic settings and essential packages I like to have on any box.
+
+- block:
+    - import_tasks: wsl.yml             # run this first as it may restart WSL
+    - import_tasks: sudoers.yml
+    - import_tasks: apt.yml
+    #- import_tasks: change_groups.yml   # TODO move uids/gids to my liking
+    #- import_tasks: grub.yml            # TODO configure serial console and timeout
+    #- import_tasks: systemd.yml         # TODO setup systemd components (e.g. journal)
+    #- import_tasks: backup.yml          # TODO setup system level backups
+  become: yes
+  become_user: "root"
+  when:
+    - my_facts.can_become_root

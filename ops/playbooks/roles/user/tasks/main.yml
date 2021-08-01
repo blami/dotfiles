@@ -1,0 +1,25 @@
+---
+# User setup.
+
+# NOTE create_user.yml needs to be called separately because if user doesn't
+# exist we do not want to skip it silently.
+#- import_tasks: create_user.yml
+
+# Tasks to do as root 
+- block:
+    - import_tasks: apt.yml
+  become: yes
+  become_user: "root"
+  when:
+    - my_facts.can_become_root
+
+# Tasks to do as target user
+- block:
+    - import_tasks: dotfiles.yml
+    - import_tasks: userdirs.yml
+    - import_tasks: secrets.yml
+    - import_tasks: nvim.yml
+  become: yes
+  become_user: "{{ my_user.username }}"
+  when:
+    - my_facts.can_become_user

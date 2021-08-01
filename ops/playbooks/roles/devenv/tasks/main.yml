@@ -1,0 +1,21 @@
+---
+# Development environment setup for C, C++, Assembly, Go, Python, Javascript
+# and possibly other languages.
+
+# Tasks to do as root 
+- block:
+    - import_tasks: apt.yml
+  become: yes
+  become_user: "root"
+  when:
+    - my_facts.can_become_root
+
+# Tasks to do as target user
+- block:
+    - import_tasks: go.yml
+    - import_tasks: nodejs.yml
+    - import_tasks: python.yml
+  become: yes
+  become_user: "{{ my_user.username }}"
+  when:
+    - my_facts.can_become_user

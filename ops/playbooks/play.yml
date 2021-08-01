@@ -1,0 +1,12 @@
+---
+
+- name: Playbook
+  hosts: localhost
+
+  pre_tasks:
+    - import_tasks: tasks/pre_tasks.yml
+
+  roles:
+    - role: base
+    - role: user
+    - role: devenv

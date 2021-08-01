@@ -1,0 +1,31 @@
+---
+# Configure WSL
+
+# This configures WSL to maintain file metadata even on native filesystems. If
+# system is WSL it creates /etc/wsl.conf if it didn't exist. If file is created
+# LxssManager service is also restarted for changes to come into effect.
+
+- name: Installing wsl.conf
+  copy:
+    src: "{{ role_path }}/files/wsl.conf"
+    dest: "/etc/wsl.conf"
+    owner: root
+    group: root
+    mode: 644
+    force: yes
+  register: out
+  when:
+    - my_facts.is_wsl is defined
+
+# NOTE This will result in interactive prompt, since this playbook is for
+# interactive use on WSL it doesn't matter much.
+- name: Rebooting WSL
+  command: >
+    /mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe
+    Start-Process
+    -FilePath "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
+    -ArgumentList "Restart-Service","LxssManager"
+    -Verb runas
+  when: 
+    - out.changed
+    - my_facts.is_wsl is defined

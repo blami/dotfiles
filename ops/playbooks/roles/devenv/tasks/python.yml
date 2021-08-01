@@ -1,0 +1,13 @@
+---
+# Install Python pip packages.
+
+# TODO Check if pip3 is present and if not skip the rest?
+# TODO Decide if use pip or pip3?
+
+- name: Installing Python packages
+  shell:
+    chdir: "{{ my_user.home }}"
+    cmd: |
+      umask {{ my_user.umask }}
+      pip3 install {{ item }}
+  with_items: "{{ python_packages }}"

@@ -1,0 +1,63 @@
+---
+# Create common user directories; see ~/.config/user-dirs.dirs for details.
+
+- name: Create ~ directories
+  file:
+    path: "{{ my_user.home }}/{{ item }}"
+    state: directory
+  with_items:
+    # XDG user directories
+    - "desk"                  # XDG_DESKTOP_DIR
+    - "docs"                  # XDG_DOCUMENTS_DIR
+    - "downl"                 # XDG_DOWNLOAD_DIR
+    - "tmpl"                  # XDG_TEMPLATES_DIR (in dotfiles)
+    - "pics"                  # XDG_PICTURES_DIR
+    - "music"                 # XDG_MUSIC_DIR
+    - "videos"                # XDG_VIDEOS_DIR
+    - "pub"                   # XDG_PUBLICSHARE_DIR
+    # Non-XDG (but I still have some of them in user-dirs.dirs)
+    - "bak"                   # backups (XDG_BACKUP_DIR)
+    - "mail"                  # mail (XDG_MAIL_DIR)
+    - "src"                   # source code (XDG_SRC_DIR)
+    - "public_html"           # public_html (XDG_PUBLICHTML_DIR)
+    - "tmp"                   # temporary files
+    # Sub-directories
+    - "downl/arch"
+
+- name: Create SSH keys directory
+  file:
+    path: "{{ my_user.home }}/.ssh/keys"
+    mode: "0700"
+    state: directory
+
+- name: Create IRC certs directory
+  file:
+    path: "{{ my_user.home }}/.config/weechat/certs"
+    mode: "0700"
+    state: directory
+
+# On WSL1 certain directories have to be on native filesystem
+- name: Create WSL1 native directories
+  file:
+    path: "{{ item.src }}"
+    mode: "{{ item.mode }}"
+    state: directory
+  with_items: "{{ wsl1_native_dirs }}"
+  loop_control:
+    label: "{{ item.dest }}"
+  when:
+    - my_facts.is_wsl == 1
+
+- name: Symlink WSL1 native directories
+  file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+    # NOTE This will delete (unlink) the original file if its not a symlink and
+    # create the symlink
+    force: yes
+  with_items: "{{ wsl1_native_dirs }}"
+  loop_control:
+    label: "{{ item.dest }}"
+  when:
+    - my_facts.is_wsl == 1

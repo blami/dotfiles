@@ -1,0 +1,130 @@
+---
+# Pre-play tasks. Mostly gathering additional facts into my_facts.* and
+# my_user.* as well as couple of sanity checks (e.g. variables necessary for
+# play being defined, etc.
+
+# TODO Check mandatory variables
+
+# Gather installed packages list to ansible_facts.packages
+- name: "Gathering Installed Packages Facts"
+  package_facts:
+    manager: auto
+
+# Check if running on WSL; gather my_facts.wsl bool and my_facts.wsl_version
+# based on $WSL_DISTRO_NAME and $WSL_INTEROP.
+- name: "Checking if running in WSL"
+  set_fact:
+    my_facts: >
+      {{
+        my_facts | default({})
+        | combine({
+            "is_wsl": true if lookup("env", "WSL_DISTRO_NAME") else false
+          }, 
+          {} if not lookup("env", "WSL_DISTRO_NAME") else {
+            "wsl_version": 2 if lookup("env", "WSL_INTEROP") else 1
+          })
+      }}
+
+# Gather some additional info about Windows if running in WSL
+# TODO Obtain envvars via powershell
+- name: "Checking Windows through WSL"
+  command: >
+    /mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe
+    -command "Get-Item Env:* | Select Key,Value | ConvertTo-Json"
+  register: out
+  changed_when: false
+  when:
+    - my_facts.is_wsl
+- set_fact:
+    # TODO See if anything else is needed
+    my_facts: >
+      {{
+        my_facts | default({})
+        | combine({
+            "win_user": win_env.USERNAME,
+            "win_home": win_env.USERPROFILE,
+          })
+      }}
+  vars:
+    win_env: "{{ out.stdout | from_json | items2dict(key_name='Key', value_name='Value') }}"
+  when:
+    - not out.failed
+    - my_facts.is_wsl
+
+# Check if Ansible can become root; gather my_facts.can_become_root bool.
+- name: "Checking if Ansible can become root"
+  command: "/bin/true"
+  become: true
+  become_user: "root"
+  register: out
+  # Never failed nor changed
+  failed_when: false
+  changed_when: false
+- set_fact:
+    my_facts: >
+      {{
+        my_facts | default({})
+        | combine({
+          "can_become_root": true if out.rc == 0 else false
+        })
+      }}
+
+# Check if my_user exists; gather my_facts.user_exists bool. If user exists
+# also check if can become that user and gather my_facts.can_become_user.
+- name: "Checking if user {{ my_user.username }} exists"
+  getent:
+    database: passwd
+    key: "{{ my_user.username }}"
+  # Never failed nor changed
+  failed_when: false
+  changed_when: false
+- set_fact:
+    my_facts: >
+      {{
+        my_facts | default({})
+        | combine({
+            "user_exists": true if "getent_passwd" in vars and my_user.username in getent_passwd else false
+          })
+      }}
+    # Gather my_user.umask that should be set for any files created in ~.
+    # This is based on uid == gid; uid >= 1000 and defaults to 022.
+    my_user: >
+      {{
+        my_user | default({})
+        | combine({
+          "umask": "022" if "getent_passwd" not in vars or my_user.username not in getent_passwd else ("002" if (getent_passwd[my_user.username][1] | int) >= 1000 and getent_passwd[my_user.username][1] == getent_passwd[my_user.username][2] else "022")
+          })
+      }}
+
+- name: "Checking if Ansible can become {{ my_user.username }}"
+  command: "/bin/true"
+  become: true
+  become_user: "{{ my_user.username }}"
+  register: out
+  # Never failed nor changed
+  failed_when: false
+  changed_when: false
+  when:
+    - my_facts.user_exists
+- set_fact:
+    my_facts: >
+      {{
+        my_facts | default({})
+        | combine({
+          "can_become_user": true if my_facts.user_exists and out.rc == 0 else false
+        })
+      }}
+
+# Check if Ansible can become target user; or if target user doesn't exist it
+# can become root to create it. Warn user to doublecheck on my_user.username.
+- name: "Checking if Ansible has enough become permissions"
+  fail:
+    msg: >
+      Ansible cannot become {{ my_user.username }}. If that user does not exist
+      Ansible also cannot become root to create it. Make sure
+      'my_user.username' is set correctly in order to do this play.
+  when: 
+    - not my_facts.user_exists and not my_facts.can_become_root
+    - not my_facts.can_become_user
+
+#- debug: msg="{{ my_facts }}"

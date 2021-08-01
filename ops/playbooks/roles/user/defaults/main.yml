@@ -1,0 +1,61 @@
+---
+dotfiles_repo: "https://github.com/blami/dotfiles.git"
+
+ssh_keys:
+  - name: "Keys/id_blami_rsa"
+    file: "id_blami_rsa"
+
+irc_certs:
+  - name: "Accounts/IRC libera.chat"
+    file: "libera.chat_blami.pem"
+  - name: "Accounts/IRC oftc.net"
+    file: "irc.oftc.net_blami.pem"
+
+# TODO
+gpg_keys:
+
+# Neovim packs to install
+nvim_packs:
+  # LSP configuration snippets
+  - name: "nvim-lspconfig"
+    group: "plugins"
+    repo: "https://github.com/neovim/nvim-lspconfig"
+  # LSP Compe
+  - name: "nvim-compe"
+    group: "plugins"
+    repo: "https://github.com/hrsh7th/nvim-compe"
+  # VSnip
+  - name: "vsnip"
+    group: "plugins"
+    repo: "https://github.com/hrsh7th/vim-vsnip"
+  # GitGutter
+  - name: "gitgutter"
+    group: "plugins"
+    repo: "https://github.com/airblade/vim-gitgutter"
+  # Nerdtree
+  - name: "nerdtree"
+    group: "plugins"
+    repo: "https://github.com/preservim/nerdtree"
+
+# Additional packages to install
+apt_packages:
+  - lastpass-cli              # lastpass client
+  - weechat                   # irc client
+  - xdg-user-dirs
+  - graphicsmagick
+  - mc                        # file manager
+  - direnv                    # load .env files
+  - fzf                       # fuzzy finder
+
+# WSL1 native directories
+# NOTE This is until fixed by Microsoft; some directories cannot be on NTFS
+# and must be on native filesystem.
+wsl1_native_dirs:
+  - src: "/home/{{ my_user.username }}/.ssh/control"
+    dest: "{{ my_user.home }}/.ssh/control"
+    mode: "0700"
+  - src: "/home/{{ my_user.username }}/.lpass"
+    dest: "{{ my_user.home }}/.lpass"
+    mode: "0700"
+
+

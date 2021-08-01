@@ -1,0 +1,12 @@
+---
+# Variables for all groups
+# NOTE Using dictionaries here will make overrides hard to do. 
+
+# User account that is "me"
+# NOTE 
+my_user:
+  username: "blami"
+  gecos: "Ondrej Balaz,,,,blami@blami.net"
+  shell: "/usr/bin/zsh"
+  # TODO Handle this somewhere else? pre_checks? add_user?
+  home: "/mnt/c/Users/blami"

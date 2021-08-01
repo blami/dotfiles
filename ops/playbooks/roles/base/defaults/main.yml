@@ -1,0 +1,114 @@
+---
+
+# APT repository sources and essential packages to install
+apt_repositories:
+  # Neovim
+  - name: "ppa_neovim"
+    key_id: "55F96FCF8231B6DD"
+    sources:
+      - "deb http://ppa.launchpad.net/neovim-ppa/unstable/ubuntu {{ ansible_distribution_release }} main"
+  # Git
+  - name: "ppa_gitcore-git"
+    key_id: "A1715D88E1DF1F24"
+    sources:
+      - "deb http://ppa.launchpad.net/git-core/ppa/ubuntu {{ ansible_distribution_release }} main"
+  # Go
+  - name: "ppa_longsleep-golang"
+    key_id: "F6BC817356A3D45E"
+    sources:
+      - "deb http://ppa.launchpad.net/longsleep/golang-backports/ubuntu {{ ansible_distribution_release }} main"
+  # Node.js
+  - name: "nodejs"
+    key_id: "1655A0AB68576280"
+    sources:
+      # Node.js LTS (14.x)
+      - "deb https://deb.nodesource.com/node_14.x/ {{ ansible_distribution_release }} main"
+      - "deb-src https://deb.nodesource.com/node_14.x/ {{ ansible_distribution_release }} main"
+  # Yarn
+  - name: "yarn"
+    key_id: "1646B01B86E50310"
+    sources:
+      - "deb https://dl.yarnpkg.com/debian/ stable main"
+  # LLVM
+  - name: "llvm"
+    key_id: "15CF4D18AF4F7421"
+    sources:
+      - "deb http://apt.llvm.org/{{ ansible_distribution_release }}/ llvm-toolchain-{{ ansible_distribution_release }} main"
+      - "deb-src http://apt.llvm.org/{{ ansible_distribution_release }}/ llvm-toolchain-{{ ansible_distribution_release }} main"
+  # PostgreSQL
+  - name: "postgres"
+    key_id: "7FCC7D46ACCC4CF8"
+    sources:
+      - "deb http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+  # Docker
+  - name: "docker"
+    key_id: "8D81803C0EBFCD88"
+    sources:
+      - "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+  # Kubernetes
+  - name: "kubernetes"
+    key_id: "FEEA9169307EA071"
+    # NOTE There is no newer APT dist than -xenial so not relying on 
+    # {{ ansible_distribution_release }} variable.
+    sources:
+      - "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+  # Google Cloud SDK
+  - name: "gcloud"
+    key_id: "FEEA9169307EA071"
+    sources:
+      - "deb https://packages.cloud.google.com/apt cloud-sdk main"
+
+# Essential packages to install
+apt_packages:
+  - apcalc
+  - acl                       # manage filesystem access lists
+  - cryptsetup-bin
+  - curl
+  - dosfstools
+  - equivs
+  - gdisk
+  - git
+  - gnupg
+  - gzip
+  - htop
+  - jq                        # JSON parser and query language
+  - less
+  - lftp
+  - logrotate
+  - lsof                      # list open files
+  - procps                    # /proc utilities
+  - ltrace
+  - m4                        # macro processor
+  - make
+  - mosh                      # mobile shell
+  - mtr                       # traceroute & ping
+  - neovim
+  - netperf                   # network speed meter
+  - nmap
+  - openssh-client
+  - p7zip
+  - psmisc
+  - pv                        # progressbar
+  - pwgen
+  - rclone
+  - rsnapshot
+  - rsync
+  - shellcheck                # lint shell scripts
+  - snapd
+  - socat
+  - sshfs                     # mount filesystems over ssh and fuse
+  - sqlite3
+  - squashfs-tools
+  - strace
+  - tig
+  - tmux
+  - tshark                    # network traffic capture and analysis
+  - unzip
+  - wdiff
+  - wget
+  - xdelta3
+  - xz-utils
+  - zip
+  - unzip
+  - zsh
+  - powertop                  # power management utility

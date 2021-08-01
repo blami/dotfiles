@@ -1,0 +1,22 @@
+---
+# Install Node.js packages.
+
+# TODO Check if node and yarn are present; otherwise skip all here
+
+- name: Setting up yarn
+  shell:
+    chdir: "{{ my_user.home }}"
+    # NOTE Do not use 'creates:' to always revert changed prefix to ~/.node
+    #creates: "{{ my_user.home }}/.yarnrc"
+    cmd: |
+      umask {{ my_user.umask }}
+      yarn config set network-timeout 300000 -g
+      yarn config set prefix ~/.node -g
+
+- name: Installing Node.js packages
+  shell:
+    chdir: "{{ my_user.home }}"
+    cmd: |
+      umask {{ my_user.umask }}
+      yarn global add {{ item }}
+  with_items: "{{ nodejs_packages }}"
