@@ -8,5 +8,7 @@ my_user:
   username: "blami"
   gecos: "Ondrej Balaz,,,,blami@blami.net"
   shell: "/usr/bin/zsh"
-  # TODO Handle this somewhere else? pre_checks? add_user?
+  # TODO Handle this better
   home: "/mnt/c/Users/blami"
+  # Relative to {{ my_user.home }}/.ssh
+  ssh_key: "keys/id_blami_rsa"

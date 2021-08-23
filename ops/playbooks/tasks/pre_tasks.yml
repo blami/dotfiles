@@ -127,4 +127,18 @@
     - not my_facts.user_exists and not my_facts.can_become_root
     - not my_facts.can_become_user
 
+# Check if user SSH key exists.
+- name: "Checking if SSH key exists"
+  stat:
+    path: "{{ my_user.home }}/.ssh/{{ my_user.ssh_key }}"
+  register: out
+- set_fact:
+    my_facts: >
+      {{
+        my_facts | default({})
+        | combine({
+          "has_ssh_key": out.stat.exists
+        })
+      }}
+
 #- debug: msg="{{ my_facts }}"

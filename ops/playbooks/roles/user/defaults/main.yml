@@ -1,5 +1,6 @@
 ---
-dotfiles_repo: "https://github.com/blami/dotfiles.git"
+# Dotfiles repository without github.com host
+dotfiles_repo: "blami/dotfiles.git"
 
 ssh_keys:
   - name: "Keys/id_blami_rsa"
