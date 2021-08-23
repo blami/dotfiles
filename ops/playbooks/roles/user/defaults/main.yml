@@ -51,11 +51,9 @@ apt_packages:
 # NOTE This is until fixed by Microsoft; some directories cannot be on NTFS
 # and must be on native filesystem.
 wsl1_native_dirs:
-  - src: "/home/{{ my_user.username }}/.ssh/control"
-    dest: "{{ my_user.home }}/.ssh/control"
+  - src: "/home/{{ my_user.username }}/.ssh/ctrl"
+    dest: "{{ my_user.home }}/.ssh/ctrl"
     mode: "0700"
   - src: "/home/{{ my_user.username }}/.lpass"
     dest: "{{ my_user.home }}/.lpass"
     mode: "0700"
-
-
