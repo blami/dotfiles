@@ -33,7 +33,8 @@
       "historySize": 8196,
       "padding": "8, 8, 8, 8",
       "snapOnInput": true,
-      "useAcrylic": false
+      "useAcrylic": false,
+      "commandline": "wsl.exe -d Ubuntu"
     },
     {
       "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
