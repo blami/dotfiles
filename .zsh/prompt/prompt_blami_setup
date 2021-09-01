@@ -64,6 +64,11 @@ zle -N zle-keymap-select
 prompt_blami_precmd() {
     setopt localoptions noxtrace
 
+    if [ $SR -ne 0 ]; then
+        PS1="ok "
+        return
+    fi
+
     #local C_DB="%F{8}
 
     # Background start/end
