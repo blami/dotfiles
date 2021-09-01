@@ -1,7 +1,0 @@
-# /etc/apt/sources.list.d/nodejs.list - Official Node.js APT repository
-# GPG: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
-
-deb https://deb.nodesource.com/node_14.x/ focal main
-
-
-# vim:set ft=debsources fo-=t:

@@ -1,7 +1,0 @@
-# /etc/apt/sources.list.d/kubernetes.list - Upstream Kubernetes APT repository
-# GPG: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-
-deb http://apt.kubernetes.io/ kubernetes-xenial main
-
-
-# vim:set ft=debsources fo-=t:
