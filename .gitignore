@@ -60,6 +60,7 @@
 # Misc
 /.sudo_as_admin_successful
 /.motd_shown
+.mypy-cache
 
 # Windows
 /Application\ Data
