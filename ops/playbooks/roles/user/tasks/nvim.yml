@@ -8,12 +8,10 @@
       mkdir -p $NVIM_SITE_PACK
       git clone {{ item.repo }} $NVIM_SITE_PACK/plugins/start/{{ item.name }}
     creates: "{{ my_user.home }}/.local/share/nvim/site/pack/{{ item.group }}/start/{{ item.name }}"
-  register: out
   with_items: "{{ nvim_packs }}"
   loop_control:
     label: "clone {{ item.name }}"
 
-# TODO Do not update if out changed (means been right cloned)
 - name: Updating Neovim packs
   shell:
     cmd: |
@@ -22,5 +20,3 @@
   with_items: "{{ nvim_packs }}"
   loop_control:
     label: "update {{ item.name }}"
-  when:
-    - not out.changed

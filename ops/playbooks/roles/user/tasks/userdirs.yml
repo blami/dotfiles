@@ -44,7 +44,7 @@
     state: directory
   with_items: "{{ wsl1_native_dirs }}"
   loop_control:
-    label: "{{ item.dest }}"
+    label: "{{ item.src }}"
   when:
     - my_facts.is_wsl == 1
 

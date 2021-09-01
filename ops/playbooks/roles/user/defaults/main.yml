@@ -12,8 +12,9 @@ irc_certs:
   - name: "Accounts/IRC oftc.net"
     file: "irc.oftc.net_blami.pem"
 
-# TODO
 gpg_keys:
+  - name: "Keys/GPG blami@blami.net"
+    identity: "blami@blami.net"
 
 # Neovim packs to install
 nvim_packs:

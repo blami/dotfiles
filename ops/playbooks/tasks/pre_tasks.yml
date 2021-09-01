@@ -6,7 +6,7 @@
 # TODO Check mandatory variables
 
 # Gather installed packages list to ansible_facts.packages
-- name: "Gathering Installed Packages Facts"
+- name: "Gathering installed packages"
   package_facts:
     manager: auto
 
@@ -27,7 +27,7 @@
 
 # Gather some additional info about Windows if running in WSL
 # TODO Obtain envvars via powershell
-- name: "Checking Windows through WSL"
+- name: "Gathering Windows facts (via WSL)"
   command: >
     /mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe
     -command "Get-Item Env:* | Select Key,Value | ConvertTo-Json"
@@ -127,8 +127,28 @@
     - not my_facts.user_exists and not my_facts.can_become_root
     - not my_facts.can_become_user
 
+# If user exists set my_user.home. Otherwise keep it (and it will be created).
+- name: "Gathering user home directory fact"
+  shell: |
+    getent passwd {{ my_user.username }} | awk -F: '{ print $6 }'
+  register: out
+  changed_when: false
+  when:
+    - my_facts.user_exists
+- set_fact:
+    my_user: >
+      {{
+        my_user | default({})
+        | combine({
+          "home": out.stdout
+        })
+      }}
+  # NOTE If user doesn't exist we don't want to overwrite default home
+  when:
+    - my_facts.user_exists
+
 # Check if user SSH key exists.
-- name: "Checking if SSH key exists"
+- name: "Checking user SSH key presence"
   stat:
     path: "{{ my_user.home }}/.ssh/{{ my_user.ssh_key }}"
   register: out

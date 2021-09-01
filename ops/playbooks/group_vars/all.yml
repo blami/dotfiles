@@ -3,12 +3,11 @@
 # NOTE Using dictionaries here will make overrides hard to do. 
 
 # User account that is "me"
-# NOTE 
 my_user:
   username: "blami"
   gecos: "Ondrej Balaz,,,,blami@blami.net"
   shell: "/usr/bin/zsh"
-  # TODO Handle this better
-  home: "/mnt/c/Users/blami"
+  # Default setting for case user doesn't exist; otherwise gets replaced
+  home: "/home/blami"
   # Relative to {{ my_user.home }}/.ssh
   ssh_key: "keys/id_blami_rsa"
