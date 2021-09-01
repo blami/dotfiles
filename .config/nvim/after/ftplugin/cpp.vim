@@ -15,7 +15,7 @@ compiler clang
 "Formatting
 setl noexpandtab
 setl textwidth=119
-let b:autofmt=1                                         "Enable LSP autoformatting
+call blami#autofmt#Enable()                         "Enable LSP autoformatting
 
 "File Matching
 setl suffixesadd=.cpp,.cxx,.c++,.h,.hpp,.hxx,.h++

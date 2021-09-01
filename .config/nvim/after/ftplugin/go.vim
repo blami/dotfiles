@@ -11,7 +11,7 @@ compiler go
 setl formatoptions-=t
 setl noexpandtab
 setl textwidth=79
-let b:autofmt=1                                         "Enable LSP autoformatting
+call blami#autofmt#Enable()                         "Enable LSP autoformatting
 
 "Comments
 setl comments=s1:/*,mb:*,ex:*/,://

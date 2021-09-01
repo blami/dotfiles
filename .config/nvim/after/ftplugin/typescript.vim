@@ -7,7 +7,7 @@
 "Formatting
 setl expandtab shiftwidth=2 softtabstop=2 tabstop=4
 setl textwidth=119
-let b:autofmt=1                                         "Enable LSP autoformatting
+call blami#autofmt#Enable()                         "Enable LSP autoformatting
 
 "File Matching
 setl suffixesadd=.ts,.tsx

@@ -7,7 +7,7 @@
 "Formatting
 setl expandtab shiftwidth=4 softtabstop=4 tabstop=8
 setl textwidth=119
-let b:autofmt=1                                         "Enable LSP autoformatting
+call blami#autofmt#Enable()                         "Enable LSP autoformatting
 
 "Comments
 setl comments=b:#,fb:-
