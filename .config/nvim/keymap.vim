@@ -13,6 +13,7 @@ let maplocalleader='-'                                  "Leader for ftplugins
 nnoremap    <silent><expr>          <leader>tw              match(&fo,'[tc]')>-1?':setl fo-=c fo-=t<CR>':':setl fo+=tc<CR>'
 nnoremap    <silent><expr>          <leader>twc             match(&fo,'c')>-1?':setl fo-=c<CR>':':setl fo+=c<CR>'
 nnoremap    <silent><expr>          <leader>twt             match(&fo,'t')>-1?':setl fo-=t<CR>':':setl fo+=t<CR>'
+nnoremap    <silent>                <leader>w               :setl invwrap<CR>
 
 nnoremap    <silent>                <leader>p               :setl invpaste<CR>
 nnoremap    <silent>                <leader>pp              :echoerr 'toggle paste mode, columns and list'<CR>

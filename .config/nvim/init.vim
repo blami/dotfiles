@@ -94,7 +94,7 @@ let g:clipboardTODO={
     \}
 
 "Search and Replace
-set re=1                                                "Use legacy regex engine (faster)
+set re=0                                                "Use autoselection (NOTE =1 breaks Typescript)
 set magic                                               "Enable magic in regexes e.g. ( matches \( groups... 
 set ignorecase                                          "Ignore case on searches
 set smartcase                                           "Keep case when searching *

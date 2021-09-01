@@ -10,7 +10,7 @@ compiler go
 "Formatting
 setl formatoptions-=t
 setl noexpandtab
-setl textwidth=119
+setl textwidth=79
 let b:autofmt=1                                         "Enable LSP autoformatting
 
 "Comments

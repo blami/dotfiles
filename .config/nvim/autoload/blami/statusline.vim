@@ -48,6 +48,10 @@ func! blami#statusline#LEDs() abort
     if &foldlevel==0 
         let currentleds.='ﲓ'.(&fdm=='manual'?'_':&fdm[0:0])
     endif
+    "Line wrapping
+    if &wrap==1
+        let currentleds.='$'
+    endif
     "Autoformatting and LSP
     if get(b:, 'autofmt', 0)    | let currentleds.=''              | endif
     if luaeval('not vim.tbl_isempty(vim.lsp.buf_get_clients(0))')
