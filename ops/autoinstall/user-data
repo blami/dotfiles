@@ -1,0 +1,71 @@
+#cloud-config
+autoinstall:
+  version: 1
+
+  refresh-installer:
+    update: true
+
+  locale: en_US.UTF-8
+
+  # Ubuntu adopts consistent device naming based on PCI address; hence always
+  # enp1s0.
+  network:
+    version: 2
+    ethernets:
+      enp1s0:
+        dhcp4: true
+        dhcp6: false
+
+  storage:
+    layout:
+      name: direct
+      #match:
+        #serial: QEMU...
+
+  ssh:
+    install-server: true
+    allow-pw: false
+
+  packages:
+    - zsh
+
+  #early-commands:
+  #late-commands:
+    # NOTE All these commands run in installer environment with installed
+    # system mounted in /target; curtin allows to run commands inside /target.
+
+  # cloud-init userdata; this will run on first boot
+  user-data:
+    timezone: Asia/Tokyo
+    hostname: ubuntu
+
+    users:
+      - name: blami
+        gecos: Ondrej Balaz
+        primary_group: blami
+        groups: [adm, cdrom, sudo, dip, plugdev, lxd]
+        shell: /usr/bin/zsh
+        ssh_import_id: gh:blami
+
+    # NOTE Set password to 'ubuntu' and require chaning it upon first login
+    chpasswd:
+      expire: true
+      list:
+        - blami:ubuntu
+
+    ssh_pwauth: false
+
+    runcmd:
+      # Use Google timeservers (leap smeared time)
+      - [ sed, -i, 's/^#\?\(.*\)NTP=.*/\1NTP=time.google.com/', /etc/systemd/timesyncd.conf ]
+      - [ systemctl, restart, systemd-timesyncd ]
+
+    write_files:
+      - path: /etc/cloud/cloud-init.disabled
+        owner: root:root
+        content: |
+          # Disable cloud-init after first boot
+
+    final_message: 'The system is configured. Run Ansible'
+
+# vim:set ft=yaml:
