@@ -24,11 +24,6 @@ apt_repositories:
       # Node.js LTS (14.x)
       - "deb https://deb.nodesource.com/node_14.x/ {{ ansible_distribution_release }} main"
       - "deb-src https://deb.nodesource.com/node_14.x/ {{ ansible_distribution_release }} main"
-  # Yarn
-  - name: "yarn"
-    key_id: "1646B01B86E50310"
-    sources:
-      - "deb https://dl.yarnpkg.com/debian/ stable main"
   # LLVM
   - name: "llvm"
     key_id: "15CF4D18AF4F7421"
@@ -62,15 +57,19 @@ apt_repositories:
 apt_packages:
   - apcalc
   - acl                       # manage filesystem access lists
+  - bpfcc-tools               # BPF compiler collection
+  - bpftrace                  # BPF tracing analyzer
   - cryptsetup-bin
   - curl
   - dosfstools
   - equivs
+  - fzf                       # fuzzy finder
   - gdisk
   - git
   - gnupg
   - gzip
   - htop
+  - icdiff                    # side by side diff
   - jq                        # JSON parser and query language
   - less
   - lftp

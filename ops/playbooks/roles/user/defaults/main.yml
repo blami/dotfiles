@@ -56,6 +56,3 @@ wsl1_native_dirs:
   - src: "/home/{{ my_user.username }}/.ssh/ctrl"
     dest: "{{ my_user.home }}/.ssh/ctrl"
     mode: "0700"
-  - src: "/home/{{ my_user.username }}/.lpass"
-    dest: "{{ my_user.home }}/.lpass"
-    mode: "0700"

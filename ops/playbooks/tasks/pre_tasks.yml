@@ -48,8 +48,9 @@
   vars:
     win_env: "{{ out.stdout | from_json | items2dict(key_name='Key', value_name='Value') }}"
   when:
-    - not out.failed
+    # NOTE First check is_wsl as out won't exist if not WSL...
     - my_facts.is_wsl
+    - not out.failed
 
 # Check if Ansible can become root; gather my_facts.can_become_root bool.
 - name: "Checking if Ansible can become root"
