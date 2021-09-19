@@ -7,8 +7,6 @@
 /.config/weechat/logs
 /.config/weechat/xfer
 /.config/weechat/*.log
-/.config/yarn
-/.yarnrc
 /.ssh/keys
 /.ssh/ctrl
 /.ssh/agent
@@ -27,6 +25,9 @@
 /.rnd
 /.lpass
 /.node
+/.npmrc
+/.config/yarn
+/.yarnrc
 
 # History
 /.zsh_history*
