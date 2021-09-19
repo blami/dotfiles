@@ -7,6 +7,7 @@ apt_packages:
   - cmake
   - gcc
   - g++
+  - build-essential
   - binutils
   - gcc-avr                   # gcc for AVR microcontrollers
   - avrdude                   # AVR microcontrollers download/upload tool 
@@ -35,6 +36,10 @@ apt_packages:
   - docker-compose
   - kubectl
   - google-cloud-sdk          # gcloud utility and other Google Cloud tools
+  # Ubuntu/Debian packaging
+  - devscripts
+  - dput
+  - quilt
 
 # Go packages
 go_packages:

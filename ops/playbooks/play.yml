@@ -9,4 +9,5 @@
   roles:
     - role: base
     - role: user
-    - role: devenv
+    - role: user_win
+    - role: dev

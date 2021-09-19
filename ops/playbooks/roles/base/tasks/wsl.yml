@@ -29,3 +29,10 @@
   when: 
     - out.changed
     - my_facts.is_wsl is defined
+
+# NOTE SysV IPC doesn't work on WSL 1, fakeroot needs to use TCP instead.
+- name: Switching to fakeroot-tcp
+  command: >
+    update-alternatives --set fakeroot /usr/bin/fakeroot-tcp
+  when:
+    - my_facts.is_wsl == 1

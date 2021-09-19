@@ -63,6 +63,7 @@ apt_packages:
   - curl
   - dosfstools
   - equivs
+  - fakeroot                  # simulate running as root
   - fzf                       # fuzzy finder
   - gdisk
   - git
