@@ -71,6 +71,9 @@ endif
 
 
 "{{{ Editing
+"Paste last yank
+nnoremap                            pp                      "0p
+
 "Uppercase/lowercase inner word (`z)
 nnoremap                            <C-u>                   mzgUiw`z
 inoremap                            <C-u>                   <ESC>mzgUiw`za
