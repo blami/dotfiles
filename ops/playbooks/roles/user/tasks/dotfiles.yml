@@ -30,13 +30,15 @@
   when:
     - not out.changed
 
+# Setting only push to SSH key is convenient as we can always pull without
+# authenticating...
 # TODO This is dumb and actually doesn't check if key can be used to push/clone
-- name: Change dotfiles repository remote to SSH
+- name: Change dotfiles remote to SSH for push
   shell:
     chdir: "{{ my_user.home }}"
     cmd: |
       umask {{ my_user.umask }}
-      git --git-dir=.dfgit remote set-url origin git@github.com:{{ dotfiles_repo }}
+      git --git-dir=.dfgit remote set-url --push origin git@github.com:{{ dotfiles_repo }}
   # Do not run if SSH key is not present
   when:
     - my_facts.has_ssh_key
