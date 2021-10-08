@@ -5,6 +5,16 @@
 # system is WSL it creates /etc/wsl.conf if it didn't exist. If file is created
 # LxssManager service is also restarted for changes to come into effect.
 
+# This is to get /tmp cleared on reboot
+- name: Converting /tmp to tmpfs
+  lineinfile:
+    path: /etc/fstab
+    regexp: "^tmpfs	/tmp	tmpfs	defaults	1 0$"
+    line: "tmpfs	/tmp	tmpfs	defaults	1 0"
+  register: out_wsl_tmpfs
+  when:
+    - my_facts.is_wsl == 1
+
 - name: Installing wsl.conf
   copy:
     src: "{{ role_path }}/files/wsl.conf"
@@ -13,7 +23,7 @@
     group: root
     mode: 644
     force: yes
-  register: out
+  register: out_wsl_wslconf
   when:
     - my_facts.is_wsl is defined
 
@@ -27,7 +37,7 @@
     -ArgumentList "Restart-Service","LxssManager"
     -Verb runas
   when: 
-    - out.changed
+    - (out_wsl_tmpfs.changed or out_wsl_wslconf.changed)
     - my_facts.is_wsl is defined
 
 # NOTE SysV IPC doesn't work on WSL 1, fakeroot needs to use TCP instead.
