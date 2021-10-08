@@ -106,15 +106,16 @@ promptinit
 
 
 # {{{ History
-# Increment history immediately, store on command exit (accurate elapsed time)
-setopt inc_append_history_time
-setopt extended_history
-HISTFILE=~/.zsh_history.$HOST
+HISTFILE=~/.zsh_history.$HOSTNICK
 HISTSIZE=16384
 SAVEHIST=16384
 HISTIGNORE="&:ls:ll:la:mc:reset:clear:cd:cd ..:exit"
 setopt hist_verify
-
+# Save history immediately and share between sessions
+#setopt append_history
+#setopt inc_append_history
+setopt share_history        # this behaves as inc_append_history(_time)
+setopt extended_history
 # Ignore duplicates, spaces and history function itself
 setopt hist_ignore_dups
 setopt hist_ignore_space
@@ -144,7 +145,7 @@ setopt completeinword
 # {{{ Includes
 # Local configuration
 [ -r ~/.zshrc_local ] && . ~/.zshrc_local || builtin true
-[ -r ~/.zshrc_$HOST ] && . ~/.zshrc_$HOST || builtin true
+[ -r ~/.zshrc_$HOSTNICK ] && . ~/.zshrc_$HOSTNICK || builtin true
 
 # Additional files
 [ -r ~/.zalias ] && . ~/.zalias || builtin true

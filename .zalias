@@ -147,7 +147,7 @@ alias sl='ls'
 # {{{ Includes
 # Local configuration
 [ -r $HOME/.zalias_local ] && . $HOME/.zalias_local
-[ -r $HOME/.zalias_$HOST ] && . $HOME/.zalias_$HOST
+[ -r $HOME/.zalias_$HOSTNICK ] && . $HOME/.zalias_$HOSTNICK
 
 # Clear exit code (if any optional file doesn't exist)
 builtin true

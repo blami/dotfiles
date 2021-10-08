@@ -32,7 +32,7 @@ bindkey             '^i'    expand-or-complete-prefix
 # {{{ Includes
 # Local configuration
 [ -r ~/.zbindkey_local ] && . ~/.zbindkey_local
-[ -r ~/.zbindkey_$HOST ] && . ~/.zbindkey_$HOST
+[ -r ~/.zbindkey_$HOSTNICK ] && . ~/.zbindkey_$HOSTNICK
 
 # Clear exit code (if any file doesn't exist)
 builtin true

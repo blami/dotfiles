@@ -6,7 +6,7 @@
 [ -z $HOSTNAME ] && HOSTNAME=$HOST
 
 # TODO Host nickname (no long $HOST in prompt XTerm title)
-HOSTNICK=$HOST
+HOSTNICK=${HOST%%.*}
 # Host status (0-good, 1-bad, unset don't show)
 HOSTOK=
 export HOSTNICK HOSTOK
@@ -107,7 +107,7 @@ builtin unset -v s
 # Setup PATH in ~/local
 pathmunge $HOME/local/bin
 # Setup PATH in ~ always as last component
-pathmunge $HOME/bin/$HOST
+pathmunge $HOME/bin/$HOSTNICK
 pathmunge $HOME/bin/$OSARCH
 pathmunge $HOME/bin/$OS
 pathmunge $HOME/bin
