@@ -4,7 +4,7 @@
 # Usage: cwdlast
 
 cwdlast () {
-    local cwd=${PWD/$HOME/\~}
+    local cwd=${PWD/#$HOME/\~}
     [ -L $HOME ] && cwd=${cwd/$(readlink -m $HOME)/\~}
 
     cwd=${cwd/*\//}

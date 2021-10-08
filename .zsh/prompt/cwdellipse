@@ -7,7 +7,7 @@
 cwdellipse () {
     local MAXLEN=${1:-3}
 
-    local cwd=${PWD/$HOME/\~}
+    local cwd=${PWD/#$HOME/\~}
     [ -L $HOME ] && cwd=${cwd/$(readlink -m $HOME)/\~}
 
     if [ $MAXLEN -eq 0 ]; then
