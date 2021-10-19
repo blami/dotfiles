@@ -2,6 +2,9 @@
 # Install Node.js packages.
 
 # TODO Check if node is present; otherwise skip all here
+# TODO Make sure we look for node not only in default PATH? maybe subshell to
+# my_user.shell?
+
 
 - name: Setting up Node.js (.npmrc)
   shell:

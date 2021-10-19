@@ -13,7 +13,7 @@
     line: "tmpfs	/tmp	tmpfs	defaults	1 0"
   register: out_wsl_tmpfs
   when:
-    - my_facts.is_wsl == 1
+    - my_facts.is_wsl
 
 - name: Installing wsl.conf
   copy:
@@ -25,7 +25,7 @@
     force: yes
   register: out_wsl_wslconf
   when:
-    - my_facts.is_wsl is defined
+    - my_facts.is_wsl
 
 # NOTE This will result in interactive prompt, since this playbook is for
 # interactive use on WSL it doesn't matter much.
@@ -38,11 +38,4 @@
     -Verb runas
   when: 
     - (out_wsl_tmpfs.changed or out_wsl_wslconf.changed)
-    - my_facts.is_wsl is defined
-
-# NOTE SysV IPC doesn't work on WSL 1, fakeroot needs to use TCP instead.
-- name: Switching to fakeroot-tcp
-  command: >
-    update-alternatives --set fakeroot /usr/bin/fakeroot-tcp
-  when:
-    - my_facts.is_wsl == 1
+    - my_facts.is_wsl

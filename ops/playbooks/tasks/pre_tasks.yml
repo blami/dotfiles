@@ -148,11 +148,32 @@
   when:
     - my_facts.user_exists
 
+# Check if my_user.home is on drvfs if so, we can't create certain directories.
+- name: "Checking if user home directory is on drvfs"
+  shell: |
+    df -P {{ my_user.home }} | awk 'FNR==2 {print $1}'
+  register: out
+  changed_when: false
+  when:
+    - my_facts.user_exists
+- set_fact:
+    my_facts: >
+      {{
+        my_facts | default({})
+        | combine({
+          "home_filesystem": out.stdout
+        })
+      }}
+  when:
+     - my_facts.user_exists
+
 # Check if user SSH key exists.
 - name: "Checking user SSH key presence"
   stat:
     path: "{{ my_user.home }}/.ssh/{{ my_user.ssh_key }}"
   register: out
+  when:
+    - my_facts.user_exists
 - set_fact:
     my_facts: >
       {{
@@ -161,5 +182,8 @@
           "has_ssh_key": out.stat.exists
         })
       }}
+  when:
+    - my_facts.user_exists
 
-#- debug: msg="{{ my_facts }}"
+# Output user information and facts
+- debug: msg = "{{ my_user }} {{ my_facts }}"

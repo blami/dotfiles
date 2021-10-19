@@ -1,0 +1,6 @@
+---
+# Change shell to my_user.shell (assumes it is installed otherwise fails).
+
+- name: Setting user shell
+  command: >
+    usermod -s {{ my_user.shell }} {{ my_user.username }}

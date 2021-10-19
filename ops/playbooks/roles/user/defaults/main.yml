@@ -41,7 +41,6 @@ nvim_packs:
 
 # Additional packages to install
 apt_packages:
-  - lastpass-cli              # lastpass client
   - weechat                   # irc client
   - xdg-user-dirs
   - graphicsmagick
@@ -49,10 +48,10 @@ apt_packages:
   - direnv                    # load .env files
   - fzf                       # fuzzy finder
 
-# WSL1 native directories
+# WSL native directories
 # NOTE This is until fixed by Microsoft; some directories cannot be on NTFS
 # and must be on native filesystem.
-wsl1_native_dirs:
+wsl_native_dirs:
   - src: "/home/{{ my_user.username }}/.ssh/ctrl"
     dest: "{{ my_user.home }}/.ssh/ctrl"
     mode: "0700"

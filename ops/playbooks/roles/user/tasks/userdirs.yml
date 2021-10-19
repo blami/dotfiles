@@ -10,7 +10,6 @@
     - "desk"                  # XDG_DESKTOP_DIR
     - "docs"                  # XDG_DOCUMENTS_DIR
     - "downl"                 # XDG_DOWNLOAD_DIR
-    - "tmpl"                  # XDG_TEMPLATES_DIR (in dotfiles)
     - "pics"                  # XDG_PICTURES_DIR
     - "music"                 # XDG_MUSIC_DIR
     - "videos"                # XDG_VIDEOS_DIR
@@ -37,18 +36,19 @@
     state: directory
 
 # On WSL1 certain directories have to be on native filesystem
-- name: Create WSL1 native directories
+- name: Create WSL native directories
   file:
     path: "{{ item.src }}"
     mode: "{{ item.mode }}"
     state: directory
-  with_items: "{{ wsl1_native_dirs }}"
+  with_items: "{{ wsl_native_dirs }}"
   loop_control:
     label: "{{ item.src }}"
   when:
-    - my_facts.is_wsl == 1
+    - my_facts.is_wsl
+    - my_facts.home_filesystem == "drvfs"
 
-- name: Symlink WSL1 native directories
+- name: Symlink WSL native directories
   file:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -56,8 +56,9 @@
     # NOTE This will delete (unlink) the original file if its not a symlink and
     # create the symlink
     force: yes
-  with_items: "{{ wsl1_native_dirs }}"
+  with_items: "{{ wsl_native_dirs }}"
   loop_control:
     label: "{{ item.dest }}"
   when:
-    - my_facts.is_wsl == 1
+    - my_facts.is_wsl
+    - my_facts.home_filesystem == "drvfs"

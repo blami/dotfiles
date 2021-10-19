@@ -1,16 +1,19 @@
 ---
 # Install Go packages and golangci-lint to GOPATH.
+# In order to get GOPATH right (as defined in .profile.d/golang.sh) we need to
+# source that file but it depends on pathmunge so provide kludge for that too.
 
 # TODO Check if go is present; version is high enough and if not skip the rest?
+# TODO Make sure we look for go not only in default PATH? maybe subshell to
+# my_user.shell?
 
 - name: Installing Go packages to GOPATH
   shell:
     chdir: "{{ my_user.home }}"
-    # NOTE Force GOPATH to same location as in ~/.profile.d/go.sh
-    # TODO Decide whether to enforce @latest here or move @* to go_packages
     cmd: |
       umask {{ my_user.umask }}
-      GOPATH={{ my_user.home }}/.local/go
+      pathmunge() { PATH=$PATH:$1 ; }
+      [ -f {{ my_user.home }}/.profile.d/golang.sh ] && . {{ my_user.home }}/.profile.d/golang.sh
       go install {{ item }}@latest
   with_items: "{{ go_packages }}"
 
@@ -21,5 +24,6 @@
     chdir: "{{ my_user.home }}"
     cmd: |
       umask {{ my_user.umask }}
-      GOPATH={{ my_user.home }}/.local/go
+      pathmunge() { PATH=$PATH:$1 ; }
+      [ -f {{ my_user.home }}/.profile.d/golang.sh ] && . {{ my_user.home }}/.profile.d/golang.sh
       curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin

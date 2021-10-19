@@ -5,6 +5,7 @@
 # Tasks to do as root 
 - block:
     - import_tasks: apt.yml
+    - import_tasks: fakeroot.yml
   become: yes
   become_user: "root"
   when:

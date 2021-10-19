@@ -40,6 +40,7 @@ apt_packages:
   - devscripts
   - dput
   - quilt
+  - fakeroot
 
 # Go packages
 go_packages:

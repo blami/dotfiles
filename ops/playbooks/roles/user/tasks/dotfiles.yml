@@ -18,7 +18,7 @@
       [ -f .git ] && rm -rf .git
   register: out
 
-- name: Update dotfiles
+- name: Updating dotfiles
   shell:
     chdir: "{{ my_user.home }}"
     # TODO Check if pull can be done...
@@ -31,9 +31,8 @@
     - not out.changed
 
 # Setting only push to SSH key is convenient as we can always pull without
-# authenticating...
-# TODO This is dumb and actually doesn't check if key can be used to push/clone
-- name: Change dotfiles remote to SSH for push
+# authenticating. Assumes clone is done using by my_user.ssh_key.
+- name: Changing dotfiles remote to SSH (for push)
   shell:
     chdir: "{{ my_user.home }}"
     cmd: |
