@@ -40,7 +40,7 @@ set undolevels=1000
 "Encoding
 set encoding=utf-8
 set fileencoding=utf-8
-set fileencodings=utf-8
+set fileencodings=ucs-bom,utf-8
 "set bomb                                                "Prepend file with BOM if needed
 "set binary                                              "Edit file as binary
 set fileformats=unix,dos,mac                            "<EOL> formats to try
