@@ -1,8 +1,3 @@
-
-;	Aero black
-;	Exact copy of Aero cursor in black with HiDPI support
-;	twipeep.deviantart.com
-
 [Version]
 signature="$CHICAGO$"
 
@@ -14,7 +9,7 @@ AddReg    = Scheme.Reg
 Scheme.Cur = 10,"%CUR_DIR%"
 
 [Scheme.Reg]
-HKCU,"Control Panel\Cursors\Schemes","%SCHEME_NAME%",,"%10%\%CUR_DIR%\%pointer%,%10%\%CUR_DIR%\%help%,%10%\%CUR_DIR%\%work%,%10%\%CUR_DIR%\%busy%,%10%\%CUR_DIR%\%Cross%,%10%\%CUR_DIR%\%Text%,%10%\%CUR_DIR%\%Hand%,%10%\%CUR_DIR%\%Unavailiable%,%10%\%CUR_DIR%\%Vert%,%10%\%CUR_DIR%\%Horz%,%10%\%CUR_DIR%\%Dgn1%,%10%\%CUR_DIR%\%Dgn2%,%10%\%CUR_DIR%\%move%,%10%\%CUR_DIR%\%alternate%,%10%\%CUR_DIR%\%link%"
+HKCU,"Control Panel\Cursors\Schemes","%SCHEME_NAME%",,"%10%\%CUR_DIR%\%pointer%,%10%\%CUR_DIR%\%help%,%10%\%CUR_DIR%\%work%,%10%\%CUR_DIR%\%busy%,%10%\%CUR_DIR%\%Cross%,%10%\%CUR_DIR%\%Text%,%10%\%CUR_DIR%\%Hand%,%10%\%CUR_DIR%\%Unavailiable%,%10%\%CUR_DIR%\%Vert%,%10%\%CUR_DIR%\%Horz%,%10%\%CUR_DIR%\%Dgn1%,%10%\%CUR_DIR%\%Dgn2%,%10%\%CUR_DIR%\%move%,%10%\%CUR_DIR%\%alternate%,%10%\%CUR_DIR%\%link%,%10%\%CUR_DIR%\%pin%,%10%\%CUR_DIR%\%person%"
 
 [Scheme.Cur]
 aero_black_up.cur
@@ -32,10 +27,13 @@ aero_black_beam.cur
 aero_black_unavail.cur
 aero_black_ns.cur
 aero_black_working.ani
+aero_black_person.cur
+aero_black_pin.cur
+
 
 [Strings]
-CUR_DIR			
-SCHEME_NAME		= "Windows Aero (black)"
+CUR_DIR			= "Cursors\AeroBlack"
+SCHEME_NAME		= "Aero Black"
 alternate		= "aero_black_up.cur"
 busy			= "aero_black_busy.ani"
 dgn1			= "aero_black_nwse.cur"
@@ -51,4 +49,5 @@ text			= "aero_black_beam.cur"
 unavailiable	= "aero_black_unavail.cur"
 vert			= "aero_black_ns.cur"
 work			= "aero_black_working.ani"
-
+person			= "aero_black_person.cur"
+pin				= "aero_black_pin.cur"
