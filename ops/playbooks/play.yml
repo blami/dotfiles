@@ -9,5 +9,4 @@
   roles:
     - role: base
     - role: user
-    - role: user_wsl
     - role: dev
