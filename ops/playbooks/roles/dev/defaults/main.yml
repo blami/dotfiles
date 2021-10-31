@@ -73,3 +73,4 @@ nodejs_packages:
   - typescript-language-server
   - eslint
   - prettier
+  - yarn
