@@ -26,6 +26,8 @@
     cmd: |
       umask {{ my_user.umask }}
       git --git-dir=.dfgit pull
+  # Never fail (if see TODO above)
+  failed_when: false
   # Do not run if dotfiles were just cloned
   when:
     - not out.changed
@@ -41,4 +43,3 @@
   # Do not run if SSH key is not present
   when:
     - my_facts.has_ssh_key
-

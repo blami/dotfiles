@@ -1,0 +1,36 @@
+---
+# Setup Windows related configuration
+# NOTE Using 'command' 
+
+# NOTE This will install environment variables for current Windows user
+- name: Setting Windows user environment variables
+  command: |
+    powershell.exe -Command "[Environment]::SetEnvironmentVariable('{{ item.key }}', '{{ item.value }}', 'User')"
+  with_dict: "{{ windows_env }}"
+  when:
+    - my_facts.is_wsl
+
+# NOTE This will import registry settings for current Windows user (under HKCU)
+- name: Importing Windows user registry settings
+  command: |
+    powershell.exe -Command "If(!(Test-Path 'HKCU:\\{{ item.path }}')) {New-Item -Path 'HKCU:\\{{ item.path }}' | Out-Null};  New-ItemProperty -Path 'HKCU:\\{{ item.path }}' -Name '{{ item.name }}' -Value '{{ item.value }}' -Type '{{ item.type }}' -Force | Out-Null"
+  with_items: "{{ windows_registry }}"
+  when:
+    - my_facts.is_wsl
+
+# NOTE Requires UAC elevation but is_wsl is only run on localhost anyway. In 
+# order to have only one prompt loop over all .inf files is done inside
+# elevated PowerShell.
+#- name: Installing Windows Cursors
+  #shell:
+    #chdir: "{{ my_user.home }}/.local/share/icons/aero_black/cursors"
+    # LaunchINFSectionEx arguments are:
+    # 1. INF file
+    # 2. Section (defaults to DefaultInstall)
+    # 3. CAB file
+    # 4. Flags (4=Quiet, NO UI)
+    # 5. Reboot
+    #cmd: |
+    #  powershell.exe -Command "Start-Process -Verb RunAs -WorkingDirectory '{{ my_facts.win_home }}\ rundll32.exe -ArgumentList 'advpack.dll,LaunchINFSectionEx .\install.inf,,,4,N'"
+    #when:
+    #- my_facts.is_wsl

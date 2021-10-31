@@ -2,19 +2,63 @@
 # Dotfiles repository without github.com host
 dotfiles_repo: "blami/dotfiles.git"
 
+# WSL native directories
+# NOTE This is until fixed by Microsoft; some directories cannot be on NTFS
+# and must be on native filesystem.
+wsl_native_dirs:
+  - src: "/home/{{ my_user.username }}/.ssh/ctrl"
+    dest: "{{ my_user.home }}/.ssh/ctrl"
+    mode: "0700"
+
+# Environment
+# NOTE These are "user" variables to avoid elevation
+windows_env:
+  - HOME: "{{ my_facts.win_home}}"
+  # XDG data dirs (not all applications support them; in some cases this might
+  # cause issues - e.g. if contains any PATHs, etc.)
+  - XDG_CONFIG_HOME: "{{ my_facts.win_home }}\\.config"
+  - XDG_DATA_HOME: "{{ my_facts.win_home }}\\.local\\share"
+
+# Registry
+# NOTE These are "user" keys under HKCU (Current User) to avoid elevation
+windows_registry:
+  # Total Commander
+  - path: "Software\\Ghisler\\Total Commander"
+    name: "IniFileName"
+    value: "%USERPROFILE%\\.config\\tc\\wincmd.ini"
+    type: "String"
+  - path: "Software\\Ghisler\\Total Commander"
+    name: "FtpIniName"
+    value: "%USERPROFILE%\\.config\\tc\\wcx_ftp.ini"
+    type: "String"
+
+# Secrets
 ssh_keys:
-  - name: "Keys/id_blami_rsa"
-    file: "id_blami_rsa"
+  - id_blami_rsa
 
 irc_certs:
-  - name: "Accounts/IRC libera.chat"
-    file: "libera.chat_blami.pem"
-  - name: "Accounts/IRC oftc.net"
-    file: "irc.oftc.net_blami.pem"
+  - server: "libera.chat"
+    user: "blami"
+  - server: "irc.oftc.net"
+    user: "blami"
 
 gpg_keys:
-  - name: "Keys/GPG blami@blami.net"
-    identity: "blami@blami.net"
+  - blami@blami.net
+
+# File based licenses
+licenses:
+  - name: "Total Commander"
+    filename: "wincmd.key"
+    dest: "{{ my_user.home }}/.config/tc"
+
+# Additional packages to install
+apt_packages:
+  - weechat                   # irc client
+  - xdg-user-dirs
+  - graphicsmagick
+  - mc                        # file manager
+  - direnv                    # load .env files
+  - fzf                       # fuzzy finder
 
 # Neovim packs to install
 nvim_packs:
@@ -39,19 +83,4 @@ nvim_packs:
     group: "plugins"
     repo: "https://github.com/preservim/nerdtree"
 
-# Additional packages to install
-apt_packages:
-  - weechat                   # irc client
-  - xdg-user-dirs
-  - graphicsmagick
-  - mc                        # file manager
-  - direnv                    # load .env files
-  - fzf                       # fuzzy finder
 
-# WSL native directories
-# NOTE This is until fixed by Microsoft; some directories cannot be on NTFS
-# and must be on native filesystem.
-wsl_native_dirs:
-  - src: "/home/{{ my_user.username }}/.ssh/ctrl"
-    dest: "{{ my_user.home }}/.ssh/ctrl"
-    mode: "0700"

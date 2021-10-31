@@ -1,0 +1,29 @@
+---
+# Install various software licenses stored in Bitwarden.
+# Bitwarden CLI has to be installed.
+
+# TODO This currently works only when run locally with BW_SESSION exported,
+# probably need to unlock bitwarden on target host and instead of exporting
+# BW_SESSION pass it to master?
+
+- name: Checking Bitwarden status
+  shell: |
+    bw status | jq -r .status 
+  register: out
+  # Never failed nor changed
+  failed_when: false
+  changed_when: false
+
+# Licenses that are installed to user home
+- name: Fetching file-based licenses
+  shell:
+    cmd: |
+      ID=$(bw get item "{{ item.name }}" | jq -r ".id")
+      ATTACH_ID=$(bw get item $ID | jq -r ".attachments[] | select((.fileName == \"{{ item.filename }}\")).id")
+      bw get attachment $ATTACH_ID --itemid $ID --output {{ item.dest }}/{{ item.filename }}
+    creates: "{{ item.dest }}/{{ item.filename}}"
+  with_items: "{{ licenses }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - out.stdout == "unlocked"

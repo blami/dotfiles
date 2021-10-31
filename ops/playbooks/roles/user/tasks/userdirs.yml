@@ -1,7 +1,7 @@
 ---
 # Create common user directories; see ~/.config/user-dirs.dirs for details.
 
-- name: Create ~ directories
+- name: Creating ~ directories
   file:
     path: "{{ my_user.home }}/{{ item }}"
     state: directory
@@ -23,20 +23,20 @@
     # Sub-directories
     - "downl/arch"
 
-- name: Create SSH keys directory
+- name: Creating SSH keys directory
   file:
     path: "{{ my_user.home }}/.ssh/keys"
     mode: "0700"
     state: directory
 
-- name: Create IRC certs directory
+- name: Creating IRC certs directory
   file:
     path: "{{ my_user.home }}/.config/weechat/certs"
     mode: "0700"
     state: directory
 
 # On WSL1 certain directories have to be on native filesystem
-- name: Create WSL native directories
+- name: Creating WSL native directories
   file:
     path: "{{ item.src }}"
     mode: "{{ item.mode }}"
@@ -48,7 +48,7 @@
     - my_facts.is_wsl
     - my_facts.home_filesystem == "drvfs"
 
-- name: Symlink WSL native directories
+- name: Symlinking WSL native directories
   file:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
