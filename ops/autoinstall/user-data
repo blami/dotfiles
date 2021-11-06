@@ -61,6 +61,12 @@ autoinstall:
       - [ systemctl, restart, systemd-timesyncd ]
 
     write_files:
+      - path: /etc/modprobe.d/nfs4.conf
+        # This is to enable NFSv4 ID mapping
+        owner: root:root
+        content: |
+          options nfs nfs4_disable_idmapping=0
+          options nfsd nfs4_disable_idmapping=0
       - path: /etc/cloud/cloud-init.disabled
         owner: root:root
         content: |
