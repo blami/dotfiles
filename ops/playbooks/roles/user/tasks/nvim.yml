@@ -1,5 +1,6 @@
 ---
 # Install and/or update Neovim packs.
+# NOTE This is not used since I switched to Emacs
 
 - name: Installing Neovim packs
   shell:
