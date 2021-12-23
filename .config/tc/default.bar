@@ -1,5 +1,5 @@
 [Buttonbar]
-Buttoncount=21
+Buttoncount=20
 button1=wcmicons.dll
 cmd1=cm_Rereadsource
 iconic1=0
@@ -52,15 +52,10 @@ cmd17=cm_SearchFor
 iconic17=0
 button18=
 iconic18=0
-button19=C:\Program Files\Vim\gvim.exe
-cmd19=""C:\Program Files\Vim\vim.exe""
-path19=C:\Program Files\Vim\
+button19=C:\Program Files\Emacs\x86_64\bin\emacs.exe
+cmd19=""C:\Program Files\Emacs\x86_64\bin\runemacs.exe""
 iconic19=0
 button20=C:\Program Files\IrfanView\i_view64.exe
 cmd20=""C:\Program Files\IrfanView\i_view64.exe""
 path20=C:\Program Files\IrfanView\
 iconic20=0
-button21=C:\Program Files\PuTTY\putty.exe
-cmd21=""C:\Program Files\PuTTY\putty.exe""
-path21=C:\Program Files\PuTTY\
-iconic21=0
