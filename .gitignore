@@ -1,4 +1,5 @@
 /.bundle
+!/.bundle/config
 /.dfgit
 /.config/nvim/doc/tags
 /.config/tc/wincmd.key
@@ -68,5 +69,6 @@
 
 # Windows
 /Application\ Data
-/AppData/*
+/AppData
 !/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json
+!/AppData/Roaming/IrfanView/i_view*.ini
