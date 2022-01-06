@@ -23,6 +23,7 @@ RUN apt-get update \
         apt-utils \
         lintian \
         quilt \
+        equivs \
         sudo \
     && rm -rf /tmp/* /var/tmp/* \
     && apt-get clean
