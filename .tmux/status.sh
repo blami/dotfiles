@@ -19,5 +19,4 @@ DOW=umtwhfs ; DOW=${DOW:$(date +%w):1}
 DLM=:
 timedate=$(date +"%H${DLM}%M %d${DOW}%m")
 
-
 echo $host $timedate
