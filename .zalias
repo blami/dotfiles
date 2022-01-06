@@ -74,11 +74,15 @@ fi
 
 
 # {{{ Text editing
-(( $+commands[nvim] )) && alias vim='nvim'
-alias vi='vim'
-alias v='vim'
-alias vimn='vim -u NONE'                # vim without configuration
 alias tn='tr -d "\n"'                   # trim newlines
+# Editor
+alias e='emacs'
+alias eN='emacs -Q'
+# TODO Remove after Emacs-ization
+alias vim='emacs'
+#(( $+commands[nvim] )) && alias vim='nvim'
+#alias vi='vim'
+#alias v='vim'
 # }}}
 
 

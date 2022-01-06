@@ -59,13 +59,8 @@ fi
 
 
 # {{{ Misc environment
-if (( $+commands[nvim] )); then
-    EDITOR=nvim
-    VISUAL=nvim
-else
-    EDITOR=vim
-    VISUAL=vim
-fi
+EDITOR=emacs
+VISUAL=emacs
 PAGER=less
 LESSHISTFILE=-
 #BROWSER=~/bin/browser
@@ -75,6 +70,11 @@ export EDITOR VISUAL PAGER LESSHISTFILE
 IRCNICK='blami'
 IRCUSER='blami'
 export IRCNICK IRCUSER
+
+# User (override in ~/.zprofile_local|$HOST)
+MYFULLNAME='Ondrej Balaz'
+MYEMAIL='blami@blami.net'
+export MYFULLNAME MYEMAIL
 
 # Debian/Ubuntu development environment
 DEBFULLNAME='Ondrej Balaz'
