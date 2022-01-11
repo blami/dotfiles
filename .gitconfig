@@ -30,10 +30,13 @@
 	template = ~/.gitmessage
 
 [merge]
-	tool = vimdiff
+	tool = nvim
 
 [mergetool "vimdiff"]
 	cmd = vim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c '$wincmd J'
+
+[mergetool "nvim"]
+	cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c '$wincmd J'
 
 [push]
 	# Push branches manually one by one

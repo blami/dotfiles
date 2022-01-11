@@ -37,7 +37,7 @@ alias path='echo -e ${PATH//:/\\n}'
 # Directory shortcuts
 alias src="cd $HOME/src"
 alias doc="cd $HOME/docs"
-alias sand="cd $HOME/ws/sandbox"
+alias sb="cd $HOME/ws/sandbox"
 alias etc='cd /etc'
 
 # Disable globbing for some commands
@@ -76,13 +76,14 @@ fi
 # {{{ Text editing
 alias tn='tr -d "\n"'                   # trim newlines
 # Editor
-alias e='emacs'
-alias eN='emacs -Q'
-# TODO Remove after Emacs-ization
-alias vim='emacs'
-#(( $+commands[nvim] )) && alias vim='nvim'
-#alias vi='vim'
-#alias v='vim'
+(( $+commands[nvim] )) && alias vim='nvim'
+alias vi='vim'
+alias v='vim'
+alias nvimdiff='vim -d'
+alias vimdiff='vim -d'
+alias vd='vim -d'
+alias vN='vim --clean'
+alias e='vim'
 # }}}
 
 

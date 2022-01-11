@@ -59,12 +59,12 @@ fi
 
 
 # {{{ Misc environment
-EDITOR=emacs
-VISUAL=emacs
+(( $+commands[nvim] )) && EDITOR=nvim || EDITOR=vim
+VISUAL=$EDITOR
 PAGER=less
+[ -x ~/bin/browser ] && BROWSER=~/bin/browser
 LESSHISTFILE=-
-#BROWSER=~/bin/browser
-export EDITOR VISUAL PAGER LESSHISTFILE
+export EDITOR VISUAL BROWSER PAGER LESSHISTFILE
 
 # Irssi variables
 IRCNICK='blami'
