@@ -11,4 +11,5 @@ setl noexpandtab
 setl nonumber
 setl signcolumn=
 setl colorcolumn=
+setl nolist
 setl statusline=%t%{exists('w:quickfix_title')?'\ '.w:quickfix_title:''}\ %=%2*%c,%l/%LL%*\ %P 

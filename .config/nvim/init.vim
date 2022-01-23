@@ -1,225 +1,254 @@
-"Neovim init
+"init.vim - Neovim init file
 
 "{{{ General
-"Compatible mode options
-set cpoptions=aABceFs_
-
-"Errors
-set noerrorbells                                        "Disable ^A on error
-set belloff=all
+set encoding=utf-8                          "use UTF-8 internally and for RPC
+set cpoptions=aABceFs_                      "compatible mode options
 
 "Command history
-set history=5000
+set history=8000
 
-"Builtins
-"let loaded_netrw=0                                      "Do NOT disable netrw (plugins use it to download stuff)
+"Undo
+set undofile                                "enable persistent undo
+set undolevels=1000
+
+"Load custom Lua library
+lua blami=require('blami')
+"}}}
+
+
+"{{{ Variables
+"TODO Review this... does XDG work on Windows too?
+"TODO Is using stdpath() sane on WSL system?
+let g:confdir=stdpath('config')             "config (init.vim) directory
+let g:localdir=stdpath('data')              "local data directory
+let g:sitedir=stdpath('data') . '/site'     "local site directory
 "}}}
 
 
 "{{{ Files and Directories
 "Directories
-let g:confdir=stdpath('config')                         "Config (init.vim) directory
-let g:localdir=stdpath('data')                          "Local data directory
+for d in ['backup', 'site/spell', 'swap', 'undo']
+    call mkdir(g:localdir . '/' . d, 'p')
+endfor
+let &dir=g:localdir . '/swap'               "keep swap files in .local/
+let &backupdir=g:localdir . '/backup'       "keep backups in .local/
 
-"Loading
-set modeline                                            "Process 'vim:' modelines in files
-set exrc                                                "Load per-project .vimrc
-set secure                                              "No autocmd in per-project .vimrc
-set hidden                                              "Hide buffers instead of closing
-set autoread                                            "Re-read file when changed outside neovim
-set switchbuf+=useopen,usetab                           "Re-use open window/tab for switching buffers
+"Loading Files
+set modeline                                "process 'vim:' modeline in files
+set exrc secure                             "load safe parts of per-project .exrc/.vimrc
+set hidden                                  "hide buffers instead of closing
+set autoread                                "re-read files when changed outside
+set switchbuf+=useopen,usetab               "re-use open window/tab for switching buffers
 
-"Backup, swap files
-set nobackup                                            "When saving overwrite current file (no rename)
-set noswapfile
-
-"Undo
-set undofile                                            "Enable persistent undo
-set undolevels=1000
-
-"Encoding
-set encoding=utf-8
+"File Encoding
 set fileencoding=utf-8
 set fileencodings=ucs-bom,utf-8
-"set bomb                                                "Prepend file with BOM if needed
-"set binary                                              "Edit file as binary
-set fileformats=unix,dos,mac                            "<EOL> formats to try
+"set bomb                                   "prepend file with BOM if needed
+"set binary                                 "edit file as binary
+set fileformats=unix,dos,mac                "<EOL> formats to try
+
+"Backup and Swap Files
+set backupcopy=yes                          "make backup COPY and overwrite original file
+set backupskip+=~/tmp/*
+set swapfile                                "create swapfiles in g:localdir/swap
 "}}}
 
 
 "{{{ Editing
-"NOTE Very basic defaults overriden by ftplugins
-"Indentation
-set expandtab                                           "Indent using spaces
-set shiftwidth=4
-set softtabstop=4
-set tabstop=4
-"set shiftround                                          "Round indents to multiple of shiftwidth
-set smarttab
-set smartindent                                         "Smart indentation
-set autoindent                                          "Continue indentation automatically
-set copyindent                                          "Copy indentation from line above
-set breakindent                                         "Indent breaked lines
+set nowrap
+set textwidth=79                            "default text-width is 79 columns
+set nojoinspaces                            "do NOT insert 2 spaces after .!?
+set linebreak breakat=\ \	.;:,!?。…！？   "break long lines at these characters
+
+"Indentation, TAB and BS behavior
+set expandtab                               "indent using spaces by default
+set shiftwidth=4 softtabstop=4 tabstop=4    "TAB key and indent are both 4 spaces
+set smarttab smartindent                    "smart indentation TAB/BS behavior
+set autoindent copyindent breakindent       "automatically indent new lines
 set backspace=indent,eol,start
-set nostartofline                                       "Keep cursor on same column when going up/down
-set nojoinspaces                                        "Do NOT insert 2 spaces after .!?
 
 "Formatting
+"TODO Sane defaults?
 "set formatoptions=
 
-"Scrolling and wrapping
-set scrolloff=2                                         "Show at least 2 lines above/below
-set sidescroll=8                                        "Show at least 8 columns left/right
-set scrolljump=5                                        "Jump by 5 lines when cursor leaves screen
-set nowrap
-set textwidth=79                                        "Default text-width is 79 columns
-set breakat=\ \	.;:,!?
-set linebreak                                           "Break long lines at 'breakat'
-
-"Clipboard
-"TODO remove TODO from g:clipboardTODO
-set clipboard+=unnamedplus
-"Use ~/bin/pb wrapper that detects WSL
-let g:clipboardTODO={
-    \ 'name': 'cb',
-    \ 'copy': {
-    \   '+': ['cb', '--copy', '-'],
-    \   '*': ['cb', '--copy', '-'],
-    \ },
-    \ 'paste': {
-    \   '+': ['cb', '--paste', '-'],
-    \   '*': ['cb', '--paste', '-'],
-    \ },
-    \ 'cache_enabled': 1,
-    \}
-
-"Search and Replace
-set re=0                                                "Use autoselection (NOTE =1 breaks Typescript)
-set magic                                               "Enable magic in regexes e.g. ( matches \( groups... 
-set ignorecase                                          "Ignore case on searches
-set smartcase                                           "Keep case when searching *
-set wrapscan                                            "Wrap around searches (begin<->end)
-set incsearch                                           "Incremental search (search as you type)
-set gdefault                                            "Add /g by default, invert by adding /g
-"NOTE Causes issues with plugins/autoload scripts...
-"set inccommand=nosplit                                  "Visual feedback when substituting with :s
+"Scrolling
+set scrolloff=2                             "show at least 2 lines above/below
+set sidescroll=8                            "show at least 8 columns left/right
+set scrolljump=5                            "jump by 5 lines when cursor leaves screen
+set nostartofline                           "keep cursor on same column when going up/down
 
 "Folding
-set foldenable
-set foldmethod=marker                                   "Fold by {{{ markers only
-set foldlevel=100                                       "Don't fold automatically only on zC
-set foldopen=block,hor,mark,percent,quickfix,tag        "Open fold on those actions
-
-"Diff
-set diffopt=filler,iwhite,vertical                      "Show filler lines, ignore spaces, vertical split
-set diffopt+=internal,algorithm:histogram               "Use internal diff library, same algo as git
-set diffopt+=indent-heuristic                           "Use indentation heuristics
-
-"Spell checking
-let g:spelllangs=['en', 'cs']
-set nospell
-let loaded_spellfile_plugin=1                           "Disable spellfile.vim dictionary downloads
-                                                        "See autocmd.vim for SpellFileMissing
-let &spelllang=get(g:spelllangs, 0)
-let &spellfile=g:confdir.'/spell/'.&g:spelllang.'.utf8.add,'
-    \ .g:confdir.'/spell/common.utf8.add'               "Custom spell files for added words (in my dotfiles)
-set complete+=kspell
-
-"Printing
-set printoptions=paper:a4,duplex:on
+set foldenable foldmethod=marker            "fold by {{{ markers only
+set foldlevel=100                           "don't fold automatically only on zC
+set foldopen=block,hor,mark,percent,quickfix,tag
 "}}}
 
 
-"{{{ Look and feel
-"Command line
-set cmdheight=2                                         "Command line height (lingering echomsg)
-set showmode                                            "Show current -- MODE -- in command line
-set showcmd                                             "Show command
-set shortmess+=cm                                       "No completion messages (match X of Y...); [+] instead of modified
-set shortmess-=S                                        "Show search [X/Y] message
+"{{{ Search and Replace
+set re=0                                    "use autoselection (NOTE =1 breaks Typescript)
+set magic                                   "enable magic in regex e.g. ( matches \( groups... 
+set ignorecase smartcase                    "ignore case on search/replace unless uppercase char used
+set wrapscan                                "wrap around search/replace
+set incsearch                               "incremental search (search as you type)
+set gdefault                                "invert regex /g
+"NOTE Causes issues with plugins/autoload scripts
+"set inccommand=nosplit                     "visual feedback when substituting with :s
+"}}}
 
-"Signs and line numbers
-set signcolumn=yes                                      "Show sign (warnings, git...) column
-set number                                              "Show line numbers
-set numberwidth=4
+
+"{{{ Diff
+set diffopt=vertical                        "open diff in vertical split
+set diffopt+=filler,iwhite                  "show filler lines, ignore spaces
+set diffopt+=internal,algorithm:histogram   "use internal diff library, same algo as git
+set diffopt+=indent-heuristic               "use indentation heuristics
+"}}}
+
+
+"{{{ User Interface
+"Colors and Theme(s)
+set termguicolors                           "GUI color depth in tty
+set background=dark                         "default to dark background
+syntax on                                   "enable syntax coloring
+colors blami
+" Fonts
+if has('win32')
+    set guifont="TODO"
+endif
+
+"Beeps
+set noerrorbells belloff=all                "no ^A beeps
+
+"Command-line
+set cmdheight=2                             "command line height (lingering echomsg)
+set showmode showcmd                        "current -- MODE -- in command line; last command
+set shortmess+=cm                           "no completion messages (match X of Y...); [+] instead of modified
+set shortmess-=S                            "show search [X/Y] message
+set nowildmenu                              "ain't wildmenu lover
+"Command-line completion ignored patterns:
+set wildignore+=*.o,*.obj,*.a,*.so,*.pyc,*.pyo,*.gem,*.exe,*.dll
+set wildignore+=.DS_Store,.git,.gitkeep
+
+"Gutter
+set signcolumn=yes                          "show sign (warnings, git...) column
+set number numberwidth=4                    "show line numbers
 
 "Text
-set colorcolumn=80,120                                  "Highlight columns 80,120 (ftplugin overrides)
-set cursorline                                          "Highlight line with cursor (only using that to CursorLine)
-"set cursorline                                          "Highlight line cursor is on
-set hlsearch                                            "Highlight search matches
-set list                                                "Show non-printable characters
-set listchars=tab:⯈\ ,trail:·,eol:¬,extends:$,precedes:^
-set matchpairs=(:),{:},[:]                              "Match pair characters (highlight match)
+set colorcolumn=80,120                      "highlight columns 80,120 (ftplugin overrides)
+set cursorline                              "highlight line with cursor (only using that in number column)
+set hlsearch                                "highlight search matches
+set nolist                                  "do not show non-printable characters by default
+set listchars=tab:⯈\ ,trail:·,eol:¶,extends:$,precedes:^
+set matchpairs=(:),{:},[:],「:」,【:】      "match pair characters (highlight match)
 set matchtime=1
-set noshowmatch                                         "Don't briefly skip to matching bracket
-"set cpoptions-=m                                        "Don't showmatch on paste
-set emoji                                               "Enable emoji
+set noshowmatch                             "don't briefly skip to matching bracket
+"set cpoptions-=m                           "don't showmatch on paste
+set emoji                                   "enable emoji
 
 "Splits
-set splitbelow splitright                               "Open splits below or on right
+set splitbelow splitright                   "open splits below or on right
 
-"Status line
-let g:curwin=winnr()                                    "Current window number initial state
-set laststatus=2                                        "Always show last status
-set ruler                                               "Show current line/column in status
+"Status-line
+set laststatus=2                            "always show statusline
+set noruler                                 "no need for ruler it's in statusline
+
+let g:curwin=win_getid()                    "current window unique id initial state
 set statusline=
-"Status line left side
-set statusline+=%2.2n                                   "Buffer number
-set statusline+=\ %1*%{g:curwin==winnr()?blami#statusline#Mode():''}%* "Mode (only active window)
-set statusline+=%{g:curwin==winnr()?'\ ':''}            "(space)
-set statusline+=%t%m%r                                  "Filename, modified, ro/rw
-set statusline+=\ %2*[%{&ft!=''?&ft:'-'}]%*             "Filetype
-set statusline+=%{winwidth(0)>80?'\ '.&ff.(&fenc!=''?','.&fenc.'\ ':''):''} "File format and encoding
-set statusline+=%2*%{winwidth(0)>80&&g:curwin==winnr()?blami#statusline#Page():''}%* "Per-buffer status page (only active window)
-"Status right side
+"Left side
+set statusline+=%2.2n                       "buffer number
+set statusline+=\ %1*%{g:curwin==win_getid()?blami#statusline#Mode():''}%*
+set statusline+=%{g:curwin==win_getid()?'\ ':''}
+set statusline+=%t%m%r                      "file name[modified][read-only]
+set statusline+=\ %2*[%{&ft!=''?&ft:'-'}]%*
+set statusline+=%{winwidth(0)>80?'\ '.&ff.(&fenc!=''?','.&fenc.'\ ':''):''}
+set statusline+=%2*%{winwidth(0)>80&&g:curwin==win_getid()?blami#statusline#Page():''}%*
+"Right side
 set statusline+=%=
-set statusline+=%{&spell!=0?strpart(&spelllang,0,2).'\ ':''} "Spell checker language
-set statusline+=%2*%{blami#statusline#LEDs()}%*         "Various LEDs
-set statusline+=%{blami#statusline#LEDs()!=''?'\ ':''}  "(space)
-set statusline+=%b,0x%B                                 "Character code in dec,hex
-set statusline+=\ %2*%{matchstr(&fo,'c')!=''?'#':''}    "Comment wrapping flag
-set statusline+=%{matchstr(&fo,'t')!=''?'>':''}         "Text wrapping flag
-set statusline+=%{matchstr(&fo,'[tc]')!=''?&tw:''}      "Text width if t or c in &fo
-set statusline+=%{matchstr(&fo,'[tc]')!=''?'\ ':''}     "(space)"
-set statusline+=%c,%l/%LL%*\ %P                         "Ruler
-"NOTE This is used by blami#statusline#Refresh() in case of non-Filetyped windows
+set statusline+=%{&spell!=0?strpart(&spelllang,0,2).'\ ':''}
+set statusline+=%2*%{blami#statusline#LEDs()}%*
+set statusline+=%{blami#statusline#LEDs()!=''?'\ ':''}
+set statusline+=%b,0x%B                     "character code dec, hex
+set statusline+=\ %2*%{matchstr(&fo,'c')!=''?'#':''}
+set statusline+=%{matchstr(&fo,'t')!=''?'>':''}
+set statusline+=%{matchstr(&fo,'[tc]')!=''?&tw:''}
+set statusline+=%{matchstr(&fo,'[tc]')!=''?'\ ':''}
+set statusline+=%c,%l/%LL%*\ %P             "ruler
+"NOTE This is used by blami#statusline#Refresh() in case of non-ft windows
 let g:statusline=&statusline
 
-"Tab line
-set showtabline=1                                       "Show tabline only when more tabs are open
+"Tab-line
+set showtabline=1                           "show tabline only when more tabs are open
+"}}}
 
-"Wildmenu
-set wildmenu
-set wildmode=list:longest,list:full
-"TODO revisit this
-set wildignore+=*.o,*.obj,*.a,*.so,*.pyc,*.gem,*.exe,*.dll
-set wildignore+=.DS_Store,*.jpg,*.png,*.gif,*.svg,*.psd,*.ai,*.ttf,*.otf,*.woff,*.woff2,*.eot
-set wildignore+=.git,.gitkeep
 
-"Colors and theme
-set termguicolors                                       "GUI colors in terminal
-set background=dark
-syntax on
-colors blami
+"{{{ Clipboard
+"Use ~/bin/clip multi-OS wrapper
+set clipboard+=unnamedplus
+let g:clipboardTODO={
+    \ 'name': 'clip',
+    \ 'copy':   {'+': ['clip', '-c', '-'], '*': ['clip', '-c', '-'], },
+    \ 'paste':  {'+': ['clip', '-p', '-'], '*': ['clip', '-p', '-'], },
+    \ 'cache_enabled': 1,
+    \}
+"}}}
 
-"Window title
-set title titlestring=NVIM:\ [%{hostname()}]\ %t\ %m%r  "NVIM: [hostname] filename [+-=][RO]
-set titleold=NVIM
+
+"{{{ Completion
+set completeopt=menu,menuone,noselect       "show menu (even for one option), do not select match automatically
+set omnifunc=v:lua.vim.lsp.omnifunc
+"}}}
+
+
+"{{{ Diagnostics
+"
+"Gutter Signs
+sign define DiagnosticSignError     text= texthl=DiagnosticSignError
+sign define DiagnosticSignWarn      text= texthl=DiagnosticSignWarn
+sign define DiagnosticSignHint      text= texthl=DiagnosticSignHint
+sign define DiagnosticSignInfo      text= texthl=DiagnosticSignInfo
+
+sign define Bookmark                text=
+
+"NOTE See colors/blami.vim for highlights
+"}}}
+
+
+"{{{ Spell-checking
+"NOTE Dictionary downloads/updates are handled by Ansible playbook and
+"spellfile.vim is disabled because of that.
+let loaded_spellfile_plugin=1
+
+let g:spelllangs=['en', 'cs']
+set nospell                                 "by default do not spellcheck
+let &spelllang=get(g:spelllangs, 0)
+let &spellfile=
+    \ g:confdir.'/spell/'.&g:spelllang.'.utf8.add,'
+    \ .g:confdir.'/spell/common.utf8.add'
+"set complete+=kspell                       "show spell completions
 "}}}
 
 
 "{{{ OS specific
+"Window title
+"NVIM: [hostname] filename [+-=][RO]
+set title titlestring=NVIM:\ [%{hostname()}]\ %t\ %m%r
+set titleold=NVIM
+
 "TTY
 set ttyfast
 set lazyredraw
-set timeout timeoutlen=750                              "Key mapping sequence timeout (ms)
-set ttimeout ttimeoutlen=50                             "Key code sequence timeout (ms)
+set timeout timeoutlen=750                  "key mapping sequence timeout (ms)
+set ttimeout ttimeoutlen=50                 "key code sequence timeout (ms)
 
 "MS Windows 32/64bit
 if has('win32')
-    set shell=bash.exe                                  "Use WSL bash.exe on Win
+    set shell=bash.exe                      "use WSL bash.exe on Windows
 endif
+"}}}
+
+
+"{{{ Printing
+"Keeping this one around for highschool days nostalgia
+set printoptions=paper:a4,duplex:on
 "}}}
 
 
@@ -228,8 +257,7 @@ endif
 filetype plugin on
 filetype indent on
 
-"blami Lua module
-lua blami=require('blami')
-
-"NOTE All other configs are sourced from ~/after/plugin/source.vim to have plugins loaded
+"NOTE All other configs are sourced from ~/after/plugin/source.vim to have
+"plugins/packs loaded. This is so I can rely on things like g: variables being
+"already set by them in e.g. keymap.vim.
 "}}}

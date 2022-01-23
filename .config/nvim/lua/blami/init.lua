@@ -1,20 +1,18 @@
---- Set of Nvim utilities.
+-- blami's Lua utilities for Neovim
+--
+-- This library contains some utility functions and wrappers I use in my
+-- Neovim configuration.
 
 local M = {}
 
--- Import submodules
-M.lsp = require("blami.lsp")                    -- LSP related utilities
+-- Utilities
+--
+-- Single-file utilities that can be either used standalone or in libraries.
+M.autofmt   = require('blami.autofmt')
+M.prequire  = require('blami.prequire')
 
-
---- Protected require.
-function M.prequire(name)
-    local found, m = pcall(require, name)
-    if not found then
-        -- TODO Drop message to history?
-        return nil
-    end
-    return m
-end
+-- Libraries
+M.lsp       = require('blami.lsp')
 
 
 return M

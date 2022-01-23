@@ -9,13 +9,20 @@ let b:did_ftplugin = 1
 "Do not run lines below for C files
 if (&ft != 'cpp') | finish | endif
 
+"Language Server
+lua blami.lsp.setup(
+            \ 'clangd',
+            \ {}, 
+            \ {}
+            \ )
+
 "Compiler
 compiler clang
 
 "Formatting
 setl noexpandtab
 setl textwidth=119
-call blami#autofmt#Enable()                         "Enable LSP autoformatting
+setl list
 
 "File Matching
 setl suffixesadd=.cpp,.cxx,.c++,.h,.hpp,.hxx,.h++
@@ -24,22 +31,3 @@ setl suffixesadd=.cpp,.cxx,.c++,.h,.hpp,.hxx,.h++
 "NOTE Following will work only with .cpp-.h pair of extension
 nnoremap    <buffer><silent>        <localleader>h          :call blami#ftplugin#SwitchFile('^\(.*\)\.cpp$', '\1.h', '^\(.*\)\.h$', '\1.cpp')<CR>
 nnoremap    <buffer><silent>        <localleader>t          :call blami#ftplugin#SwitchFile('^\(.*\)\(_test\)\@<!\.cpp$', '\1_test.cpp', '^\(.*\)_test\.cpp$', '\1.cpp')<CR>
-
-"Autocommands
-autocmd BufWritePre <buffer>
-            \ lua blami.lsp.autoformat_sync(
-            \   1000,
-            \   {}
-            \ )
-
-"Language server
-if !get(s:, 'loaded', v:false)
-lua << EOF
-lspconfig = blami.prequire('lspconfig')
-if lspconfig then
-    lspconfig.clangd.setup{}
-end
-EOF
-let s:loaded = v:true
-doautocmd FileType cpp
-endif

@@ -17,13 +17,20 @@
 "if exists("b:did_ftplugin") | finish | endif
 let b:did_ftplugin = 1
 
+"Language Server
+lua blami.lsp.setup(
+            \ 'clangd',
+            \ {}, 
+            \ {}
+            \ )
+
 "Compiler
 compiler clang
 
 "Formatting
 setl noexpandtab
 setl textwidth=79
-call blami#autofmt#Enable()                         "Enable LSP autoformatting
+setl list
 
 "File Matching
 setl suffixesadd=.c,.h
@@ -32,22 +39,3 @@ setl suffixesadd=.c,.h
 "See NOTE above if this switches c -> h -> cpp
 nnoremap    <buffer><silent>        <localleader>h          :call blami#ftplugin#SwitchFile('^\(.*\)\.c$', '\1.h', '^\(.*\)\.h$', '\1.c')<CR>
 nnoremap    <buffer><silent>        <localleader>t          :call blami#ftplugin#SwitchFile('^\(.*\)\(_test\)\@<!\.c$', '\1_test.c', '^\(.*\)_test\.c$', '\1.c')<CR>
-
-"Autocommands
-autocmd BufWritePre <buffer>
-            \ lua blami.lsp.autoformat_sync(
-            \   1000,
-            \   {}
-            \ )
-
-"Language server
-if !get(s:, 'loaded', v:false)
-lua << EOF
-lspconfig = blami.prequire('lspconfig')
-if lspconfig then
-    lspconfig.clangd.setup{}
-end
-EOF
-let s:loaded = v:true
-doautocmd FileType c
-endif

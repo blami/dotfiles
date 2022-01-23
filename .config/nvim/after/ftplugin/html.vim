@@ -6,7 +6,7 @@
 
 "Formatting
 setl expandtab shiftwidth=2 softtabstop=2 tabstop=4
-setl formatoptions-=t formatoptions-=c
+setl fo-=t fo-=c
 
 "File Matching
 setl suffixesadd=.htm,.html

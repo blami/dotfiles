@@ -7,6 +7,16 @@
 "Formatting
 setl expandtab shiftwidth=2 softtabstop=2 tabstop=4
 setl formatoptions-=t
+setl list
 
 "File Matching
 setl suffixesadd=.json
+
+"Misc
+if executable('jq')
+    setl equalprg=jq\ -M\ "."
+
+    "TODO: blami.autfomt.wrap()
+    "TODO: write helper to run external command on buffer and populate qf with errors...
+    autocmd BufWritePre <buffer> :%!jq '.' || echo <buffer>
+endif

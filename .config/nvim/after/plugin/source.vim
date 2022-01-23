@@ -1,8 +1,8 @@
 "NOTE This is not really a plugin, it's just script to source additional files
 "after packs are loaded.
 
-"Load packs configuration (to install packs see ~/.zsh/furnish/furnish_nvim)
-for f in split(glob(g:confdir.'/packs/*.vim'), '\n')
+"Load configuration files in conf/*.vim
+for f in split(glob(g:confdir.'/conf/*.vim'), '\n')
     exec 'source' f
 endfor
 

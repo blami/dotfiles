@@ -1,4 +1,4 @@
-"Various toggles used mostly in keymap.vim
+"toggle.vim - various toggles of built-ins used mostly in keymap.vim
 
 "Toggle quickfix/location lists.
 func! blami#toggle#List(prefix) abort

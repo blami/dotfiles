@@ -1,4 +1,4 @@
-"Various ftplugin utilities.
+"ftplugin.vim - various ftplugin utilities
 
 "Switch between two files based on filename regexes.
 "NOTE This always matches only the basename, never full path!

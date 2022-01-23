@@ -1,6 +1,5 @@
-"Statusline utilities
+"statusline.vim - statusline utilities
 
-"{{{ Statusline displays
 "Show one-character mode in statusline.
 func! blami#statusline#Mode() abort
     "Consult :help mode()
@@ -38,7 +37,7 @@ func! blami#statusline#Mode() abort
     endtry
 endfunc
 
-"Show LEDs (status lights for certain flags) in statusline.
+"Show LEDs (statuses for certain flags) in statusline.
 func! blami#statusline#LEDs() abort
     let currentleds=''
 
@@ -60,10 +59,8 @@ func! blami#statusline#LEDs() abort
 
     return currentleds
 endfunc
-"}}}
 
-
-"{{{ Statusline pages
+"Statusline per-buffer pages
 "Add page. If id is 0, new id will be current length of page list.
 func blami#statusline#PageAdd(id, value) abort
     if !exists('b:statuspage') | let b:statuspage = {} | endif
@@ -121,11 +118,12 @@ endfunc
 "Enter helper that sets &statusline in each window, in non-active ones it 
 "removes UserN highlights and in active restores highlighted b:statusline.
 func! blami#statusline#Enter() abort
-    for i in blami#util#Winnrs('r')
+    "Loop over all window ids that do not belong to relative (float) windows
+    for i in filter(nvim_list_wins(), {v -> !nvim_win_get_config(v:val).relative})
         let bufnr = winbufnr(i)
         if has_key(getbufvar(bufnr, ''), 'statusline')
             let statusline=getbufvar(bufnr, 'statusline')
-            call setwinvar(i, '&statusline', g:curwin==i?statusline:substitute(statusline,'%[1-9]\?\*','','g')) |
+            call setwinvar(i, '&statusline', g:curwin==i?statusline:substitute(statusline,'%[1-9]\?\*','','g'))
         endif
     endfor
 endfunc
