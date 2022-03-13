@@ -10,12 +10,13 @@ apt_packages:
   - build-essential
   - binutils
   - gcc-avr                   # gcc for AVR microcontrollers
-  - avrdude                   # AVR microcontrollers download/upload tool 
+  - avrdude                   # AVR microcontrollers download/upload tool
   - clang                     # c/c++ frontend for LLVM
   - clangd                    # language server for clang
   - clang-format
   - clang-tidy
   - lldb                      # lldb next-gen debugger
+  #- googletest               # DO NOT USE system googletest
   - nodejs
   - python3
   - python3-dev
@@ -23,6 +24,8 @@ apt_packages:
   - python3-venv              # python virtual environments
   - yasm                      # modular assembler (successor of nasm)
   - ruby
+  - ruby-dev                  # required for some bundler packages
+  - zlib1g-dev
   - bundler                   # ruby package manager
   - protobuf-compiler         # protocol buffers compiler
   - manpages-dev
