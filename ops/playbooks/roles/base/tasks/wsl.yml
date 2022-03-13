@@ -1,5 +1,5 @@
 ---
-# Configure WSL
+# Configure Linux side of WSL based system
 
 # This configures WSL to maintain file metadata even on native filesystems. If
 # system is WSL it creates /etc/wsl.conf if it didn't exist. If file is created
@@ -27,15 +27,21 @@
   when:
     - my_facts.is_wsl
 
-# NOTE This will result in interactive prompt, since this playbook is for
-# interactive use on WSL it doesn't matter much.
-- name: Rebooting WSL
-  command: >
-    /mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe
-    Start-Process
-    -FilePath "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
-    -ArgumentList "Restart-Service","LxssManager"
-    -Verb runas
+- name: Warning about WSL restart
+  pause:
+    prompt: |
+      Windows Subsystem for Linux (WSL) configuration was changed and in order
+      to continue the playbook it needs to be restarted so that change take
+      effect.
+
+      After pressing ENTER WSL will be terminated. Close the terminal and run
+      it again to restart WSL. Then re-run playbook.
+  when:
+    - (out_wsl_tmpfs.changed or out_wsl_wslconf.changed)
+    - my_facts.is_wsl
+
+- name: Restarting WSL
+  command: /mnt/c/Windows/System32/wsl.exe -t $WSL_DISTRO_NAME
   when: 
     - (out_wsl_tmpfs.changed or out_wsl_wslconf.changed)
     - my_facts.is_wsl
