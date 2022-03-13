@@ -62,6 +62,7 @@ apt_packages:
   - cryptsetup-bin
   - curl
   - dosfstools
+  - dnsutils                  # dig
   - equivs
   - fakeroot                  # simulate running as root
   - fzf                       # fuzzy finder
@@ -71,6 +72,7 @@ apt_packages:
   - gzip
   - htop
   - icdiff                    # side by side diff
+  - ipcalc                    # IP address/mask/subnet arithmetics calculator
   - jq                        # JSON parser and query language
   - less
   - lftp
@@ -84,12 +86,15 @@ apt_packages:
   - mtr                       # traceroute & ping
   - neovim
   - netperf                   # network speed meter
+  - net-tools                 # netstat & co.
   - nmap
   - openssh-client
   - p7zip
   - psmisc
   - pv                        # progressbar
   - pwgen
+  - python3
+  - python3-winrm             # required to Ansible-remote to Windows
   - rclone
   - rsnapshot
   - rsync
@@ -100,6 +105,7 @@ apt_packages:
   - sqlite3
   - squashfs-tools
   - strace
+  - telnet
   - tig
   - tmux
   - tshark                    # network traffic capture and analysis
