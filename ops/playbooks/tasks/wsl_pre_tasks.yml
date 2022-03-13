@@ -1,0 +1,194 @@
+---
+# Pre-play tasks intended to detect WSL and eventually setup local Windows
+# WinRM remoting on WSL systems. This needs to be run inside WSL.
+
+# Check if running on WSL; gather my_facts.wsl bool and my_facts.wsl_version
+# based on $WSL_DISTRO_NAME and $WSL_INTEROP.
+- name: "Checking if running in WSL"
+  set_fact:
+    my_facts: >
+      {{
+        my_facts | default({})
+        | combine({
+            "is_wsl": true if lookup("env", "WSL_DISTRO_NAME") else false
+          }, 
+          {} if not lookup("env", "WSL_DISTRO_NAME") else {
+            "wsl_version": 2 if lookup("env", "WSL_INTEROP") else 1
+          })
+      }}
+
+- name: "Gathering WSL user facts"
+  command: >
+    /mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -command "Get-Item Env:* | Select Key,Value | ConvertTo-Json"
+  register: out
+  changed_when: false
+  when:
+    - my_facts.is_wsl
+- set_fact:
+    my_user: >
+      {{
+        my_user | default({})
+        | combine({
+            "win_user": win_env.USERNAME,
+            "win_home": win_env.USERPROFILE,
+          })
+      }}
+  vars:
+    win_env: "{{ out.stdout | from_json | items2dict(key_name='Key', value_name='Value') }}"
+  when:
+    - my_facts.is_wsl
+    - not out.failed
+
+# Gather Windows native paths to important WSL directories that can be later
+# used with WinRM setup tasks.
+- name: "Gathering Windows-WSL path facts"
+  shell: |
+    /usr/bin/wslpath -w {{ playbook_dir }}
+    /usr/bin/wslpath -w {{ my_user.home }}
+  register: out
+  changed_when: false
+  when:
+    - my_facts.is_wsl
+- set_fact:
+    my_facts: >
+      {{
+        my_facts | default({})
+        | combine({
+            "win_playbook_dir": out.stdout_lines[0],
+          })
+      }}
+    my_user: >
+      {{
+        my_user | default({})
+        | combine({
+            "win_wsl_home": out.stdout_lines[1],
+          })
+      }}
+  when:
+    - my_facts.is_wsl
+    - not out.failed
+
+# Gathers win_host fact which contains an actual target IP to connect to as in
+# case of WSL2 localhost is not shared between WSL and Windows; instead Windows
+# host is accessible via virtual switch.
+- name: "Gather WSL hostname of Windows host (localhost)"
+  set_fact:
+    my_facts: >
+      {{
+        my_facts | default({})
+        | combine({
+            "win_host": "localhost" if my_facts.wsl_version == 1 else "{}.local".format(ansible_hostname),
+          })
+      }}
+  when:
+    - my_facts.is_wsl
+
+# Generate client certificate for WSL user
+- name: "Generate WinRM client certificate"
+  shell:
+    cmd: |
+      mkdir -m 700 -p $(dirname $OPENSSL_CONF)
+      cd $(dirname $OPENSSL_CONF)
+
+      cat > openssl.conf << EOF
+      distinguished_name = req_distinguished_name
+      [req_distinguished_name]
+      [v3_req_client]
+      extendedKeyUsage = clientAuth
+      subjectAltName = @alt_names
+      [alt_names]
+      otherName.1 = 1.3.6.1.4.1.311.20.2.3;UTF8:{{ my_user.win_user }}@localhost
+      EOF
+      [ "{{ my_facts.win_host }}" != "localhost" ] && echo "otherName.2 = 1.3.6.1.4.1.311.20.2.3;UTF8:{{ my_user.win_user }}@{{ my_facts.win_host }}" >> openssl.conf
+
+      openssl req -x509 -nodes -days 36500 -newkey rsa:2048 -sha256 -out client.crt -outform PEM -keyout client.key -subj "/CN={{ my_user.win_user }}" -extensions v3_req_client
+      rm -rf $OPENSSL_CONF
+    # Do not warn about files/directories being created in shell
+    warn: false
+    creates: "{{ my_user.home }}/.winrm/client.crt"
+  environment:
+    OPENSSL_CONF: "{{ my_user.home }}/.winrm/openssl.conf"
+  when:
+    - my_facts.is_wsl
+
+# Generate self-signed server certificate for WinRM service
+- name: "Generate WinRM server certificate"
+  shell:
+    cmd: |
+      mkdir -m 700 -p $(dirname $OPENSSL_CONF)
+      cd $(dirname $OPENSSL_CONF)
+
+      cat > openssl.conf << EOF
+      distinguished_name = req_distinguished_name
+      [req_distinguished_name]
+      [v3_req_server]
+      subjectKeyIdentifier = hash
+      keyUsage = critical,digitalSignature,keyEncipherment
+      extendedKeyUsage = clientAuth,serverAuth
+      subjectAltName = @alt_names
+      [alt_names]
+      DNS.1 = localhost
+      EOF
+      [ "{{ my_facts.win_host }}" != "localhost" ] && echo "DNS.2 = {{ my_facts.win_host }}" >> openssl.conf
+
+      openssl req -x509 -nodes -days 36500 -newkey rsa:2048 -sha256 -out server.crt -outform PEM -keyout server.key -subj "/CN=localhost" -extensions v3_req_server
+      openssl pkcs12 -export -out server.pfx -in server.crt -inkey server.key -name "Ansible WinRM Server Certificate" -passout pass:
+      rm -rf server.key $OPENSSL_CONF
+    # Do not warn about files/directories being created in shell
+    warn: false
+    creates: "{{ my_user.home }}/.winrm/server.pfx"
+  environment:
+    OPENSSL_CONF: "{{ my_user.home }}/.winrm/openssl.conf"
+  when:
+    - my_facts.is_wsl
+
+# Check if WinRM listener is set up
+# TODO: Figure this out
+- name: "Checking if Ansible can WinRM to localhost"
+  test_winrm:
+    hostname: "{{ my_facts.win_host }}"
+    winrm_transport: certificate
+    winrm_cert_pem: "{{ my_user.home }}/.winrm/client.crt"
+    winrm_cert_key_pem: "{{ my_user.home }}/.winrm/client.key"
+    winrm_server_cert_validation: ignore
+  register: out
+  when:
+    - my_facts.is_wsl
+- set_fact:
+    my_facts: >
+      {{
+        my_facts | default({})
+        | combine({
+          "can_winrm": out.can_winrm,
+          "has_pywinrm": out.has_pywinrm
+        })
+      }}
+
+# Execute WinRM setup script 
+# NOTE This step requires interactive Windows elevation but since this is
+# WSL only it will run on the same machine. This is also why all is in
+# single .ps1 to avoid further popups.
+- name: "Setup WinRM on localhost"
+  command: > 
+    powershell.exe -Command 
+      "$p = Start-Process -PassThru -Wait -Verb RunAs powershell.exe"
+      "'-ExecutionPolicy Bypass -File {{ my_facts.win_playbook_dir }}\scripts\winrm.ps1 -User {{ my_user.win_user }} -CertDir {{ my_user.win_wsl_home }}\.winrm -Firewall 127.0.0.1,172.0.0.0/8' ;"
+      "Exit $p.ExitCode"
+  when:
+    - my_facts.is_wsl
+    - not my_facts.can_winrm
+  register: out
+
+# Add local Windows host
+- name: "Add localhost to Windows hosts"
+  add_host:
+    hostname: "{{ my_facts.win_host }}"
+    ansible_connection: winrm
+    ansible_winrm_transport: certificate
+    ansible_winrm_cert_pem: "{{ my_user.home }}/.winrm/client.crt"
+    ansible_winrm_cert_key_pem: "{{ my_user.home }}/.winrm/client.key"
+    ansible_winrm_server_cert_validation: ignore
+    groups: windows
+  when:
+    - my_facts.has_pywinrm
+    - my_facts.is_wsl

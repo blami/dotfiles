@@ -1,56 +1,12 @@
 ---
-# Pre-play tasks. Mostly gathering additional facts into my_facts.* and
-# my_user.* as well as couple of sanity checks (e.g. variables necessary for
-# play being defined, etc.
-
-# TODO Check mandatory variables
+# Pre-play tasks for Linux to gather additional facts into my_facts.* and
+# my_user.* / can_become.* which are used later to decide which tasks
+# requiring root should be skipped.
 
 # Gather installed packages list to ansible_facts.packages
 - name: "Gathering installed packages"
   package_facts:
     manager: auto
-
-# Check if running on WSL; gather my_facts.wsl bool and my_facts.wsl_version
-# based on $WSL_DISTRO_NAME and $WSL_INTEROP.
-- name: "Checking if running in WSL"
-  set_fact:
-    my_facts: >
-      {{
-        my_facts | default({})
-        | combine({
-            "is_wsl": true if lookup("env", "WSL_DISTRO_NAME") else false
-          }, 
-          {} if not lookup("env", "WSL_DISTRO_NAME") else {
-            "wsl_version": 2 if lookup("env", "WSL_INTEROP") else 1
-          })
-      }}
-
-# Gather some additional info about Windows if running in WSL
-# TODO Obtain envvars via powershell
-- name: "Gathering Windows facts (via WSL)"
-  command: >
-    /mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe
-    -command "Get-Item Env:* | Select Key,Value | ConvertTo-Json"
-  register: out
-  changed_when: false
-  when:
-    - my_facts.is_wsl
-- set_fact:
-    # TODO See if anything else is needed
-    my_facts: >
-      {{
-        my_facts | default({})
-        | combine({
-            "win_user": win_env.USERNAME,
-            "win_home": win_env.USERPROFILE,
-          })
-      }}
-  vars:
-    win_env: "{{ out.stdout | from_json | items2dict(key_name='Key', value_name='Value') }}"
-  when:
-    # NOTE First check is_wsl as out won't exist if not WSL...
-    - my_facts.is_wsl
-    - not out.failed
 
 # Check if Ansible can become root; gather my_facts.can_become_root bool.
 - name: "Checking if Ansible can become root"
@@ -184,6 +140,3 @@
       }}
   when:
     - my_facts.user_exists
-
-# Output user information and facts
-- debug: msg = "{{ my_user }} {{ my_facts }}"
