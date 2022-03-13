@@ -1,12 +1,22 @@
 ---
 
-- name: Playbook
-  hosts: localhost
+- name: Linux
+  # Playbook for setting up Linux (both pure and WSL); If WSL detected it will
+  # attempt setting host WinRM so Windows can be configured from WSL distro.
+  hosts: linux
 
   pre_tasks:
-    - import_tasks: tasks/pre_tasks.yml
+    - import_tasks: tasks/linux_pre_tasks.yml
+    - import_tasks: tasks/wsl_pre_tasks.yml
 
   roles:
     - role: base
     - role: user
     - role: dev
+
+- name: Windows
+  # Playbook for setting up Windows host
+  hosts: windows
+
+  pre_tasks:
+    - import_tasks: tasks/win_pre_tasks.yml

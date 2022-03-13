@@ -1,0 +1,11 @@
+---
+# Pre-play tasks. Mostly gathering additional facts into my_facts.* and
+# my_user.* as well as couple of sanity checks (e.g. variables necessary for
+# play being defined, etc.
+
+# TODO: Finish this...
+# TODO: If WSL find playbook home so we can refer to tasks, how?
+
+- name: "Debug"
+  debug:
+    var: ansible_facts
