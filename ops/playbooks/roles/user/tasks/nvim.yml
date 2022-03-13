@@ -1,23 +1,28 @@
 ---
-# Install and/or update Neovim packs.
-# NOTE This is not used since I switched to Emacs
+# Install and/or update Neovim packs and dictionaries
+
+- name: Downloading Neovim spell files
+  get_url:
+    dest: "{{ my_user.home }}/.local/share/nvim/site/spell/"
+    url: "https://ftp.nluug.nl/pub/vim/runtime/spell/{{ item }}.spl"
+  with_items: "{{ nvim_spell }}"
+  ignore_errors: true
+  loop_control:
+    label: "{{ item }}.spl"
+
+- name: Downloading Neovim spell suggestion files
+  get_url:
+    dest: "{{ my_user.home }}/.local/share/nvim/site/spell/"
+    url: "https://ftp.nluug.nl/pub/vim/runtime/spell/{{ item }}.sug"
+  with_items: "{{ nvim_spell }}"
+  ignore_errors: true
+  loop_control:
+    label: "{{ item }}.sug"
 
 - name: Installing Neovim packs
-  shell:
-    cmd: |
-      NVIM_SITE_PACK={{ my_user.home }}/.local/share/nvim/site/pack
-      mkdir -p $NVIM_SITE_PACK
-      git clone {{ item.repo }} $NVIM_SITE_PACK/plugins/start/{{ item.name }}
-    creates: "{{ my_user.home }}/.local/share/nvim/site/pack/{{ item.group }}/start/{{ item.name }}"
+  git:
+    repo: "{{ item.repo }}"
+    dest: "{{ my_user.home }}/.local/share/nvim/site/pack/{{ item.group }}/{{ 'opt' if item.get('opt', false) else 'start' }}/{{ item.name }}"
   with_items: "{{ nvim_packs }}"
   loop_control:
-    label: "clone {{ item.name }}"
-
-- name: Updating Neovim packs
-  shell:
-    cmd: |
-      NVIM_SITE_PACK={{ my_user.home }}/.local/share/nvim/site/pack
-      git -C $NVIM_SITE_PACK/{{ item.group }}/start/{{ item.name }} pull
-  with_items: "{{ nvim_packs }}"
-  loop_control:
-    label: "update {{ item.name }}"
+    label: "{{ item.name }} {{ item.repo }}"

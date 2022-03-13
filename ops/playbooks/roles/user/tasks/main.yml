@@ -18,10 +18,9 @@
 - block:
     - import_tasks: dotfiles.yml
     - import_tasks: userdirs.yml
-    - import_tasks: windows.yml
     - import_tasks: secrets.yml
     - import_tasks: licenses.yml
-    #- import_tasks: nvim.yml
+    - import_tasks: nvim.yml
   become: yes
   become_user: "{{ my_user.username }}"
   when:
