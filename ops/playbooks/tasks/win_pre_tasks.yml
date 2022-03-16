@@ -8,4 +8,4 @@
 
 - name: "Debug"
   debug:
-    var: ansible_facts
+    var: ansible_facts.os_family

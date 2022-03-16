@@ -10,30 +10,6 @@ wsl_native_dirs:
     dest: "{{ my_user.home }}/.ssh/ctrl"
     mode: "0700"
 
-# TODO: Move to Windows play
-# Environment
-# NOTE: These are "user" variables to avoid elevation
-windows_env:
-  - HOME: "{{ my_facts.win_home}}"
-  # XDG data dirs (not all applications support them; in some cases this might
-  # cause issues - e.g. if contains any PATHs, etc.)
-  - XDG_CONFIG_HOME: "{{ my_facts.win_home }}\\.config"
-  - XDG_DATA_HOME: "{{ my_facts.win_home }}\\.local\\share"
-
-# TODO: Move to Windows play
-# Registry
-# NOTE: These are "user" keys under HKCU (Current User) to avoid elevation
-windows_registry:
-  # Total Commander
-  - path: "Software\\Ghisler\\Total Commander"
-    name: "IniFileName"
-    value: "%USERPROFILE%\\.config\\tc\\wincmd.ini"
-    type: "String"
-  - path: "Software\\Ghisler\\Total Commander"
-    name: "FtpIniName"
-    value: "%USERPROFILE%\\.config\\tc\\wcx_ftp.ini"
-    type: "String"
-
 # Secrets
 ssh_keys:
   - id_blami_rsa
@@ -78,3 +54,29 @@ nvim_packs:
   - name: "plenary"
     group: "plugins"
     repo: "https://github.com/nvim-lua/plenary.nvim"
+
+# Windows user environment variables
+windows_env:
+  - HOME: "%USERPROFILE%"
+  # TODO: WSL_HOME: 
+  # XDG data dirs (not all applications support them; in some cases this might
+  # cause issues - e.g. if files in there contain any PATHs, etc.)
+  - XDG_CONFIG_HOME: "%USERPROFILE%\\.config"
+  - XDG_DATA_HOME: "%USERPROFILE%\\.local\\share"
+
+# Windows user registry keys (HKCU)
+windows_registry:
+  # Disable shake window to minimize
+  - path: "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced"
+    name: "DisallowShaking"
+    data: 0x00000001
+    type: "dword"
+  # Total Commander
+  - path: "SOFTWARE\\Ghisler\\Total Commander"
+    name: "IniFileName"
+    data: "%USERPROFILE%\\.config\\tc\\wincmd.ini"
+    type: "string"
+  - path: "SOFTWARE\\Ghisler\\Total Commander"
+    name: "FtpIniName"
+    data: "%USERPROFILE%\\.config\\tc\\wcx_ftp.ini"
+    type: "string"

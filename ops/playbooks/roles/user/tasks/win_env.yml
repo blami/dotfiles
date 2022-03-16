@@ -1,0 +1,12 @@
+---
+# Configure Windows environment variables
+
+- name: Setting user environment variables
+  win_environment:
+    level: user
+    state: present
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ windows_env }}"
+  loop_control:
+    label: "{{ item.key }}={{ item.value}}"

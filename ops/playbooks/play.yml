@@ -1,22 +1,28 @@
 ---
 
+# Linux (and WSL) play
+# NOTE: wsl_pre_tasks.yml detects if this is WSL system AND if so it attempts
+# to configure winrm client-certificate authorized connection. If you don't
+# want that add --skip-tags winrm.
 - name: Linux
-  # Playbook for setting up Linux (both pure and WSL); If WSL detected it will
-  # attempt setting host WinRM so Windows can be configured from WSL distro.
   hosts: linux
 
   pre_tasks:
-    - import_tasks: tasks/linux_pre_tasks.yml
-    - import_tasks: tasks/wsl_pre_tasks.yml
+    - { import_tasks: tasks/linux_pre_tasks.yml, tags: always }
+    - { import_tasks: tasks/wsl_pre_tasks.yml, tags: always }
 
   roles:
-    - role: base
-    - role: user
-    - role: dev
+    - { role: base, tags: [base, linux] } 
+    - { role: user, tags: [user, linux] }
+    - { role: dev, tags: [dev, linux] }
 
+# Windows play
 - name: Windows
-  # Playbook for setting up Windows host
   hosts: windows
 
   pre_tasks:
-    - import_tasks: tasks/win_pre_tasks.yml
+    - { import_tasks: tasks/win_pre_tasks.yml, tags: always }
+
+  roles:
+    - { role: base, tags: [base, windows] }
+    - { role: user, tags: [user, windows] }

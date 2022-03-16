@@ -2,16 +2,16 @@
 # Development environment setup for C, C++, Assembly, Go, Python, Javascript
 # and possibly other languages.
 
-# Tasks to do as root 
+# Linux (and WSL)
 - block:
     - import_tasks: apt.yml
     - import_tasks: fakeroot.yml
   become: yes
   become_user: "root"
   when:
+    - ansible_facts.os_family == "Debian"
     - my_facts.can_become_root
 
-# Tasks to do as target user
 - block:
     - import_tasks: go.yml
     - import_tasks: nodejs.yml
@@ -19,4 +19,14 @@
   become: yes
   become_user: "{{ my_user.username }}"
   when:
+    - ansible_facts.os_family == "Debian"
     - my_facts.can_become_user
+
+
+# Windows
+- block:
+    - import_tasks: win_visualstudio.yml
+  when:
+    - ansible_facts.os_family == "Windows"
+    #- my_facts.can_become_user
+

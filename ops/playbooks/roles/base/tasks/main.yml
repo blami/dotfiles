@@ -1,16 +1,26 @@
 ---
-# Basic OS level setup without considering how and who will use host.
-# Installs basic settings and essential packages I like to have on any box.
+# Basic OS level setup without considering how and who will use the host
 
+# Linux (and WSL)
 - block:
     - import_tasks: wsl.yml             # run this first as it may restart WSL
     - import_tasks: sudoers.yml
     - import_tasks: apt.yml
-    #- import_tasks: change_groups.yml   # TODO move uids/gids to my liking
-    #- import_tasks: grub.yml            # TODO configure serial console and timeout
-    #- import_tasks: systemd.yml         # TODO setup systemd components (e.g. journal)
-    #- import_tasks: backup.yml          # TODO setup system level backups
+    #- import_tasks: change_groups.yml   # TODO: move uids/gids to my liking
+    #- import_tasks: systemd.yml         # TODO: setup systemd components (e.g. journal)
+    #- import_tasks: backup.yml          # TODO: setup system level backups
   become: yes
   become_user: "root"
   when:
+    - ansible_facts.os_family == "Debian"
     - my_facts.can_become_root
+
+# Windows
+- block:
+    - import_tasks: win_registry.yml
+  become: yes
+  become_user: "System"
+  become_method: "runas"
+  when:
+    - ansible_facts.os_family == "Windows"
+    #- my_facts.can_become_root

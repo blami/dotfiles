@@ -1,20 +1,16 @@
 ---
-# User setup.
+# User setup
 
-# NOTE create_user.yml needs to be called separately because if user doesn't
-# exist we do not want to skip it silently.
-#- import_tasks: create_user.yml
-
-# Tasks to do as root 
+# Linux (and WSL)
 - block:
     - import_tasks: apt.yml
     - import_tasks: shell.yml
   become: yes
   become_user: "root"
   when:
+    - ansible_facts.os_family == "Debian"
     - my_facts.can_become_root
 
-# Tasks to do as target user
 - block:
     - import_tasks: dotfiles.yml
     - import_tasks: userdirs.yml
@@ -24,4 +20,15 @@
   become: yes
   become_user: "{{ my_user.username }}"
   when:
+    - ansible_facts.os_family == "Debian"
     - my_facts.can_become_user
+
+
+# Windows
+- block:
+    - import_tasks: win_env.yml
+    - import_tasks: win_registry.yml
+  when:
+    - ansible_facts.os_family == "Windows"
+    #- my_facts.can_become_user
+

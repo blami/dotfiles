@@ -2,6 +2,9 @@
 # Pre-play tasks intended to detect WSL and eventually setup local Windows
 # WinRM remoting on WSL systems. This needs to be run inside WSL.
 
+# To detect WSL but not do winrm setup and also to not dynamically add
+# localhost.windows add --skip-tags winrm
+
 # Check if running on WSL; gather my_facts.wsl bool and my_facts.wsl_version
 # based on $WSL_DISTRO_NAME and $WSL_INTEROP.
 - name: "Checking if running in WSL"
@@ -67,6 +70,7 @@
   when:
     - my_facts.is_wsl
     - not out.failed
+  tags: winrm
 
 # Gathers win_host fact which contains an actual target IP to connect to as in
 # case of WSL2 localhost is not shared between WSL and Windows; instead Windows
@@ -82,6 +86,7 @@
       }}
   when:
     - my_facts.is_wsl
+  tags: winrm
 
 # Generate client certificate for WSL user
 - name: "Generate WinRM client certificate"
@@ -110,6 +115,7 @@
     OPENSSL_CONF: "{{ my_user.home }}/.winrm/openssl.conf"
   when:
     - my_facts.is_wsl
+  tags: winrm
 
 # Generate self-signed server certificate for WinRM service
 - name: "Generate WinRM server certificate"
@@ -141,9 +147,9 @@
     OPENSSL_CONF: "{{ my_user.home }}/.winrm/openssl.conf"
   when:
     - my_facts.is_wsl
+  tags: winrm
 
 # Check if WinRM listener is set up
-# TODO: Figure this out
 - name: "Checking if Ansible can WinRM to localhost"
   test_winrm:
     hostname: "{{ my_facts.win_host }}"
@@ -154,6 +160,7 @@
   register: out
   when:
     - my_facts.is_wsl
+  tags: winrm
 - set_fact:
     my_facts: >
       {{
@@ -163,6 +170,7 @@
           "has_pywinrm": out.has_pywinrm
         })
       }}
+  tags: winrm
 
 # Execute WinRM setup script 
 # NOTE This step requires interactive Windows elevation but since this is
@@ -178,12 +186,17 @@
     - my_facts.is_wsl
     - not my_facts.can_winrm
   register: out
+  tags: winrm
 
 # Add local Windows host
 - name: "Add localhost to Windows hosts"
   add_host:
-    hostname: "{{ my_facts.win_host }}"
     ansible_connection: winrm
+    # NOTE: hostname MUST NOT be 'localhost' as that would change localhost
+    # dictionary to Windows and NO Linux tasks would run; ansible_winrm_host
+    # below actually CAN BE localhost.
+    hostname: localhost.windows
+    ansible_winrm_host: "{{ my_facts.win_host }}"
     ansible_winrm_transport: certificate
     ansible_winrm_cert_pem: "{{ my_user.home }}/.winrm/client.crt"
     ansible_winrm_cert_key_pem: "{{ my_user.home }}/.winrm/client.key"
@@ -192,3 +205,4 @@
   when:
     - my_facts.has_pywinrm
     - my_facts.is_wsl
+  tags: winrm

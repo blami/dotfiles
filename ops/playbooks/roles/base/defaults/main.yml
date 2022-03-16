@@ -118,3 +118,17 @@ apt_packages:
   - unzip
   - zsh
   - powertop                  # power management utility
+
+# Windows registry keys (HKLM)
+windows_registry:
+  # NOTE: These are relevant only on systems that have CDROM
+  # Disable CD drive power off
+  - path: "SYSTEM\\CurrentControlSet\\Services\\cdrom\\Parameters"
+    name: "ZeroPowerODDEnabled"
+    data: 0x00000000
+    type: "dword"
+  # Disable CD burning in Explorer.exe
+  - path: "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer"
+    name: "NoCDBurning"
+    data: 0x00000001
+    type: "dword"
