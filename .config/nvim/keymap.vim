@@ -134,6 +134,8 @@ cmap                        W               w
 cmap                        Q               q
 "Handy when editing ro files, use sudo
 cmap                        w#              w !sudo -S tee % >/dev/null
+"Always use lgrep
+cnoreabbrev                 grep            lgrep
 "}}}
 
 

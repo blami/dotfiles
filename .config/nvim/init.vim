@@ -136,8 +136,8 @@ set number numberwidth=4                    "show line numbers
 set colorcolumn=80,120                      "highlight columns 80,120 (ftplugin overrides)
 set cursorline                              "highlight line with cursor (only using that in number column)
 set hlsearch                                "highlight search matches
-set nolist                                  "do not show non-printable characters by default
-set listchars=tab:⯈\ ,trail:·,eol:¶,extends:$,precedes:^
+set list                                    "show non-printable characters by default (see autocmd.vim!)
+set listchars=tab:⯈\ ,trail:·,eol:,extends:$,precedes:^
 set matchpairs=(:),{:},[:],「:」,【:】      "match pair characters (highlight match)
 set matchtime=1
 set noshowmatch                             "don't briefly skip to matching bracket
@@ -208,7 +208,7 @@ sign define DiagnosticSignInfo      text= texthl=DiagnosticSignInfo
 
 sign define Bookmark                text=
 
-"NOTE See colors/blami.vim for highlights
+"NOTE: See colors/blami.vim for highlights
 "}}}
 
 
