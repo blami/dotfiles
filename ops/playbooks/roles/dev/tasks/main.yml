@@ -25,7 +25,7 @@
 
 # Windows
 - block:
-    - import_tasks: win_visualstudio.yml
+    - import_tasks: win_msvs.yml
   when:
     - ansible_facts.os_family == "Windows"
     #- my_facts.can_become_user

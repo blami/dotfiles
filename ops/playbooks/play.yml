@@ -26,3 +26,4 @@
   roles:
     - { role: base, tags: [base, windows] }
     - { role: user, tags: [user, windows] }
+    - { role: dev, tags: [dev, windows] }
