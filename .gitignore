@@ -66,6 +66,7 @@
 /.sudo_as_admin_successful
 /.motd_shown
 .mypy-cache
+__pycache__
 
 # Windows
 /Application\ Data
