@@ -130,13 +130,20 @@ alias t='tmux'
 alias ta='tmux a'
 
 # System commands (systemctl, etc.)
+alias psef='ps -ef'
 # }}}
+
 
 # {{{ Coding
 # VCS
 # Git
 alias g='git'
 alias dfgit="git --git-dir=$HOME/.dfgit --work-tree=$HOME" # dfgit for .dfgit
+# }}}
+
+
+# {{{ Misc
+alias irc='weechat'
 # }}}
 
 
