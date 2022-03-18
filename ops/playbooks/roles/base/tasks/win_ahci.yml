@@ -1,0 +1,58 @@
+---
+# Change Windows AHCI Link Power Management (LPM) on systems that have devices
+# known to misbehave with HIPM (Host initiated).
+
+- name: Enabling AHCI Link Power Management control panel
+  win_regedit:
+    path: "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\0012ee47-9041-4b5d-9b77-535fba8b1442\\0b2d69d7-a2a1-449c-9680-f91c70521c60"
+    name: "Attributes"
+    data: "0x00000002"
+    type: "dword"
+
+# Check if any of devices that require DIPM setting are present
+# NOTE: Windows does not allow to do this per-device
+# PIONEER BD-RW   BDR-UD03
+- name: Checking for devices that require DIPM
+  win_shell: |
+    $lookup = @(`
+      "PIONEER BD-RW   BDR-UD03" `
+    )
+    @(Get-PnpDevice | Where-Object { $lookup -Contains $_.FriendlyName -And $_.Status -Eq "OK" }).Count
+  register: out
+  changed_when: false
+
+# Set DIPM mode if needed
+- name: Setting AHCI Link Power Management to DIPM (all profiles)
+  win_shell: |
+    $changed = 0
+
+    # Get all profile GUIDs
+    $re = '(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}'
+    $out = powercfg /list
+    $guids = @()
+    foreach ($l in $out) {
+      $guid = [regex]::Match($l, $re).Value
+      if ($guid -ne "") { $guids += $guid }
+    }
+
+    # Modify all profile AC/DC settings if needed
+    # NOTE: DIPM value is 3
+    foreach ($g in $guids) {
+      $out = powercfg /query $g 0012ee47-9041-4b5d-9b77-535fba8b1442 0b2d69d7-a2a1-449c-9680-f91c70521c60
+
+      if (-Not($out -Match "Current AC Power Setting Index: 0x00000003")) {
+        powercfg /setacvalueindex $g 0012ee47-9041-4b5d-9b77-535fba8b1442 0b2d69d7-a2a1-449c-9680-f91c70521c60 3
+        $changed += 1
+      }
+      if (-Not($out -Match "Current DC Power Setting Index: 0x00000003")) {
+        powercfg /setdcvalueindex $g 0012ee47-9041-4b5d-9b77-535fba8b1442 0b2d69d7-a2a1-449c-9680-f91c70521c60 3
+        $changed += 1
+      }
+    }
+
+    Write-Host $changed
+  register: powercfg
+  changed_when: powercfg.stdout | int > 0
+  when:
+    - not out.failed
+    - out.stdout | int > 0

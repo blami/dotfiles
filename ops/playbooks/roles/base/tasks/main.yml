@@ -18,6 +18,8 @@
 # Windows
 - block:
     - import_tasks: win_registry.yml
+    - import_tasks: win_ahci.yml
+    - import_tasks: win_onedrive.yml
   become: yes
   become_user: "System"
   become_method: "runas"
