@@ -18,7 +18,7 @@ for goroot in "$GOPATH" \
         break
     fi
 done
-builtin unset -v goroot
+unset -v goroot
 export GOPATH PATH
 
 # Set GO111MODULE to auto (use go.mod if exists)

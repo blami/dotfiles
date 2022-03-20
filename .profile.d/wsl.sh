@@ -28,7 +28,7 @@ for dir in "/mnt/c/Devel/python3" \
     [ -d $dir ] && pathmunge $dir after
 done
 
-builtin unset -v dir
+unset -v dir
 fi
 
 
