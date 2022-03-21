@@ -1,7 +1,28 @@
 ---
-# Change Windows AHCI Link Power Management (LPM) on systems that have devices
-# known to misbehave with HIPM (Host initiated).
+# Change Windows HW settings
 
+# Change mapping of certain keys on keyboard
+# Caps -> Ctrl
+# TODO: Figure out if registry or DLL layout...
+- name: Changing keyboard mapping
+  win_shell: |
+    Write-Host TODO
+
+# Disable wake-up by input devices (mouse, keyboard, etc.)
+- name: Disabling wake-up by input devices
+  win_shell: |
+    $changed = 0
+    powercfg /devicequery wake_armed | foreach {
+      if ($_ -and (@("Keyboard", "Mouse", "HIDClass", "Bluetooth") -contains $(Get-PnpDevice -FriendlyName $_).Class)) {
+        powercfg /devicedisablewake $_
+        $changed += 1
+      }
+    }
+    Write-Host $changed
+  register: ret
+  changed_when: ret.out | int > 0
+
+# Enable AHCI Link Power Management control panel in Power Options
 - name: Enabling AHCI Link Power Management control panel
   win_regedit:
     path: "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\0012ee47-9041-4b5d-9b77-535fba8b1442\\0b2d69d7-a2a1-449c-9680-f91c70521c60"
@@ -25,7 +46,6 @@
 - name: Setting AHCI Link Power Management to DIPM (all profiles)
   win_shell: |
     $changed = 0
-
     # Get all profile GUIDs
     $re = '(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}'
     $out = powercfg /list
@@ -34,12 +54,10 @@
       $guid = [regex]::Match($l, $re).Value
       if ($guid -ne "") { $guids += $guid }
     }
-
     # Modify all profile AC/DC settings if needed
     # NOTE: DIPM value is 3
     foreach ($g in $guids) {
       $out = powercfg /query $g 0012ee47-9041-4b5d-9b77-535fba8b1442 0b2d69d7-a2a1-449c-9680-f91c70521c60
-
       if (-Not($out -Match "Current AC Power Setting Index: 0x00000003")) {
         powercfg /setacvalueindex $g 0012ee47-9041-4b5d-9b77-535fba8b1442 0b2d69d7-a2a1-449c-9680-f91c70521c60 3
         $changed += 1
@@ -49,10 +67,9 @@
         $changed += 1
       }
     }
-
     Write-Host $changed
-  register: powercfg
-  changed_when: powercfg.stdout | int > 0
+  register: ret
+  changed_when: ret.stdout | int > 0
   when:
     - not out.failed
     - out.stdout | int > 0
