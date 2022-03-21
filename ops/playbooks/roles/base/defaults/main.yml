@@ -121,6 +121,11 @@ apt_packages:
 
 # Windows registry keys (HKLM)
 windows_registry:
+  # Shorter shutdown/restart kill timeout
+  - path: "SYSTEM\\CurrentControlSet\\Control"
+    name: "WaitToKillServiceTimeout"
+    data: "500"
+    type: "string"
   # NOTE: These are relevant only on systems that have CDROM
   # Disable CD drive power off
   - path: "SYSTEM\\CurrentControlSet\\Services\\cdrom\\Parameters"
