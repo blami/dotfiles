@@ -27,7 +27,8 @@
 # Windows
 - block:
     - import_tasks: win_env.yml
-    - import_tasks: win_registry.yml
+    - import_tasks: win_reg.yml
+    - import_tasks: win_userdirs.yml
   when:
     - ansible_facts.os_family == "Windows"
     #- my_facts.can_become_user
