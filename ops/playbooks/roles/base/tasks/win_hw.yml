@@ -20,7 +20,7 @@
     }
     Write-Host $changed
   register: ret
-  changed_when: ret.out | int > 0
+  changed_when: ret.stdout | int > 0
 
 # Enable AHCI Link Power Management control panel in Power Options
 - name: Enabling AHCI Link Power Management control panel
