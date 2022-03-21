@@ -4,48 +4,45 @@
 # NOTE: This DOES NOT install Visual Studio! It only makes various
 # configuration changes on computer with already installed Visual Studio.
 
-- name: Checking for Visual Studio installation
-  win_shell: >
-    Get-CimInstance MSFT_VSInstance
+# Find MSVS installations and note their attributes in msvs fact
+- name: Finding Visual Studio installations
+  win_shell: |
+    $objs = @()
+    foreach($i in (Get-CimInstance MSFT_VSInstance -ErrorAction Ignore)) {
+      $obj = $i | Select-Object -Property `
+        Version, `
+        IdentifyingNumber, `
+        InstallationLocation
+      # Cut version parts beyond minor as m
+      $obj.Version = $obj.Version -replace '^(\d+\.\d+).*$','$1'
+      $objs += ,$obj
+    }
+    ConvertTo-Json $objs
   register: out
   failed_when: false
   changed_when: false
 - set_fact:
-    msvs_facts: >
-      {{
-        msvs_facts | default({})
-        | combine({
-            "installed": out.rc == 0,
-          })
-      }}
-- set_fact:
-    msvs_facts: >
-      {{
-        msvs_facts | default({})
-        | combine({
-            "version": out.stdout | regex_search('Version\s+:\s+(?P<version>\d+\.\d+)', '\g<version>') | first,
-            "path": out.stdout | regex_search('InstallLocation\s+:\s+(?P<path>.+)\r', '\g<path>') | first,
-            "id": out.stdout | regex_search('IdentifyingNumber\s+:\s+(?P<id>[0-9a-z]+)', '\g<id>') | first,
-          })
-      }}
-  when:
-    - msvs_facts.installed
+    msvs: "{{ (out.stdout | from_json) if out.rc == 0 else [] }}"
 
-- name: "Change path settings"
+# NOTE: From here everything has to use with_nested with msvs so that settings
+# are applied to all instances of MSVS installed.
+
+# Change default path settings
+- name: "Changing default path settings"
   win_regedit:
-    hive: "%USERPROFILE%\\AppData\\Local\\Microsoft\\VisualStudio\\{{ msvs_facts.version }}_{{ msvs_facts.id }}\\privateregistry.bin"
-    path: "HKLM:\\ANSIBLE\\Software\\Microsoft\\VisualStudio\\{{ msvs_facts.version }}_{{ msvs_facts.id }}"
-    name: "{{ item.key }}"
-    data: "{{ item.value }}"
+    hive: "%USERPROFILE%\\AppData\\Local\\Microsoft\\VisualStudio\\{{ item[0].Version }}_{{ item[0].IdentifyingNumber }}\\privateregistry.bin"
+    path: "HKLM:\\ANSIBLE\\Software\\Microsoft\\VisualStudio\\{{ item[0].Version }}_{{ item[0].IdentifyingNumber }}"
+    name: "{{ item[1].keys() | first }}"
+    data: "{{ item[1].values() | first }}"
     type: "string"
-  with_dict:
-    - VisualStudioProjectsLocation: "%USERPROFILE%\\src"
-    - DefaultFileOpenLocation: "%USERPROFILE%\\src"
-    - DefaultNewProjectLocation: "%USERPROFILE%\\src\\"
-    - DefaultNewProjItemLocation: "%USERPROFILE%\\src"
-    - DefaultOpenProjectLocation: "%USERPROFILE%\\src\\"
-    - DefaultOpenProjItemLocation: "%USERPROFILE%\\src"
-    - DefaultOpenSolutionLocation: "%USERPROFILE%\\src"
+  with_nested:
+    - "{{ msvs }}"
+    - - { VisualStudioProjectsLocation: "%USERPROFILE%\\src" }
+      - { DefaultFileOpenLocation: "%USERPROFILE%\\src" }
+      - { DefaultNewProjectLocation: "%USERPROFILE%\\src\\" }
+      - { DefaultNewProjItemLocation: "%USERPROFILE%\\src" }
+      - { DefaultOpenProjectLocation: "%USERPROFILE%\\src\\" }
+      - { DefaultOpenProjItemLocation: "%USERPROFILE%\\src" }
+      - { DefaultOpenSolutionLocation: "%USERPROFILE%\\src" }
   when:
-    - msvs_facts.installed
-
+    - msvs | length > 0
