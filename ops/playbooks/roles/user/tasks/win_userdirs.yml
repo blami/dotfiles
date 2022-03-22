@@ -1,8 +1,9 @@
 ---
 # Setup Windows user directories
 
-# TODO: This is very destructive, maybe do only if some flag file exists...
-- name: Deleting useless directories
+# TODO: Relocate directories (e.g. Videos -> videos, etc.)
+
+- name: Deleting useless Windows directories
   win_file:
     path: "{{ item }}"
     state: absent
@@ -10,5 +11,3 @@
     - "{{ ansible_facts.env.USERPROFILE }}\\OneDrive"
     - "{{ ansible_facts.env.USERPROFILE }}\\ansel"
     - "{{ ansible_facts.env.USERPROFILE }}\\source"
-
-# TODO: Relocate certain directories such as Downloads, etc.
