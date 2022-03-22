@@ -1,7 +1,7 @@
 ---
 # Disable OneDrive for all users
 
-- name: Disabling OneDrive policies
+- name: Disabling Windows OneDrive policies
   win_regedit:
     path: "{{ item.path }}"
     name: "{{ item.name }}"
@@ -25,7 +25,7 @@
   loop_control:
     label: "{{ item.path }}.{{ item.name }}={{ item.data }}"
 
-- name: Uninstalling OneDrive client
+- name: Uninstalling Windows OneDrive client
   win_shell: |
     $paths = @("$env:SYSTEMROOT\System32\OneDriveSetup.exe", "$env:SYSTEMROOT\SysWOW64\OneDriveSetup.exe")
     foreach ($p in $paths) {
