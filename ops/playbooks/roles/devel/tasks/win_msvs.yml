@@ -12,7 +12,8 @@
       $obj = $i | Select-Object -Property `
         Version, `
         IdentifyingNumber, `
-        InstallationLocation
+        InstallLocation, `
+        Caption
       # Cut version parts beyond minor as m
       $obj.Version = $obj.Version -replace '^(\d+\.\d+).*$','$1'
       $objs += ,$obj
@@ -28,7 +29,7 @@
 # are applied to all instances of MSVS installed.
 
 # Change default path settings
-- name: "Changing default path settings"
+- name: Changing Visual Studio default paths
   win_regedit:
     hive: "%USERPROFILE%\\AppData\\Local\\Microsoft\\VisualStudio\\{{ item[0].Version }}_{{ item[0].IdentifyingNumber }}\\privateregistry.bin"
     path: "HKLM:\\ANSIBLE\\Software\\Microsoft\\VisualStudio\\{{ item[0].Version }}_{{ item[0].IdentifyingNumber }}"
@@ -44,5 +45,7 @@
       - { DefaultOpenProjectLocation: "%USERPROFILE%\\src\\" }
       - { DefaultOpenProjItemLocation: "%USERPROFILE%\\src" }
       - { DefaultOpenSolutionLocation: "%USERPROFILE%\\src" }
+  loop_control:
+    label: "{{ item[0].Caption }} - {{ item[1].keys() | first }}"
   when:
     - msvs | length > 0
