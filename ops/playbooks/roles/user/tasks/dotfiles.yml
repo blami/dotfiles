@@ -1,10 +1,8 @@
 ---
-# Clone and update dotfiles.
+# Clone and update dotfiles
 
-# NOTE Not using built-in `git` as this is cloned into a homedir which already
+# NOTE: Not using built-in `git` as this is cloned into a homedir which already
 # exists.
-# NOTE Always use HTTPS to do initial clone; if SSH key is present task 'Change
-# dotfiles repository remote to SSH' will change remote origin.
 - name: Cloning dotfiles repository
   shell:
     chdir: "{{ my_user.home }}"
@@ -21,12 +19,12 @@
 - name: Updating dotfiles
   shell:
     chdir: "{{ my_user.home }}"
-    # TODO Check if pull can be done...
+    # TODO: Check if pull can be done...
     # https://stackoverflow.com/questions/24504400/whats-the-correct-way-to-check-if-its-possible-to-perform-a-fast-forward-merge
     cmd: |
       umask {{ my_user.umask }}
       git --git-dir=.dfgit pull
-  # Never fail (if see TODO above)
+  # Never fail (see TODO above)
   failed_when: false
   # Do not run if dotfiles were just cloned
   when:

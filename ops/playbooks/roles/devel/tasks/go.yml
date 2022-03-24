@@ -1,10 +1,11 @@
 ---
-# Install Go packages and golangci-lint to GOPATH.
+# Install Go packages and golangci-lint to GOPATH
+
 # In order to get GOPATH right (as defined in .profile.d/golang.sh) we need to
 # source that file but it depends on pathmunge so provide kludge for that too.
 
-# TODO Check if go is present; version is high enough and if not skip the rest?
-# TODO Make sure we look for go not only in default PATH? maybe subshell to
+# TODO: Check if go is present; version is high enough and if not skip the rest?
+# TODO: Make sure we look for go not only in default PATH? maybe subshell to
 # my_user.shell?
 
 - name: Installing Go packages to GOPATH
@@ -18,7 +19,7 @@
   with_items: "{{ go_packages }}"
 
 # Install golangci-lint latest version to GOPATH.
-# NOTE Can't go install; see https://golangci-lint.run/usage/install/#install-from-source
+# NOTE: Can't go install; see https://golangci-lint.run/usage/install/#install-from-source
 - name: Installing golangci-lint to GOPATH
   shell:
     chdir: "{{ my_user.home }}"

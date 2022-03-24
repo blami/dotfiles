@@ -1,8 +1,7 @@
 ---
-# Install various software licenses stored in Bitwarden.
-# Bitwarden CLI has to be installed.
+# Install various software licenses stored in Bitwarden
 
-# TODO This currently works only when run locally with BW_SESSION exported,
+# TODO: This currently works only when run locally with BW_SESSION exported,
 # probably need to unlock bitwarden on target host and instead of exporting
 # BW_SESSION pass it to master?
 
@@ -14,7 +13,6 @@
   failed_when: false
   changed_when: false
 
-# Licenses that are installed to user home
 - name: Fetching file-based licenses
   shell:
     cmd: |

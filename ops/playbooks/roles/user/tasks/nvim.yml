@@ -5,24 +5,27 @@
   get_url:
     dest: "{{ my_user.home }}/.local/share/nvim/site/spell/"
     url: "https://ftp.nluug.nl/pub/vim/runtime/spell/{{ item }}.spl"
-  with_items: "{{ nvim_spell }}"
   ignore_errors: true
   loop_control:
     label: "{{ item }}.spl"
+  with_items: "{{ nvim_spell }}"
+  tags: nvim
 
 - name: Downloading Neovim spell suggestion files
   get_url:
     dest: "{{ my_user.home }}/.local/share/nvim/site/spell/"
     url: "https://ftp.nluug.nl/pub/vim/runtime/spell/{{ item }}.sug"
-  with_items: "{{ nvim_spell }}"
   ignore_errors: true
   loop_control:
     label: "{{ item }}.sug"
+  with_items: "{{ nvim_spell }}"
+  tags: nvim
 
 - name: Installing Neovim packs
   git:
     repo: "{{ item.repo }}"
     dest: "{{ my_user.home }}/.local/share/nvim/site/pack/{{ item.group }}/{{ 'opt' if item.get('opt', false) else 'start' }}/{{ item.name }}"
-  with_items: "{{ nvim_packs }}"
   loop_control:
     label: "{{ item.name }} {{ item.repo }}"
+  with_items: "{{ nvim_packs }}"
+  tags: nvim

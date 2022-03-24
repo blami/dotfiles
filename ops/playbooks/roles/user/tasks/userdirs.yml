@@ -1,5 +1,5 @@
 ---
-# Create common user directories; see ~/.config/user-dirs.dirs for details.
+# Create common user directories; see ~/.config/user-dirs.dirs for details
 
 - name: Creating ~ directories
   file:
@@ -35,15 +35,15 @@
     mode: "0700"
     state: directory
 
-# On WSL1 certain directories have to be on native filesystem
+# On WSL certain directories have to be on native filesystem
 - name: Creating WSL native directories
   file:
     path: "{{ item.src }}"
     mode: "{{ item.mode }}"
     state: directory
-  with_items: "{{ wsl_native_dirs }}"
   loop_control:
     label: "{{ item.src }}"
+  with_items: "{{ wsl_native_dirs }}"
   when:
     - my_facts.is_wsl
     - my_facts.home_filesystem == "drvfs"
@@ -56,9 +56,9 @@
     # NOTE This will delete (unlink) the original file if its not a symlink and
     # create the symlink
     force: yes
-  with_items: "{{ wsl_native_dirs }}"
   loop_control:
     label: "{{ item.dest }}"
+  with_items: "{{ wsl_native_dirs }}"
   when:
     - my_facts.is_wsl
     - my_facts.home_filesystem == "drvfs"

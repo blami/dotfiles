@@ -5,7 +5,6 @@
 # system is WSL it creates /etc/wsl.conf if it didn't exist. If file is created
 # LxssManager service is also restarted for changes to come into effect.
 
-# This is to get /tmp cleared on reboot
 - name: Converting /tmp to tmpfs
   lineinfile:
     path: /etc/fstab

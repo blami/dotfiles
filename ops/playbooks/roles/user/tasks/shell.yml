@@ -1,5 +1,7 @@
 ---
-# Change shell to my_user.shell (assumes it is installed otherwise fails).
+# Change shell to my_user.shell
+
+# TODO: Check if {{ my_user.shell }} is installed; otherwise skip.
 
 - name: Setting user shell
   command: >

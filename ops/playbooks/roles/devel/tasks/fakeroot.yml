@@ -1,7 +1,6 @@
 ---
 # On WSL1 change fakeroot to fakeroot-tcp to avoid not implemented SysV IPC
 # calls.
-# NOTE This will still fail in many cases as I found...
 
 - name: Switching to fakeroot-tcp
   command: >

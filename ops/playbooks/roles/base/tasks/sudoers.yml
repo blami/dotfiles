@@ -1,5 +1,5 @@
 ---
-# Configure sudo to keep environment and not e-mail bad attempts to root.
+# Configure sudo to keep environment and not e-mail bad attempts to root
 
 - name: Installing sudoers.d/99-defaults
   copy:

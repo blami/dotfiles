@@ -1,19 +1,18 @@
 ---
 # Setup Windows UI aspects
 
-# TODO: Likely replace paths with some fact pointing to WSL home?
+# TODO: Check if dotfiles are present
 
-# TODO: Requires user to be Admin
-# TODO: See if advpack.dll can be called from PS for better error handling?
-- name: Installing Windows Aero Black cursors
-  win_shell: >
-    rundll32.exe advpack.dll,LaunchINFSectionEx "{{ ansible_facts.env.USERPROFILE }}\\.local\\share\\icons\\aero_black\\cursors\\{{ item }},,,4"
+- name: Installing Windows local cursors
+  win_shell: |
+    rundll32.exe advpack.dll,LaunchINFSectionEx "{{ ansible_facts.env.USERPROFILE }}\\.local\\share\\icons\\{{ item }},,,4"
+  # This re-registers cursors in registry every time...
+  changed_when: false
   with_items:
-    - install.inf
-    - install_l.inf
-    - install_xl.inf
+    - aero_black\cursors\install.inf
+    - aero_black\cursors\install_l.inf
+    - aero_black\cursors\install_xl.inf
 
-# Install local fonts for current user
 - name: Installing Windows local fonts
   win_shell: |
     $changed = 0
@@ -46,5 +45,5 @@
       $changed += 1
     }
     Write-Host $changed
-  register: ret
-  changed_when: ret.stdout | int > 0
+  register: result
+  changed_when: result.stdout | int > 0

@@ -1,5 +1,5 @@
 ---
-# Install user APT packages.
+# Install user APT packages
 
 - name: Installing user APT packages
   apt:

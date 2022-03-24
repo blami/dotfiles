@@ -1,19 +1,16 @@
 ---
 # Change Windows HW settings
 
-# Change mapping of certain keys on keyboard
-# Caps -> Ctrl
-# TODO: Figure out if registry or DLL layout...
-- name: Changing Windows keyboard mapping
-  win_shell: |
-    Write-Host TODO
+# TODO: Keyboard layout (map Caps -> Ctrl, anything else?)
+#- name: Changing Windows keyboard mapping
+#  win_shell: |
+#    Write-Host TODO
 
-# Disable wake-up by input devices (mouse, keyboard, etc.)
-- name: Disabling Windows wake-up by input devices
+- name: Disarming Windows wake-up by input devices
   win_shell: |
     $changed = 0
     powercfg /devicequery wake_armed | foreach {
-      if ($_ -and (@("Keyboard", "Mouse", "HIDClass", "Bluetooth") -contains $(Get-PnpDevice -FriendlyName $_).Class)) {
+      if ($_ -and (@("Keyboard", "Mouse", "HIDClass", "Bluetooth") -contains $(Get-PnpDevice -FriendlyName "$($_)").Class)) {
         powercfg /devicedisablewake $_
         $changed += 1
       }
@@ -22,7 +19,6 @@
   register: ret
   changed_when: ret.stdout | int > 0
 
-# Enable AHCI Link Power Management control panel in Power Options
 - name: Enabling Windows AHCI Link Power Management control panel
   win_regedit:
     path: "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\0012ee47-9041-4b5d-9b77-535fba8b1442\\0b2d69d7-a2a1-449c-9680-f91c70521c60"
@@ -30,7 +26,6 @@
     data: "0x00000002"
     type: "dword"
 
-# Check if any of devices that require DIPM setting are present
 # NOTE: Windows does not allow to do this per-device
 # PIONEER BD-RW   BDR-UD03
 - name: Checking for Windows devices that require DIPM
@@ -42,7 +37,6 @@
   register: out
   changed_when: false
 
-# Set DIPM mode if needed
 - name: Setting Windows AHCI Link Power Management to DIPM (all profiles)
   win_shell: |
     $changed = 0

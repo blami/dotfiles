@@ -1,5 +1,5 @@
 ---
-# Configure APT and install essential packages.
+# Configure APT and install essential packages
 
 - name: Disabling APT recommendations
   copy:
@@ -15,19 +15,19 @@
     id: "{{ item.key_id }}"
     keyserver: keyserver.ubuntu.com
     state: present
-  with_items: "{{ apt_repositories }}"
   loop_control:
     label: "{{ item.name }} {{ item.key_id }}"
+  with_items: "{{ apt_repositories }}"
 
 - name: Adding APT repositories
   apt_repository:
     repo: "{{ item.1 }}"
     filename: "{{ item.0.name }}"
+  loop_control:
+    label: "{{ item.0.name }}.list"
   with_subelements: 
     - "{{ apt_repositories }}"
     - "sources"
-  loop_control:
-    label: "{{ item.0.name }}.list"
 
 - name: Updating APT cache and upgrading/autoremoving packages
   apt:

@@ -1,15 +1,14 @@
 ---
-# Install Node.js packages.
+# Install Node.js packages
 
-# TODO Check if node is present; otherwise skip all here
-# TODO Make sure we look for node not only in default PATH? maybe subshell to
+# TODO: Check if node is present; otherwise skip all here
+# TODO: Make sure we look for node not only in default PATH? maybe subshell to
 # my_user.shell?
-
 
 - name: Setting up Node.js (.npmrc)
   shell:
     chdir: "{{ my_user.home }}"
-    # NOTE Do not use 'creates:' to always revert changed prefix to ~/.node
+    # NOTE: DO NOT use 'creates:' to always revert changed prefix to ~/.node
     #creates: "{{ my_user.home }}/.npmrc"
     cmd: |
       umask {{ my_user.umask }}
