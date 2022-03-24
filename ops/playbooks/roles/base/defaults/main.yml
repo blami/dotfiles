@@ -137,3 +137,10 @@ windows_registry:
     name: "NoCDBurning"
     data: 0x00000001
     type: "dword"
+
+# Windows trusted hosts (Internet Settings control panel)
+# NOTE: This allows executing .exe's from Samba, etc.
+windows_trusted_hosts:
+  - domain: blami.net
+    host: bagend.lan
+    protocol: file

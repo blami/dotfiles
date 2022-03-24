@@ -1,0 +1,43 @@
+---
+# Configure Windows networking aspects
+
+- name: Optimizing Windows TCP/IP stack parameters
+  win_regedit:
+    path: "HKLM:\\SYSTEM\\CurrentControlSet\\{{ item.path }}"
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+  loop_control:
+    label: "{{ item.name }}: {{ item.data }}"
+  with_items:
+    # Maximum of TCP connections computer can handle
+    - path: "Services\\Tcpip\\Parameters"
+      name: "MaxFreeTcbs"
+      data: 65536
+      type: "dword"
+    # Maximum of above-1024 (user) TCP/UDP ports (default is 5000)
+    - path: "Services\\Tcpip\\Parameters"
+      name: "MaxUserPort"
+      data: 65536
+      type: "dword"
+    # TTL (default is 128)
+    - path: "Services\\Tcpip\\Parameters"
+      name: "DefaultTTL"
+      data: 64
+      type: "dword"
+    # I/O request packet stack size (default is 15)
+    - path: "Services\\Lanman\\Server\\Parameters"
+      name: "IRPStackSize"
+      data: 32
+      type: "dword"
+
+# Make given hosts trusted for specific protocols
+- name: Adding Windows local intranet trusted hosts
+  win_regedit:
+    path: "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\ZoneMap\\Domains\\{{ item.domain }}\\{{ item.host }}"
+    name: "{{ item.protocol }}"
+    data: 0x00000001
+    type: "dword"
+  loop_control:
+    label: "{{ item.host }}.{{ item.domain }} {{ item.protocol }}"
+  with_items: "{{ windows_trusted_hosts }}"

@@ -18,6 +18,7 @@
 # Windows
 - block:
     - import_tasks: win_reg.yml
+    - import_tasks: win_net.yml
     - import_tasks: win_hw.yml
     - import_tasks: win_onedrive.yml
   become: yes
