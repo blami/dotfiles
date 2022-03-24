@@ -14,7 +14,7 @@
   roles:
     - { role: base, tags: [base, linux] } 
     - { role: user, tags: [user, linux] }
-    - { role: dev, tags: [dev, linux] }
+    - { role: devel, tags: [devel, linux] }
 
 # Windows play
 - name: Windows
@@ -26,4 +26,4 @@
   roles:
     - { role: base, tags: [base, windows] }
     - { role: user, tags: [user, windows] }
-    - { role: dev, tags: [dev, windows] }
+    - { role: devel, tags: [devel, windows] }

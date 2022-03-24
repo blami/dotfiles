@@ -17,7 +17,7 @@ for androidroot in "$HOME/.local/android" \
         break
     fi
 done
-builtin unset -v androidroot
+unset -v androidroot
 
 
 # vim:set ft=zsh:

@@ -1,0 +1,51 @@
+---
+# Configure Visual Studio
+
+# NOTE: This DOES NOT install Visual Studio! It only makes various
+# configuration changes on computer with already installed Visual Studio.
+
+# Find MSVS installations and note their attributes in msvs fact
+- name: Finding Visual Studio installations
+  win_shell: |
+    $objs = @()
+    foreach($i in (Get-CimInstance MSFT_VSInstance -ErrorAction Ignore)) {
+      $obj = $i | Select-Object -Property `
+        Version, `
+        IdentifyingNumber, `
+        InstallLocation, `
+        Caption
+      # Cut version parts beyond minor as m
+      $obj.Version = $obj.Version -replace '^(\d+\.\d+).*$','$1'
+      $objs += ,$obj
+    }
+    ConvertTo-Json $objs
+  register: out
+  failed_when: false
+  changed_when: false
+- set_fact:
+    msvs: "{{ (out.stdout | from_json) if out.rc == 0 else [] }}"
+
+# NOTE: From here everything has to use with_nested with msvs so that settings
+# are applied to all instances of MSVS installed.
+
+# Change default path settings
+- name: Changing Visual Studio default paths
+  win_regedit:
+    hive: "%USERPROFILE%\\AppData\\Local\\Microsoft\\VisualStudio\\{{ item[0].Version }}_{{ item[0].IdentifyingNumber }}\\privateregistry.bin"
+    path: "HKLM:\\ANSIBLE\\Software\\Microsoft\\VisualStudio\\{{ item[0].Version }}_{{ item[0].IdentifyingNumber }}"
+    name: "{{ item[1].keys() | first }}"
+    data: "{{ item[1].values() | first }}"
+    type: "string"
+  with_nested:
+    - "{{ msvs }}"
+    - - { VisualStudioProjectsLocation: "%USERPROFILE%\\src" }
+      - { DefaultFileOpenLocation: "%USERPROFILE%\\src" }
+      - { DefaultNewProjectLocation: "%USERPROFILE%\\src\\" }
+      - { DefaultNewProjItemLocation: "%USERPROFILE%\\src" }
+      - { DefaultOpenProjectLocation: "%USERPROFILE%\\src\\" }
+      - { DefaultOpenProjItemLocation: "%USERPROFILE%\\src" }
+      - { DefaultOpenSolutionLocation: "%USERPROFILE%\\src" }
+  loop_control:
+    label: "{{ item[0].Caption }} - {{ item[1].keys() | first }}"
+  when:
+    - msvs | length > 0

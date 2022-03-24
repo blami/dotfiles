@@ -1,7 +1,7 @@
 ---
 # Configure Windows environment variables
 
-- name: Setting user environment variables
+- name: Setting Windows user environment variables
   win_environment:
     level: user
     state: present

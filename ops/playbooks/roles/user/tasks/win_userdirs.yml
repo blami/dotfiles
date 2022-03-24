@@ -1,0 +1,13 @@
+---
+# Setup Windows user directories
+
+# TODO: Relocate directories (e.g. Videos -> videos, etc.)
+
+- name: Deleting useless Windows directories
+  win_file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ ansible_facts.env.USERPROFILE }}\\OneDrive"
+    - "{{ ansible_facts.env.USERPROFILE }}\\ansel"
+    - "{{ ansible_facts.env.USERPROFILE }}\\source"

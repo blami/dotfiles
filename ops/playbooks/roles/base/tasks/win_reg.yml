@@ -1,7 +1,7 @@
 ---
 # Configure Windows registry keys
 
-- name: Setting HKLM registry keys
+- name: Setting Windows HKLM registry keys
   win_regedit:
     path: "HKLM:\\{{ item.path }}"
     name: "{{ item.name }}"

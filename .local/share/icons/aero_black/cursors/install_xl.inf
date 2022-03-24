@@ -16,7 +16,7 @@ aero_black_up_xl.cur
 aero_black_busy_xl.ani
 aero_black_nwse_xl.cur
 aero_black_nesw_xl.cur
-aero_black_xlink_xl.cur
+aero_black_link_xl.cur
 aero_black_helpsel_xl.cur
 aero_black_ew_xl.cur
 aero_black_move_xl.cur
@@ -38,7 +38,7 @@ alternate		= "aero_black_up_xl.cur"
 busy			= "aero_black_busy_xl.ani"
 dgn1			= "aero_black_nwse_xl.cur"
 dgn2			= "aero_black_nesw_xl.cur"
-link			= "aero_black_xlink_xl.cur"
+link			= "aero_black_link_xl.cur"
 help			= "aero_black_helpsel_xl.cur"
 horz			= "aero_black_ew_xl.cur"
 move			= "aero_black_move_xl.cur"

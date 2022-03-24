@@ -14,13 +14,13 @@ for colors in "$HOME/.DIR_COLORS.$TERM" \
 
     [ -r "$colors" ] && COLORS="$colors" && break
 done
-builtin unset -v colors
+unset -v colors
 
 
 if [ -n "$COLORS" ]; then
     # Eval selected file and set alias
     eval "`dircolors --sh "$COLORS" 2>/dev/null`"
-    builtin unset -v COLORS
+    unset -v COLORS
     [ -z "$LS_COLORS" ] && return
 
     export LS_COLORS
