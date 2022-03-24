@@ -35,7 +35,7 @@
     path: "HKLM:\\ANSIBLE\\Software\\Microsoft\\VisualStudio\\{{ item[0].Version }}_{{ item[0].IdentifyingNumber }}"
     name: "{{ item[1].keys() | first }}"
     data: "{{ item[1].values() | first }}"
-    type: "string"
+    type: "expandstring"
   with_nested:
     - "{{ msvs }}"
     - - { VisualStudioProjectsLocation: "%USERPROFILE%\\src" }
