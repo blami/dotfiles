@@ -9,10 +9,10 @@
 	from = Ondrej Balaz <blami@blami.net>
 
 [core]
-	excludesfile = /home/blami/.gitignore_global
+	excludesfile = ~/.gitignore_global
 
 [http]
-	cookiefile = /mnt/c/Users/blami/.gitcookies
+	cookiefile = ~/.gitcookies
 
 [color]
 	filemode = false
