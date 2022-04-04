@@ -8,11 +8,12 @@
 [sendemail]
 	from = Ondrej Balaz <blami@blami.net>
 
-[core]
-	excludesfile = ~/.gitignore_global
+[init]
+	defaultbranch = main
 
-[http]
-	cookiefile = ~/.gitcookies
+[core]
+	; Always exclude globally ignored files
+	excludesfile = ~/.gitignore_global
 
 [color]
 	filemode = false
@@ -22,9 +23,6 @@
 	status = auto
 	ui = auto
 	pager = true
-
-[init]
-	defaultbranch = main
 
 [commit]
 	template = ~/.gitmessage
@@ -38,26 +36,42 @@
 [mergetool "nvim"]
 	cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c '$wincmd J'
 
+[rebase]
+	autosquash = true
+
 [push]
-	# Push branches manually one by one
-	default = simple
+	; nothing   - do not push any branches
+	; matching  - push all matching branches
+	; upstream  - push the current branch to its upstream
+	; current   - push the current branch to a branch of the same name
+	; simple    - push the current branch to its upstream of the same name
+	default = current
 
 [pull]
 	ff = only
 
-[rebase]
-	autosquash = true
+[pack]
+	packSizeLimit = 2g
+
+[http]
+	cookiefile = ~/.gitcookies
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
 
 [include]
 	path = ~/.gitaliases
-	# Include local configuration file
+	; Include local configuration file
 	path = ~/.gitconfig_local
-	# Include ~/.gitdirs file
-	# NOTE ~/.gitdirs contains ONLY includeIf statemens pointing to a 
-	# per-directory configs:
-	# [includeIf "gitdir:~/ws/work/"]
-	#     path = ~/.gitconfig_work
+	; Include ~/.gitdirs file
+	; NOTE: ~/.gitdirs contains ONLY includeIf statemens pointing to a 
+	; per-directory configs:
+	; [includeIf "gitdir:~/ws/work/"]
+	;     path = ~/.gitconfig_work
 	path = ~/.gitdirs
 
 
-# vim:set ft=gitconfig:
+; vim:set ft=gitconfig:
