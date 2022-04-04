@@ -6,10 +6,10 @@ CopyFiles = Scheme.Cur
 AddReg    = Scheme.Reg
 
 [DestinationDirs]
-Scheme.Cur = 16412,"%CUR_DIR%"
+Scheme.Cur = 10,"%CUR_DIR%"
 
 [Scheme.Reg]
-HKCU,"Control Panel\Cursors\Schemes","%SCHEME_NAME%",,"%16412%\%CUR_DIR%\%pointer%,%16412%\%CUR_DIR%\%help%,%16412%\%CUR_DIR%\%work%,%16412%\%CUR_DIR%\%busy%,%16412%\%CUR_DIR%\%Cross%,%16412%\%CUR_DIR%\%Text%,%16412%\%CUR_DIR%\%Hand%,%16412%\%CUR_DIR%\%Unavailiable%,%16412%\%CUR_DIR%\%Vert%,%16412%\%CUR_DIR%\%Horz%,%16412%\%CUR_DIR%\%Dgn1%,%16412%\%CUR_DIR%\%Dgn2%,%16412%\%CUR_DIR%\%move%,%16412%\%CUR_DIR%\%alternate%,%16412%\%CUR_DIR%\%link%,%16412%\%CUR_DIR%\%pin%,%16412%\%CUR_DIR%\%person%"
+HKLM,"SOFTWARE\Microsoft\Windows\CurrentVersion\Control Panel\Cursors\Schemes","%SCHEME_NAME%",0x00020000,"%%SystemRoot%%\%CUR_DIR%\%pointer%,%%SystemRoot%%\%CUR_DIR%\%help%,%%SystemRoot%%\%CUR_DIR%\%work%,%%SystemRoot%%\%CUR_DIR%\%busy%,%%SystemRoot%%\%CUR_DIR%\%Cross%,%%SystemRoot%%\%CUR_DIR%\%Text%,%%SystemRoot%%\%CUR_DIR%\%Hand%,%%SystemRoot%%\%CUR_DIR%\%Unavailiable%,%%SystemRoot%%\%CUR_DIR%\%Vert%,%%SystemRoot%%\%CUR_DIR%\%Horz%,%%SystemRoot%%\%CUR_DIR%\%Dgn1%,%%SystemRoot%%\%CUR_DIR%\%Dgn2%,%%SystemRoot%%\%CUR_DIR%\%move%,%%SystemRoot%%\%CUR_DIR%\%alternate%,%%SystemRoot%%\%CUR_DIR%\%link%,%%SystemRoot%%\%CUR_DIR%\%pin%,%%SystemRoot%%\%CUR_DIR%\%person%"
 
 [Scheme.Cur]
 aero_black_up_xl.cur
@@ -32,7 +32,7 @@ aero_black_pin_xl.cur
 
 
 [Strings]
-CUR_DIR			= "Microsoft\Windows\Cursors"
+CUR_DIR			= "cursors"
 SCHEME_NAME		= "Aero Black (extra large)"
 alternate		= "aero_black_up_xl.cur"
 busy			= "aero_black_busy_xl.ani"
