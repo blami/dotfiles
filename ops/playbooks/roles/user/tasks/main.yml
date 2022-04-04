@@ -32,5 +32,3 @@
     - import_tasks: win_ui.yml
   when:
     - ansible_facts.os_family == "Windows"
-    #- my_facts.can_become_user
-
