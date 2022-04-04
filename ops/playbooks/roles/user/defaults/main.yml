@@ -56,13 +56,18 @@ nvim_packs:
     repo: "https://github.com/nvim-lua/plenary.nvim"
 
 # Windows user environment variables
+# NOTE: DO NOT USE %USERPROFILE% in HOME, XDG_* and other variables possibly
+# recognized by mingw or other similar UNIX-Windows software as it cannot
+# expand %USERPROFILE%!
 windows_env:
-  - HOME: "%USERPROFILE%"
+  - HOME: "{{ my_user.home }}"
   # TODO: WSL_HOME: 
   # XDG data dirs (not all applications support them; in some cases this might
   # cause issues - e.g. if files in there contain any PATHs, etc.)
-  - XDG_CONFIG_HOME: "%USERPROFILE%\\.config"
-  - XDG_DATA_HOME: "%USERPROFILE%\\.local\\share"
+  - XDG_CONFIG_HOME: "{{ my_user.home }}\\.config"
+  - XDG_DATA_HOME: "{{ my_user.home }}\\.local\\share"
+  - TEMP: "{{ my_user.home }}\\AppData\\Local\\Temp"
+  - TMP: "{{ my_user.home }}\\AppData\\Local\\Temp"
 
 # Windows user registry keys (HKCU)
 windows_registry:
