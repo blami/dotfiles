@@ -91,5 +91,3 @@
     Write-Host $changed
   register: result
   changed_when: result.stdout | int > 0
-  tags: debug
-
