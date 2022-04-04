@@ -9,7 +9,7 @@ setl noexpandtab
 
 "Look and feel
 setl nonumber
-setl signcolumn=
+setl signcolumn=no
 setl colorcolumn=
 setl nolist
 setl statusline=%t%{exists('w:quickfix_title')?'\ '.w:quickfix_title:''}\ %=%2*%c,%l/%LL%*\ %P 

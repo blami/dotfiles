@@ -10,7 +10,7 @@ setl noexpandtab
 
 "User Interface
 setl nonumber
-setl signcolumn=
+setl signcolumn=no
 setl colorcolumn=
 setl statusline=\[Help\]\ %t\ %=%2*%c,%l/%LL%*\ %P 
 setl nolist
