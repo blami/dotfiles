@@ -7,7 +7,7 @@
 
 # Check if running on WSL; gather my_facts.wsl bool and my_facts.wsl_version
 # based on $WSL_DISTRO_NAME and $WSL_INTEROP.
-- name: "Checking if running in WSL"
+- name: Checking if running in WSL
   set_fact:
     my_facts: >
       {{
@@ -20,7 +20,7 @@
           })
       }}
 
-- name: "Gathering WSL user facts"
+- name: Gathering WSL user facts
   command: >
     /mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -command "Get-Item Env:* | Select Key,Value | ConvertTo-Json"
   register: out
@@ -44,7 +44,7 @@
 
 # Gather Windows native paths to important WSL directories that can be later
 # used with WinRM setup tasks.
-- name: "Gathering Windows-WSL path facts"
+- name: Gathering Windows-WSL path facts
   shell: |
     /usr/bin/wslpath -w {{ playbook_dir }}
     /usr/bin/wslpath -w {{ my_user.home }}
@@ -75,7 +75,7 @@
 # Gathers win_host fact which contains an actual target IP to connect to as in
 # case of WSL2 localhost is not shared between WSL and Windows; instead Windows
 # host is accessible via virtual switch.
-- name: "Gather WSL hostname of Windows host (localhost)"
+- name: Gather WSL hostname of Windows host (localhost)
   set_fact:
     my_facts: >
       {{
@@ -89,7 +89,7 @@
   tags: winrm
 
 # Generate client certificate for WSL user
-- name: "Generate WinRM client certificate"
+- name: Generate WinRM client certificate
   shell:
     cmd: |
       mkdir -m 700 -p $(dirname $OPENSSL_CONF)
@@ -118,7 +118,7 @@
   tags: winrm
 
 # Generate self-signed server certificate for WinRM service
-- name: "Generate WinRM server certificate"
+- name: Generate WinRM server certificate
   shell:
     cmd: |
       mkdir -m 700 -p $(dirname $OPENSSL_CONF)
@@ -150,7 +150,7 @@
   tags: winrm
 
 # Check if WinRM listener is set up
-- name: "Checking if Ansible can WinRM to localhost"
+- name: Checking if Ansible can WinRM to localhost
   test_winrm:
     hostname: "{{ my_facts.win_host }}"
     winrm_transport: certificate
@@ -176,7 +176,7 @@
 # NOTE This step requires interactive Windows elevation but since this is
 # WSL only it will run on the same machine. This is also why all is in
 # single .ps1 to avoid further popups.
-- name: "Setup WinRM on localhost"
+- name: Setup WinRM on localhost
   command: > 
     powershell.exe -Command 
       "$p = Start-Process -PassThru -Wait -Verb RunAs powershell.exe"
@@ -189,7 +189,7 @@
   tags: winrm
 
 # Add local Windows host
-- name: "Add localhost to Windows hosts"
+- name: Add localhost to Windows hosts
   add_host:
     ansible_connection: winrm
     # NOTE: hostname MUST NOT be 'localhost' as that would change localhost

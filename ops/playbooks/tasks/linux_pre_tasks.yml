@@ -3,15 +3,13 @@
 # my_user.* / can_become.* which are used later to decide which tasks
 # requiring root should be skipped.
 
-# Gather installed packages list to ansible_facts.packages
-- name: "Gathering installed packages"
+- name: Gathering installed packages
   package_facts:
     manager: auto
 
-# Check if Ansible can become root; gather my_facts.can_become_root bool.
-- name: "Checking if Ansible can become root"
+- name: Checking if Ansible can become root
   command: "/bin/true"
-  become: true
+  become: yes
   become_user: "root"
   register: out
   # Never failed nor changed
@@ -26,8 +24,8 @@
         })
       }}
 
-# Check if my_user exists; gather my_facts.user_exists bool. If user exists
-# also check if can become that user and gather my_facts.can_become_user.
+# TODO: Make this rather override my_user.username and home and only if tag
+# adduser is specified attempt to create that user in root mode.
 - name: "Checking if user {{ my_user.username }} exists"
   getent:
     database: passwd
@@ -55,26 +53,24 @@
 
 - name: "Checking if Ansible can become {{ my_user.username }}"
   command: "/bin/true"
-  become: true
+  become: yes
   become_user: "{{ my_user.username }}"
   register: out
   # Never failed nor changed
   failed_when: false
   changed_when: false
-  when:
-    - my_facts.user_exists
 - set_fact:
     my_facts: >
       {{
         my_facts | default({})
         | combine({
-          "can_become_user": true if my_facts.user_exists and out.rc == 0 else false
+          "can_become_user": true if out.rc == 0 else false
         })
       }}
 
 # Check if Ansible can become target user; or if target user doesn't exist it
 # can become root to create it. Warn user to doublecheck on my_user.username.
-- name: "Checking if Ansible has enough become permissions"
+- name: Checking if Ansible has enough become permissions
   fail:
     msg: >
       Ansible cannot become {{ my_user.username }}. If that user does not exist
@@ -84,8 +80,7 @@
     - not my_facts.user_exists and not my_facts.can_become_root
     - not my_facts.can_become_user
 
-# If user exists set my_user.home. Otherwise keep it (and it will be created).
-- name: "Gathering user home directory fact"
+- name: Gathering user home directory fact
   shell: |
     getent passwd {{ my_user.username }} | awk -F: '{ print $6 }'
   register: out
@@ -104,8 +99,7 @@
   when:
     - my_facts.user_exists
 
-# Check if my_user.home is on drvfs if so, we can't create certain directories.
-- name: "Checking if user home directory is on drvfs"
+- name: Checking ~ directory filesystem
   shell: |
     df -P {{ my_user.home }} | awk 'FNR==2 {print $1}'
   register: out
@@ -124,7 +118,7 @@
      - my_facts.user_exists
 
 # Check if user SSH key exists.
-- name: "Checking user SSH key presence"
+- name: Checking user SSH key presence
   stat:
     path: "{{ my_user.home }}/.ssh/{{ my_user.ssh_key }}"
   register: out
