@@ -16,8 +16,8 @@
       }
     }
     Write-Host $changed
-  register: ret
-  changed_when: ret.stdout | int > 0
+  register: result
+  changed_when: result.stdout | int > 0
 
 - name: Enabling Windows AHCI Link Power Management control panel
   win_regedit:
@@ -62,8 +62,34 @@
       }
     }
     Write-Host $changed
-  register: ret
-  changed_when: ret.stdout | int > 0
+  register: result
+  changed_when: result.stdout | int > 0
   when:
     - not out.failed
     - out.stdout | int > 0
+
+# Remove any Razer installer downloaded by Windows Update (periodically) and
+# put in place dummy file with SYSTEM write access denied so that Windows
+# Update cannot replace it with real installer.
+- name: Disable Razer Synapse auto-installer
+  win_shell: |
+    $changed = 0
+    foreach ($d in @("Razer", "RazerSynapse")) {
+      $p = "$($env:SystemRoot)\\Installer\\$($d)"
+      if ((Get-Item $p -ErrorAction SilentlyContinue) -is [System.IO.DirectoryInfo]) {
+        Remove-Item -Recurse -Force $p | Out-Null
+      }
+      if (-not(Test-Path "$($env:SystemRoot)\\Installer\\$($d)")) {
+        New-Item -ItemType File -Path "$($env:SystemRoot)\\Installer" -Name $d | Out-Null
+        # Deny writing to SYSTEM
+        $acl = Get-Acl $p
+        $acl.SetAccessRule((New-Object System.Security.AccessControl.FileSystemAccessRule("SYSTEM", "Write", "Deny")))
+        $acl | Set-Acl $p
+        $changed = 1
+      }
+    }
+    Write-Host $changed
+  register: result
+  changed_when: result.stdout | int > 0
+  tags: debug
+
