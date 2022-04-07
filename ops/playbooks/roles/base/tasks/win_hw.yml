@@ -10,14 +10,18 @@
   win_shell: |
     $changed = 0
     powercfg /devicequery wake_armed | foreach {
-      if ($_ -and (@("Keyboard", "Mouse", "HIDClass", "Bluetooth") -contains $(Get-PnpDevice -FriendlyName "$($_)").Class)) {
-        powercfg /devicedisablewake $_
-        $changed += 1
+      if ($_) {
+        $dev = Get-PnpDevice -FriendlyName "$($_)" -ErrorAction SilentlyContinue
+        if ($dev -and (@("Keyboard", "Mouse", "HIDClass", "Bluetooth") -contains $dev.Class)) {
+          powercfg /devicedisablewake $_
+          $changed += 1
+        }
       }
     }
     Write-Host $changed
   register: result
   changed_when: result.stdout | int > 0
+  tags: debug
 
 - name: Enabling Windows AHCI Link Power Management control panel
   win_regedit:
