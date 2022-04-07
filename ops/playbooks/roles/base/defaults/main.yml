@@ -119,6 +119,10 @@ apt_packages:
   - zsh
   - powertop                  # power management utility
 
+# Windows system environment variable
+# TODO: Placeholder dictionary
+windows_env: {}
+
 # Windows registry keys (HKLM)
 windows_registry:
   # Shorter shutdown/restart kill timeout

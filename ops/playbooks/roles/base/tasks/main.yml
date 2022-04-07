@@ -17,6 +17,7 @@
 
 # Windows
 - block:
+    - import_tasks: win_env.yml
     - import_tasks: win_reg.yml
     - import_tasks: win_net.yml
     - import_tasks: win_hw.yml

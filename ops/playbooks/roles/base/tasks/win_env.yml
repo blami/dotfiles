@@ -1,0 +1,37 @@
+---
+# Configure Windows system environment variables
+
+- name: Setting Windows system environment variables
+  win_environment:
+    level: system
+    state: present
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ windows_env }}"
+  loop_control:
+    label: "{{ item.key }}={{ item.value}}"
+
+# Add C:\SysInternals in system PATH if it exists
+- name: Checking if SysInternals suite is installed
+  win_stat: 
+    path: C:\SysInternals
+  register: out
+- debug: 
+    var: out
+# NOTE: Need to use PowerShell here as we are appending to PATH
+- win_shell: |
+    $changed = 1
+    $path = [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine)
+    foreach($p in $path.split(";")) {
+      if ($p -eq "C:\SysInternals") { $changed = 0 }
+    }
+    if ($changed) {
+      [Environment]::SetEnvironmentVariable("Path", $path + ";C:\SysInternals", [EnvironmentVariableTarget]::Machine)
+    }
+    Write-Host $changed
+  register: result
+  changed_when: result.stdout | int > 0
+  when:
+    - not out.failed
+    - out.stat.exists == True 
+    - out.stat.isdir == True
