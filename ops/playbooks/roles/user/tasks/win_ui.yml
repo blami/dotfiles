@@ -5,7 +5,7 @@
 # NOTE: This checks if SCHEME_NAME is installed in registry and if not it
 # attempts to install it from INF. Check is very opinionated and works with MY
 # own cursor scheme INFs.
-- name: Installing Windows system cursors
+- name: Installing Windows cursors
   win_shell: |
     $changed = 0
     switch -regex -file "{{ my_user.home }}\\.local\\share\\icons\\{{ item }}" {
@@ -26,8 +26,35 @@
     - my_facts.is_administrator
     - my_facts.has_dotfiles
 
-# Install local fonts for current user
-- name: Installing Windows local fonts
+# Make window under mouse focused but not raised with delay of 200ms
+# NOTE: Can't use SystemParamsInfo from user32.dll through WinRM, also can't
+# use win_regedit as this requires bit flipping (lol).
+# TODO: This requires sign-out/sign-in.
+- name: Setting Windows focus follows mouse (X11 style)
+  win_shell: |
+    $changed = 0
+    # Flip 1st bit of UserPreferencesMask (ActiveWindowTracking)
+    $pref = Get-ItemProperty "HKCU:\Control Panel\Desktop" "UserPreferencesMask"
+    if (-not($pref.UserPreferencesMask[0] -band 1)) {
+      $pref.UserPreferencesMask[0] = ($pref.UserPreferencesMask[0] -bxor 1)
+      Set-ItemProperty "HKCU:\Control Panel\Desktop" "UserPreferencesMask" $pref.UserPreferencesMask
+      $changed += 1
+    }
+    # Set timeout to 200ms
+    if ((Get-ItemProperty "HKCU:\Control Panel\Desktop" "ActiveWndTrkTimeout").ActiveWndTrkTimeout -ne 200) {
+      Set-ItemProperty "HKCU:\Control Panel\Desktop" "ActiveWndTrkTimeout" 200
+      $changed += 1
+    }
+    # ?
+    if ((Get-ItemProperty "HKCU:\Control Panel\Mouse" "ActiveWindowTracking").ActiveWindowTracking -ne 1) {
+      Set-ItemProperty "HKCU:\Control Panel\Mouse" "ActiveWindowTracking" 1
+      $changed += 1
+    }
+    Write-Host $changed
+  register: result
+  changed_when: result.stdout | int > 0
+
+- name: Installing Windows user fonts
   win_shell: |
     $changed = 0
     $fonts = Get-ChildItem -Path "C:\\Users\\blami\\.local\\share\\fonts" -Recurse -Include *.ttf,*.otf
