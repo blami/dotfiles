@@ -123,6 +123,9 @@ apt_packages:
 # TODO: Placeholder dictionary
 windows_env: {}
 
+windows_path:
+  - "C:\\SysInternals"
+
 # Windows registry keys (HKLM)
 windows_registry:
   # Shorter shutdown/restart kill timeout
