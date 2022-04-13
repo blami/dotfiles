@@ -21,7 +21,6 @@
     Write-Host $changed
   register: result
   changed_when: result.stdout | int > 0
-  tags: debug
 
 - name: Enabling Windows AHCI Link Power Management control panel
   win_regedit:
@@ -31,11 +30,13 @@
     type: "dword"
 
 # NOTE: Windows does not allow to do this per-device
+# NOTE: "SCSI CdRom Device" is suffix added by JMicron JBD controllers 
 # PIONEER BD-RW   BDR-UD03
 - name: Checking for Windows devices that require DIPM
   win_shell: |
     $lookup = @(`
-      "PIONEER BD-RW   BDR-UD03" `
+      "PIONEER BD-RW   BDR-UD03", `
+      "PIONEER BD-RW   BDR-UD03 SCSI CdRom Device" `
     )
     @(Get-PnpDevice | Where-Object { $lookup -Contains $_.FriendlyName -And $_.Status -Eq "OK" }).Count
   register: out
@@ -75,21 +76,55 @@
 # Remove any Razer installer downloaded by Windows Update (periodically) and
 # put in place dummy file with SYSTEM write access denied so that Windows
 # Update cannot replace it with real installer.
-- name: Disable Razer Synapse auto-installer
+# - name: Disabling Razer Synapse auto-installer
+#   win_shell: |
+#     $changed = 0
+#     foreach ($d in @("Razer", "RazerSynapse")) {
+#       $p = "$($env:SystemRoot)\\Installer\\$($d)"
+#       if ((Get-Item $p -ErrorAction SilentlyContinue) -is [System.IO.DirectoryInfo]) {
+#         Remove-Item -Recurse -Force $p | Out-Null
+#       }
+#       if (-not(Test-Path "$($env:SystemRoot)\\Installer\\$($d)")) {
+#         New-Item -ItemType File -Path "$($env:SystemRoot)\\Installer" -Name $d | Out-Null
+#         # Deny writing to SYSTEM
+#         $acl = Get-Acl $p
+#         $acl.SetAccessRule((New-Object System.Security.AccessControl.FileSystemAccessRule("SYSTEM", "Write", "Deny")))
+#         $acl | Set-Acl $p
+#         $changed = 1
+#       }
+#     }
+#     Write-Host $changed
+#   register: result
+#   changed_when: result.stdout | int > 0
+
+# Razer Game Manager continuously scans disk for games. It does not play nice
+# with floppy and Zip drives I have installed in some computers.
+# See: https://www.reddit.com/r/razer/comments/kpp3hu/ysk_how_to_disable_razer_game_manager_service_as/
+- name: Disabling Razer Game Manager Service
   win_shell: |
     $changed = 0
-    foreach ($d in @("Razer", "RazerSynapse")) {
-      $p = "$($env:SystemRoot)\\Installer\\$($d)"
-      if ((Get-Item $p -ErrorAction SilentlyContinue) -is [System.IO.DirectoryInfo]) {
-        Remove-Item -Recurse -Force $p | Out-Null
+    $reg = "HKLM:\SYSTEM\CurrentControlSet\Services\Razer Synapse Service"
+    $svc = "Razer Game Manager Service"
+    if (Test-Path $reg) {
+      # Remove dependency from Synapse Service (so it can start)
+      $deps = (Get-ItemProperty -Path $reg -Name DependOnService -ErrorAction SilentlyContinue)
+      if ($deps -and ($deps.DependOnService -Contains $svc)) {
+        $deps = ($deps.DependOnService | Where-Object { $_ -ne $svc }) -join "/"
+        & sc.exe config "Razer Synapse Service" depend=$deps | Out-Null
+        if (-Not($?)) {
+          Write-Error "unable to disable Razer Game Manager"
+          exit 1
+        }
+        $changed += 1
       }
-      if (-not(Test-Path "$($env:SystemRoot)\\Installer\\$($d)")) {
-        New-Item -ItemType File -Path "$($env:SystemRoot)\\Installer" -Name $d | Out-Null
-        # Deny writing to SYSTEM
-        $acl = Get-Acl $p
-        $acl.SetAccessRule((New-Object System.Security.AccessControl.FileSystemAccessRule("SYSTEM", "Write", "Deny")))
-        $acl | Set-Acl $p
-        $changed = 1
+      # Disable the service and restart Synapse Service without it
+      if ((Get-Service -Name $svc).StartType -ne "Disabled") {
+        Set-Service -Name $svc -StartupType "Disabled"
+        $changed += 1
+      }
+      if ((Get-Service -Name $svc).Status -eq "Running") {
+        Stop-Service -Force -NoWait -Name @("Razer Synapse Service", $svc)
+        $changed += 1
       }
     }
     Write-Host $changed
