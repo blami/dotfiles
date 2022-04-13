@@ -6,6 +6,8 @@ apt_packages:
   - golang
   - gcc
   - g++
+  - libstdc++6                # GNU C++ standard library
+  - libstdc++-10-dev
   - build-essential
   - binutils
   - gcc-avr                   # gcc for AVR microcontrollers
@@ -14,6 +16,16 @@ apt_packages:
   - clangd                    # language server for clang
   - clang-format
   - clang-tidy
+  - libc++1                   # clang C++ standard library
+  - libc++abi1
+  - libc++-dev
+  - libc++abi-dev
+  - libclang-dev
+  - libclang1
+  - python3-clang
+  - llvm                      # LLVM
+  - llvm-runtime
+  - lld                       # LLVM linker
   - lldb                      # lldb next-gen debugger
   - yasm                      # modular assembler (successor of nasm)
   - cmake
