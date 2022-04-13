@@ -1,0 +1,48 @@
+---
+# Configure Windows HyperV VM to store VMs into a predefined directory
+
+# NOTE: This will not install HyperV, only configure it if
+
+- name: Checking if HyperV is enabled
+  win_shell: |
+    $out = Get-WindowsOptionalFeature -FeatureName Microsoft-Hyper-V-All -Online
+    if ($out.state -ne "Enabled") {
+      exit 1
+    }
+  failed_when: false
+  changed_when: false
+  register: out
+
+# Set up HyperV to store VMs to first drive that has VM directory in root. If
+# none has pick the largest one.
+- name: Setting up Windows HyperV VM path
+  win_shell: |
+    $changed = 0
+    # Find VM volume
+    $volumes = Get-Volume | `
+      Where-Object { ($_.DriveType -eq "Fixed") -and ($_.DriveLetter) -and ($_.FileSystemType -eq "NTFS") } | `
+      Sort-Object -Property Size -Descending
+    foreach ($v in $volumes) {
+      if (Test-Path "$($v.DriveLetter):\VM") { 
+        $volume = $v 
+        break
+      }
+    }
+    if (-not($volume)) { $volume = $volumes[0] }
+    $vmpath = "$($volume.DriveLetter):\VM"
+    $vhdpath = "$($vmpath)\HDD"
+
+    # Setup HyperV
+    $vmhost = Get-VMHost
+    if ((-not(Test-Path $vmpath)) -or `
+      ($vmhost.VirtualMachinePath -ne $vmpath) -or `
+      ($vmhost.VirtualHardDiskPath -ne $vhdpath)) {
+      Set-VMHost -VirtualMachinePath $vmpath
+      Set-VMHost -VirtualHardDiskPath $vhdpath
+      $changed = 1
+    }
+    Write-Host $changed
+  register: result
+  changed_when: result.stdout | int > 0
+  when:
+    - not out.failed

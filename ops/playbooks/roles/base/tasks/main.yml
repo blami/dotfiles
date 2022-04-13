@@ -21,8 +21,8 @@
     - import_tasks: win_reg.yml
     - import_tasks: win_net.yml
     - import_tasks: win_hw.yml
-    - import_tasks: win_onedrive.yml
-    #- import_tasks: win_hyperv.yml       # TODO: relocate VMs to D: if exists
+    - import_tasks: win_onedrive.yml    # disable OneDrive
+    - import_tasks: win_hyperv.yml
   become: yes
   become_user: "System"
   become_method: "runas"
