@@ -36,15 +36,6 @@
     # Remove un-necessary packages
     autoremove: true
 
-# NOTE Autoremove will remove snap (which we will install later) but will not
-# remove /etc/apt/apt.conf.d/20snapd.conf; this fixes it.
-- name: Removing APT /etc/apt/apt.conf.d/20snapd.conf
-  file:
-    path: /etc/apt/apt.conf.d/20snapd.conf
-    state: absent
-  when:
-    - "\"snapd\" not in ansible_facts.packages"
-
 - name: Removing non-essential APT packages
   apt:
     pkg:

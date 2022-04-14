@@ -9,7 +9,7 @@
     state: absent
     purge: true
 
-- name: Preventing snap packages from being further installed
+- name: Preventing snap APT packages from being further installed
   dpkg_selections:
     name: snapd
     selection: hold
@@ -23,7 +23,7 @@
   when:
     - "\"snapd\" not in ansible_facts.packages"
 
-- name: Removing snap files
+- name: Removing snap directories
   file:
     path: "{{ item }}"
     state: absent
