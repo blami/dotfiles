@@ -69,6 +69,7 @@ apt_packages:
   - fzf                       # fuzzy finder
   - gdisk
   - git
+  - git-lfs
   - gnupg
   - gzip
   - htop
