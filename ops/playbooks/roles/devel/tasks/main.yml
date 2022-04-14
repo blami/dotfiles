@@ -6,7 +6,7 @@
 - block:
     - import_tasks: apt.yml
     - import_tasks: fakeroot.yml
-  become: yes
+  become: true
   become_user: "root"
   when:
     - ansible_facts.os_family == "Debian"
@@ -16,7 +16,7 @@
     - import_tasks: go.yml
     - import_tasks: nodejs.yml
     - import_tasks: python.yml
-  become: yes
+  become: true
   become_user: "{{ my_user.username }}"
   when:
     - ansible_facts.os_family == "Debian"

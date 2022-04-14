@@ -10,7 +10,7 @@
     #- import_tasks: change_groups.yml   # TODO: move uids/gids to my liking
     #- import_tasks: systemd.yml         # TODO: setup systemd components (e.g. journal)
     #- import_tasks: backup.yml          # TODO: setup system level backups
-  become: yes
+  become: true
   become_user: "root"
   when:
     - ansible_facts.os_family == "Debian"
@@ -24,7 +24,7 @@
     - import_tasks: win_hw.yml
     - import_tasks: win_onedrive.yml    # disable OneDrive
     - import_tasks: win_hyperv.yml
-  become: yes
+  become: true
   become_user: "System"
   become_method: "runas"
   when:

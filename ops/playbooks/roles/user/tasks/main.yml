@@ -5,7 +5,7 @@
 - block:
     - import_tasks: apt.yml
     - import_tasks: shell.yml
-  become: yes
+  become: true
   become_user: "root"
   when:
     - ansible_facts.os_family == "Debian"
@@ -17,7 +17,7 @@
     - import_tasks: secrets.yml
     - import_tasks: licenses.yml
     - import_tasks: nvim.yml
-  become: yes
+  become: true
   become_user: "{{ my_user.username }}"
   when:
     - ansible_facts.os_family == "Debian"

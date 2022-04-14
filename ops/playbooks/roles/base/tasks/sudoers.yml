@@ -8,4 +8,4 @@
     owner: root
     group: root
     mode: 644
-    force: yes
+    force: true

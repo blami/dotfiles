@@ -55,7 +55,7 @@
     state: link
     # NOTE This will delete (unlink) the original file if its not a symlink and
     # create the symlink
-    force: yes
+    force: true
   loop_control:
     label: "{{ item.dest }}"
   with_items: "{{ wsl_native_dirs }}"
