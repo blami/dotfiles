@@ -173,7 +173,7 @@
   tags: winrm
 
 # Execute WinRM setup script 
-# NOTE This step requires interactive Windows elevation but since this is
+# NOTE: This step requires interactive Windows elevation but since this is
 # WSL only it will run on the same machine. This is also why all is in
 # single .ps1 to avoid further popups.
 - name: Setup WinRM on localhost
@@ -188,8 +188,9 @@
   register: out
   tags: winrm
 
-# Add local Windows host
-- name: Add localhost to Windows hosts
+# Add local Windows host to hosts so that Windows portion of playbook runs on
+# it.
+- name: Adding localhost to Windows hosts
   add_host:
     ansible_connection: winrm
     # NOTE: hostname MUST NOT be 'localhost' as that would change localhost

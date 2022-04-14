@@ -95,7 +95,7 @@
           "home": out.stdout
         })
       }}
-  # NOTE If user doesn't exist we don't want to overwrite default home
+  # NOTE: If user doesn't exist we don't want to overwrite default home
   when:
     - my_facts.user_exists
 
