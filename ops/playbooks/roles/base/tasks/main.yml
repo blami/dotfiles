@@ -5,6 +5,7 @@
 - block:
     - import_tasks: wsl.yml             # run this first as it may restart WSL
     - import_tasks: sudoers.yml
+    - import_tasks: snap.yml            # disable snap
     - import_tasks: apt.yml
     #- import_tasks: change_groups.yml   # TODO: move uids/gids to my liking
     #- import_tasks: systemd.yml         # TODO: setup systemd components (e.g. journal)
