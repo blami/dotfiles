@@ -55,6 +55,7 @@ apt_repositories:
 
 # Essential packages to install
 apt_packages:
+  #- snapd                    # DO NOT add snapd here
   - apcalc
   - acl                       # manage filesystem access lists
   - bpfcc-tools               # BPF compiler collection
@@ -99,7 +100,6 @@ apt_packages:
   - rsnapshot
   - rsync
   - shellcheck                # lint shell scripts
-  - snapd
   - socat
   - sshfs                     # mount filesystems over ssh and fuse
   - sqlite3
