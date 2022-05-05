@@ -2,6 +2,7 @@
 # Setup Windows UI aspects
 
 # Install system cursors
+# TODO: DISABLED. Install to user AppData, not system Windows\Cursors.
 # NOTE: This checks if SCHEME_NAME is installed in registry and if not it
 # attempts to install it from INF. Check is very opinionated and works with MY
 # own cursor scheme INFs.
@@ -25,34 +26,34 @@
   when:
     - my_facts.is_administrator
     - my_facts.has_dotfiles
+  tags: never
 
-# Make window under mouse focused but not raised with delay of 200ms
-# NOTE: Can't use SystemParamsInfo from user32.dll through WinRM, also can't
-# use win_regedit as this requires bit flipping (lol).
-# TODO: This requires sign-out/sign-in.
+# Toggle making window under mouse focused but not raised with given delay
+# NOTE: DISABLED
+# NOTE: This is (wtf) stored as bit array
 - name: Setting Windows focus follows mouse (X11 style)
   win_shell: |
     $changed = 0
     # Flip 1st bit of UserPreferencesMask (ActiveWindowTracking)
     $pref = Get-ItemProperty "HKCU:\Control Panel\Desktop" "UserPreferencesMask"
-    if (-not($pref.UserPreferencesMask[0] -band 1)) {
+    if ([convert]::ToString($pref.UserPreferencesMask[0],2)[-1] -ne "{{ windows_activewindowtracking }}") {
       $pref.UserPreferencesMask[0] = ($pref.UserPreferencesMask[0] -bxor 1)
       Set-ItemProperty "HKCU:\Control Panel\Desktop" "UserPreferencesMask" $pref.UserPreferencesMask
       $changed += 1
     }
-    # Set timeout to 200ms
-    if ((Get-ItemProperty "HKCU:\Control Panel\Desktop" "ActiveWndTrkTimeout").ActiveWndTrkTimeout -ne 200) {
-      Set-ItemProperty "HKCU:\Control Panel\Desktop" "ActiveWndTrkTimeout" 200
+    if ((Get-ItemProperty "HKCU:\Control Panel\Mouse" "ActiveWindowTracking").ActiveWindowTracking -ne {{ windows_activewindowtracking }}) {
+      Set-ItemProperty "HKCU:\Control Panel\Mouse" "ActiveWindowTracking" {{ windows_activewindowtracking }}
       $changed += 1
     }
-    # ?
-    if ((Get-ItemProperty "HKCU:\Control Panel\Mouse" "ActiveWindowTracking").ActiveWindowTracking -ne 1) {
-      Set-ItemProperty "HKCU:\Control Panel\Mouse" "ActiveWindowTracking" 1
+    # Set timeout
+    if ((Get-ItemProperty "HKCU:\Control Panel\Desktop" "ActiveWndTrkTimeout").ActiveWndTrkTimeout -ne {{ windows_activewndtrktimeout }}) {
+      Set-ItemProperty "HKCU:\Control Panel\Desktop" "ActiveWndTrkTimeout" {{ windows_activewndtrktimeout }}
       $changed += 1
     }
     Write-Host $changed
   register: result
   changed_when: result.stdout | int > 0
+  tags: never
 
 - name: Installing Windows user fonts
   win_shell: |
