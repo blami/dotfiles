@@ -1,6 +1,7 @@
 ---
 # Configure Windows networking aspects
 
+# TODO: DISABLED. Revisit on Windows 11, might be interfering with games
 - name: Optimizing Windows TCP/IP stack parameters
   win_regedit:
     path: "HKLM:\\SYSTEM\\CurrentControlSet\\{{ item.path }}"
@@ -30,6 +31,7 @@
       name: "IRPStackSize"
       data: 32
       type: "dword"
+  tags: never
 
 - name: Adding Windows local intranet trusted hosts
   win_regedit:
