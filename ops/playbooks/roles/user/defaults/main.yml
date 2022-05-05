@@ -85,3 +85,8 @@ windows_registry:
     name: "FtpIniName"
     data: "%USERPROFILE%\\.config\\tc\\wcx_ftp.ini"
     type: "expandstring"
+
+# Windows focus follows mouse (X11 style)
+# NOTE: Disabled as it does not really work with modern apps
+windows_activewindowtracking: 0
+windows_activewndtrktimeout: 300
