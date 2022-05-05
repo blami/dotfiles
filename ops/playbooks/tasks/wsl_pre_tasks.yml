@@ -89,7 +89,7 @@
   tags: winrm
 
 # Generate client certificate for WSL user
-- name: Generate WinRM client certificate
+- name: Generating WinRM client certificate
   shell:
     cmd: |
       mkdir -m 700 -p $(dirname $OPENSSL_CONF)
@@ -118,7 +118,7 @@
   tags: winrm
 
 # Generate self-signed server certificate for WinRM service
-- name: Generate WinRM server certificate
+- name: Generating WinRM server certificate
   shell:
     cmd: |
       mkdir -m 700 -p $(dirname $OPENSSL_CONF)
@@ -176,7 +176,7 @@
 # NOTE: This step requires interactive Windows elevation but since this is
 # WSL only it will run on the same machine. This is also why all is in
 # single .ps1 to avoid further popups.
-- name: Setup WinRM on localhost
+- name: Setting up WinRM on localhost
   command: > 
     powershell.exe -Command 
       "$p = Start-Process -PassThru -Wait -Verb RunAs powershell.exe"
