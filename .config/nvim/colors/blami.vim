@@ -39,7 +39,7 @@ hi! link IncSearch      Search
 hi FoldColumn           guifg=#bc6ec5   guibg=NONE
 
 "Status, Tabs and Splits
-"NOTE statusline is reversed, UserXX colors are for elements
+"NOTE: statusline is reversed, UserXX colors are for elements
 hi StatusLine           guibg=#b2b2b2   guifg=#5d4d7a
 hi StatusLineNC         guibg=#727272   guifg=#34323e
 hi VertSplit            guibg=#727272   guifg=#34323e

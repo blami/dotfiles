@@ -1,7 +1,7 @@
 "Language: C++
 "Maintainer: Ondrej Balaz
 
-"NOTE Depends on compile_commands.json compilation database.
+"NOTE: Depends on compile_commands.json compilation database.
 "See: https://cmake.org/cmake/help/latest/variable/CMAKE_EXPORT_COMPILE_COMMANDS.html
 
 "if exists("b:did_ftplugin") | finish | endif

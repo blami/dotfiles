@@ -1,9 +1,23 @@
 local M = {}
 
+
+
+
+
+
+---- REFACTOR
+
+-- See whether to enable autoformatting or on
+--
+-- Returns 0 if any directory
+
+
+
+
 -- Set buffer autofmt flag
 -- 
 -- Set b:autofmt to 1 unless either NOAUTOFMT variable is set or current or any
--- of LSP workspace directories contains file '.noautocmd' (with any content).
+-- of LSP workspace directories contains file '.noautofmt' (with any content).
 --
 -- NOTE: This is called by blami.lsp.setup() if LSP is enabled; otherwise needs
 -- to be called manually from ftplugin.
@@ -35,5 +49,17 @@ function M.wrap(...)
     end
 end
 
+-- Run autoformatting functions in b:autofmt_actions
+--
+-- If b:autofmt is 1 run all Lua functions and/or Vim commands in
+-- b:autofmt_actions and optionally also arguments.
+function M.autofmt(...)
+    local args={...}
+    if vim.b.autofmt ~= 1 then return end
+    for _, a in ipairs(args) do 
+        if type(a) == 'function' then a() end
+        if type(a) == 'string' then vim.api.nvim_command(a) end 
+    end
+end
 
 return M

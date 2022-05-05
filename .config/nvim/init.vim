@@ -194,7 +194,6 @@ let g:clipboardTODO={
 
 "{{{ Completion
 set completeopt=menu,menuone,noselect       "show menu (even for one option), do not select match automatically
-set omnifunc=v:lua.vim.lsp.omnifunc
 "}}}
 
 
