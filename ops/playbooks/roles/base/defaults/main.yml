@@ -13,17 +13,17 @@ apt_repositories:
     sources:
       - "deb http://ppa.launchpad.net/git-core/ppa/ubuntu {{ ansible_distribution_release }} main"
   # Go
-  - name: "ppa_longsleep-golang"
-    key_id: "F6BC817356A3D45E"
-    sources:
-      - "deb http://ppa.launchpad.net/longsleep/golang-backports/ubuntu {{ ansible_distribution_release }} main"
+  #- name: "ppa_longsleep-golang"
+  #  key_id: "F6BC817356A3D45E"
+  #  sources:
+  #    - "deb http://ppa.launchpad.net/longsleep/golang-backports/ubuntu {{ ansible_distribution_release }} main"
   # Node.js
   - name: "nodejs"
     key_id: "1655A0AB68576280"
     sources:
-      # Node.js LTS (14.x)
-      - "deb https://deb.nodesource.com/node_14.x/ {{ ansible_distribution_release }} main"
-      - "deb-src https://deb.nodesource.com/node_14.x/ {{ ansible_distribution_release }} main"
+      # Node.js LTS (16.x)
+      - "deb https://deb.nodesource.com/node_16.x/ {{ ansible_distribution_release }} main"
+      - "deb-src https://deb.nodesource.com/node_16.x/ {{ ansible_distribution_release }} main"
   # LLVM
   - name: "llvm"
     key_id: "15CF4D18AF4F7421"
@@ -43,8 +43,7 @@ apt_repositories:
   # Kubernetes
   - name: "kubernetes"
     key_id: "FEEA9169307EA071"
-    # NOTE There is no newer APT dist than -xenial so not relying on 
-    # {{ ansible_distribution_release }} variable.
+    # NOTE: There is no newer APT dist than xenial
     sources:
       - "deb http://apt.kubernetes.io/ kubernetes-xenial main"
   # Google Cloud SDK
