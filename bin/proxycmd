@@ -1,5 +1,6 @@
 #!/bin/sh
-# proxycmd - HTTP proxy tunnel using GNU netcat
+# HTTP proxy tunnel using GNU netcat
+
 # Usage: proxycmd <uri>
 
 NC=

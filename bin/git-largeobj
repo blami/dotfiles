@@ -1,0 +1,15 @@
+#!/bin/bash -e
+# Find large object in git repository history
+
+# Usage: gitbig 10M
+
+SIZE=$(numfmt --from=iec --suffix=B ${1:-10M})
+SIZE=${SIZE//[!0-9]/}
+
+git rev-list --objects --all | \
+    git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' | \
+    sed -n 's/^blob //p' | \
+    awk "\$2 >= $SIZE" | \
+    sort --numeric-sort --key=2 | \
+    cut -c 1-12,41- | \
+    numfmt --field=2 --to=iec --padding=7 --round=nearest

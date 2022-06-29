@@ -1,5 +1,5 @@
 #!/bin/bash
-# mklocallinks - make .sh_*_local links pointing to suffixed config files
+# Make .sh_*_local links pointing to suffixed config files
 
 # Usage: mkllocallinks <suffix|->
 # If suffix is - it will just delete any known .<config_file>_local which are
@@ -16,7 +16,6 @@ read -r -d '' FILES <<- EOF
     .zprofile
     .zshrc
     .zsh
-    .hgrc
     .gitconfig
     .tmux.conf
 EOF

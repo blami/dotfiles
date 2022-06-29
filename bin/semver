@@ -2,8 +2,6 @@
 # semver.sh - Manipulate semantic versions
 # Copyright (c) Ondrej Balaz. Licensed under UNLICENSE.
 
-# TODO Put usage variable here so those who read script can quickly see how to
-# use it.
 HELP=$(cat <<EOF
 $0 - Manipulate semantic versions
 Usage: $0 [-Mmprb] [VERSION]            bump version
@@ -28,7 +26,7 @@ NOTE: N must always be zero or positive integer, P can be either integer or
 string composed of digits, ASCII letters nad dashes.
 
 Copyright (c) Ondrej Balaz. Licensed under UNLICENSE license.
-Downloads and bug-reports: https://github.com/blami/scripts
+Downloads and bug-reports: https://github.com/blami/dotfiles
 EOF
 )
 
