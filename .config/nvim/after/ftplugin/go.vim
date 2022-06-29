@@ -4,12 +4,7 @@
 "if exists('b:did_ftplugin') | finish | endif
 let b:did_ftplugin = 1
 
-"Language Server
-lua blami.lsp.setup(
-            \ 'gopls',
-            \ {}, 
-            \ {['textDocument/codeAction']={['source']={['organizeImports']=true}},}
-            \ )
+"TODO: Language Server
 
 "Compiler
 compiler go
@@ -28,4 +23,3 @@ setl commentstring=//\ %s
 setl suffixesadd=.go
 
 "Keybindings
-nnoremap    <buffer><silent>        <localleader>t          :call blami#ftplugin#SwitchFile('^\(.*\)\(_test\)\@<!\.go$', '\1_test.go', '^\(.*\)_test\.go$', '\1.go')<CR>

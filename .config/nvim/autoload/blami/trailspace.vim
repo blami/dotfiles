@@ -1,7 +1,7 @@
-"trailspace.vim - trailing space utilities
+"Trailing highlighting and removal
 
 "Turn trailing space highlighting on(1), off(0) or toggle current state.
-func blami#trailspace#Toggle(...) abort
+func blami#trailspace#Highlight(...) abort
     let matchid=0
     for g in getmatches()
         if g['group'] == 'TrailSpace'

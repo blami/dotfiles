@@ -1,4 +1,4 @@
-"toggle.vim - various toggles of built-ins used mostly in keymap.vim
+"Various toggles used mostly in keymap.vim
 
 "Toggle quickfix/location lists.
 func! blami#toggle#List(prefix) abort
@@ -34,4 +34,4 @@ func! blami#toggle#Number() abort
     else
         setl nonumber norelativenumber
     endif
-endfunc
+endfun

@@ -1,9 +1,9 @@
-"keymap.vim - key and mouse mappings
+"Key mappings
 
 "Mouse
 set mouse=a                                 "enable mouse
 
-
+"Keyboard
 let mapleader=','
 let g:mapleader=','                         "leader for custom commands
 let maplocalleader='-'                      "leader for ftplugins
@@ -63,6 +63,11 @@ nnoremap    <silent>        <leader>e       :e .<CR>
 "{{{ Editing
 "Paste last yank
 nnoremap                    pp              "0p
+
+"Autocomplete brackets
+"inoremap                    (               ()<Esc>i
+"inoremap                    [               []<Esc>i
+"inoremap                    {               {}<Esc>i
 
 "Uppercase/lowercase inner word (`z)
 nnoremap                    <C-Up>          mzgUiw`z
@@ -129,6 +134,7 @@ inoremap                    <F1>            <Esc>:help
 
 
 "{{{ Commands
+"TODO: Review this
 "Typo and convenience aliases
 cmap                        W               w
 cmap                        Q               q
@@ -137,6 +143,3 @@ cmap                        w#              w !sudo -S tee % >/dev/null
 "Always use lgrep
 cnoreabbrev                 grep            lgrep
 "}}}
-
-
-

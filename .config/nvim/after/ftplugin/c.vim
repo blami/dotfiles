@@ -17,12 +17,7 @@
 "if exists("b:did_ftplugin") | finish | endif
 let b:did_ftplugin = 1
 
-"Language Server
-lua blami.lsp.setup(
-            \ 'clangd',
-            \ {}, 
-            \ {}
-            \ )
+"TODO: Language Server
 
 "Compiler
 compiler clang
@@ -36,6 +31,3 @@ setl list
 setl suffixesadd=.c,.h
 
 "Keybindings
-"See NOTE above if this switches c -> h -> cpp
-nnoremap    <buffer><silent>        <localleader>h          :call blami#ftplugin#SwitchFile('^\(.*\)\.c$', '\1.h', '^\(.*\)\.h$', '\1.c')<CR>
-nnoremap    <buffer><silent>        <localleader>t          :call blami#ftplugin#SwitchFile('^\(.*\)\(_test\)\@<!\.c$', '\1_test.c', '^\(.*\)_test\.c$', '\1.c')<CR>

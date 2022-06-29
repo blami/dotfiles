@@ -4,16 +4,7 @@
 "if exists("b:did_ftplugin") | finish | endif
 "let b:did_ftplugin = 1
 
-"Language Server
-"TODO: Revisit this and make it more 'minimal'
-lua blami.lsp.setup(
-            \ 'pylsp',
-            \ {pylsp={plugins={
-            \   ['pylsp_isort']={enabled=true},
-            \   ['pylsp_black']={enabled=true},
-            \ }}}, 
-            \ {}
-            \ )
+"TODO: Language Server
 
 "Formatting
 setl expandtab shiftwidth=4 softtabstop=4 tabstop=8
@@ -32,4 +23,3 @@ setl suffixesadd=.py
 setl wildignore+=*.pyc,*.pyo
 
 "Keybindings
-nnoremap    <buffer><silent>        <localleader>t          :call blami#ftplugin#SwitchFile('^\(test_\)\@!\(.*\)\.py$', '\2_test.py', '^test_\(.*\)\.py$', '\1.py')<CR>

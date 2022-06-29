@@ -1,4 +1,4 @@
-"todo.vim - TODO highlighting
+"TODO highlighting
 
 "\< and \> are word boundary marks
 let s:patterns = [
@@ -11,7 +11,7 @@ let s:patterns = [
 
 "Turn highlight of all TODO patterns above using CustomTodo highlight on(1), 
 "off(0) or toggle current state.
-func blami#todo#Toggle(...) abort
+func blami#todo#Highlight(...) abort
     let matchid=0
     for g in getmatches()
         if g['group'] == 'CustomTodo'
@@ -26,3 +26,5 @@ func blami#todo#Toggle(...) abort
         call matchdelete(matchid)
     endif
 endfunc
+
+"TODO: Add items to QuickList

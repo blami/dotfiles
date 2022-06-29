@@ -1,4 +1,4 @@
-"NOTE This is not really a plugin, it's just script to source additional files
+"NOTE: This is not really a plugin, it's just script to source additional files
 "after packs are loaded.
 
 "Load configuration files in conf/*.vim

@@ -1,4 +1,4 @@
-"statusline.vim - statusline utilities
+"Statusline utilities
 
 "Show one-character mode in statusline.
 func! blami#statusline#Mode() abort
@@ -51,8 +51,8 @@ func! blami#statusline#LEDs() abort
     if &wrap==1
         let currentleds.='$'
     endif
-    "Autoformatting and LSP
-    if get(b:, 'autofmt', 0)    | let currentleds.=''              | endif
+    "LSP
+    "if get(b:, 'autofmt', 0)    | let currentleds.=''              | endif
     if luaeval('not vim.tbl_isempty(vim.lsp.buf_get_clients(0))')
         let currentleds.=''
     endif

@@ -9,6 +9,8 @@ endif
 
 let g:colors_name='blami'
 
+"All colors
+
 "Basics
 hi Normal               guifg=#b2b2b2   guibg=#292b2e
 hi NonText              guifg=#44505c   guibg=NONE
@@ -18,10 +20,10 @@ hi TrailSpace           guibg=#e0211d
 hi Visual               guifg=NONE      guibg=#444155
 hi VisualNC             guifg=NONE      guibg=#3b314d
 "hi VisualNOS
-hi LineNr               guifg=#44505c   guibg=#212026
+hi LineNr               guifg=#44505c   guibg=#212026   gui=none
 hi CursorLine           guifg=NONE      guibg=NONE
-hi CursorLineNr         guifg=#b2b2b2   guibg=#212026
-hi SignColumn           guifg=#44505c   guibg=#212026
+hi CursorLineNr         guifg=#b2b2b2   guibg=#212026   gui=none
+hi SignColumn           guifg=#44505c   guibg=#212026   gui=bold
 hi ColorColumn          guifg=NONE      guibg=#212026
 hi CursorLineFold       guifg=#bc6ec5   guibg=#212026
 hi ModeMsg              guifg=#86dc2f   guibg=NONE
@@ -40,11 +42,11 @@ hi FoldColumn           guifg=#bc6ec5   guibg=NONE
 
 "Status, Tabs and Splits
 "NOTE: statusline is reversed, UserXX colors are for elements
-hi StatusLine           guibg=#b2b2b2   guifg=#5d4d7a
+hi StatusLine           guibg=#b2b2b2   guifg=#5d4d7a   gui=reverse,bold
 hi StatusLineNC         guibg=#727272   guifg=#34323e
 hi VertSplit            guibg=#727272   guifg=#34323e
-"hi User1                guifg=#
-"hi User2                guifg=#
+hi User1                guifg=#86dc2f                   gui=bold
+hi User2                gui=none
 
 "Popup-menus, Floats and Wild-menu
 hi Pmenu                guifg=#9a9aba   guibg=#34323e

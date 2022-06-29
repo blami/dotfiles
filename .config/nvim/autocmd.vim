@@ -1,14 +1,15 @@
 "autocmd.vim - global autocommands
 
+"{{{ Cursor
 "Restore cursor position
 autocmd BufReadPost * 
         \ if line("'\"") > 1 && line("'\"") <= line("$") |
         \       exe 'normal! g`"' |
         \ endif
+"}}}
 
-"Highlight TODO items (I prefer this to filetype specific highlights)
-autocmd WinEnter,BufWinEnter * call blami#todo#Toggle(1)
 
+"{{{ Statusline
 "Statusline in special buffers
 autocmd CmdWinEnter * setl nonu scl= cc= nolist stl=%t\ %=%2*%c,%l/%LL%*\ %P
 autocmd TermOpen * setl nonu scl= cc= nolist stl=\[Terminal\]\ %2*%t%*\ %=%2*%c,%l/%LL%*\ %P
@@ -25,8 +26,13 @@ autocmd WinLeave *
             \ if nvim_win_get_config(0).relative=="" |
             \   call blami#statusline#Leave() |
             \ endif
+"}}}
 
 
-"{{{ File format specific
-"Do not show
+"{{{ General
+autocmd WinEnter,BufWinEnter * call blami#todo#Highlight(1)
+"}}}
+
+
+"{{{ Filetype specific
 "}}}

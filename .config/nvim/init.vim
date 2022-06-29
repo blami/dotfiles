@@ -1,4 +1,4 @@
-"init.vim - Neovim init file
+"Neovim init file
 
 "{{{ General
 set encoding=utf-8                          "use UTF-8 internally and for RPC
@@ -17,11 +17,12 @@ lua blami=require('blami')
 
 
 "{{{ Variables
-"TODO Review this... does XDG work on Windows too?
-"TODO Is using stdpath() sane on WSL system?
+"TODO: Review this... does XDG work on Windows too?
+"TODO: Is using stdpath() sane on WSL system?
 let g:confdir=stdpath('config')             "config (init.vim) directory
 let g:localdir=stdpath('data')              "local data directory
 let g:sitedir=stdpath('data') . '/site'     "local site directory
+let g:statedir=stdpath('state')             "local state directory
 "}}}
 
 
@@ -112,7 +113,9 @@ syntax on                                   "enable syntax coloring
 colors blami
 " Fonts
 if has('win32')
-    set guifont="TODO"
+    set guifont="Go Mono NF:h13"
+elseif has('linux') || has('gui_gtk2')
+    set guifont="Go Mono NF 13"
 endif
 
 "Beeps
@@ -172,7 +175,7 @@ set statusline+=%{matchstr(&fo,'t')!=''?'>':''}
 set statusline+=%{matchstr(&fo,'[tc]')!=''?&tw:''}
 set statusline+=%{matchstr(&fo,'[tc]')!=''?'\ ':''}
 set statusline+=%c,%l/%LL%*\ %P             "ruler
-"NOTE This is used by blami#statusline#Refresh() in case of non-ft windows
+"NOTE: This is used by blami#statusline#Refresh() in case of non-ft windows
 let g:statusline=&statusline
 
 "Tab-line
@@ -185,8 +188,8 @@ set showtabline=1                           "show tabline only when more tabs ar
 set clipboard+=unnamedplus
 let g:clipboardTODO={
     \ 'name': 'clip',
-    \ 'copy':   {'+': ['clip', '-c', '-'], '*': ['clip', '-c', '-'], },
-    \ 'paste':  {'+': ['clip', '-p', '-'], '*': ['clip', '-p', '-'], },
+    \ 'copy':   {'+': ['clip', '-c'], '*': ['clip', '-c'], },
+    \ 'paste':  {'+': ['clip', '-p'], '*': ['clip', '-p'], },
     \ 'cache_enabled': 1,
     \}
 "}}}
