@@ -91,3 +91,32 @@
 "Precision diminishes the likelihood of truth, but often increases the pragmatic value of a belief if it is true."
 	-- Bertrand Russell
 %
+"The secret to optimization is changing the problem to make it easier to optimize"
+	-– John Carmack
+%
+"Success masks failure. The more a thing operates successfully, the more confidence we have in it. So we dismiss little failures ... as trivial annoyances rather than preludes to catastrophe."
+	-– Henry Petroski
+%
+"Anyone can build a fast CPU. The trick is to build a fast system."
+	-– Seymour Cray
+%
+"Measuring programming progress by lines of code is like measuring aircraft building progress by weight."
+	-– Bill Gates
+%
+"Automating chaos only gives you a faster chaos"
+	-- Mark Fewter
+%
+"You know, life is always right; it is the architect who is wrong."
+	-– Le Corbusier
+%
+"Beware of bugs in the above code; I have only proved it correct, not tried it."
+	-– Donald Knuth
+%
+"The computer was born to solve problems that did not exist before."
+	-– Bill Gates
+%
+"If a function is only called from a single place, consider inlining it. If a function is called from multiple places, see if it is possible to arrange for the work to be done in a single place, perhaps with flags, and inline that."
+	-– John Carmack
+%
+"Why are video games so much better designed than office software? Because people who design video games love to play video games. People who design office software look forward to doing something else on the weekend."
+	-– Ted Nelson
