@@ -4,13 +4,14 @@
 # NOTE: This image is meant mostly for interactive use, hence bash entrypoint.
 #
 # Usage:
-# docker build -f /path/to/ppa.dockerfile -t local/ppa .
-# docker run -it -v ~/src/ppa:/ppa --name ppa-<package> local/ppa
+# docker build -f /path/to/ppa.dockerfile -t ppa/jammy --build-arg SERIES=jammy .
+# docker run -it -v ~/src/ppa:/ppa --name ppa-<package> ppa/jammy
 #
 # To install build-dependecies *INSIDE* container use:
 # mk-build-deps -i /path/to/debian/control
 
-FROM ubuntu:latest
+ARG SERIES=latest
+FROM ubuntu:${RELEASE}
 
 # Install essential packages
 RUN apt-get update \
@@ -33,7 +34,7 @@ RUN apt-get update \
 ARG UID=1000
 ARG GID=1000
 RUN addgroup --gid ${GID} ppa \
-    && adduser --disabled-password --uid ${UID} --gid ${GID} --no-create-home ppa\
+    && adduser --disabled-password --uid ${UID} --gid ${GID} ppa \
     && addgroup ppa sudo \
     && echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/sudo
 
