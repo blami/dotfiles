@@ -1,11 +1,10 @@
 # ~/.zprofile - Z shell profile
-# NOTE This file is sourced only for login shells
+# NOTE: This file is sourced only for login shells
 
 # {{{ Hostname
 [ -z $HOST ] && HOST=$(hostname)
 [ -z $HOSTNAME ] && HOSTNAME=$HOST
 
-# TODO Host nickname (no long $HOST in prompt XTerm title)
 HOSTNICK=${HOST%%.*}
 # Host status (0-good, 1-bad, unset don't show)
 HOSTOK=
@@ -15,20 +14,27 @@ export HOSTNICK HOSTOK
 
 # {{{ OS
 # Sets $OS and $OSARCH variables
-_uname=$(uname -smr) ; _uname=(${(@s/ /)_uname:l})
-OS=$_uname[1]
+OS=$OSTYPE
 case "$OS" in
-    cygwin*)            OS=cygwin ;;
-    linux-android)      OS=android ;;
-    darwin*)            OS=macosx ;;
+    linux*)         OS=linux ;;
+    linux-android)  OS=android ;;
+    darwin*)        OS=mac ;;
+    freebsd*|netbsd*|openbsd*|dragonfly*) OS=bsd ;;
+    win32)          OS=win ;;
+    msys*|cygwin*)  OS=win ;;
 esac
-OSARCH=$OS-$_uname[3]
+OSARCH=$OS-$(uname -m)
 
 # Set $WSL to non-zero (WSL version 1 or 2); use WSL exported variables for
 # detection rather than kernel string in uname.
 WSL=
 if [ ! -z "$WSL_DISTRO_NAME" ]; then
     [ ! -z "$WSL_INTEROP" ] && WSL=2 || WSL=1
+fi
+# If WSL is non-zero set some useful variables
+if [ -z "$WSL" ]; then
+    WSLUSER=
+    WSLHOME=
 fi
 
 unset _uname
@@ -50,7 +56,7 @@ export SUDO
 
 
 # {{{ Temporary directory
-# NOTE This is for systems without TMPDIR set from PAM (or without PAM)
+# NOTE: This is for systems without TMPDIR set from PAM (or without PAM)
 if [ -z "$TMPDIR" ]; then
     TMPDIR=/tmp
     export TMPDIR
@@ -62,7 +68,6 @@ fi
 (( $+commands[nvim] )) && EDITOR=nvim || EDITOR=vim
 VISUAL=$EDITOR
 PAGER=less
-[ -x ~/bin/browser ] && BROWSER=~/bin/browser
 LESSHISTFILE=-
 export EDITOR VISUAL BROWSER PAGER LESSHISTFILE
 
@@ -87,8 +92,8 @@ CLICOLOR=1
 export CLICOLOR
 
 # Screen reader mode (no fancy prompt, per-app settings in nvim, tmux, etc.)
-SR=0
-export SR
+SCREENREADER=0
+export SCREENREADER
 # }}}
 
 
@@ -101,7 +106,7 @@ if [ ! -z "$WSL" ]; then
 fi
 
 # Source snippets in ~/.profile.d
-[ -d ~/.profile.d ] && for s in ~/.profile.d/*.sh; source $s
+for s in ~/.profile.d/*.sh(N) ; source $s
 builtin unset -v s
 
 # Setup PATH in ~/local

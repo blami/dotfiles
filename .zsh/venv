@@ -1,5 +1,5 @@
 #!/usr/bin/zsh
-# ~/.zsh/venv - Python virtual environments wrapper
+# Python virtual environments management wrapper
 
 # Usage: venv [/path/to/python]
 

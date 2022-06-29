@@ -25,6 +25,10 @@
 # Skip this file for non-interactive shells
 [[ -z "$PS1" ]] && return
 
+autoload -Uz \
+    add-zsh-hook \
+    promptinit \
+    #compinit
 
 # {{{ General
 # Allow use of unset variables
@@ -98,9 +102,8 @@ unsetopt list_beep
 # Allow substitutions and have RPROMPT only on last line
 setopt promptsubst
 setopt transientrprompt
-autoload -Uz promptinit
 promptinit
-# NOTE Moved to the end of file to ensure prompt_precmd hook is last
+# NOTE: Moved to the end of file to ensure prompt_precmd hook is last
 #prompt blami
 # }}}
 
@@ -109,11 +112,11 @@ promptinit
 HISTFILE=~/.zsh_history.$HOSTNICK
 HISTSIZE=16384
 SAVEHIST=16384
-HISTIGNORE="&:ls:ll:la:mc:reset:clear:cd:cd ..:exit"
+HISTIGNORE="&:ls:ll:la:mc:reset:clear:cd:exit"
 setopt hist_verify
 # Save history immediately and share between sessions
-#setopt append_history
-#setopt inc_append_history
+#setopt append_history       # KEEP this off if share_history
+#setopt inc_append_history   # KEEP this off if share_history
 setopt share_history        # this behaves as inc_append_history(_time)
 setopt extended_history
 # Ignore duplicates, spaces and history function itself
@@ -124,13 +127,6 @@ setopt hist_no_store
 # Ignore all duplicates (not only previous/next)
 setopt hist_ignore_all_dups
 setopt hist_expire_dups_first
-
-# Sync history between sessions
-autoload -Uz add-zsh-hook
-hist_precmd () {
-    # builtin fc -RI
-}
-add-zsh-hook precmd hist_precmd
 # }}}
 
 
@@ -139,6 +135,12 @@ add-zsh-hook precmd hist_precmd
 #compinit -u
 
 setopt completeinword
+
+# Rehash PATH with every new prompt
+hash_precmd() {
+    builtin hash -r
+}
+add-zsh-hook precmd hash_precmd
 # }}}
 
 
@@ -154,7 +156,7 @@ setopt completeinword
 
 
 # {{{ Prompt
-# NOTE Moved to the end of file to ensure prompt_precmd hook is last
+# NOTE: Moved to the end of file to ensure prompt_precmd hook is last
 prompt blami
 # }}}
 

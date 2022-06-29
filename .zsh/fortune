@@ -1,0 +1,31 @@
+#!/usr/bin/zsh
+# Print random fortune from one or more fortune files
+
+# Usage: fortune /path/to/file [/path/to/other_file ...]
+
+zmodload zsh/mapfile
+
+fortune () {
+    local db=()
+    local quote
+
+    for arg in $@; do
+        # Process files
+        local file=( "${(f)mapfile[$arg]}" )
+        for line in $file; do
+            if [ "${line// /}" = "%" ]; then
+                [ ! -z "$quote" ] && db+=("$quote")
+                quote=""
+                continue
+            fi
+            [ -z "$quote" ] && quote="$line" || quote="$quote\n$line"
+        done
+    done
+
+    [ ${#db[@]} -ne 0 ] || return
+    quote=$db[${RANDOM}%${#db}+1]
+
+    print "$quote"
+}
+
+fortune $@

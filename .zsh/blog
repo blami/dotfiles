@@ -1,5 +1,5 @@
 #!/usr/bin/zsh
-# ~/.zsh/blog - create new blog post
+# Create new blog post
 
 BLOG_POSTS=~/blog/_posts
 

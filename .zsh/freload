@@ -1,5 +1,5 @@
 #!/usr/bin/zsh
-# ~/.zsh/freload - reload function(s)
+# Reload Zsh function(s)
 
 # Usage: freload [function ...]
 
