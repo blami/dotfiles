@@ -1,75 +1,77 @@
-/.bundle
-!/.bundle/config
+# Dotfiles
 /.dfgit
-/.config/nvim/doc/tags
-/.config/tc/wincmd.key
-/.config/tc/wcx_ftp.ini
-/.config/weechat/certs/*.pem
-/.config/weechat/sec.conf
-/.config/weechat/logs
-/.config/weechat/xfer
-/.config/weechat/*.log
-/.ssh/keys
-/.ssh/ctrl
-/.ssh/agent
-/.ssh/authorized_keys
-/.ssh/known_hosts
-/.ssh/id*
-/.ssh/config_hosts
-/.gnupg
-/.git-credentials
-/.gitcookies
-/.gitdirs
-/.solstudio
-/.netrc
-/.viminfo
-/.cache
-/.rnd
-/.lpass
-/.node
-/.npm
-/.npmrc
-/.config/yarn
-/.yarnrc
 
-# History
-/.zsh_history*
-/.bash_history*
-/.lesshst*
-/.zcompdump*
+# Temporary
+_bak
+_sort
 
-# Local files
-.*_local
-/.proxy
-/.local/share/nvim
-/.local/bin
-/.local/lib
-/.local/go
+# Debugging
+/ops/ansible/debug*.yml
 
-# Directories
+# User directories
 /bak
-/blog
 /desk
 /docs
 /downl
 /drive
 /mail
-/media
+/music
 /pics
 /pub
 /public_html
 /sandbox
-/tmp
 /src
+/videos
 
-# Misc
-/.sudo_as_admin_successful
+# Sensitive
+/.aws
+/.azure
+/.config/Bitwarden*
+/.config/weechat/certs
+/.gitcookies
+/.gnupg
+/.netrc
+/.rnd
+/.ssh/agent
+/.ssh/authorized_keys
+/.ssh/config_hosts
+/.ssh/ctrl
+/.ssh/id_*
+/.ssh/keys
+/.ssh/known_hosts*
+
+# Specific per-install
+/.ansible
+/.cache
+/.calc_history
+/.config/user-dirs.dirs
+/.config/wslu
+/.config/yarn
+/.landscape
+/.lesshst.*
+/.local/bin
+/.local/go
+/.local/lib
+/.local/node
+/.local/share/lftp
+/.local/share/mc/history
+/.local/share/nvim
+/.local/share/weechat/weechat.log
+/.local/share/weechat/logs
+/.local/share/weechat/xfer
+/.local/state
+/.npm
+/.npm
+/.npmrc
+/.python_history
+/.solstudio
+/.viminfo
+/.wget-hsts
+/.yarnrc
+/.zsh_history.*
+
+# OS
 /.motd_shown
-.mypy-cache
-__pycache__
+/.sudo_as_admin_successful
 
-# Windows
-/Application\ Data
-/AppData
-!/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json
-!/AppData/Roaming/IrfanView/i_view*.ini
+# AppData

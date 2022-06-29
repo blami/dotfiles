@@ -1,4 +1,12 @@
 # ~/.gitignore_global: Global .gitignore file
-.DS_Store/
 *.bak
 *.log
+*~
+._*
+.DS_Store
+.Spotlight-V100
+.Trashes
+__pycache__
+Desktop.ini
+Thumbs.db
+venv*
