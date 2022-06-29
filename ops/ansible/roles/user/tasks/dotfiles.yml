@@ -1,0 +1,42 @@
+---
+# Clone and update dotfiles
+
+- name: Cloning Dotfiles Repository {{ dotfiles_repo }}
+  # NOTE: Not using builtin.git as we clone to ~ which already exists.
+  shell:
+    chdir: "{{ my_user.home }}"
+    cmd: |
+      umask {{ my_user.umask }}
+      git init --separate-git-dir .dfgit
+      git --git-dir=.dfgit remote add -f -m main origin https://github.com/{{ dotfiles_repo }}
+      git --git-dir=.dfgit reset --hard origin/main
+      git --git-dir=.dfgit checkout main
+      [ -f .git ] && rm -rf .git
+    creates: "{{ my_user.home }}/.dfgit"
+  register: out
+
+# - name: Updating dotfiles
+#   shell:
+#     chdir: "{{ my_user.home }}"
+#     # TODO: Check if pull can be done...
+#     # https://stackoverflow.com/questions/24504400/whats-the-correct-way-to-check-if-its-possible-to-perform-a-fast-forward-merge
+#     cmd: |
+#       umask {{ my_user.umask }}
+#       git --git-dir=.dfgit pull
+#   # Never fail (see TODO above)
+#   failed_when: false
+#   # Do not run if dotfiles were just cloned
+#   when:
+#     - not out.changed
+# 
+# # Setting only push to SSH key is convenient as we can always pull without
+# # authenticating. Assumes clone is done using by my_user.ssh_key.
+# - name: Changing dotfiles remote to SSH (for push)
+#   shell:
+#     chdir: "{{ my_user.home }}"
+#     cmd: |
+#       umask {{ my_user.umask }}
+#       git --git-dir=.dfgit remote set-url --push origin git@github.com:{{ dotfiles_repo }}
+#   # Do not run if SSH key is not present
+#   when:
+#     - my_facts.has_ssh_key

@@ -1,0 +1,15 @@
+---
+# Change shell to my_user.shell
+
+- name: Detecting {{ my_user.shell | basename }}
+  stat:
+    path: "{{ my_user.shell }}"
+  failed_when: false
+  changed_when: false
+  register: out
+
+- name: Changing User Shell To {{ my_user.shell | basename }}
+  command: >
+    usermod -s {{ my_user.shell }} {{ my_user.username }}
+  when:
+    - not out.failed

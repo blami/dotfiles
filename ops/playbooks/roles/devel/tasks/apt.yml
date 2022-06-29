@@ -1,7 +1,0 @@
----
-# Install development environment APT packages
-
-- name: Installing user APT packages
-  apt:
-    pkg: "{{ apt_packages }}"
-    state: present

@@ -1,0 +1,14 @@
+---
+# Install user APT packages
+
+- name: Installing APT Packages
+  apt:
+    pkg: "{{ apt_packages }}"
+    state: latest
+
+- name: Installing Desktop Specific APT Packages
+  apt:
+    pkg: "{{ apt_packages_desktop }}"
+    state: latest
+  when:
+    - my_facts.is_desktop

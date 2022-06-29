@@ -1,0 +1,28 @@
+---
+# Create user account
+
+# In case user already exists this will just update fields.
+- name: Setting Up User {{ my_user.username }}
+  user:
+    name: "{{ my_user.username }}"
+    comment: "{{ my_user.gecos }}"
+    # NOTE: DO NOT set shell as it might not be installed yet; there's task in
+    # user/shell to do that.
+    #shell: {{ my_user.shell }}
+    groups: "{{ my_user.groups }}"
+    append: true
+    # NOTE: Use system home directory see update command bellow
+    move_home: false
+    # NOTE: For new user require change on first login
+    password: "{{ 'changeme' | password_hash('sha512') }}"
+    update_password: on_create
+  register: out
+
+# TODO: call chage to force password change
+
+- name: Refreshing User Facts
+  set_fact:
+    my_user: >
+      {{ my_user | xcombine({
+        "home": out['home']
+      }) }}

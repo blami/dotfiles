@@ -1,8 +1,0 @@
----
-# Change shell to my_user.shell
-
-# TODO: Check if {{ my_user.shell }} is installed; otherwise skip.
-
-- name: Setting user shell
-  command: >
-    usermod -s {{ my_user.shell }} {{ my_user.username }}

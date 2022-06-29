@@ -1,0 +1,11 @@
+---
+# Configure sudo
+
+- name: Installing sudoers.d/99-defaults
+  copy:
+    src: "{{ role_path }}/files/sudoers.d/99-defaults"
+    dest: "/etc/sudoers.d/99-defaults"
+    owner: root
+    group: root
+    mode: 644
+    force: true

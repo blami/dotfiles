@@ -1,0 +1,23 @@
+---
+# User environment setup
+
+# Linux
+- block:
+    - import_tasks: apt.yml
+    - import_tasks: shell.yml
+  become: true
+  become_user: "root"
+  when:
+    - ansible_facts.os_family == "Debian"
+    - my_facts.has_become_root
+
+- block:
+    - import_tasks: dotfiles.yml
+    - import_tasks: dirs.yml
+    - import_tasks: secrets.yml
+    - import_tasks: nvim.yml
+  become: true
+  become_user: "{{ my_user.username }}"
+  when:
+    - ansible_facts.os_family == "Debian"
+    - my_facts.has_become_my_user

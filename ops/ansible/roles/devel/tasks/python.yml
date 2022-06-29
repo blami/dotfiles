@@ -1,0 +1,18 @@
+---
+# Setup Python development environment
+
+- name: Detecting pip3
+  command: pip3 --version
+  failed_when: false
+  changed_when: false
+  register: has_pip3
+
+- name: Installing Python Packages
+  shell:
+    chdir: "{{ my_user.home }}"
+    cmd: |
+      umask {{ my_user.umask }}
+      pip3 install {{ item }}
+  with_items: "{{ python_packages }}"
+  when:
+    - not has_pip3.failed

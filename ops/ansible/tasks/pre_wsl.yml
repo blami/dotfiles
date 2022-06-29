@@ -1,0 +1,51 @@
+---
+# WSL detection and tasks that run before actual roles.
+
+# NOTE: It is OK to use env lookups here as WSL runs locally.
+- name: Detecting WSL
+  set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "is_wsl": true if lookup("env", "WSL_DISTRO_NAME") else false,
+      }) }}
+
+- name: Gathering WSL Facts
+  set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "wsl_version": 2 if lookup("env", "WSL_INTEROP") else 1,
+        "wsl_distro": lookup("env", "WSL_DISTRO_NAME"),
+        "wsl_hostname": "{}.local".format(ansible_hostname) if lookup("env", "WSL_INTEROP") else "localhost",
+      }) }}
+  when:
+    - my_facts.is_wsl
+
+- name: Gathering WSL Paths
+  shell: |
+    wslpath -w {{ playbook_dir }}
+    wslpath -w {{ my_user.home }}
+    powershell.exe -Command 'Write-Host $env:USERPROFILE'
+    wslpath -u $(powershell.exe -Command 'Write-Host $env:USERPROFILE')
+  register: out
+  changed_when: false
+  when:
+    - my_facts.is_wsl
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "wsl_win_playbook_dir": out.stdout_lines[0],
+        "wsl_win_home_dir": out.stdout_lines[1],
+        "wsl_win_userprofile_dir": out.stdout_lines[2],
+        "wsl_userprofile_dir": out.stdout_lines[3],
+      }) }}
+  when:
+    - my_facts.is_wsl
+
+- name: Checking If $HOME Is %USERPROFILE%
+  set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "wsl_home_is_userprofile": true if my_facts.wsl_win_home_dir == my_facts.wsl_win_userprofile_dir else false
+      }) }}
+  when:
+    - my_facts.is_wsl

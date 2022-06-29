@@ -1,0 +1,42 @@
+---
+# Configure WSL
+
+- name: Converting /tmp To tmpfs
+  lineinfile:
+    path: /etc/fstab
+    regexp: "^tmpfs	/tmp	tmpfs	defaults	1 0$"
+    line: "tmpfs	/tmp	tmpfs	defaults	1 0"
+  register: out_wsl_tmpfs
+  when:
+    - my_facts.is_wsl
+
+- name: Installing wsl.conf
+  copy:
+    src: "{{ role_path }}/files/wsl.conf"
+    dest: "/etc/wsl.conf"
+    owner: root
+    group: root
+    mode: 644
+    force: yes
+  register: out_wsl_wslconf
+  when:
+    - my_facts.is_wsl
+
+- name: Warning about WSL restart
+  pause:
+    prompt: |
+      Windows Subsystem for Linux (WSL) configuration was changed and in order
+      to continue the playbook it needs to be restarted so that change take
+      effect.
+
+      After pressing ENTER WSL will be terminated. Close the terminal and run
+      it again to restart WSL. Then re-run playbook.
+  when:
+    - (out_wsl_tmpfs.changed or out_wsl_wslconf.changed)
+    - my_facts.is_wsl
+
+- name: Restarting WSL
+  command: "/mnt/c/Windows/System32/wsl.exe -t {{ my_facts.wsl_distro }}"
+  when: 
+    - (out_wsl_tmpfs.changed or out_wsl_wslconf.changed)
+    - my_facts.is_wsl

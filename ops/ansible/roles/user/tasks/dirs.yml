@@ -1,0 +1,63 @@
+---
+# Create or link user directories
+
+# User directories
+
+- name: Symlinking Windows User Directories To WSL
+  shell:
+    cmd: |
+      umask {{ my_user.umask }}
+      ln -s "{{ my_facts.wsl_userprofile_dir }}/{{ item.name }}" "{{ my_user.home }}/{{ item.name }}"
+    creates: "{{ my_user.home }}/{{ item.name }}"
+  loop_control:
+    label: "{{ item.name }}"
+  with_items: "{{ user_dirs | selectattr('link', 'defined') | selectattr('link', 'equalto', 'wsl') }}"
+  when:
+    - my_facts.is_wsl
+    - not my_facts.wsl_home_is_userprofile
+
+- name: Creating User Directories
+  shell:
+    cmd: |
+      umask {{ my_user.umask }}
+      mkdir -p "{{ my_user.home }}/{{ item.name }}"
+    creates: "{{ my_user.home }}/{{ item.name }}"
+  loop_control:
+    label: "{{ item.name }}"
+  with_items: "{{ user_dirs }}"
+
+- name: Generating XDG ~/.config/user-dirs.dirs
+  template:
+    src: "{{ role_path }}/files/user-dirs.dirs.j2"
+    dest: "{{ my_user.home }}/.config/user-dirs.dirs"
+
+# WSL native directories
+
+# Some WSL directories cannot be on NTFS (if that's where HOME is)
+- name: Creating WSL Native Directories
+  file:
+    path: "{{ item.src }}"
+    mode: "{{ item.mode }}"
+    state: directory
+  loop_control:
+    label: "{{ item.src }}"
+  with_items: "{{ wsl_native_dirs }}"
+  when:
+    - my_facts.is_wsl
+    - my_facts.wsl_home_is_userprofile
+
+- name: Symlinking WSL Directories to NTFS
+  file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+    # NOTE: This will delete (unlink) the original file if its not a symlink and
+    # create the symlink. This should not be problem as all are transient.
+    force: true
+  loop_control:
+    label: "{{ item.dest }}"
+  with_items: "{{ wsl_native_dirs }}"
+  when:
+    - my_facts.is_wsl
+    - my_facts.wsl_home_is_userprofile
+

@@ -1,0 +1,101 @@
+---
+# Linux tasks that run before actual roles.
+
+# NOTE: DO NOT use env lookups here as they run on controller and not the host itself.
+
+# Permissions checks
+
+# If playbook was run with -e user=USER for e.g. work environment, fix my_user
+# for further tests.
+- name: Detecting User Override with -e user=
+  set_fact:
+    my_user: >
+      {{ my_user | xcombine({
+        "username": user,
+      }) }}
+  when:
+    - "'user' in vars"
+
+- name: Checking User {{ my_user.username }} Exists
+  getent:
+    database: passwd
+    key: "{{ my_user.username }}"
+  failed_when: false
+  changed_when: false
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "has_my_user": true if "getent_passwd" in vars and my_user.username in getent_passwd else false
+      }) }}
+
+- name: Checking Become root
+  command:
+    cmd: "/bin/true"
+  become: true
+  become_user: "root"
+  register: out
+  failed_when: false
+  changed_when: false
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "has_become_root": true if out.rc == 0 else false
+      }) }}
+
+- name: Checking Become {{ my_user.username }}
+  command:
+    cmd: "/bin/true"
+  become: true
+  become_user: "{{ my_user.username }}"
+  register: out
+  failed_when: false
+  changed_when: false
+  when:
+    - my_facts.has_my_user
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "has_become_my_user": true if my_facts.has_my_user and out.rc == 0 else false
+      }) }}
+  # NOTE: no when: here since we want false even if user does not exists and
+  # thus check was skipped. Ansible (Python) won't evaluate and condition if
+  # my_facts.has_my_user is False.
+
+# Check if makes sense to continue with current user and permissions
+- name: Checking Ansible Permissions
+  fail:
+    msg: >
+      Ansible has not enough permissions to continue this playbook.
+
+      At least user '{{ my_user.username }}' MUST exist or Ansible needs
+      privileges to become 'root' (see -K). If you wish to run this playbook
+      with different username than '{{ my_user.username }}' rather than
+      creating that user; run playbook with '-e user=USERNAME' argument.
+  when: >
+    (not my_facts.has_become_root and not my_facts.has_my_user)
+    or (my_facts.has_my_user and not my_facts.has_become_my_user)
+
+# If we have no power to change aspects of user simply read them into my_user.
+- name: Gathering User Facts
+  set_fact:
+    my_user: >
+      {{ my_user | xcombine({
+        "home": ansible_facts.user_dir,
+        "shell": ansible_facts.user_shell,
+      }) }}
+  when:
+    - not my_facts.has_become_root
+
+# Gather additional facts
+
+- name: Gathering Installed Packages
+  package_facts:
+    manager: auto
+
+# TODO: This is quite naive approach; find something better?
+- name: Gathering Desktop Environment Facts
+  set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "is_desktop": true if 'ubuntu-desktop' in packages else false,
+      }) }}

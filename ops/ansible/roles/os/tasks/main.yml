@@ -1,0 +1,18 @@
+---
+# Base OS setup
+
+# Linux
+- block:
+    - import_tasks: wsl.yml             # run this first as it may restart WSL
+    - import_tasks: dirs.yml            # create additional directories
+    - import_tasks: user.yml
+    - import_tasks: sudoers.yml
+    - import_tasks: snap.yml            # disable snap
+    - import_tasks: apport.yml          # disable Apport
+    - import_tasks: apt.yml
+    - import_tasks: bitwarden.yml       # install Bitwarden CLI
+  become: true
+  become_user: "root"
+  when:
+    - ansible_facts.os_family == "Debian"
+    - my_facts.has_become_root

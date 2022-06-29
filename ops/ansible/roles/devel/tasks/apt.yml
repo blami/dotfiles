@@ -1,0 +1,8 @@
+---
+# Install APT packages
+
+- name: Installing APT Packages
+  apt:
+    pkg: "{{ apt_packages }}"
+    install_recommends: false
+    state: latest

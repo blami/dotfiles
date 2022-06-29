@@ -1,0 +1,12 @@
+---
+# Bitwarden check task that run before actual roles.
+
+# NOTE: This is to check if Bitwarden vault is ready and unlocked on controller
+# for further tasks.
+
+- name: Checking Bitwarden Status
+  set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "has_bitwarden": lookup("bitwarden"),
+      }) }}

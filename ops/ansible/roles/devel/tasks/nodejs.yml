@@ -1,0 +1,29 @@
+---
+# Setup Node.js development environment
+
+- name: Detecting npm
+  command: npm --version
+  failed_when: false
+  changed_when: false
+  register: has_npm
+
+- name: Configuring npm
+  shell:
+    chdir: "{{ my_user.home }}"
+    # NOTE: DO NOT use 'creates:' to always revert changed prefix to ~/.local/node
+    #creates: "{{ my_user.home }}/.npmrc"
+    cmd: |
+      umask {{ my_user.umask }}
+      npm config set prefix ~/.local/node
+  when:
+    - not has_npm.failed
+
+- name: Installing npm Packages
+  shell:
+    chdir: "{{ my_user.home }}"
+    cmd: |
+      umask {{ my_user.umask }}
+      npm install -g {{ item }}
+  with_items: "{{ nodejs_packages }}"
+  when:
+    - not has_npm.failed

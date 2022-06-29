@@ -1,0 +1,11 @@
+---
+# Create additional OS-level directories
+
+# Ansible cache directory to hold various artifacts
+- name: Creating /var/cache/ansible
+  file:
+    path: /var/cache/ansible
+    mode: 755
+    owner: root
+    group: root
+    state: directory

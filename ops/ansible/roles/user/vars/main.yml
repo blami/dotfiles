@@ -1,0 +1,110 @@
+---
+# User role variables
+
+# Additional packages to install
+apt_packages:
+  - apcalc
+  - ffmpeg
+  - graphicsmagick
+  - graphicsmagick-imagemagick-compat
+  - weechat                   # irc client
+  - xdg-user-dirs
+  - mc                        # file manager
+  - direnv                    # load .env files
+  - fzf                       # fuzzy finder
+
+# Additional packages in case Desktop (e.g. GNOME) is installed
+apt_packages_desktop:
+  - google-chrome-stable
+  #- telegram
+  #- discord
+  #- slack
+  #- zoom
+  #- remmina
+
+# User directories
+# NOTE: This is shared both by Linux and Windows as I tend to have same home
+# directory organization on both systems. On Windows especially there's a lot
+# of littering done by Apps so I redirect Documents and all special folders to
+# TODO.
+#
+# BUG: All directory names are relative to home directory. While they can be
+# nested it will blow up if link is nested in directory.
+#
+# link: "wsl" will link %USERPROFILE%/name to WSL
+# link: "win" will link //wsl.local../name to Windows
+# xdg: "XDG_FOO_DIR" will put directory to ~/.config/user-dirs.dirs
+user_dirs:
+  - name: "desk"
+    xdg: "XDG_DESKTOP_DIR"
+    win_guid: "B4BFCC3A-DB2C-424C-B029-7FE99A87C641"
+    win_icon: "%SystemRoot%\\system32\\imageres.dll,-183"
+    link: "wsl"
+  - name: "docs"
+    xdg: "XDG_DOCUMENTS_DIR"
+    # NOTE: Not linked with GUID as Windows apps tend to litter Documents a lot
+    win_icon: "%SystemRoot%\\system32\\imageres.dll,-112"
+    link: "wsl"
+  - name: "downl"
+    xdg: "XDG_DOWNLOAD_DIR"
+    win_guid: "374DE290-123F-4565-9164-39C4925E467B"
+    win_icon: "%SystemRoot%\\system32\\imageres.dll,-184"
+    link: "wsl"
+  - name: "tmpl"                      # NOTE: In dotfiles do not link: wsl
+    xdg: "XDG_TEMPLATES_DIR"
+  - name: "pics"
+    xdg: "XDG_PICTURES_DIR"
+    win_icon: "%SystemRoot%\\system32\\imageres.dll,-113"
+    link: "wsl"
+  - name: "music"
+    xdg: "XDG_MUSIC_DIR"
+    win_icon: "%SystemRoot%\\system32\\imageres.dll,-108"
+    link: "wsl"
+  - name: "videos"
+    xdg: "XDG_VIDEOS_DIR"
+    win_icon: "%SystemRoot%\\system32\\imageres.dll,-189"
+    link: "wsl"
+  - name: "pub"
+    xdg: "XDG_PUBLICSHARE_DIR"
+  - name: "bak"
+  - name: "mail"
+  - name: "src"
+  - name: "public_html"
+  - name: "drive"                     # Google Drive
+    link: "wsl"
+
+# WSL native directories
+# NOTE: These need to be on native WSL filesystem in case HOME is on NTFS
+wsl_native_dirs:
+  - src: "/home/{{ my_user.username }}/.ssh/ctrl"
+    dest: "{{ my_user.home }}/.ssh/ctrl"
+    mode: "0700"
+
+# Dotfiles repository without github.com host
+dotfiles_repo: "blami/dotfiles.git"
+
+# Neovim spell files
+nvim_spell:
+  - en.utf-8
+  - cs.utf-8
+
+# Neovim packs
+# NOTE: To NOT-autoload plugin add `opt: true` property
+nvim_packs:
+  # LSP configuration snippets
+  - name: "nvim-lspconfig"
+    group: "plugins"
+    repo: "https://github.com/neovim/nvim-lspconfig"
+
+# Secrets
+ssh_keys:
+  - id_blami_rsa
+
+irc_certs:
+  - server: "libera.chat"
+    user: "blami"
+  - server: "irc.oftc.net"
+    user: "blami"
+
+gpg_keys:
+  - blami@blami.net
