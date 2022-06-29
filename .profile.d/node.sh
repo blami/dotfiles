@@ -1,11 +1,12 @@
-# ~/.profile.d/node.sh - Node.js related environment
+# Node.js related environment
 # NOTE: This uses pathmunge
 
-# Add ~/.node/bin to PATH
-[ -d ~/.node/bin ] && pathmunge ~/.node/bin after
+# Add ~/.local/node/bin to PATH
+[ -d $HOME/.local/node/bin ] || mkdir -p $HOME/.local/node/bin
+pathmunge ~/.local/node/bin after
 
-# Add ~/.node to NODE_PATH
-NODE_PATH="$HOME/.node/lib/node_modules:$NODE_PATH"
+# Add ~/.local/node to NODE_PATH
+NODE_PATH="$HOME/.local/node/lib/node_modules:$NODE_PATH"
 export NODE_PATH
 
 

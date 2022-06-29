@@ -1,4 +1,4 @@
-# ~/.profile.d/colorless.sh - Colorize less output
+# Colorize less output
 
 # Skip configuration for non-interactive shells
 [ -z "$PS1" ] && return

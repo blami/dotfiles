@@ -1,9 +1,9 @@
-# ~/.profile.d/golang.sh - Setup golang environment
+# Golang environment
 # NOTE: This uses pathmunge
 
 # Set GOPATH to $HOME/.local/go
 # NOTE: $GOPATH I still love you (but only) for installing tools
-[ -d $HOME/.local/go ] || mkdir -p $HOME/.local/go
+[ -d $HOME/.local/go ] || mkdir -p $HOME/.local/go/bin
 GOPATH=$HOME/.local/go
 
 # NOTE: On systems where I don't have root I tend to merge $GOROOT and $GOPATH

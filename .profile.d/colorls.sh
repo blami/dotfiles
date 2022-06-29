@@ -1,4 +1,4 @@
-# ~/.profile.d/colorls.sh - Colorize ls output
+# Colorize ls output
 
 # Skip configuration for non-interactive shells
 [ -z "$PS1" ] && return
@@ -15,7 +15,6 @@ for colors in "$HOME/.DIR_COLORS.$TERM" \
     [ -r "$colors" ] && COLORS="$colors" && break
 done
 unset -v colors
-
 
 if [ -n "$COLORS" ]; then
     # Eval selected file and set alias

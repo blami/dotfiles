@@ -1,4 +1,4 @@
-# ~/.profile.d/colorgrep.sh - Colorize GNU grep output
+# Colorize GNU grep output
 
 # Skip configuration for non-interactive shells
 [ -z "$PS1" ] && return

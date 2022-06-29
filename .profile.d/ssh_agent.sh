@@ -1,4 +1,4 @@
-# ~/.profile.d/ssh_agent.sh - SSH agent on startup
+# SSH agent autostart
 
 SSH_AGENT=ssh-agent
 SSH_AGENT_ENV=$HOME/.ssh/agent/$HOST.env
@@ -17,6 +17,7 @@ function ssh_agent {
 }
 
 [ -d $HOME/.ssh/agent ] || mkdir -p $HOME/.ssh/agent
+chmod 700 $HOME/.ssh/agent
 if [ -f "${SSH_AGENT_ENV}" ]; then
     # Read safely SSH_AUTH_SOCK and SSH_AGENT_PID
     SSH_AUTH_SOCK=$(ssh_agent_readenv "SSH_AUTH_SOCK")
@@ -35,5 +36,6 @@ unset -f ssh_agent
 
 # Export variables
 export SSH_AUTH_SOCK SSH_AGENT_PID SSH_AGENT_ENV
+
 
 # vim:set ft=zsh:

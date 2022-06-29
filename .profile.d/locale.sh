@@ -1,4 +1,4 @@
-# ~/.profile.d/locale.sh - Export locale
+# Export locale
 
 LANG=en_US.UTF-8
 LC_CTYPE=en_US.UTF-8

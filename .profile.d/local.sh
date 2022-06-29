@@ -1,4 +1,4 @@
-# ~/.profile.d/local.sh - ~/local/$OSARCH local builds directory
+# ~/local/$OSARCH local builds directory
 # NOTE: This uses pathmunge
 
 # I use this in environments where I'm ordinary user only and want to add some

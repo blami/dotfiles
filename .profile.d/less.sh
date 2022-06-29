@@ -1,4 +1,4 @@
-# ~/.profile.d/less.sh - less pager configuration
+# Pager configuration
 
 # {{{ History
 LESSHISTSIZE=1000
