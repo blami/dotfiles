@@ -1,6 +1,0 @@
-# ~/.hgignore_global: Global .hgignore file
-
-syntax: glob
-.DS_Store/
-*.bak
-*.log
