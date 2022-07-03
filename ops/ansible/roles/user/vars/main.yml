@@ -67,6 +67,7 @@ user_dirs:
   - name: "pub"
     xdg: "XDG_PUBLICSHARE_DIR"
   - name: "bak"
+  - name: "logs"
   - name: "mail"
   - name: "src"
   - name: "public_html"
