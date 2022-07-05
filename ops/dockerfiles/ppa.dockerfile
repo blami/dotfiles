@@ -13,7 +13,6 @@
 ARG SERIES=latest
 FROM ubuntu:${RELEASE}
 
-# Install essential packages
 RUN apt-get update \
     && apt-get upgrade -y \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -29,8 +28,6 @@ RUN apt-get update \
     && rm -rf /tmp/* /var/tmp/* \
     && apt-get clean
 
-# Add ppa user with UID:GID 1000:1000 (usually maps to my account and if not it
-# can be changed via ARG
 ARG UID=1000
 ARG GID=1000
 RUN addgroup --gid ${GID} ppa \
@@ -38,10 +35,8 @@ RUN addgroup --gid ${GID} ppa \
     && addgroup ppa sudo \
     && echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/sudo
 
-# Prepare work volume for mount from host system
 VOLUME ["/ppa"]
 
-# Switch to ppa user
 USER ppa
 WORKDIR /ppa
 ENTRYPOINT /bin/bash
