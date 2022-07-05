@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -xe
 # Find large object in git repository history
 
 # Usage: gitbig 10M

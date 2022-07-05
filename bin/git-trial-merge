@@ -1,0 +1,5 @@
+#!/bin/bash -xe
+# Attempt to merge
+
+git checkout --detach HEAD
+git merge --no-edit -- "$@"
