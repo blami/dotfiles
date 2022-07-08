@@ -259,6 +259,11 @@ set printoptions=paper:a4,duplex:on
 filetype plugin on
 filetype indent on
 
+"Disable scripting language providers
+let g:loaded_ruby_provider = 0
+let g:loaded_perl_provider = 0
+let g:loaded_node_provider = 0
+
 "NOTE All other configs are sourced from ~/after/plugin/source.vim to have
 "plugins/packs loaded. This is so I can rely on things like g: variables being
 "already set by them in e.g. keymap.vim.
