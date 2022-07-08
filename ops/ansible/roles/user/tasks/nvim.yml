@@ -23,3 +23,18 @@
   loop_control:
     label: "{{ item }}"
   with_items: "{{ nvim_spell | product(['spl', 'sug']) | map('join', '.') | list }}"
+
+- name: Detecting pip3
+  command: pip3 --version
+  failed_when: false
+  changed_when: false
+  register: has_pip3
+
+- name: Installing Neovim Python Provider
+  shell:
+    chdir: "{{ my_user.home }}"
+    cmd: |
+      umask {{ my_user.umask }}
+      pip3 install pynvim
+  when:
+    - not has_pip3.failed
