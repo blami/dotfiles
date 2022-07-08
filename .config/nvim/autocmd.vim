@@ -11,9 +11,9 @@ autocmd BufReadPost *
 
 "{{{ Statusline
 "Statusline in special buffers
-autocmd CmdWinEnter * setl nonu scl= cc= nolist stl=%t\ %=%2*%c,%l/%LL%*\ %P
-autocmd TermOpen * setl nonu scl= cc= nolist stl=\[Terminal\]\ %2*%t%*\ %=%2*%c,%l/%LL%*\ %P
-autocmd BufEnter * if &bt ==# 'nofile' | setl nonu scl= cc= nolist stl=%t\ %=%2*%c,%l/%LL%*\ %P | endif 
+autocmd CmdWinEnter * setl nonu scl=no cc= nolist stl=%t\ %=%2*%c,%l/%LL%*\ %P
+autocmd TermOpen * setl nonu scl=no cc= nolist stl=\[Terminal\]\ %2*%t%*\ %=%2*%c,%l/%LL%*\ %P
+autocmd BufEnter * if &bt ==# 'nofile' | setl nonu scl=no cc= nolist stl=%t\ %=%2*%c,%l/%LL%*\ %P | endif 
 
 "Store current window number to g:curwin
 "Run statusline helpers to hide UserN highlights in non-active windows
