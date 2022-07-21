@@ -28,8 +28,12 @@ nnoremap    <silent><expr>  <leader>f       get(b:,'autofmt',0)==0?':let b:autof
 "Toggle per-buffer status pages
 map         <silent>        [p              :call blami#statusline#PageToggle('-')<CR>
 map         <silent>        ]p              :call blami#statusline#PageToggle('+')<CR>
-
+"Toggle background color
 noremap     <silent>        <leader>bg      :let &bg=(&bg=='dark'?'light':'dark')<CR>
+"Toggle showing colors
+if exists('g:loaded_colorizer')
+noremap     <silent>        <leader>c       :ColorizerToggle<CR>
+endif
 
 "Folds
 nnoremap    <silent><expr>  <leader>F       &foldlevel==100?':setl foldlevel=0<CR>':':setl foldlevel=100<CR>'
@@ -38,6 +42,7 @@ nnoremap    <silent><expr>  <leader>F       &foldlevel==100?':setl foldlevel=0<C
 map         <silent>        [b              :bprevious<CR>
 map         <silent>        ]b              :bnext<CR>
 map         <silent>        tt              :tabnew<CR>
+map         <silent>        tc              :tabclose<CR>
 map         <silent>        [t              :tabprevious<CR>
 map         <silent>        ]t              :tabnext<CR>
 
@@ -142,4 +147,11 @@ cmap                        Q               q
 cmap                        w#              w !sudo -S tee % >/dev/null
 "Always use lgrep
 cnoreabbrev                 grep            lgrep
+"}}}
+
+
+"{{{ Plugins
+if exists('g:loaded_gitsigns')
+noremap     <silent>        <leader>gb      :Gitsigns blame_line<CR>
+end
 "}}}
