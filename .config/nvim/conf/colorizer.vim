@@ -8,7 +8,8 @@ if not colorizer then return end
 -- Setup gitsigns
 colorizer.setup({
     '*';
-    --'!filetype'; -- Exclude filetype
+    -- Excluded filetypes:
+    '!gitcommit';
 }, {
     names = false;
     mode = 'background';
