@@ -40,7 +40,6 @@ endfunc
 "Show LEDs (statuses for certain flags) in statusline.
 func! blami#statusline#LEDs() abort
     let currentleds=''
-
     "Paste mode
     if &paste                   | let currentleds.=''              | endif
     "Folding
@@ -56,27 +55,27 @@ func! blami#statusline#LEDs() abort
     if luaeval('not vim.tbl_isempty(vim.lsp.buf_get_clients(0))')
         let currentleds.=''
     endif
-
     return currentleds
 endfunc
 
 "Statusline per-buffer pages
-"Add page. If id is 0, new id will be current length of page list.
-func blami#statusline#PageAdd(id, value) abort
+"Add page. If id is '', new id will be current length of page list.
+func! blami#statusline#PageAdd(id, value) abort
     if !exists('b:statuspage') | let b:statuspage = {} | endif
-    if a:id == 0 | a:id = len(ids) | endif
+    "FIXME:
+    "let ids = keys(b:statuspage)
+    "if a:id == 0 | a:id = len(ids) | endif
     let b:statuspage[a:id] = a:value
 endfunc
 
 "Toggle current page ("+" next, "-" prev or "<ID>").
-func blami#statusline#PageToggle(arg) abort
+func! blami#statusline#PageToggle(arg) abort
     if !exists('b:statuspage') || empty(b:statuspage) | return | endif
     "If current id is not set yet or isn't valid use the first item
     let ids = keys(b:statuspage)
     if !exists("b:statuspage_current") || index(ids, b:statuspage_current) == -1
         let b:statuspages_current = keys(b:statuspage)[0] | return
     endif
-
     if a:arg != '-' && a:arg != '+'
         if index(ids, a:arg) != -1
             let b:statuspage_current = a:arg
@@ -92,14 +91,15 @@ func blami#statusline#PageToggle(arg) abort
 endfunc
 
 "Return currently selected page.
-func blami#statusline#Page() abort
+func! blami#statusline#Page() abort
     if !exists('b:statuspage') || empty(b:statuspage) | return '-' | endif
     if !exists('b:statuspage_current')
         let b:statuspage_current = keys(b:statuspage)[0]
     endif
     "Execute functions, print other types
-    let page=b:statuspage[b:statuspage_current]
-    if type(page) == v:t_func | return page() | else | return page | endif
+    let F = b:statuspage[b:statuspage_current]
+    if type(F) == v:t_func | let F = call(F, []) | endif
+    return b:statuspage_current . ':' . F
 endfunc
 "}}}
 

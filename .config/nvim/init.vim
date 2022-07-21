@@ -264,7 +264,16 @@ let g:loaded_ruby_provider = 0
 let g:loaded_perl_provider = 0
 let g:loaded_node_provider = 0
 
-"NOTE All other configs are sourced from ~/after/plugin/source.vim to have
+"Load plugin _pre configuration before setting up packs; this is useful for
+"setting globals. NOTE: See after/plugin/source.vim for the non-_pre configs.
+for f in split(glob(g:confdir.'/conf/*_pre.vim'), '\n')
+    exec 'source' f
+endfor
+
+"Setup packs
+exec 'source' g:confdir.'/packs.vim'
+
+"NOTE: All other configs are sourced from after/plugin/source.vim to have
 "plugins/packs loaded. This is so I can rely on things like g: variables being
 "already set by them in e.g. keymap.vim.
 "}}}

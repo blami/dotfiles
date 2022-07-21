@@ -94,14 +94,18 @@ nvim_spell:
 # to start based on whether running standalone or in VSCode. To override set
 # start: true.
 nvim_packs:
-  # LSP configuration snippets
-  - name: "nvim-lspconfig"
+  - name: "lspconfig"
     group: "plugins"
     repo: "https://github.com/neovim/nvim-lspconfig"
-  # Git changes in sign column
-  - name: "gitgutter"
+  - name: "treesitter"
     group: "plugins"
-    repo: "https://github.com/airblade/vim-gitgutter"
+    repo: "https://github.com/nvim-treesitter/nvim-treesitter"
+  - name: "gitsigns"
+    group: "plugins"
+    repo: "https://github.com/lewis6991/gitsigns.nvim"
+  - name: "colorizer"
+    group: "plugins"
+    repo: "https://github.com/norcalli/nvim-colorizer.lua"
 
 # Secrets
 ssh_keys:
