@@ -1,0 +1,20 @@
+---
+# Configure containerd
+
+- name: Configuring containerd
+  copy:
+    src: "{{ role_path }}/files/containerd/config.toml"
+    dest: "/etc/containerd/config.toml"
+    owner: root
+    group: root
+    mode: 644
+    force: true
+  register: out
+
+- name: Restarting containerd
+  systemd:
+    name: containerd
+    state: restarted
+    daemon_reload: true
+  when:
+    - out.changed

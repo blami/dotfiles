@@ -1,0 +1,13 @@
+---
+# Kubernetes role variables
+
+kube_cluster:
+  pod_cidr: 192.168.224.0/20
+
+# Additional packages to install
+apt_packages:
+  - containerd.io           # containerd from Docker CE APT repository
+  - kubeadm
+  - kubelet
+  - kubectl
+  - helm

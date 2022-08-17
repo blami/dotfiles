@@ -1,0 +1,24 @@
+---
+# Development environment setup
+
+# Linux
+- block:
+    - import_tasks: disable_swap.yml
+    - import_tasks: kernel_modules.yml
+    - import_tasks: sysctl.yml
+    - import_tasks: apt.yml
+    - import_tasks: containerd.yml
+    - import_tasks: calico.yml
+  become: true
+  become_user: "root"
+  when:
+    - ansible_facts.os_family == "Debian"
+    - my_facts.has_become_root
+
+#- block:
+#    - import_tasks: go.yml
+#  become: true
+#  become_user: "{{ my_user.username }}"
+#  when:
+#    - ansible_facts.os_family == "Debian"
+#    - my_facts.has_become_my_user

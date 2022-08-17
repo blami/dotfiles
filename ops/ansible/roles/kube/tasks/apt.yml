@@ -1,0 +1,18 @@
+---
+# Install APT packages
+
+- name: Installing APT Packages
+  apt:
+    pkg: "{{ apt_packages }}"
+    install_recommends: false
+    state: latest
+
+# Avoid accidental automatic upgrades
+- name: Holding APT Packages
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  with_items:
+    - kubeadm
+    - kubelet
+    - kubectl

@@ -1,0 +1,15 @@
+---
+# Sysctl Settings
+
+- name: Installing Sysctl Settings
+  copy:
+    src: "{{ role_path }}/files/sysctl.d/kubernetes.conf"
+    dest: "/etc/sysctl.d/kubernetes.conf"
+    owner: root
+    group: root
+    mode: 644
+    force: true
+
+- name: Applying Sysctl Settings
+  command: /usr/sbin/sysctl --system
+  # NOTE: No when: as it does not hurt to reload sysctl configs.
