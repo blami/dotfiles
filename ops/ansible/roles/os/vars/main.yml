@@ -52,6 +52,11 @@ apt_repositories:
     # NOTE: There is no newer APT dist than xenial
     sources:
       - "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+  # Helm
+  - name: "helm"
+    key_url: "https://baltocdn.com/helm/signing.asc"
+    sources:
+      - "deb https://baltocdn.com/helm/stable/debian/ all main"
   # Google Cloud SDK
   - name: "gcloud"
     key_id: "FEEA9169307EA071"
@@ -135,6 +140,7 @@ apt_packages:
   - unzip
   - zsh
   - powertop                  # power management utility
+  - lm-sensors
 
 apt_packages_unwanted:
   - command-not-found
