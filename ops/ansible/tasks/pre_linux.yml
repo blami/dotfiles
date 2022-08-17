@@ -88,6 +88,11 @@
 
 # Gather additional facts
 
+- name: Gathering Groups
+  getent:
+    database: group
+    split: ":"
+
 - name: Gathering Installed Packages
   package_facts:
     manager: auto

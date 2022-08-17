@@ -9,14 +9,19 @@
     # NOTE: DO NOT set shell as it might not be installed yet; there's task in
     # user/shell to do that.
     #shell: {{ my_user.shell }}
-    groups: "{{ my_user.groups }}"
-    append: true
     # NOTE: Use system home directory see update command bellow
     move_home: false
     # NOTE: For new user require change on first login
     password: "{{ 'changeme' | password_hash('sha512') }}"
     update_password: on_create
   register: out
+
+- name: Adding User {{ my_user.username }} To Groups
+  user:
+    name: "{{ my_user.username }}"
+  with_items: "{{ my_user.groups }}"
+  when:
+    - item in ansible_facts.getent_group
 
 # TODO: call chage to force password change
 
