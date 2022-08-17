@@ -9,7 +9,9 @@
   roles:
     - { role: os,     tags: [os, linux] } 
     - { role: user,   tags: [user, linux] }
-    - { role: devel,  tags: [devel, linux] }
+    # NOTE: These roles need to be triggerd with --tags
+    - { role: devel,  tags: [devel, linux, never] }
+    - { role: kube,   tags: [kube, linux, never] }
 
 - name: Windows
   hosts: windows
@@ -19,4 +21,5 @@
   roles:
     - { role: os,     tags: [os, windows] }
     - { role: user,   tags: [user, windows] }
-    - { role: devel,  tags: [devel, windows] }
+    # NOTE: These roles need to be triggered with --tags
+    - { role: devel,  tags: [devel, windows, never] }
