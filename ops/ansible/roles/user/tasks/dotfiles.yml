@@ -29,14 +29,17 @@
 #   when:
 #     - not out.changed
 # 
-# # Setting only push to SSH key is convenient as we can always pull without
-# # authenticating. Assumes clone is done using by my_user.ssh_key.
-# - name: Changing dotfiles remote to SSH (for push)
-#   shell:
-#     chdir: "{{ my_user.home }}"
-#     cmd: |
-#       umask {{ my_user.umask }}
-#       git --git-dir=.dfgit remote set-url --push origin git@github.com:{{ dotfiles_repo }}
-#   # Do not run if SSH key is not present
-#   when:
-#     - my_facts.has_ssh_key
+
+- stat:
+    path: "{{ my_user.home }}/.ssh/{{ my_user.ssh_key }}"
+  register: out
+
+- name: Changing Dotfiles Repository Remote To SSH (for push)
+  shell:
+    chdir: "{{ my_user.home }}"
+    cmd: |
+      umask {{ my_user.umask }}
+      git --git-dir=.dfgit remote set-url --push origin git@github.com:{{ dotfiles_repo }}
+  # Do not run if SSH key is not present
+  when:
+    - out.stat.exists
