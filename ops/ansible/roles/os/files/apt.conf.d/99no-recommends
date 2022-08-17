@@ -1,3 +1,4 @@
 APT::Install-Recommends "false";
-APT::AutoRemove::RecommendsImportant "false";
+APT::Install-Suggests "false";
+APT::AutoRemove::RecommendsImportant "true";
 APT::AutoRemove::SuggestsImportant "false";
