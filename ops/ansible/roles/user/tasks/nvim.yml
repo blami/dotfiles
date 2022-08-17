@@ -35,6 +35,6 @@
     chdir: "{{ my_user.home }}"
     cmd: |
       umask {{ my_user.umask }}
-      pip3 install pynvim
+      /usr/bin/pip3 install pynvim
   when:
     - not has_pip3.failed
