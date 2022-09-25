@@ -54,7 +54,8 @@ MAILCHECK=
 # {{{ Expansion, Globbing & Scripting
 setopt globdots
 setopt no_case_glob
-setopt no_extended_glob
+# NOTE: Allow things like rm -rf ^debian, etc.
+setopt extended_glob
 
 # Redirection - don't clobber with >; allow multiple redirections
 unsetopt clobber
