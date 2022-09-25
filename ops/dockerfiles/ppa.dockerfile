@@ -11,7 +11,7 @@
 # mk-build-deps -i /path/to/debian/control
 
 ARG SERIES=latest
-FROM ubuntu:${RELEASE}
+FROM ubuntu:${SERIES}
 
 RUN apt-get update \
     && apt-get upgrade -y \
