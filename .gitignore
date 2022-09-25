@@ -10,6 +10,7 @@ _sort
 
 # User directories
 /bak
+/blog
 /desk
 /docs
 /downl
@@ -42,6 +43,7 @@ _sort
 
 # Specific per-install
 /.ansible
+/.bundle/cache
 /.cache
 /.calc_history
 /.config/user-dirs.dirs
@@ -56,9 +58,9 @@ _sort
 /.local/share/lftp
 /.local/share/mc/history
 /.local/share/nvim
-/.local/share/weechat/weechat.log
-/.local/share/weechat/logs
-/.local/share/weechat/xfer
+/.local/share/weechat/*
+!/.local/share/weechat
+!/.local/share/weechat/python
 /.local/state
 /.npm
 /.npm
@@ -75,3 +77,10 @@ _sort
 /.sudo_as_admin_successful
 
 # AppData
+/AppData/Local/*
+/AppData/Roaming/*
+!/AppData/Local
+!/AppData/Roaming
+!/AppData/Local/nvim
+!/AppData/Local/foo
+!/AppData/Roaming/GHISLER
