@@ -11,7 +11,7 @@
     - { role: user,   tags: [user, linux] }
     # NOTE: These roles need to be triggerd with --tags
     - { role: devel,  tags: [devel, linux, never] }
-    - { role: kube,   tags: [kube, linux, never] }
+    - { role: k8s,    tags: [k8s, linux, never] } # needs --tags ...,k8s-node/k8s-controlplane
 
 - name: Windows
   hosts: windows
