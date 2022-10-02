@@ -5,6 +5,9 @@
 if !exists('g:vscode')
     call blami#pack#Add(
                 \ 'lspconfig',
+                \ 'cmp-lsp',
+                \ 'cmp-vsnip',
+                \ 'cmp',
                 \ 'treesitter',
                 \ 'gitsigns',
                 \ 'colorizer',
