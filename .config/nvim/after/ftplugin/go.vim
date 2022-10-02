@@ -13,7 +13,6 @@ compiler go
 setl formatoptions-=t
 setl noexpandtab
 setl textwidth=79
-setl list
 
 "Comments
 setl comments=s1:/*,mb:*,ex:*/,://

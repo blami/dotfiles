@@ -20,4 +20,4 @@ noremap     <silent><buffer>    <F1>        :q<CR>
 
 "Autocommands
 "Open help window as right split on large terminals
-autocmd! BufWinEnter <buffer> if &columns > 160 | wincmd L"{{{"}}} | endif
+autocmd! BufWinEnter <buffer> if &columns > 120 | wincmd L"{{{"}}} | endif

@@ -6,7 +6,6 @@
 
 "Formatting
 setl fo-=t fo-=c
-setl list
 
 "File Matching
 setl suffixesadd=.vim

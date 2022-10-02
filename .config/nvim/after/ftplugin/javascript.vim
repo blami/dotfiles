@@ -7,7 +7,6 @@
 "Formatting
 setl expandtab shiftwidth=2 softtabstop=2 tabstop=4
 setl textwidth=119
-setl list
 
 "File Matching
 setl suffixesadd=.js

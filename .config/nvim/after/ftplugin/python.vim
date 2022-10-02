@@ -9,7 +9,6 @@
 "Formatting
 setl expandtab shiftwidth=4 softtabstop=4 tabstop=8
 setl textwidth=119
-setl list
 
 "Comments
 setl comments=b:#,fb:-

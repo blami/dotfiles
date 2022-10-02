@@ -16,7 +16,6 @@ setl spell spelllang=en
 
 "Syntax
 let b:current_syntax = 1
-syn match   gitcommitBlank '\%1l\.$'
 
 "Autocommands
 "Reset cursor position to begining of file (autocmd.vim remembers cursor position)
