@@ -20,6 +20,25 @@
   when:
     - my_facts.is_wsl
 
+# TODO: If interop check fails consider system being non-WSL for now as we use
+# PS to gather some vital info relied upon in playbook...
+- name: Chekcking WSL Interop
+  command: >
+    powershell.exe -Command 'Write-Host OK'
+  register: out
+  changed_when: false
+  failed_when: false
+  when:
+    - my_facts.is_wsl
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "is_wsl": out.failed,
+        "wsl_interop": out.failed,
+      }) }}
+  when:
+    - my_facts.is_wsl
+
 - name: Gathering WSL Paths
   shell: |
     wslpath -w {{ playbook_dir }}
