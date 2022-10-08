@@ -6,10 +6,10 @@
     - { import_tasks: tasks/pre_linux.yml, tags: always }
     - { import_tasks: tasks/pre_wsl.yml, tags: always }
     - { import_tasks: tasks/pre_bitwarden.yml, tags: always }
+    - { import_tasks: tasks/pre_debug.yml, tags: [debug, never] }
   roles:
     - { role: os,     tags: [os, linux] } 
     - { role: user,   tags: [user, linux] }
-    # NOTE: These roles need to be triggerd with --tags
     - { role: devel,  tags: [devel, linux, never] }
     - { role: k8s,    tags: [k8s, linux, never] } # needs --tags ...,k8s-node/k8s-controlplane
 
@@ -18,8 +18,9 @@
   pre_tasks:
     - { import_tasks: tasks/pre_windows.yml, tags: always }
     - { import_tasks: tasks/pre_bitwarden.yml, tags: always }
+    - { import_tasks: tasks/pre_debug.yml, tags: [debug, never] }
   roles:
     - { role: os,     tags: [os, windows] }
     - { role: user,   tags: [user, windows] }
-    # NOTE: These roles need to be triggered with --tags
     - { role: devel,  tags: [devel, windows, never] }
+    - { role: k8s,    tags: [k8s, windows, never] }
