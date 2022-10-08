@@ -10,6 +10,18 @@
   when:
     - my_facts.is_wsl
 
+- name: Installing WSLInterop.conf to binfmt.d
+  copy:
+    src: "{{ role_path }}/files/binfmt.d/WSLInterop.conf"
+    dest: "/etc/binfmt.d/WSLInterop.conf"
+    owner: root
+    group: root
+    mode: 644
+    force: yes
+  register: out_wsl_wslinterop
+  when:
+    - my_facts.is_wsl
+
 - name: Installing wsl.conf
   copy:
     src: "{{ role_path }}/files/wsl.conf"
@@ -38,5 +50,5 @@
 - name: Restarting WSL
   command: "/mnt/c/Windows/System32/wsl.exe -t {{ my_facts.wsl_distro }}"
   when: 
-    - (out_wsl_tmpfs.changed or out_wsl_wslconf.changed)
+    - (out_wsl_tmpfs.changed or out_wsl_wslinterop.changed or out_wsl_wslconf.changed)
     - my_facts.is_wsl
