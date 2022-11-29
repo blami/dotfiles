@@ -1,8 +1,11 @@
 ---
 # Install APT packages
+# NOTE: These work only on Debian-like distros
 
 - name: Installing APT Packages
   apt:
     pkg: "{{ apt_packages }}"
     install_recommends: false
     state: latest
+  when:
+    - ansible_facts.os_family == "Debian"

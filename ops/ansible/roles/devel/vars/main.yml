@@ -47,6 +47,7 @@ apt_packages:
   - docker-ce-cli             # docker client
   - docker-compose
   - kubectl
+  - helm
   - google-cloud-sdk          # gcloud utility and other Google Cloud tools
   # General Linux stuff
   - pkg-config

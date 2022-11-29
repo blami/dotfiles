@@ -1,6 +1,9 @@
 ---
 # User environment setup
 
+- debug:
+    var: ansible_facts
+
 # Linux
 - block:
     - import_tasks: apt.yml
@@ -8,7 +11,7 @@
   become: true
   become_user: "root"
   when:
-    - ansible_facts.os_family == "Debian"
+    - ansible_facts.system == "Linux"
     - my_facts.has_become_root
 
 - block:
@@ -19,5 +22,5 @@
   become: true
   become_user: "{{ my_user.username }}"
   when:
-    - ansible_facts.os_family == "Debian"
+    - ansible_facts.system == "Linux"
     - my_facts.has_become_my_user

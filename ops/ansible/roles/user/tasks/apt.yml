@@ -1,10 +1,13 @@
 ---
 # Install user APT packages
+# NOTE: These work only on Debian-like distros
 
 - name: Installing APT Packages
   apt:
     pkg: "{{ apt_packages }}"
     state: latest
+  when:
+    - ansible_facts.os_family == "Debian"
 
 - name: Installing Desktop Specific APT Packages
   apt:
@@ -12,3 +15,4 @@
     state: latest
   when:
     - my_facts.is_desktop
+    - ansible_facts.os_family == "Debian"
