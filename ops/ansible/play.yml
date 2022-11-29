@@ -11,7 +11,7 @@
     - { role: os,     tags: [os, linux] } 
     - { role: user,   tags: [user, linux] }
     - { role: devel,  tags: [devel, linux, never] }
-    - { role: k8s,    tags: [k8s, linux, never] } # needs --tags ...,k8s-node/k8s-controlplane
+    - { role: kube,   tags: [kube, linux, never] }
 
 - name: Windows
   hosts: windows
@@ -23,4 +23,4 @@
     - { role: os,     tags: [os, windows] }
     - { role: user,   tags: [user, windows] }
     - { role: devel,  tags: [devel, windows, never] }
-    - { role: k8s,    tags: [k8s, windows, never] }
+    - { role: kube,   tags: [kube, windows, never] }

@@ -14,11 +14,3 @@
   when:
     - ansible_facts.os_family == "Debian"
     - my_facts.has_become_root
-
-#- block:
-#    - import_tasks: go.yml
-#  become: true
-#  become_user: "{{ my_user.username }}"
-#  when:
-#    - ansible_facts.os_family == "Debian"
-#    - my_facts.has_become_my_user
