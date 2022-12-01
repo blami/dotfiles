@@ -1,0 +1,7 @@
+#!/bin/sh
+# code - VS Code wrapper
+
+# TODO: Find right version of VSCode
+
+VSCODE="/mnt/c/Program Files/Microsoft VS Code/bin/code"
+exec "$VSCODE" $@
