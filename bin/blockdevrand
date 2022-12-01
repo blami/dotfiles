@@ -9,7 +9,7 @@ done
 
 echo Writing random data to: $1
 
-openssl enc -aes-256-ctr -nosalt -pass \
+openssl enc -aes-256-cbc -md sha512 -pbkdf2 -nosalt -pass \
     pass:"$(dd if=/dev/urandom bs=128 count=1 2>/dev/null | base64)" \
     < /dev/zero \
     | \
