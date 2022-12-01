@@ -1,0 +1,118 @@
+#!/usr/bin/env python3
+"""Generate random unused MAC address(es)
+
+This script generates random MAC addresses and checks them against list of
+existing MAC addresses obtained from libvirt instance(s). In case libvirt is
+not installed or given URI(s) aren't accessible script will still generate
+random MAC addresses without collision check.
+
+Interactive mode (-i) dupes each MAC address to stderr and waits for key press
+which is convenient for integration with e.g. virt-install:
+
+  $ virt-install ... --network ...,mac=$(virt-mac -i) ...
+"""
+__author__="Ondrej Balaz"
+__license__="MIT"
+
+import sys
+import os
+import random
+import argparse
+from textwrap import fill
+from xml.dom.minidom import parseString
+
+has_libvirt=True
+try:
+    import libvirt
+except ImportError:
+    has_libvirt=False
+
+def getmacs(uris: list[str] = ["qemu:///system"]) -> list[str]:
+    """Get MAC addresses of all virtual interfaces on given libvirt
+    instances."""
+
+    macs = []
+    for uri in uris:
+        conn = None
+        try:
+            conn = libvirt.open(uri)
+        except libvirt.libvirtError:
+            raise RuntimeError(f"unable to connect to libvirt {uri}")
+
+        for dom in conn.listAllDomains():
+            xml = parseString(dom.XMLDesc())
+            for i in xml.getElementsByTagName("interface"):
+                for m in i.getElementsByTagName("mac"):
+                    mac = m.getAttribute("address")
+                    if mac:
+                        macs.append(mac)
+    return macs
+
+
+def genmac(macs: list[str] = [], oui: list[int] = [0x52, 0x54, 0x00]) -> str:
+    """Generate random unique and unused MAC address."""
+    attempt = 0
+    while True:
+        attempt += 1
+        mac = ':'.join(["%02x" % x for x in 
+                        oui + [
+                            random.randint(0x00, 0xff),
+                            random.randint(0x00, 0xff),
+                            random.randint(0x00, 0xff)]
+                        ])
+        if mac not in macs:
+            return mac
+        # Safety break
+        if attempt >= 65535:
+            raise RuntimeError("too many MAC collisions")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+            prog = os.path.basename(__file__),
+            description = __doc__,
+            epilog = "note: argument -u URI can be used multiple times",
+            formatter_class = argparse.RawTextHelpFormatter)
+    parser.add_argument("-n", type=int, 
+                        default=1,
+                        help="generate N MAC addresses (default: 1)")
+    parser.add_argument("-o", type=str, metavar="OUI",
+                        help="set specific MAC OUI (default: 52:54:00)")
+    parser.add_argument("-u", type=str, metavar="URI", action="append",
+                        help="libvirt URI(s) (default: \"qemu:///system\")")
+    parser.add_argument("-i", action="store_true",
+                        help="print MAC address to stderr and wait for key")
+    args = parser.parse_args()
+
+    if args.o:
+        try:
+            args.o = [int(h, 16) for h in args.o.split(":")]
+        except:
+            print(f"error: invalid OUI \"{args.o}\"")
+            exit(1)
+    else:
+        args.o = [0x52, 0x54, 0x00] # QEMU default
+    if not args.u:
+        args.u = ["qemu:///system"]
+
+    existing_macs = []
+    if has_libvirt:
+        try:
+            existing_macs = getmacs(args.u)
+        except RuntimeError as err:
+            print(f"warning: {err}, skipping", file=sys.stderr)
+
+    new_macs = []
+    for i in range(0, args.n):
+        try:
+            mac = genmac(existing_macs, oui=args.o)
+            existing_macs.append(mac)
+            print(mac)
+            if args.i:
+                # Print MAC address once again to stderr and wait for key
+                print(f"MAC address: {mac}, press any key...", file=sys.stderr)
+                input("")
+
+        except RuntimeError as err:
+            print(f"error: {err}", file=sys.stderr)
+            exit(1)
