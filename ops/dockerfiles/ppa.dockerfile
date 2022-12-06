@@ -25,7 +25,7 @@ RUN apt-get update \
         quilt \
         equivs \
         sudo \
-    && rm -rf /tmp/* /var/tmp/* \
+    && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/* \
     && apt-get clean
 
 ARG UID=1000
