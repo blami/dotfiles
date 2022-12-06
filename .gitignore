@@ -55,6 +55,7 @@ _sort
 /.local/go
 /.local/lib
 /.local/node
+/.local/share/fonts/**/.uuid
 /.local/share/lftp
 /.local/share/mc/history
 /.local/share/nvim
@@ -67,6 +68,7 @@ _sort
 /.npmrc
 /.python_history
 /.solstudio
+/.vscode-server
 /.viminfo
 /.wget-hsts
 /.yarnrc
