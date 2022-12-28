@@ -28,23 +28,16 @@
 	template = ~/.gitmessage
 
 [merge]
-	tool = nvim
+	tool = git-mergetool
 
-[mergetool "vimdiff"]
-	cmd = vim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c '$wincmd J'
-
-[mergetool "nvim"]
-	cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c '$wincmd J'
+[mergetool "git-mergetool"]
+	# NOTE: git-mergetool uses nvimdiff and fallbacks to vimdiff
+	cmd = ~/bin/git-mergetool $LOCAL $REMOTE $MERGED
 
 [rebase]
 	autosquash = true
 
 [push]
-	; nothing   - do not push any branches
-	; matching  - push all matching branches
-	; upstream  - push the current branch to its upstream
-	; current   - push the current branch to a branch of the same name
-	; simple    - push the current branch to its upstream of the same name
 	default = current
 
 [pull]
@@ -61,6 +54,9 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+
+[url "git+ssh://blami@git.launchpad.net/"]
+    insteadof = lp:
 
 [include]
 	path = ~/.gitaliases

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+VIM=vim
+if ! command -v nvim &> /dev/null; then VIM=nvim; fi
+exec $VIM -d $1 $2 $3 -c '$wincmd w' -c '$wincmd J'
