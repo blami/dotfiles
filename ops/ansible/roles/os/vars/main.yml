@@ -72,6 +72,11 @@ apt_repositories:
     key_url: "https://dl.google.com/linux/linux_signing_key.pub"
     sources:
       - "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main"
+  # Plex
+  - name: "plex"
+    key_url: "https://downloads.plex.tv/plex-keys/PlexSign.key"
+    sources:
+      - "deb https://downloads.plex.tv/repo/deb public main"
 
 # Essential packages to install
 apt_packages:
