@@ -2,6 +2,7 @@
 # User role variables
 
 # Additional packages to install
+# NOTE: Depends on "os" role APT repositories
 apt_packages:
   - apcalc
   - ffmpeg
@@ -99,9 +100,9 @@ nvim_packs:
   - name: "lspconfig"
     group: "plugins"
     repo: "https://github.com/neovim/nvim-lspconfig"
-  - name: "treesitter"
-    group: "plugins"
-    repo: "https://github.com/nvim-treesitter/nvim-treesitter"
+  #- name: "treesitter"
+  #  group: "plugins"
+  #  repo: "https://github.com/nvim-treesitter/nvim-treesitter"
   - name: "cmp"
     group: "plugins"
     repo: "https://github.com/hrsh7th/nvim-cmp"

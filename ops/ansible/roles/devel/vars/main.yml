@@ -2,6 +2,7 @@
 # Development role variables
 
 # Additional packages to install
+# NOTE: Depends on "os" role APT repositories
 apt_packages:
   - gdb                       # GNU debugger
   - golang

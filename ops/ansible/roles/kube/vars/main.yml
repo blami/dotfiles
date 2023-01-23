@@ -5,6 +5,7 @@ kube_cluster:
   pod_cidr: 192.168.224.0/20
 
 # Additional packages to install
+# NOTE: Depends on "os" role APT repositories
 apt_packages:
   - containerd.io           # containerd from Docker CE APT repository
   - kubeadm

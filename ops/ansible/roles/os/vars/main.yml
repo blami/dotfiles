@@ -48,10 +48,10 @@ apt_repositories:
       - "deb https://ppa.launchpadcontent.net/ansible/ansible/ubuntu {{ ansible_distribution_release }} main"
   # Kubernetes
   - name: "kubernetes"
-    key_id: "FEEA9169307EA071"
-    # NOTE: There is no newer APT dist than xenial
+    key_id: "B53DC80D13EDEF05"
+    # NOTE: There is no newer APT dist than yakkety
     sources:
-      - "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+      - "deb http://apt.kubernetes.io/ kubernetes-yakkety main"
   # Helm
   - name: "helm"
     key_url: "https://baltocdn.com/helm/signing.asc"
@@ -59,7 +59,7 @@ apt_repositories:
       - "deb https://baltocdn.com/helm/stable/debian/ all main"
   # Google Cloud SDK
   - name: "gcloud"
-    key_id: "FEEA9169307EA071"
+    key_id: "B53DC80D13EDEF05"
     sources:
       - "deb https://packages.cloud.google.com/apt cloud-sdk main"
   # Microsoft (VSCode)
@@ -73,10 +73,11 @@ apt_repositories:
     sources:
       - "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main"
   # Plex
-  - name: "plex"
-    key_url: "https://downloads.plex.tv/plex-keys/PlexSign.key"
-    sources:
-      - "deb https://downloads.plex.tv/repo/deb public main"
+  # TODO: Move to Kubernetes cluster...
+  #- name: "plex"
+  #  key_url: "https://downloads.plex.tv/plex-keys/PlexSign.key"
+  #  sources:
+  #    - "deb https://downloads.plex.tv/repo/deb public main"
 
 # Essential packages to install
 apt_packages:
