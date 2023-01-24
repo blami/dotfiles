@@ -19,6 +19,7 @@
     - import_tasks: dirs.yml
     - import_tasks: secrets.yml
     - import_tasks: nvim.yml
+    - import_tasks: nerdfonts.yml
   become: true
   become_user: "{{ my_user.username }}"
   when:

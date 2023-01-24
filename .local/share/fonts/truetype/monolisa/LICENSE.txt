@@ -1,0 +1,240 @@
+NOTE: This is proprietary licensed and purchased font. To verify my purchase
+feel free to contact me by e-mail.
+
+FaceType – End User License Agreement (EULA) FaceType thanks you for reading
+this license and taking the time to understand it in detail! Your support makes
+this foundry possible.
+
+We provide two types of licenses: personal and commercial. Certain conditions
+apply for both and we cover those before the specifics.
+
+Acknowledgments FaceType is willing to license the licensed product to
+Licensees only on the condition that the Licensee accepts the terms and
+conditions contained in this agreement. By placing an order for and accepting
+FaceType font software (electronic data), or by downloading the software
+accompanying this license, the Licensee acknowledges that he has read all of
+the terms and conditions of this agreement, understands them, and agrees to be
+bound by them.
+
+If the Licensee does not agree to these terms and conditions, he must promptly
+cease download or use of the licensed product and return the licensed product
+to FaceType or its reseller for a full refund of the license fee which the
+Licensee paid for the licensed product, and the Licensee must immediately
+delete any portion of the font software installed on Licensee’s computer(s).
+
+If you intend to create a trademark, logo, brand or corporate identy, a
+multinational campaign using any of FaceType’s typefaces or if the number of
+prints for large commercial projects exceeds 250,000, a special font license
+solely issued by FaceType is needed. Please contact us for more information:
+info@monolisa.dev.
+
+1. Personal license For personal use, you are permitted to use the typeface on
+your own computer(s). However, you are not permitted to use the typeface within
+a commercial context and share the typeface with others in any way.
+
+In other words, you can use the typeface for developing a product but not as a
+part of a product. For specific restrictions per plan, please refer to the buy
+page.
+
+To give you further examples of what you can do with the personal license,
+consider the section 3.a but keep the overall constraint (i.e., no commercial
+usage) in mind.
+
+2. Commercial license To cover the commercial case, we provide a specific
+license that provides more freedoms. Again, this depends on the specific
+subscription chosen. In short, the commercial license allows the following
+types of usages:
+
+Desktop/print usage (section 3.a) - i.e., using the typeface on your computer
+or as a part of your prints Web usage (section 3.b) - i.e., hosting the
+typeface on your infrastructure and using it as a part of your web product
+Application usage (section 3.c) - i.e., using the typeface within your
+commercial application ePub usage (section 3.d) - i.e., using the typeface in
+your commercial ebook The sections 3 to 6 below describe commercial use cases
+in further detail.
+
+3. Use cases 3.A DESKTOP 3.a.1 Definition You may install a font into your
+computer’s operating system and use it in any of your applications that contain
+a fonts menu such as TextEdit, Microsoft Word, Adobe Photoshop or Indesign.
+
+3.a.2 The Licensee May Create print documents, posters, business cards, goods
+for sale, (such as clothing apparel and accessories), physical goods, static
+images, and other objects like stationery, mugs, T-shirts and the like.
+
+3.a.3 Embedding Restrictions PDF embedding of the font software into PDF
+documents is only permitted in a secured read-only mode that allows only
+printing and viewing, and prohibits editing, selecting, enhancing or modifying
+the text.
+
+Licensee must ensure that recipients of PDF documents cannot extract the
+FaceType font software from such PDF documents or use the embedded font
+software for editing purposes or for the creation of new documents.
+
+If you are unable to limit access to the document to ‘printing and viewing’
+only, the electronic document(s) may not be used on computers that are not
+Licensed Computers.
+
+Examples of non-commercial, not-for-profit permitted usage include PDF
+documents supplied to Service Bureaus, printers, or any documents that
+disseminate personal, internal or business information.
+
+3.a.4 Number of Users The number of users allowed depends on your plan
+(personal, subscription) and the restrictions have been communicated at the buy
+page.
+
+3.B WEB You can embed the purchased webfont into your website (a group of pages
+related to one domain, including sub-domains).
+
+FaceType is not responsible for installing, embedding, hosting or updating the
+webfonts. Web design agencies or hosting providers are not allowed to share a
+single license across their clients’ websites.
+
+3.C APPLICATION You can use the typeface in an app for iOS, Android, or Windows
+Phone or any other mobile OS, and you intend to embed the font files in your
+mobile application’s code. The amount of installations across the platforms (i.
+g. iOS, Android, …) is unlimited.
+
+Application usage includes incorporating the font software into your hardware,
+software or any other products, such as application programs, interfaces, EPOS,
+WEPOS, POSReady, operating systems, electronics, electronic games,
+entertainment products, video on demand, gaming devices.
+
+3.D EPUB You can use the typeface for creating layouts for publications
+intended for Kindle, iPad or other eReaders, ePublishing, ePub, eBooks, eZines,
+proprietary reader devices.
+
+General You agree to inform your employees or any other person having access to
+the FaceType software and copies thereof, of the terms and conditions of this
+Standard License Agreement and to ensure that they shall strictly abide by
+these terms and conditions.
+
+You agree that you will not export or re-export the Software in any form
+without the appropriate United States, European, and worldwide government
+licenses.
+
+You agree not to sublicense, sell, lease or otherwise transfer the electronic
+data without the prior written consent of FaceType.
+
+Grant of License In consideration of payment of the license fee, included in
+the price paid by the Licensee for this product, the Licensor grants to the
+Licensee a non-exclusive right to use this product, which consists of
+electronic data to display and output PostScript®, TrueType® or OpenType®
+typefaces. The terms of this Agreement are contractual in nature and not mere
+recitations.
+
+Prohibited Usage This product is licensed only to the Licensee, and may not be
+transferred to any third party at any time without the prior written consent of
+FaceType.
+
+The Licensee may not modify, translate, adapt, alter, decompile, disassemble,
+decrypt, reverse engineer, change or alter the embedding bits, the font name,
+legal notices contained in the font software, nor seek to discover the source
+code of the font data, convert into another font format, create bitmaps, add or
+subtract any glyphs, symbols or accents, or any other derivative works based on
+the electronic data in this product.
+
+The Licensee may not supply, directly or indirectly, any FaceType font data to
+any other firm, business or individual for any type of modifications or updates
+whatsoever.
+
+If the Licensee needs to modify or update the font data in anyway in the
+future, FaceType solely will perform and invoice this additional work at its
+normal prevailing rates.
+
+The Licensee may not duplicate, modify, adapt, translate or create derivative
+works based on the printed materials that may have been supplied with this
+product. It is a breach of this license agreement to use the product in any way
+that infringes the rights of any third party under copyright, trademark, patent
+or any other laws.
+
+In the event of infringing uses by the Licensee, this license immediately
+terminates and the Licensee is solely responsible for any such infringing uses
+including all legal and other damages that may be incurred.
+
+Ownership FaceType retains intellectual property rights, title and ownership of
+any of its electronic data provided. This title and ownership extends to copies
+of the data installed on any computer, downloaded to any output device, or
+retained on other media by the Licensee as a backup.
+
+This license does not constitute an exclusive sale of the original product to
+the Licensee. This Agreement does not grant you any right to patents,
+copyrights, trade secrets, trade names, trademarks (whether registered or
+unregistered), or any other rights, franchises or licenses in respect of the
+electronic data.
+
+No rights are granted to you other than a License to use the electronic data on
+the terms expressly set forth in this Agreement. The Licensee further
+acknowledges and agrees that the structure, organisation and code of the font
+software are valuable trade secrets and confidential information of FaceType.
+
+The font software is protected by copyright including without limitation, by
+Austrian, and United States Copyright Law, international treaty provisions, and
+applicable laws in the jurisdiction of use.
+
+Copy Restrictions This product is copyrighted and contains proprietary
+information and trade secrets of FaceType. Unauthorised copying of this product
+is expressly forbidden.
+
+You are permitted to create backups of the font software, provided that: (a)
+they are stored only at the site where this product is licensed, and (b) the
+full copyright information is included with each backup copy.
+
+You may be held legally responsible for any infringement of FaceType’s
+intellectual property rights that is caused or encouraged by your failure to
+abide by the terms of this Agreement.
+
+Disclaimer Except as expressly provided above, this product is provided ‘as
+is’. FaceType does not make any warranty of any kind, either expressed or
+implied, including, but not limited to, the implied warranties of
+merchantability and fitness for a particular purpose.
+
+No oral or written information or advice given by FaceType, its dealers,
+distributors, agents, or employees will create a warranty or in any way
+increase the scope of this warranty, and Licensee may not rely upon any such
+information or advice.
+
+FaceType shall not be liable for any direct, indirect, consequential, or
+incidental damages or any other damages of any kind whatsoever (including
+damages from loss of business profits, business interruption and loss of
+business information) arising out of the use or inability to use this product.
+
+Because laws governing the exclusion or limitation of liability for
+consequential or incidental damages vary, the above limitation may not be
+applicable.
+
+Limited Warranty See the refund policy for exact details on warranty and
+refunds.
+
+Termination This Agreement is effective until terminated. This Agreement will
+terminate automatically without notice from FaceType, if the Licensee fails to
+comply with any provision contained herein.
+
+Upon termination of this Agreement, the Licensee must: (a) destroy all copies
+of the electronic data, including the copy on the disk media originally
+provided in this product, (b) destroy all written materials provided with this
+product, if any, and (c) provide FaceType with written verification that the
+product has been destroyed.
+
+Severability If any provisions of this Agreement are held to be invalid,
+illegal or unenforceable, then such provision(s) shall be severed from it, and
+the validity, legality and enforceability of its remaining provisions shall not
+be affected or impaired.
+
+Waiver Waiver of any right(s) at any time shall not constitute waiver of any
+right(s) at any future time.
+
+License Agreement This Agreement may only be modified by FaceType. FaceType
+expressly reserves the right to amend, modify or change this Standard License
+Agreement at any time without prior notification.
+
+Jurisdiction This Agreement represents the entire agreement between the
+Licensor and Licensee. FaceType may only modify this Agreement. The laws of
+Austria govern this License Agreement.
+
+The FaceType collections are the brands and trademarks of FaceType. PostScript
+and Flash are registered trademark of Adobe Systems, Inc. TrueType®, OpenType®
+and Silverlight® are registered trademarks of Microsoft Corporation. All other
+brand or product names are the trademarks or registered trademarks of their
+respective holders and are duly recognised.
+
+© Copyright September 27th, 2022 – FaceType

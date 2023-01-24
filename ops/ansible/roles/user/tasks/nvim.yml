@@ -30,7 +30,6 @@
   failed_when: false
   changed_when: false
   register: has_pip3
-  tags: debug
 
 - name: Installing Neovim Python Provider
   shell:
@@ -40,4 +39,3 @@
       /usr/bin/pip3 install pynvim
   when:
     - has_pip3.rc == 0
-  tags: debug
