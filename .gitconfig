@@ -32,7 +32,7 @@
 
 [mergetool "git-mergetool"]
 	# NOTE: git-mergetool uses nvimdiff and fallbacks to vimdiff
-	cmd = ~/bin/git-mergetool $LOCAL $REMOTE $MERGED
+	cmd = ~/bin/mergetool $LOCAL $REMOTE $MERGED
 
 [rebase]
 	autosquash = true
