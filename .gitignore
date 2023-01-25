@@ -51,9 +51,8 @@ _sort
 /.landscape
 /.lesshst.*
 /.local/bin
-/.local/go
 /.local/lib
-/.local/node
+/.local/include
 /.local/share/fonts/**/.uuid
 /.local/share/fonts/**/*NF.[to]tf
 /.local/share/lftp
@@ -63,7 +62,8 @@ _sort
 !/.local/share/weechat
 !/.local/share/weechat/python
 /.local/state
-/.npm
+/.local/go
+/.local/node
 /.npm
 /.npmrc
 /.solstudio
