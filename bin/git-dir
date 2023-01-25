@@ -1,0 +1,20 @@
+#!/bin/bash
+# gitdir - add local gitdir to .gitconfig_local
+# Usage: gitdir add|del|delete /path/to/dir
+
+[ $# -eq 2 ] && [ -d $2 ] || exit 1
+
+# If directory is in home use `~` in .gitdirs
+GITDIR=${2/#$HOME/\~}
+
+# TODO Make add|del work
+
+[ !-r $1/.gitconfig ] && "WARNING: $1/.gitconfig doesn't exist yet.."
+
+cat >>~/.gitdirs <<EOF
+[includeIf "gitdir:$1/"]
+    path = $1/.gitconfig
+
+EOF
+
+echo "SUCCESS: $1/ local .gitconfig will be applied (if it exists)."
