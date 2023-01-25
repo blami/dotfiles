@@ -55,6 +55,7 @@ _sort
 /.local/lib
 /.local/node
 /.local/share/fonts/**/.uuid
+/.local/share/fonts/**/*NF.[to]tf
 /.local/share/lftp
 /.local/share/mc/history
 /.local/share/nvim
