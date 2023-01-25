@@ -45,7 +45,6 @@ _sort
 /.ansible
 /.bundle/cache
 /.cache
-/.calc_history
 /.config/user-dirs.dirs
 /.config/wslu
 /.config/yarn
@@ -66,13 +65,12 @@ _sort
 /.npm
 /.npm
 /.npmrc
-/.python_history
 /.solstudio
 /.vscode-server
 /.viminfo
 /.wget-hsts
 /.yarnrc
-/.zsh_history.*
+/.*_history*
 
 # OS
 /.motd_shown
