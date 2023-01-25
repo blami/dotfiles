@@ -15,7 +15,7 @@
 # NOTE: Depends on custom font-patcher (~/bin/nerdfonts)
 - name: Patching Nerd Fonts
   command:
-    cmd: "{{ my_user.home }}/bin/nerdfonts -cslq \"{{ item }}\""
+    cmd: "{{ my_user.home }}/bin/nerdfonts -slqc \"{{ item }}\""
     creates:  "{{ item | regex_replace('^(.*)(\\.[to]tf)$', '\\1 NF\\2') }}"
   # Only files that do not already contain NF.ext
   with_items: "{{ out.results | map(attribute='files') | flatten | map(attribute='path') | reject('regex', 'NF\\.[ot]tf$') }}"
