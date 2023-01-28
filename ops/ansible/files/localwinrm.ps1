@@ -10,9 +10,9 @@
 
 # Parameters
 Param (
-    [string]$User = $env:USERNAME,
-    [string]$CertDir = -join($env:USERPROFILE, "\.winrm"),
-    [string]$Firewall
+    [string]$User = $env:USERNAME,                          # username
+    [string]$CertDir = -join($env:USERPROFILE, "\.winrm"),  # certs location
+    [string]$Firewall = "127.0.0.1,172.0.0.0/8"             # source IPs
 )
 
 # Error handling
@@ -23,14 +23,13 @@ Trap {
 }
 $ErrorActionPreference = "Stop"
 
-
 # Set up WinRM listener on localhost with HTTPS self-signed certificate and
 # certificate based authentication.
 Function Setup-Listener {
     Write-Host "setting up WinRM listener"
 
     # Load, verify and add server certificate to store if needed.
-    $CertPath = -join($CertDir, "\server.pfx")
+    $CertPath = -join($CertDir, "\localserver.pfx")
     try {
         $Cert = Get-PfxCertificate -FilePath $CertPath
     } catch {
@@ -128,7 +127,7 @@ Function Setup-User {
     }
 
     # Load, verify and add client certificate to store if needed.
-    $CertPath = -join($CertDir, "\client.crt")
+    $CertPath = -join($CertDir, "\localclient.crt")
     $Cert = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Certificate2
     try {
         $Cert.Import($CertPath)
