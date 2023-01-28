@@ -7,6 +7,7 @@
     - import_tasks: dirs.yml            # create additional directories
     - import_tasks: user.yml
     - import_tasks: sudoers.yml
+    - import_tasks: netplan.yml
     - import_tasks: snap.yml            # disable snap
     - import_tasks: apport.yml          # disable Apport
     - import_tasks: apt.yml
