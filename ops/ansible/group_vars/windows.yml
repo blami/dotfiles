@@ -1,1 +1,8 @@
 ---
+my_user:
+  # These are defaults and overriden in tasks/pre_windows.yml
+  username: "blami"
+  # NOTE: not using 'home' to avoid WSL Linux-Windows confusion
+  userprofile: "C:\\Users\\blami"
+  msaccount: null
+  is_administrator: false

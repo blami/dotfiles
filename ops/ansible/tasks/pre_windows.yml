@@ -2,3 +2,37 @@
 # Windows tasks that run before actual roles.
 
 # NOTE: DO NOT use env lookups here as they run on controller and not the host itself.
+
+- name: Gathering Windows User Facts
+  win_whoami:
+  register: out
+- set_fact:
+    my_user: >
+      {{ my_user | xcombine({
+        "username": out.account.account_name,
+        "userprofile": ansible_facts.env.USERPROFILE,
+        "msaccount": None if (out.groups | selectattr('domain_name', 'contains', 'MicrosoftAccount') | list | length) == 0 else (out.groups | selectattr('domain_name', 'contains', 'MicrosoftAccount') | first).account_name,
+        "is_administrator": (out.groups | selectattr('account_name', 'contains', 'Administrators') | list | length) > 0,
+      }) }}
+
+- name: Checking Become System
+  win_shell: "$true"
+  become: yes
+  become_user: System
+  become_method: runas
+  register: out
+  failed_when: false
+  changed_when: false
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "has_become_system": true if out.rc == 0 else false,
+      }) }}
+
+# NOTE: tasks/pre_wsl.yml on the Linux side pre-sets some my_facts about WSL.
+# If is_wsl is not present in my_facts just set it to false.
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "is_wsl": false if "is_wsl" not in my_facts else my_facts.is_wsl
+      }) }}
