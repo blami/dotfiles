@@ -1,9 +1,6 @@
 ---
 # User environment setup
 
-- debug:
-    var: ansible_facts
-
 # Linux
 - block:
     - import_tasks: apt.yml

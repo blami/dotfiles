@@ -121,13 +121,13 @@ nvim_packs:
 
 # Nerd Fonts globs matching fonts to convert in ~/.local/share/fonts/truetype
 nerdfonts:
-  - bigblue terminal/*.ttf
-  - fira code/*.ttf
-  - go/Go-Mono*.ttf
-  - hack/*.ttf
+  #- bigblue terminal/*.ttf
+  #- fira code/*.ttf
+  #- go/Go-Mono*.ttf
+  #- hack/*.ttf
   - monolisa/*.ttf
-  - profont/*.ttf
-  - ubuntu/UbuntuMono*.ttf
+  #- profont/*.ttf
+  #- ubuntu/UbuntuMono*.ttf
 
 # Secrets
 ssh_keys:
