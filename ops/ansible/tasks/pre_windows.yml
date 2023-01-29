@@ -15,6 +15,20 @@
         "is_administrator": (out.groups | selectattr('account_name', 'contains', 'Administrators') | list | length) > 0,
       }) }}
 
+- name: Gathering Windows Environment Facts
+  win_shell: Get-Item Env:* | Select Key,Value | ConvertTo-Json
+  register: out
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "systemroot": env.SystemRoot,
+        "windir": env.windir,
+        "appdata": env.APPDATA,
+        "localappdata": env.LOCALAPPDATA,
+      }) }}
+  vars:
+    - env: "{{ out.stdout | from_json | items2dict(key_name='Key', value_name='Value') }}"
+
 - name: Checking Become System
   win_shell: "$true"
   become: yes
