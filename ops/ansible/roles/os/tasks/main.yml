@@ -17,3 +17,13 @@
   when:
     - ansible_facts.os_family == "Debian"
     - my_facts.has_become_root
+
+# Windows
+- block:
+    - import_tasks: windows_onedrive.yml
+  become: true
+  become_user: "System"
+  become_method: "runas"
+  when:
+    - ansible_facts.os_family == "Windows"
+    - my_facts.has_become_system
