@@ -203,7 +203,7 @@
   add_host:
     ansible_connection: winrm
     # NOTE: DO NOT use just 'localhost' as it would override Linux 'localhost'
-    hostname: localhost.wsl
+    hostname: localhost.windows
     ansible_winrm_host: "{{ my_facts.wsl_hostname }}"
     ansible_winrm_transport: certificate
     ansible_winrm_cert_pem: "{{ my_user.home }}/.winrm/localclient.crt"
