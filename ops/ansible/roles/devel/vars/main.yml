@@ -5,7 +5,7 @@
 # NOTE: Depends on "os" role APT repositories
 apt_packages:
   - gdb                       # GNU debugger
-  - golang
+  - golang-go                 # Golang (longsleep PPA)
   - gcc
   - g++
   - libstdc++6                # GNU C++ standard library
