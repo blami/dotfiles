@@ -94,6 +94,10 @@ export CLICOLOR
 # Screen reader mode (no fancy prompt, per-app settings in nvim, tmux, etc.)
 SCREENREADER=0
 export SCREENREADER
+
+# libvirt (qemu) default connect URI (to see root domains)
+LIBVIRT_DEFAULT_URI=qemu:///system
+export LIBVIRT_DEFAULT_URI
 # }}}
 
 
