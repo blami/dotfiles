@@ -21,6 +21,7 @@
 # Windows
 - block:
     - import_tasks: windows_onedrive.yml
+    - import_tasks: windows_choco.yml
   become: true
   become_user: "System"
   become_method: "runas"

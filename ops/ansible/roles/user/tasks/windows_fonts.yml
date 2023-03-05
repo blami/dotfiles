@@ -1,0 +1,39 @@
+---
+# Setup Windows UI aspects
+
+- name: Installing Windows user fonts
+  win_shell: |
+    $changed = 0
+    $fonts = Get-ChildItem -Path "C:\\Users\\blami\\.local\\share\\fonts" -Recurse -Include *.ttf,*.otf
+    $shell = New-Object -ComObject shell.application
+    foreach ($f in $fonts) {
+      # Figure out font name
+      $folder = $shell.Namespace($f.DirectoryName)
+      $item = $folder.Items().Item($f.Name)
+      $name = $folder.GetDetailsOf($item, 21)
+      switch ($f.Extension) {
+        ".ttf" { $name = "$name (TrueType)" }
+        ".otf" { $name = "$name (OpenType)" }
+      }
+      $dest = "$($Env:LocalAppData)\\Microsoft\\Windows\\Fonts\\$($f.Name)"
+      $reg = "HKCU:\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Fonts"
+      if ((Test-Path $dest) -and (Get-ItemProperty `
+        -Name $name `
+        -Path $reg `
+        -ErrorAction SilentlyContinue)) {
+        continue
+      }
+      Copy-Item -Path $f.FullName -Destination $dest -Force
+      if (-not(Test-Path $reg)) { New-Item -Path $reg -Force | Out-Null }
+      New-ItemProperty `
+        -Name $name `
+        -Path $reg `
+        -Value $dest `
+        -PropertyType string -Force | Out-Null
+      $changed += 1
+    }
+    Write-Host $changed
+  register: result
+  changed_when: result.stdout | int > 0
+  when:
+    - my_facts.has_dotfiles

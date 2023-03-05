@@ -1,0 +1,29 @@
+---
+# Setup Windows UI aspects
+
+# Install system cursors
+# TODO: DISABLED. Install to user AppData, not system Windows\Cursors.
+# NOTE: This checks if SCHEME_NAME is installed in registry and if not it
+# attempts to install it from INF. Check is very opinionated and works with MY
+# own cursor scheme INFs.
+- name: Installing Windows cursors
+  win_shell: |
+    $changed = 0
+    switch -regex -file "{{ my_user.home }}\\.local\\share\\icons\\{{ item }}" {
+      '^\s*SCHEME_NAME\s*=\s*"?([^"]*)"?$' { $scheme = $matches[1] }
+    }
+    if (-not(Get-ItemProperty "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Control Panel\\Cursors\\Schemes" $scheme -ErrorAction SilentlyContinue)) {
+      rundll32.exe advpack.dll,LaunchINFSectionEx "{{ my_user.home }}\\.local\\share\\icons\\{{ item }},,,4"
+      $changed = 1
+    }
+    Write-Host $changed
+  register: result
+  changed_when: result.stdout | int > 0
+  with_items:
+    - aero_black\cursors\install.inf
+    - aero_black\cursors\install_l.inf
+    - aero_black\cursors\install_xl.inf
+  when:
+    - my_facts.is_administrator
+    - my_facts.has_dotfiles
+  tags: never

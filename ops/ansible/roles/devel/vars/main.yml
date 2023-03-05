@@ -65,6 +65,10 @@ apt_packages:
   - tig
   - zlib1g-dev
 
+win_packages:
+  - git
+
+
 # Go packages
 go_packages:
   - golang.org/x/tools/gopls

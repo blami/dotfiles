@@ -1,0 +1,7 @@
+# Install Chocolatey
+
+- name: Installing Chocolatey
+  win_chocolatey:
+    name: "chocolatey"
+    state: present
+  tags: debug
