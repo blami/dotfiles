@@ -109,7 +109,7 @@
       openssl req -x509 -nodes -days 36500 -newkey rsa:2048 -sha256 -out {{ my_user.home }}/.winrm/localclient.crt -outform PEM -keyout {{ my_user.home }}/.winrm/localclient.key -subj "/CN={{ my_facts.wsl_win_user }}" -extensions v3_req_client
       rm -rf $OPENSSL_CONF
     # Do not warn about files/directories being created in shell
-    warn: false
+    #warn: false
     creates: "{{ my_user.home }}/.winrm/localclient.crt"
   when:
     - my_facts.is_wsl
@@ -138,7 +138,7 @@
       openssl pkcs12 -export -out {{ my_user.home }}/.winrm/localserver.pfx -in {{ my_user.home }}/.winrm/localserver.crt -inkey {{ my_user.home }}/.winrm/localserver.key -name "Ansible WSL WinRM Server Certificate" -passout pass:
       rm -rf $OPENSSL_CONF {{ my_user.home }}/.winrm/localserver.crt {{ my_user.home }}/.winrm/localserver.key
     # Do not warn about files/directories being created in shell
-    warn: false
+    #warn: false
     creates: "{{ my_user.home }}/.winrm/localserver.pfx"
   when:
     - my_facts.is_wsl
