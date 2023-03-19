@@ -13,12 +13,13 @@ apt_packages:
   - mc                        # file manager
   - direnv                    # load .env files
   - fzf                       # fuzzy finder
+  - python3-fontforge
   # NOTE: redundant with devel role but required for Nvim on non-dev machines
   - python3-pip
 
 # Additional packages in case Desktop (e.g. GNOME) is installed
 apt_packages_desktop:
-  - google-chrome-stable
+  #- google-chrome-stable
   #- telegram
   #- discord
   #- slack
