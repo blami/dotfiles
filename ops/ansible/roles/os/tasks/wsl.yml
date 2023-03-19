@@ -46,6 +46,7 @@
   when:
     - (out_wsl_tmpfs.changed or out_wsl_wslconf.changed)
     - my_facts.is_wsl
+  tags: interactive
 
 - name: Restarting WSL
   command: "/mnt/c/Windows/System32/wsl.exe -t {{ my_facts.wsl_distro }}"
