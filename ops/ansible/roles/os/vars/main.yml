@@ -57,16 +57,6 @@ apt_repositories:
     key_id: "B53DC80D13EDEF05"
     sources:
       - "deb https://packages.cloud.google.com/apt cloud-sdk main"
-  # Microsoft (VSCode)
-  - name: "microsoft"
-    key_url: "https://packages.microsoft.com/keys/microsoft.asc"
-    sources:
-      - "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
-  # Google Chrome
-  - name: "chrome"
-    key_url: "https://dl.google.com/linux/linux_signing_key.pub"
-    sources:
-      - "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main"
 
 # Essential packages to install
 apt_packages:
