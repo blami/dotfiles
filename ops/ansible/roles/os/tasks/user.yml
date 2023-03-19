@@ -31,3 +31,9 @@
       {{ my_user | xcombine({
         "home": out['home']
       }) }}
+    # NOTE: This is not 100% correct but will work in most cases
+    my_facts: >
+      {{ my_facts | xcombine({
+        "has_my_user": true,
+        "has_become_my_user": true
+      }) }}
