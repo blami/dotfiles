@@ -25,7 +25,7 @@
       chown root:root /usr/local/bin/bw
       chmod +x /usr/local/bin/bw
     # NOTE: This requires shell because of stacking multiple commands
-    warn: false
+    #warn: false
   when:
     - ansible_architecture in ("x86_64",)
     # NOTE: Only install if download changed or binary is missing
