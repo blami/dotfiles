@@ -40,6 +40,7 @@ _sort
 /.ssh/id_*
 /.ssh/keys
 /.ssh/known_hosts*
+/.winrm
 
 # Specific per-install
 /.ansible
