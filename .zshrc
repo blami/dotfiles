@@ -113,7 +113,7 @@ promptinit
 HISTFILE=~/.zsh_history.$HOSTNICK
 HISTSIZE=16384
 SAVEHIST=16384
-HISTIGNORE="&:ls:ll:la:mc:reset:clear:cd:exit"
+HISTORY_IGNORE="(ls|ll|la|mc|reset|clear|cd|exit|bw *)"
 setopt hist_verify
 # Save history immediately and share between sessions
 #setopt append_history       # KEEP this off if share_history
