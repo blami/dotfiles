@@ -58,9 +58,11 @@ export SUDO
 # {{{ Temporary directory
 # NOTE: This is for systems without TMPDIR set from PAM (or without PAM)
 if [ -z "$TMPDIR" ]; then
+    # TODO: create safe /tmp/user/$UID if possible?
     TMPDIR=/tmp
-    export TMPDIR
 fi
+TMP=$TMPDIR
+export TMP TMPDIR
 # }}}
 
 
