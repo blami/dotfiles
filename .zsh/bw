@@ -1,0 +1,31 @@
+#!/usr/bin/zsh
+# Bitwarden wrapper with vault login/unlock that stores session in
+# XDG_RUNTIME_DIR so that it can be picked up by .profile.d/bw.sh as long as
+# session exists and then its autocleaned by systemd.
+# See: ~/.profile.d/bw.sh
+
+# Usage: bw ...
+
+BW=$(whence -p bw)
+
+bw () {
+    [ -z $BW ] && { echo >&2 bw not found in PATH; return 127 }
+
+    local VERB
+    [[ $($BW status) =~ '"status":"([^"]+)"' ]]
+    case $match[1] in
+        unauthenticated) VERB=login ;;
+        locked) VERB=unlock ;;
+    esac
+    if [ ! -z $VERB ]; then
+        export BW_SESSION=$($BW $VERB --raw)
+        if [ -d $XDG_RUNTIME_DIR ]; then
+            echo export BW_SESSION=\"$BW_SESSION\" >! $XDG_RUNTIME_DIR/bwsession
+            chmod 0600 $XDG_RUNTIME_DIR/bwsession
+        fi
+    fi
+
+    $BW $@
+}
+
+bw $@
