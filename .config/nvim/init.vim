@@ -248,12 +248,6 @@ endif
 "}}}
 
 
-"{{{ Printing
-"Keeping this one around for highschool days nostalgia
-set printoptions=paper:a4,duplex:on
-"}}}
-
-
 "{{{ Includes and Plugins
 "Filetype plugins
 filetype plugin on
