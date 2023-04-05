@@ -113,6 +113,7 @@
     creates: "{{ my_user.home }}/.winrm/localclient.crt"
   when:
     - my_facts.is_wsl
+    - my_facts.has_my_user
   tags: localwinrm
 
 # Generate self-signed server certificate for WinRM service
@@ -142,6 +143,7 @@
     creates: "{{ my_user.home }}/.winrm/localserver.pfx"
   when:
     - my_facts.is_wsl
+    - my_facts.has_my_user
   tags: localwinrm
 
 # Check if WinRM listener is set up
@@ -166,6 +168,7 @@
       }}
   when:
     - my_facts.is_wsl
+    - my_facts.has_my_user
   tags: localwinrm
 
 # Execute WinRM setup script
@@ -182,6 +185,7 @@
       ';Exit $p.ExitCode'
   when:
     - my_facts.is_wsl
+    - my_facts.has_my_user
     - not my_facts.can_winrm
   register: out
   tags: localwinrm
@@ -196,6 +200,7 @@
     - out.changed
     - out.rc == 0
     - my_facts.is_wsl
+    - my_facts.has_my_user
   tags: localwinrm
 
 # Add localhost to Windows hosts and delegate WSL related facts
@@ -225,7 +230,7 @@
         "wsl_version": my_facts.wsl_version,
       }) }}
   delegate_facts: true
-  delegate_to: localhost.wsl
+  delegate_to: localhost.windows
   when:
     - my_facts.is_wsl
 
