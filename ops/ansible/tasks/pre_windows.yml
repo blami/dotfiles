@@ -50,3 +50,25 @@
       {{ my_facts | xcombine({
         "is_wsl": false if "is_wsl" not in my_facts else my_facts.is_wsl
       }) }}
+
+- name: Gathering Local Chocolatey Source Fact
+  set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "choco_source": my_facts.wsl_unc_home_dir + "\\ops\\choco" if my_facts.is_wsl else my_user.userprofile + "\\ops\\choco"
+      }) }}
+
+- name: Gathering Chocolatey Facts
+  block:
+    - win_chocolatey_facts:
+    - set_fact:
+        my_facts: >
+          {{ my_facts | xcombine({
+            "has_choco": true
+          }) }}
+  rescue:
+    - set_fact:
+        my_facts: >
+          {{ my_facts | xcombine({
+            "has_choco": false
+          }) }}
