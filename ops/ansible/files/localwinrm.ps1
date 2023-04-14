@@ -165,6 +165,9 @@ Function Setup-User {
         $Credential = Get-Credential `
             -Message "Enter $PasswordPrompt to map client certificate" `
             -Username $AnsibleUser.Name
+        if (-not $Credential) {
+            Write-Error "unable to obtain user credential"
+        }
         New-Item -Path WSMan:\localhost\ClientCertificate `
             -Subject "$($AnsibleUser.Name)@localhost" `
             -URI * `
