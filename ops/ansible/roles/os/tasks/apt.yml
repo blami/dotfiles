@@ -25,27 +25,12 @@
     label: "{{ item.path }}"
   with_items: "{{ out.files | default([]) }}"
 
-- name: Adding APT GPG Keys
-  get_url:
-    url: "{% if 'key_id' in item %}https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x{{ item.key_id }}{% elif 'key_url' in item %}{{ item.key_url }}{% endif %}"
-    dest: "/etc/apt/trusted.gpg.d/{{ item.name }}.asc"
-  loop_control:
-    label: "{{ item.name }} {% if 'key_id' in item %}{{ item.key_id }}{% elif 'key_url' in item%}{{ item.key_url }}{% endif %}"
-  with_items: "{{ apt_repositories }}"
+- include_role:
+    name: common
+    tasks_from: apt_repositories
 
-- name: Adding APT Repositories
-  apt_repository:
-    repo: "{{ item.1 }}"
-    filename: "{{ item.0.name }}"
-  loop_control:
-    label: "{{ item.0.name }}.list"
-  with_subelements: 
-    - "{{ apt_repositories }}"
-    - "sources"
-
-- name: Updating APT Cache
-  apt:
-    update_cache: true
+# NOTE: If Ansible is installed from Ubuntu repositories then attempt to
+# upgrade to PPA version will clash on PPA's ansible-core. In case of upgrade 
 
 # If ansible is installed from Ubuntu repositories it will clash with upstream
 # ansible-core package.
@@ -53,7 +38,7 @@
   shell:
     cmd: |
       /usr/bin/apt-get remove --purge --yes ansible
-      /usr/bin/apt-get install --yes ansible
+      /usr/bin/apt-get install --yes ansible  
     # NOTE: This needs to be done as shell command in one step so that Ansible is
     # installed for continuing with the next task.
     warn: false
@@ -62,22 +47,18 @@
     - "\"packages\" in ansible_facts"
     - "\"ansible\" in ansible_facts.packages" 
     - "ansible_facts.packages.ansible[0].origin == \"Ubuntu\""
-
-# TODO: Fail if out changed?
+# NOTE: In case upgrade is performed it is necessary to terminate to avoid
+# Python module mixing.
+- fail:
+    msg: "Ansible was upgraded. Restart playbook to continue."
+  when:
+    - out.changed
 
 - name: Upgrading APT Packages
   apt:
     upgrade: "safe"
     autoremove: true
 
-- name: Removing Unwanted APT Packages
-  apt:
-    pkg: "{{ apt_packages_unwanted }}"
-    purge: true
-    state: absent
-
-- name: Installing Essential APT Packages
-  apt:
-    pkg: "{{ apt_packages }}"
-    install_recommends: false
-    state: latest
+- include_role:
+    name: common
+    tasks_from: apt_packages
