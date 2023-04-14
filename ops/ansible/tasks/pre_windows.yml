@@ -10,6 +10,7 @@
     my_user: >
       {{ my_user | xcombine({
         "username": out.account.account_name,
+        "domain_username": out.account.domain_name + "\\" + out.account.account_name,
         "userprofile": ansible_facts.env.USERPROFILE,
         "msaccount": None if (out.groups | selectattr('domain_name', 'contains', 'MicrosoftAccount') | list | length) == 0 else (out.groups | selectattr('domain_name', 'contains', 'MicrosoftAccount') | first).account_name,
         "is_administrator": (out.groups | selectattr('account_name', 'contains', 'Administrators') | list | length) > 0,
@@ -51,24 +52,21 @@
         "is_wsl": false if "is_wsl" not in my_facts else my_facts.is_wsl
       }) }}
 
+# NOTE: win_chocolatey_facts takes too much time, so far no list of packages is
+# needed so I resort to simply calling Chocolatey
+- name: Checking If Chocolatey Is Installed
+  win_shell: choco --version
+  register: out
+  failed_when: false
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "has_choco": out.rc == 0
+      }) }}
+
 - name: Gathering Local Chocolatey Source Fact
   set_fact:
     my_facts: >
       {{ my_facts | xcombine({
-        "choco_source": my_facts.wsl_unc_home_dir + "\\ops\\choco" if my_facts.is_wsl else my_user.userprofile + "\\ops\\choco"
+        "choco_source": my_facts.wsl_unc_home_dir + "\ops\choco" if my_facts.is_wsl else my_user.userprofile + "\ops\choco"
       }) }}
-
-- name: Gathering Chocolatey Facts
-  block:
-    - win_chocolatey_facts:
-    - set_fact:
-        my_facts: >
-          {{ my_facts | xcombine({
-            "has_choco": true
-          }) }}
-  rescue:
-    - set_fact:
-        my_facts: >
-          {{ my_facts | xcombine({
-            "has_choco": false
-          }) }}
