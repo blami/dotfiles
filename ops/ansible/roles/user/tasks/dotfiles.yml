@@ -29,17 +29,3 @@
 #   when:
 #     - not out.changed
 # 
-
-- stat:
-    path: "{{ my_user.home }}/.ssh/{{ my_user.ssh_key }}"
-  register: out
-
-- name: Changing Dotfiles Repository Remote To SSH (for push)
-  shell:
-    chdir: "{{ my_user.home }}"
-    cmd: |
-      umask {{ my_user.umask }}
-      git --git-dir=.dfgit remote set-url --push origin git@github.com:{{ dotfiles_repo }}
-  # Do not run if SSH key is not present
-  when:
-    - out.stat.exists

@@ -1,0 +1,16 @@
+---
+# Configure NTP servers
+
+- name: Configuring NTP Servers
+  replace:
+    path: /etc/systemd/timesyncd.conf
+    regexp: '^#?((.*)NTP)=.*$'
+    replace: '\1={{ ntp_server }}'
+  register: out
+
+- name: Restarting timesyncd
+  systemd:
+    name: systemd-timesyncd
+    state: restarted
+  when:
+    - out.changed
