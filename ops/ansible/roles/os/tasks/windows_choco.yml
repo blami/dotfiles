@@ -1,7 +1,33 @@
+---
 # Install Chocolatey
 
 - name: Installing Chocolatey
   win_chocolatey:
-    name: "chocolatey"
+    name: chocolatey
+    # NOTE: 'latest' would try to upgrade Chocolatey with disabled source.
     state: present
+  register: out
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "has_choco": out.rc == 0
+      }) }}
+  when:
+    - out.changed
+
+# NOTE: Disable 'chocolatey' so we don't pull packages from web.
+- name: Disabling Chocolatey Community Source
+  win_chocolatey_source:
+    name: chocolatey
+    state: disabled
+
+- name: Adding Chocolatey Local Source
+  win_chocolatey_source:
+    name: local
+    source: "{{ my_facts.choco_source }}"
+    state: present
+
+- include_role:
+    name: common
+    tasks_from: windows_choco_packages
   tags: debug
