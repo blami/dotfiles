@@ -19,6 +19,8 @@
 - name: Adding User {{ my_user.username }} To Groups
   user:
     name: "{{ my_user.username }}"
+    groups: "{{ my_user.groups }}"
+    append: true
   with_items: "{{ my_user.groups }}"
   when:
     - item in ansible_facts.getent_group
