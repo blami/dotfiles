@@ -17,7 +17,7 @@
     owner: root
     group: root
     mode: 644
-    force: yes
+    force: true
   register: out_wsl_wslinterop
   when:
     - my_facts.is_wsl
@@ -29,25 +29,12 @@
     owner: root
     group: root
     mode: 644
-    force: yes
+    force: true
   register: out_wsl_wslconf
   when:
     - my_facts.is_wsl
 
-- name: Warning about WSL restart
-  pause:
-    prompt: |
-      Windows Subsystem for Linux (WSL) configuration was changed and in order
-      to continue the playbook it needs to be restarted so that change take
-      effect.
-
-      After pressing ENTER WSL will be terminated. Close the terminal and run
-      it again to restart WSL. Then re-run playbook.
-  when:
-    - (out_wsl_tmpfs.changed or out_wsl_wslconf.changed)
-    - my_facts.is_wsl
-  tags: interactive
-
+# Terminate WSL to force picking up changes made above
 - name: Restarting WSL
   command: "/mnt/c/Windows/System32/wsl.exe -t {{ my_facts.wsl_distro }}"
   when: 
