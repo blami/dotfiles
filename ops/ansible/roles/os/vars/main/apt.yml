@@ -1,7 +1,6 @@
 ---
-# OS role variables
+# APT repository variables
 
-# APT repository sources and essential packages to install
 apt_repositories:
   # Neovim
   - name: "ppa_neovim"
@@ -65,11 +64,11 @@ apt_packages:
   - apt-transport-https       # https support for APT
   - bpfcc-tools               # BPF compiler collection
   - bpftrace                  # BPF tracing analyzer
-  - cryptsetup-bin
   - cpuid
+  - cryptsetup-bin
   - curl
-  - dosfstools
   - dnsutils                  # dig
+  - dosfstools
   - equivs
   - fakeroot                  # simulate running as root
   - gawk
@@ -84,20 +83,23 @@ apt_packages:
   - jq                        # JSON parser and query language
   - less
   - lftp
+  - lm-sensors
+  - locales
   - logrotate
   - lsof                      # list open files
-  - procps                    # /proc utilities
   - ltrace
   - m4                        # macro processor
   - make
   - mosh                      # mobile shell
   - mtr                       # traceroute & ping
   - neovim
-  - netperf                   # network speed meter
   - net-tools                 # netstat & co.
+  - netperf                   # network speed meter
   - nmap
   - openssh-client
   - p7zip
+  - powertop                  # power management utility
+  - procps                    # /proc utilities
   - psmisc
   - pv                        # progressbar
   - pwgen
@@ -108,24 +110,22 @@ apt_packages:
   - rsync
   - shellcheck                # lint shell scripts
   - socat
-  - sshfs                     # mount filesystems over ssh and fuse
   - sqlite3
   - squashfs-tools
+  - sshfs                     # mount filesystems over ssh and fuse
   - strace
   - stress-ng                 # stress test system (load)
   - telnet
   - tmux
   - tshark                    # network traffic capture and analysis
   - unzip
+  - unzip
   - wdiff
   - wget
   - xdelta3
   - xz-utils
   - zip
-  - unzip
   - zsh
-  - powertop                  # power management utility
-  - lm-sensors
 
 apt_packages_unwanted:
   - command-not-found
@@ -135,49 +135,3 @@ apt_packages_unwanted:
   - show-motd
   - ufw                       # Ubuntu firewall?
   - update-motd
-
-windows_packages:
-  # TODO:
-  - { name: totalcommaneder, params: "/InstallPath:C:\\Program Files\\TC /ShellExtension" }
-  - { name: irfanview }
-  - { name: irfanviewplugins }
-  - { name: 7zip }
-  - { name: git, params: "/GitOnlyOnPath /NoShellIntegration /WindowsTerminal", install_args: "/DIR='C:\\Devel\\git'" }
-  - { name: msys2, params: "/InstallDir:C:\\Devel\\msys2" }
-  - { name: sysinternals, params: "/InstallDir:C:\\Utils\\sysinternals" }
-
-windows_envvars: {}
-
-windows_path:
-  - "C:\\Utils\\sysinternals"
-
-# Windows registry keys (HKLM)
-windows_registry:
-  # Shorter shutdown/restart kill timeout
-  - path: "SYSTEM\\CurrentControlSet\\Control"
-    name: "WaitToKillServiceTimeout"
-    data: "500"
-    type: "string"
-  # NOTE: These are relevant only on systems that have CDROM
-  # Disable CD drive power off
-  - path: "SYSTEM\\CurrentControlSet\\Services\\cdrom\\Parameters"
-    name: "ZeroPowerODDEnabled"
-    data: 0x00000000
-    type: "dword"
-  # Disable CD burning in Explorer.exe
-  - path: "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer"
-    name: "NoCDBurning"
-    data: 0x00000001
-    type: "dword"
-  # Enable user's mapped drive access for Administrator
-  - path: "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System"
-    name: "EnableLinkedConnections"
-    data: 0x00000001
-    type: "dword"
-
-# Windows trusted hosts (Internet Settings control panel)
-# NOTE: This allows executing .exe's from Samba, etc.
-windows_trusted_hosts:
-  - domain: blami.net
-    host: fs.lan
-    protocol: file

@@ -1,0 +1,51 @@
+---
+
+windows_choco_packages:
+  - autohotkey
+  - 7-zip
+  - {name: firefox, state: present}
+  - git
+  - {name: googledrive, state: present}
+  - imgburn
+  - irfanview
+  - irfanview-plugins
+  - neovim
+  - sharex
+  - totalcmd
+  - vlc
+  - yubimgr
+
+windows_envvars: {}
+
+windows_path: {}
+
+# Windows registry keys (HKLM)
+windows_registry:
+  # Shorter shutdown/restart kill timeout
+  - path: "SYSTEM\\CurrentControlSet\\Control"
+    name: "WaitToKillServiceTimeout"
+    data: "500"
+    type: "string"
+  # NOTE: These are relevant only on systems that have CDROM
+  # Disable CD drive power off
+  - path: "SYSTEM\\CurrentControlSet\\Services\\cdrom\\Parameters"
+    name: "ZeroPowerODDEnabled"
+    data: 0x00000000
+    type: "dword"
+  # Disable CD burning in Explorer.exe
+  - path: "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer"
+    name: "NoCDBurning"
+    data: 0x00000001
+    type: "dword"
+  # Enable user's mapped drive access for Administrator
+  - path: "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System"
+    name: "EnableLinkedConnections"
+    data: 0x00000001
+    type: "dword"
+
+# Windows trusted hosts (Internet Settings control panel)
+# NOTE: This allows executing .exe's from Samba, etc.
+windows_trusted_hosts:
+  - domain: blami.net
+    host: fs.lan
+    protocol: file
