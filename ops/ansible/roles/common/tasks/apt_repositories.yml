@@ -1,0 +1,24 @@
+---
+# Add APT repositories and their GPG keys
+
+- name: Adding APT GPG Keys
+  get_url:
+    url: "{% if 'key_id' in item %}https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x{{ item.key_id }}{% elif 'key_url' in item %}{{ item.key_url }}{% endif %}"
+    dest: "/etc/apt/trusted.gpg.d/{{ item.name }}.asc"
+  loop_control:
+    label: "{{ item.name }} {% if 'key_id' in item %}{{ item.key_id }}{% elif 'key_url' in item%}{{ item.key_url }}{% endif %}"
+  with_items: "{{ apt_repositories }}"
+
+- name: Adding APT Repositories
+  apt_repository:
+    repo: "{{ item.1 }}"
+    filename: "{{ item.0.name }}"
+  loop_control:
+    label: "{{ item.0.name }}.list"
+  with_subelements: 
+    - "{{ apt_repositories }}"
+    - "sources"
+
+- name: Updating APT Cache
+  apt:
+    update_cache: true

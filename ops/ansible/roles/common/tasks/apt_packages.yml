@@ -1,0 +1,14 @@
+---
+# (Un)install APT packages
+
+- name: Removing Unwanted APT Packages
+  apt:
+    pkg: "{{ apt_packages_unwanted }}"
+    purge: true
+    state: absent
+
+- name: Installing APT Packages
+  apt:
+    pkg: "{{ apt_packages }}"
+    install_recommends: false
+    state: latest

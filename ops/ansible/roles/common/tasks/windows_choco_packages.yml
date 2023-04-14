@@ -1,0 +1,28 @@
+---
+# Install Chocolatey packages
+
+- name: Packing Local Chocolatey Packages
+  win_shell: |
+    Get-ChildItem -Path {{ my_facts.choco_source }} -Filter *.nuspec -Recurse | ForEach-Object {
+      & choco pack $_.FullName
+      if($LASTEXITCODE -ne 0) { Write-Host $_.Name ; Exit 1 }
+    }
+  args:
+    chdir: "{{ my_facts.choco_source }}"
+  when:
+    - "'has_choco' in my_facts"
+    - my_facts.has_choco
+  # NOTE: Become is needed to access WSL2 UNC.
+  become: true
+  become_user: "{{ my_user.domain_username }}"
+
+- name: Installing Local Chocolatey Packages
+  win_chocolatey:
+    name: "{{ item.name if (item | xis_dict) else item }}"
+    state: "{{ item.state if (item | xis_dict) else 'latest' }}"
+  loop_control:
+    label: "{{ item.name if (item | xis_dict) else item }}"
+  with_items: "{{ windows_choco_packages }}"
+  # NOTE: Become is needed to access WSL2 UNC.
+  become: true
+  become_user: "{{ my_user.domain_username }}"
