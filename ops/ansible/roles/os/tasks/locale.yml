@@ -1,0 +1,17 @@
+---
+# Regenerate locales
+
+- name: Installing /etc/locale.gen
+  copy:
+    src: "{{ role_path }}/files/locale.gen"
+    dest: "/etc/locale.gen"
+    owner: root
+    group: root
+    mode: 644
+    force: true
+  register: out
+
+- name: Regenerating Locales
+  command: "/usr/sbin/locale-gen"
+  when:
+    - out.changed
