@@ -1,2 +1,3 @@
 ---
 ntp_server: time.cloudflare.com
+lan_check_host: router.lan.blami.net
