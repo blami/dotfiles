@@ -1,6 +1,10 @@
 ---
 # Install Chocolatey packages
 
+# NOTE: Tasks here rely on WSL UNC path being accessible. With 'certificate'
+# WinRM auth this requires become_user: DOMAIN\USER (see os/tasks/main.yml). If
+# performed as become_user: System this won't work.
+
 - name: Packing Local Chocolatey Packages
   win_shell: |
     Get-ChildItem -Path {{ my_facts.choco_source }} -Filter *.nuspec -Recurse | ForEach-Object {
@@ -12,9 +16,6 @@
   when:
     - "'has_choco' in my_facts"
     - my_facts.has_choco
-  # NOTE: Become is needed to access WSL2 UNC.
-  become: true
-  become_user: "{{ my_user.domain_username }}"
 
 - name: Installing Local Chocolatey Packages
   win_chocolatey:
@@ -23,6 +24,6 @@
   loop_control:
     label: "{{ item.name if (item | xis_dict) else item }}"
   with_items: "{{ windows_choco_packages }}"
-  # NOTE: Become is needed to access WSL2 UNC.
-  become: true
-  become_user: "{{ my_user.domain_username }}"
+  when:
+    - "'has_choco' in my_facts"
+    - my_facts.has_choco
