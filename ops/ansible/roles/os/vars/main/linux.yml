@@ -41,10 +41,10 @@ apt_repositories:
     sources:
       - "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
   # Ansible
-  - name: "ppa_ansible"
-    key_id: "6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367"
-    sources:
-      - "deb https://ppa.launchpadcontent.net/ansible/ansible/ubuntu {{ ansible_distribution_release }} main"
+  #- name: "ppa_ansible"
+  #  key_id: "6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367"
+  #  sources:
+  #    - "deb https://ppa.launchpadcontent.net/ansible/ansible/ubuntu {{ ansible_distribution_release }} main"
   # Kubernetes
   - name: "kubernetes"
     key_id: "B53DC80D13EDEF05"
