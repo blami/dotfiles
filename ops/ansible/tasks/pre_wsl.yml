@@ -1,5 +1,5 @@
 ---
-# WSL detection and tasks that run before actual roles.
+# WSL detection and checks
 
 # NOTE: It is OK to use env lookups here as WSL runs locally.
 - name: Detecting WSL

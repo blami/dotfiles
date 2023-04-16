@@ -1,5 +1,5 @@
 ---
-# Bitwarden check task that run before actual roles.
+# Bitwarden check
 
 # NOTE: This is to check if Bitwarden vault is ready and unlocked on controller
 # for further tasks.

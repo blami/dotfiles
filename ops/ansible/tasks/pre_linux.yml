@@ -1,5 +1,5 @@
 ---
-# Linux tasks that run before actual roles.
+# Linux checks
 
 # NOTE: DO NOT use env lookups here as they run on controller and not the host itself.
 
@@ -39,7 +39,7 @@
 - set_fact:
     my_facts: >
       {{ my_facts | xcombine({
-        "has_become_root": true if out.rc == 0 else false
+        "has_become_root": out.rc == 0
       }) }}
 
 - name: Checking Become {{ my_user.username }}

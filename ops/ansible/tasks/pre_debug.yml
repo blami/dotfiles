@@ -1,4 +1,7 @@
-- name: "Pre- Debug"
+---
+# Debug printout
+
+- name: "Debug"
   debug:
     var: item
   with_items:

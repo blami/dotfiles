@@ -1,5 +1,5 @@
 ---
-# Windows tasks that run before actual roles.
+# Windows checks
 
 # NOTE: DO NOT use env lookups here as they run on controller and not the host itself.
 
