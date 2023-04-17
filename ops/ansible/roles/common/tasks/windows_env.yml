@@ -1,7 +1,7 @@
 ---
-# Configure Windows system environment variables
+# Set environment variables and add directories to PATH
 
-- name: Setting Windows system environment variables
+- name: Setting Environment Variables
   win_environment:
     level: system
     state: present
@@ -11,7 +11,7 @@
   loop_control:
     label: "{{ item.key }}={{ item.value}}"
 
-- name: Adding directories to Windows system PATH
+- name: Adding Directories PATH
   win_shell: |
     $changed = 0
     if (Test-Path -Path "{{ item }}" -PathType Container) {

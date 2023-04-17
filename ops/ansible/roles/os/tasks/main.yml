@@ -3,15 +3,17 @@
 
 # Linux
 - block:
-    - import_tasks: wsl.yml             # run this first as it may restart WSL
-    - import_tasks: dirs.yml            # create additional directories
+    - import_tasks: wsl.yml               # run this first as it may restart WSL
+    - import_tasks: ntp.yml
+    - import_tasks: locale.yml
+    - import_tasks: dirs.yml
     - import_tasks: user.yml
     - import_tasks: sudoers.yml
     - import_tasks: netplan.yml
-    - import_tasks: snap.yml            # disable snap
-    - import_tasks: apport.yml          # disable Apport
+    - import_tasks: snap.yml              # disable snap
+    - import_tasks: apport.yml            # disable Apport
     - import_tasks: apt.yml
-    - import_tasks: bitwarden.yml       # install Bitwarden CLI
+    - import_tasks: bitwarden.yml         # install Bitwarden CLI
   become: true
   become_user: "root"
   when:
@@ -20,11 +22,15 @@
 
 # Windows
 - block:
-    - import_tasks: windows_onedrive.yml
+    - import_tasks: windows_debloat.yml   # clean up Windows install
+    - import_tasks: windows_ntp.yml
+    - import_tasks: windows_net.yml
     - import_tasks: windows_choco.yml
+  # WARN: 'become' to user itself is required to allow credential delegation;
+  # user is expected to be Administrator.
   become: true
-  become_user: "System"
-  become_method: "runas"
+  become_user: "{{ my_user.domain_username }}"
+  become_method: runas
   when:
     - ansible_facts.os_family == "Windows"
-    - my_facts.has_become_system
+    - my_user.is_administrator

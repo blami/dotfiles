@@ -13,6 +13,7 @@ windows_choco_packages:
   - sharex
   - totalcmd
   - vlc
+  - winscp
   - yubimgr
 
 windows_envvars: {}
@@ -32,16 +33,9 @@ windows_registry:
     name: "ZeroPowerODDEnabled"
     data: 0x00000000
     type: "dword"
-  # Disable CD burning in Explorer.exe
-  - path: "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer"
-    name: "NoCDBurning"
-    data: 0x00000001
-    type: "dword"
-  # Enable user's mapped drive access for Administrator
-  - path: "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System"
-    name: "EnableLinkedConnections"
-    data: 0x00000001
-    type: "dword"
+
+windows_lan_drives:
+  - N: \\fs.lan.blami.net\export
 
 # Windows trusted hosts (Internet Settings control panel)
 # NOTE: This allows executing .exe's from Samba, etc.

@@ -8,7 +8,6 @@ if !exists('g:vscode')
                 \ 'cmp-lsp',
                 \ 'cmp-vsnip',
                 \ 'cmp',
-                \ 'treesitter',
                 \ 'gitsigns',
                 \ 'colorizer',
                 \ )

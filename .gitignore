@@ -5,8 +5,10 @@
 _bak
 _sort
 
-# Debugging
+# Ops
+/ops/choco/*.nupkg
 /ops/ansible/debug*.yml
+
 
 # User directories
 /bak
@@ -84,5 +86,4 @@ _sort
 !/AppData/Local
 !/AppData/Roaming
 !/AppData/Local/nvim
-!/AppData/Local/foo
 !/AppData/Roaming/GHISLER

@@ -26,12 +26,21 @@ autoinstall:
     install-server: true
     allow-pw: false
 
+  apt:
+    preserve_sources_list: true
+    sources:
+      ppa_ansible.list:
+        source: deb https://ppa.launchpadcontent.net/ansible/ansible/ubuntu $RELEASE main
+        keyid: 6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367
+
   packages:
     - zsh
+    - git
+    - ansible
 
   #early-commands:
   #late-commands:
-    # NOTE All these commands run in installer environment with installed
+    # NOTE: All these commands run in installer environment with installed
     # system mounted in /target; curtin allows to run commands inside /target.
 
   # cloud-init userdata; this will run on first boot
@@ -47,7 +56,7 @@ autoinstall:
         shell: /usr/bin/zsh
         ssh_import_id: gh:blami
 
-    # NOTE Set password to 'ubuntu' and require chaning it upon first login
+    # NOTE: Set password to 'ubuntu' and require chaning it upon first login
     chpasswd:
       expire: true
       list:
@@ -55,10 +64,13 @@ autoinstall:
 
     ssh_pwauth: false
 
+    # Run commands on first boot
     runcmd:
-      # Use Google timeservers (leap smeared time)
-      - [ sed, -i, 's/^#\?\(.*\)NTP=.*/\1NTP=time.google.com/', /etc/systemd/timesyncd.conf ]
-      - [ systemctl, restart, systemd-timesyncd ]
+      # Clone dotfiles and run Ansible
+      - [ git, clone, --depth, 1, "https://github.com/blami/dotfiles", /var/run/dotfiles ]
+      - [ /var/run/dotfiles/bin/ans ]
+    #  - [ sed, -i, 's/^#\?\(.*\)NTP=.*/\1NTP=time.cloudflare.com/', /etc/systemd/timesyncd.conf ]
+    #  - [ systemctl, restart, systemd-timesyncd ]
 
     write_files:
       - path: /etc/modprobe.d/nfs4.conf

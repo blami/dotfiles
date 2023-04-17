@@ -1,12 +1,12 @@
 ---
-# Configure Windows registry keys
+# Add or edit registry keys
 
-- name: Setting Windows HKLM registry keys
+- name: Setting Windows Registry Keys
   win_regedit:
-    path: "HKLM:\\{{ item.path }}"
+    path: "{{ item.path }}"
     name: "{{ item.name }}"
     data: "{{ item.data }}"
     type: "{{ item.type }}"
   loop_control:
     label: "{{ item.path }}.{{ item.name }}={{ item.data}}"
-  with_items: "{{ windows_registry }}"
+  with_items: "{{ windows_reg }}"

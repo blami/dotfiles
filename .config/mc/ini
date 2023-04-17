@@ -87,7 +87,7 @@ skin=blami
 
 [Layout]
 output_lines=0
-left_panel_size=75
+left_panel_size=70
 top_panel_size=0
 message_visible=false
 keybar_visible=true

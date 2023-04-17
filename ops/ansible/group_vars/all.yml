@@ -1,3 +1,7 @@
 ---
 ntp_server: time.cloudflare.com
-lan_check_host: router.lan.blami.net
+
+# LAN related variables
+my_lan:
+  check_host: router.lan.blami.net
+  install_unc: "\\\\fs.lan.blami.net\\export\\data\\install"
