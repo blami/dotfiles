@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>hwinfo</id>
+    <version>7.0.0</version>
+    <title>HWiNFO</title>
+    <authors>Martin Malík</authors>
+    <summary>Professional System Information and Diagnostics.</summary>
+    <description>-</description>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>

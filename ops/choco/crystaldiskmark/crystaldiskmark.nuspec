@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>crystaldiskmark</id>
+    <version>8.0.4</version>
+    <title>CrystalDiskMark</title>
+    <authors>Noriyuki Miyazaki</authors>
+    <summary>A simple disk benchmark software.</summary>
+    <description>-</description>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>

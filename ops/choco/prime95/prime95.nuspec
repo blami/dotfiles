@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>prime95</id>
+    <version>30.8.17</version>
+    <title>Prime95</title>
+    <authors>Mersenne Research</authors>
+    <summary>Free Mersenne Prime Search Software.</summary>
+    <description>-</description>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
