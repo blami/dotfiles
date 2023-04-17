@@ -3,7 +3,7 @@
 
 # NOTE: Tasks here rely on WSL UNC path being accessible. With 'certificate'
 # WinRM auth this requires become_user: DOMAIN\USER (see os/tasks/main.yml). If
-# performed as become_user: System this won't work.
+# performed as become_user: SYSTEM this won't work.
 
 - name: Packing Local Chocolatey Packages
   win_shell: |
@@ -19,11 +19,15 @@
 
 - name: Installing Local Chocolatey Packages
   win_chocolatey:
-    name: "{{ item.name if (item | xis_dict) else item }}"
-    state: "{{ item.state if (item | xis_dict) else 'latest' }}"
+    name: "{{ item }}"
+    # NOTE: This should work with 0.0 self updating packages as we never change
+    # their version.
+    state: "latest"
   loop_control:
-    label: "{{ item.name if (item | xis_dict) else item }}"
-  with_items: "{{ windows_choco_packages }}"
+    label: "{{ item }}"
+  # If host is in LAN install also LAN hosted packages (if defined)
+  with_items: "{{ (my_facts.has_lan | default(false)) | ternary(windows_choco_packages + (windows_choco_packages_lan | default([])), windows_choco_packages) }}"
   when:
     - "'has_choco' in my_facts"
     - my_facts.has_choco
+  tags: debug
