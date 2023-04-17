@@ -1,0 +1,16 @@
+---
+# Python packages to install to ~/.local/lib/pythonX.Y/site-packages
+
+python_packages:
+  - black                     # opinionated code formatter
+  - flake8                    # pep8 checker
+  - isort                     # import sorter
+  - mypy
+  - mypy-ls                   # mypy support in lsp
+  - poetry                    # dependency manager (replaces setup.py)
+  - pylint                    # static code checker
+  - pyls-isort                # isort support in lsp
+  - pytest
+  - python-lsp-black          # black support in lsp
+  - python-lsp-server
+  - sphinx                    # documentation generator

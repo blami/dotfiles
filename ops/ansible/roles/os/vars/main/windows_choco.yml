@@ -1,0 +1,31 @@
+---
+# Additional Chocolatey packages to install
+
+windows_choco_packages:
+  # Essentials
+  - autohotkey
+  - 7-zip
+  - firefox               # latest, self-updating
+  - git
+  - googledrive           # latest, self-updating
+  - imgburn
+  - irfanview
+  - irfanview-plugins
+  - neovim
+  - sharex
+  - totalcmd
+  - vlc
+  - winscp
+  - yubimgr
+  # Overclocking & Tuning (C:\OC)
+  - cinebench
+  - cpu-z
+  - crystaldiskinfo
+  - crystaldiskmark
+  - gpu-z
+  - hwinfo
+  - prime95
+  - rtss                  # latest
+
+# Chocolatey packages to install only when in LAN and with NAS accessible
+windows_choco_packages_offline: []

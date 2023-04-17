@@ -1,0 +1,104 @@
+---
+# Additional APT repositories and packages to install
+
+apt_repositories:
+  # Go
+  - name: "ppa_longsleep-golang"
+    key_id: "F6BC817356A3D45E"
+    sources:
+      - "deb http://ppa.launchpad.net/longsleep/golang-backports/ubuntu {{ ansible_distribution_release }} main"
+  # Node.js:
+  - name: "nodejs"
+    key_id: "1655A0AB68576280"
+    sources:
+      # Node.js LTS (16.x)
+      - "deb https://deb.nodesource.com/node_16.x/ {{ ansible_distribution_release }} main"
+      - "deb-src https://deb.nodesource.com/node_16.x/ {{ ansible_distribution_release }} main"
+  # LLVM
+  - name: "llvm"
+    key_id: "15CF4D18AF4F7421"
+    sources:
+      - "deb http://apt.llvm.org/{{ ansible_distribution_release }}/ llvm-toolchain-{{ ansible_distribution_release }} main"
+      - "deb-src http://apt.llvm.org/{{ ansible_distribution_release }}/ llvm-toolchain-{{ ansible_distribution_release }} main"
+  # PostgreSQL
+  - name: "postgres"
+    key_id: "7FCC7D46ACCC4CF8"
+    sources:
+      - "deb http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+  # Docker
+  - name: "docker"
+    key_id: "8D81803C0EBFCD88"
+    sources:
+      - "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+  # Kubernetes
+  - name: "kubernetes"
+    key_id: "B53DC80D13EDEF05"
+    # NOTE: There is no newer APT dist than yakkety
+    sources:
+      - "deb http://apt.kubernetes.io/ kubernetes-yakkety main"
+  # Google Cloud SDK
+  - name: "gcloud"
+    key_id: "B53DC80D13EDEF05"
+    sources:
+      - "deb https://packages.cloud.google.com/apt cloud-sdk main"
+
+apt_packages:
+  - gdb                       # GNU debugger
+  - golang-go                 # Golang (longsleep PPA)
+  - gcc
+  - g++
+  - libstdc++6                # GNU C++ standard library
+  - libstdc++-10-dev
+  - build-essential
+  - binutils
+  - gcc-avr                   # gcc for AVR microcontrollers
+  - avrdude                   # AVR microcontrollers download/upload tool
+  - clang                     # c/c++ frontend for LLVM
+  - clangd                    # language server for clang
+  - clang-format
+  - clang-tidy
+  - libc++1                   # clang C++ standard library
+  - libc++abi1
+  - libc++-dev
+  - libc++abi-dev
+  - libclang-dev
+  - libclang1
+  - python3-clang
+  - llvm                      # LLVM
+  - llvm-runtime
+  - lld                       # LLVM linker
+  - lldb                      # lldb next-gen debugger
+  - yasm                      # modular assembler (successor of nasm)
+  - cmake
+  - ninja-build               # small fast build system
+  #- googletest               # WARN: DO NOT USE system googletest
+  # Dynamnic languages
+  - nodejs
+  - python3
+  - python3-dev
+  - python3-pip               # python package manager
+  - python3-venv              # python virtual environments
+  - ruby
+  - ruby-dev                  # required for some bundler packages
+  - bundler                   # ruby package manager
+  # Various clients
+  - postgresql-client         # postgresql client
+  - mysql-client              # mysql client
+  - docker-ce-cli             # docker client
+  - docker-compose
+  - kubectl
+  - google-cloud-sdk          # gcloud utility and other Google Cloud tools
+  # General Linux stuff
+  - pkg-config
+  - libtool-bin
+  # Ubuntu/Debian packaging
+  - devscripts
+  - dput
+  - quilt
+  - fakeroot
+  # Misc
+  - protobuf-compiler         # protocol buffers compiler
+  - manpages-dev
+  - sloccount                 # count sloc
+  - tig
+  - zlib1g-dev

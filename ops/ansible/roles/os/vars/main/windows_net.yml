@@ -1,0 +1,14 @@
+---
+# Windows network settings
+
+windows_lan_drives:
+  - N: \\fs.lan.blami.net\export
+
+windows_lan_printer: printer.w.lan.blami.net
+
+# Windows trusted hosts (Internet Settings control panel)
+# NOTE: This allows executing .exe's from Samba, etc.
+windows_trusted_hosts:
+  - domain: blami.net
+    host: fs.lan
+    protocol: file

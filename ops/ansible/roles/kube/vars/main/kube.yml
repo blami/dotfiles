@@ -1,0 +1,5 @@
+---
+# Kubernetes settings
+
+kube_cluster:
+  pod_cidr: 192.168.224.0/20

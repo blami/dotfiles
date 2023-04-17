@@ -1,0 +1,9 @@
+---
+# Node.js packages to install to NODE_PATH
+
+nodejs_packages:
+  - eslint
+  - prettier
+  - typescript
+  - typescript-language-server
+  - yarn
