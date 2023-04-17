@@ -12,7 +12,7 @@ $packageArgs = @{
   checksumType  = 'sha256'
   softwareName  = 'WinSCP*'
 
-  silentArgs    = '/VERYSILENT /ALLUSERS /NORESTART /DIR=C:\Program Files\WinSCP'
+  silentArgs    = '/VERYSILENT /ALLUSERS /NORESTART /DIR="C:\Program Files\WinSCP"'
 
   validExitCodes= @(0)
 }
