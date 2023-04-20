@@ -1,0 +1,44 @@
+---
+# Configure Windows network and map drive(s)
+
+- name: Adding Windows Local Trusted Hosts
+  win_regedit:
+    path: "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\ZoneMap\\Domains\\{{ item.domain }}\\{{ item.host }}"
+    name: "{{ item.protocol }}"
+    data: 0x00000001
+    type: "dword"
+  loop_control:
+    label: "{{ item.host }}.{{ item.domain }} {{ item.protocol }}"
+  with_items: "{{ windows_trusted_hosts }}"
+
+- name: Enabling Administrator Access To Mapped Drives
+  win_regedit:
+    path: "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System"
+    name: "EnableLinkedConnections"
+    data: 0x00000001
+    type: "dword"
+
+# TODO: Because of authentication method this does not work reliably
+#- name: Map LAN Network Drives
+#  win_mapped_drive:
+#    letter: "{{ item.key }}"
+#    path: "{{ item.value }}"
+#    state: present  
+#  loop_control:
+#    label: "{{ item.key }}: {{ item.value }}"
+#  with_dict: "{{ windows_lan_drives }}"
+#  when:
+#    - my_facts.has_lan
+#  # NOTE: Disable become so that Ansible sees already mapped drive
+#  become: false
+
+# Security
+
+# NOTE: Link-Local Multicast Name Resolution (LLMNR) protocol, a protocol that
+# allow name resolution without the requirement of a DNS server.
+- name: Disabling LLMNR
+  win_regedit:
+    path: "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows NT\\DNSClient"
+    name: "EnableMulticast"
+    data: 0x00000000
+    type: "dword"

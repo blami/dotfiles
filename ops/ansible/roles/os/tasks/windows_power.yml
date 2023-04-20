@@ -1,12 +1,15 @@
 ---
-# Change Windows HW settings
+# Change Windows Power Settings
 
-# TODO: Keyboard layout (map Caps -> Ctrl, anything else?)
-#- name: Changing Windows keyboard mapping
-#  win_shell: |
-#    Write-Host TODO
+# NOTE: Make shutdowns/restarts faster by killing services earlier.
+- name: Setting Service Kill Timeout To 300ms
+  win_regedit:
+    path: "HKLM:\\SYSTEM\\CurrentControlSet\\Control"
+    name: "WaitToKillServiceTimeout"
+    data: "300"
+    type: "string"
 
-- name: Disarming Windows wake-up by input devices
+- name: Disarming Wake-Up For Input Devices
   win_shell: |
     $changed = 0
     powercfg /devicequery wake_armed | foreach {
@@ -22,18 +25,25 @@
   register: result
   changed_when: result.stdout | int > 0
 
-- name: Enabling Windows AHCI Link Power Management control panel
+- name: Enabling AHCI Link Power Management Control Panel
   win_regedit:
     path: "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerSettings\\0012ee47-9041-4b5d-9b77-535fba8b1442\\0b2d69d7-a2a1-449c-9680-f91c70521c60"
     name: "Attributes"
-    data: "0x00000002"
+    data: 0x00000002
     type: "dword"
 
-# NOTE: Windows does not allow to do this per-device
-# NOTE: "SCSI CdRom Device" is suffix added by JMicron JBD controllers 
-# PIONEER BD-RW   BDR-UD03
-- name: Checking for Windows devices that require DIPM
-  win_shell: |
+# Some optical drives do not like to be powered off (mostly burners)
+- name: Disabling CD Drive Power Off
+  win_regedit:
+    path: "HKLM:\\SYSTEM\\CurrentControlSet\\Services\\cdrom\\Parameters"
+    name: "ZeroPowerODDEnabled"
+    data: 0x00000000
+    type: "dword"
+
+# NOTE: Windows does not allow to do this per-device, so try to find relevant
+# devices first.
+# NOTE: "SCSI CdRom Device" is suffix added by JMicron JBD controllers.
+- win_shell: |
     $lookup = @(`
       "PIONEER BD-RW   BDR-UD03", `
       "PIONEER BD-RW   BDR-UD03 SCSI CdRom Device" `
@@ -41,8 +51,7 @@
     @(Get-PnpDevice | Where-Object { $lookup -Contains $_.FriendlyName -And $_.Status -Eq "OK" }).Count
   register: out
   changed_when: false
-
-- name: Setting Windows AHCI Link Power Management to DIPM (all profiles)
+- name: Setting AHCI Link Power Management DIPM (All Profiles)
   win_shell: |
     $changed = 0
     # Get all profile GUIDs
