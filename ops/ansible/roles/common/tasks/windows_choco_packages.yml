@@ -30,4 +30,3 @@
   when:
     - "'has_choco' in my_facts"
     - my_facts.has_choco
-  tags: debug
