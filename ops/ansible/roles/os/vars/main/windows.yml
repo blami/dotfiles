@@ -16,24 +16,6 @@ windows_choco_packages:
   - winscp
   - yubimgr
 
-windows_envvars: {}
-
-windows_path: {}
-
-# Windows registry keys (HKLM)
-windows_registry:
-  # Shorter shutdown/restart kill timeout
-  - path: "SYSTEM\\CurrentControlSet\\Control"
-    name: "WaitToKillServiceTimeout"
-    data: "500"
-    type: "string"
-  # NOTE: These are relevant only on systems that have CDROM
-  # Disable CD drive power off
-  - path: "SYSTEM\\CurrentControlSet\\Services\\cdrom\\Parameters"
-    name: "ZeroPowerODDEnabled"
-    data: 0x00000000
-    type: "dword"
-
 windows_lan_drives:
   - N: \\fs.lan.blami.net\export
 
