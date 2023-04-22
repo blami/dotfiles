@@ -1,11 +1,5 @@
 ---
-# (Un)install APT packages
-
-- name: Removing Unwanted APT Packages
-  apt:
-    pkg: "{{ apt_packages_unwanted }}"
-    purge: true
-    state: absent
+# Install APT packages
 
 - name: Installing APT Packages
   apt:
