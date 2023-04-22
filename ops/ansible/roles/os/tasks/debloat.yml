@@ -1,0 +1,86 @@
+---
+# Debloat Ubuntu
+
+- name: Removing APT Packages
+  apt:
+    pkg:
+      # Snap
+      - snapd
+      - gnome-software-plugin-snap
+      # Apport
+      #- apport # WARN: some useful packages depend on Apport
+      # Ubuntu Server
+      - command-not-found
+      - command-not-found-data
+      - friendly-recovery
+      - motd-news-config
+      - popularity-contest
+      - show-motd
+      - ufw
+      - update-motd
+      # TODO: Ubuntu Desktop
+    state: absent
+    purge: true
+
+# Remove Snap
+- name: Disabling Snap Auto-Installation
+  dpkg_selections:
+    name: snapd
+    selection: hold
+
+# NOTE: In upgraded installations of Ubuntu this file can be left over and
+# cause APT to not operate properly.
+- name: Removing /etc/apt/apt.conf.d/20snapd.conf
+  file:
+    path: /etc/apt/apt.conf.d/20snapd.conf
+    state: absent
+  when:
+    - "\"packages\" in ansible_facts"
+    - "\"snapd\" not in ansible_facts.packages"
+
+- name: Removing Snap Directories
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /snap
+    - /var/snap
+    - /var/lib/snap
+    - /var/cache/snapd
+
+# Disable Apport
+- name: Disabling Apport
+  lineinfile:
+    path: /etc/default/apport
+    regexp: "^enabled=1$"
+    line: "enabled=0"
+
+- name: Disabling Apport Service
+  systemd:
+    name: apport
+    enabled: false
+    state: stopped
+
+# Remove Ubuntu Advantage / Pro Advertising
+- name: Copying ubuntu-advantage-tools Package Source
+  copy:
+    src: "{{ role_path }}/files/ubuntu-advantage-tools"
+    dest: /tmp
+    owner: root
+    group: root
+    force: true
+  when: "'packages' not in ansible_facts or ('ubuntu-advantage-tools' in ansible_facts.packages and ansible_facts.packages['ubuntu-advantage-tools'][0].version != '65535~blami')"
+
+- name: Replacing ubuntu-advantage-tools Package
+  shell: |
+    dpkg -b /tmp/ubuntu-advantage-tools /tmp/ubuntu-advantage-tools.deb
+    dpkg -i /tmp/ubuntu-advantage-tools.deb
+  when:
+    - "'packages' in ansible_facts"
+    - "'ubuntu-advantage-tools' in ansible_facts.packages"
+    - "ansible_facts.packages['ubuntu-advantage-tools'][0].version != '65535~blami'"
+
+- name: Clean Up ubuntu-advantage-tools Config
+  file:
+    path: /etc/apt/apt.conf.d/20apt-esm-hook.conf
+    state: absent

@@ -10,8 +10,7 @@
     - import_tasks: user.yml
     - import_tasks: sudoers.yml
     - import_tasks: netplan.yml
-    - import_tasks: snap.yml              # disable snap
-    - import_tasks: apport.yml            # disable Apport
+    - import_tasks: debloat.yml           # disable snap
     - import_tasks: apt.yml
     - import_tasks: bitwarden.yml         # install Bitwarden CLI
   become: true

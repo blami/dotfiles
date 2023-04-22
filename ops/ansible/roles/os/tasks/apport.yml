@@ -1,8 +1,0 @@
----
-# Disable Apport
-
-- name: Disabling Apport
-  lineinfile:
-    path: /etc/default/apport
-    regexp: "^enabled=1$"
-    line: "enabled=0"
