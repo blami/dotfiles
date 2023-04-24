@@ -27,7 +27,7 @@
     - import_tasks: windows_ntp.yml
     - import_tasks: windows_choco.yml
   # WARN: 'become' to user itself is required to allow credential delegation;
-  # user is expected to be Administrator.
+  # user is expected to be an Administrator.
   become: true
   become_user: "{{ my_user.domain_username }}"
   become_method: runas

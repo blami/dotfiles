@@ -81,3 +81,26 @@
   when:
     - not out.failed
     - out.stdout | int > 0
+
+# BUG: See https://github.com/microsoft/WSL/issues/8204, https://github.com/microsoft/WSL/issues/10006
+- name: Adding Scheduled Task To Workaround WSL2 Wake-Up Clock Skew
+  win_scheduled_task:
+    name: "FixWSL2ClockSkew"
+    description: "Fix WSL2 clock skew after computer wakes up from sleep."
+    author: "Ansible"
+    run_level: highest
+    multiple_instances: 2 # NOTE: Allow only one instance
+    run_only_if_idle: false
+    disallow_start_if_on_batteries: false # NOTE: Run on both AC and bateries
+    stop_if_going_on_batteries: false
+    compatibility: 4 # NOTE: Windows 10
+    triggers:
+      - type: event
+        # NOTE: Microsoft-Windows-Kernel-Power and NOT JUST Kernel-Power
+        subscription: "<QueryList><Query Id=\"0\" Path=\"System\"><Select Path=\"System\">*[System[Provider[@Name='Microsoft-Windows-Kernel-Power'] and EventID=507]]</Select></Query></QueryList>"
+    actions:
+      - path: C:\Windows\System32\wsl.exe
+        arguments: -d Ubuntu -u root -- /usr/local/bin/wsl_clocksync
+  when:
+    - my_facts.is_wsl
+    - my_facts.wsl_version == 2
