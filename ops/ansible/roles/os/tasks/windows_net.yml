@@ -1,5 +1,5 @@
 ---
-# Configure Windows network and map drive(s)
+# Configure Windows network
 
 - name: Adding Windows Local Trusted Hosts
   win_regedit:
@@ -17,20 +17,6 @@
     name: "EnableLinkedConnections"
     data: 0x00000001
     type: "dword"
-
-# TODO: Because of authentication method this does not work reliably
-#- name: Map LAN Network Drives
-#  win_mapped_drive:
-#    letter: "{{ item.key }}"
-#    path: "{{ item.value }}"
-#    state: present  
-#  loop_control:
-#    label: "{{ item.key }}: {{ item.value }}"
-#  with_dict: "{{ windows_lan_drives }}"
-#  when:
-#    - my_facts.has_lan
-#  # NOTE: Disable become so that Ansible sees already mapped drive
-#  become: false
 
 # Security
 
