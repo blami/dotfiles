@@ -34,6 +34,20 @@
   when:
     - my_facts.is_wsl
 
+- name: Installing WSL Scripts
+  copy:
+    src: "{{ role_path }}/files/{{ item }}"
+    dest: "/usr/local/bin"
+    owner: root
+    group: root
+    mode: 755
+    force: true
+  with_items:
+    - wsl_clocksync
+  when:
+    - my_facts.is_wsl
+  tags: debug
+
 # Terminate WSL to force picking up changes made above
 - name: Restarting WSL
   command: "/mnt/c/Windows/System32/wsl.exe -t {{ my_facts.wsl_distro }}"
