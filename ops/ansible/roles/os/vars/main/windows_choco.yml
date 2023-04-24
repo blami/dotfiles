@@ -5,8 +5,8 @@ windows_choco_packages:
   # Essentials
   - autohotkey
   - 7-zip
-  - firefox               # latest, self-updating
   - git
+  - googlechrome          # latest, self-updating
   - googledrive           # latest, self-updating
   - imgburn
   - irfanview
