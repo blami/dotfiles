@@ -1,4 +1,5 @@
-# Debloat Windows after installation and/or update
+---
+# Debloat Windows
 # NOTE: This should run as user for which setup is made (see main.yml)
 
 - name: Uninstalling Pre-Installed Apps
