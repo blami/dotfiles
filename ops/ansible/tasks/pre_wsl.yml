@@ -214,6 +214,10 @@
     ansible_winrm_cert_pem: "{{ my_user.home }}/.winrm/localclient.crt"
     ansible_winrm_cert_key_pem: "{{ my_user.home }}/.winrm/localclient.key"
     ansible_winrm_server_cert_validation: ignore
+    ansible_become_method: runas
+    # NOTE: Empty become password set using -K as it won't work on Windows
+    # anyway and local user is expected to have at least Administrator role.
+    ansible_become_password: null
     groups: windows
   when:
     - my_facts.can_winrm
@@ -233,4 +237,3 @@
   delegate_to: localhost.windows
   when:
     - my_facts.is_wsl
-

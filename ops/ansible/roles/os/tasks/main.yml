@@ -30,7 +30,6 @@
   # user is expected to be an Administrator.
   become: true
   become_user: "{{ my_user.domain_username }}"
-  become_method: runas
   when:
     - ansible_facts.os_family == "Windows"
     - my_user.is_administrator
