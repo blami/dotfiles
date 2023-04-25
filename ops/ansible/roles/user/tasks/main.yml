@@ -23,3 +23,14 @@
   when:
     - ansible_facts.system == "Linux"
     - my_facts.has_become_my_user
+
+# Windows
+- block:
+    - import_tasks: windows_dotfiles.yml
+    - import_tasks: windows_dirs.yml
+  # WARN: 'become' to user itself is required to allow credential delegation;
+  # user is expected to be an Administrator.
+  become: true
+  become_user: "{{ my_user.domain_username }}"
+  when:
+    - ansible_facts.os_family == "Windows"

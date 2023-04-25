@@ -1,15 +1,32 @@
 ---
 # Setup Windows user directories
 
+- name: Hiding Dotfiles
+  win_shell: |
+    $changed = 0
+    $d = @()
+    $d += Get-ChildItem {{ my_user.userprofile }} -Filter AppData -Force
+    $d += Get-ChildItem {{ my_user.userprofile }} -Filter .* -Force
+    $d | foreach {
+      if (-Not ($_.Attributes -Match "Hidden")) {
+        $_.Attributes += "Hidden"
+        $changed += 1
+      }
+    }
+    Write-Host $changed
+  register: result
+  changed_when: result.stdout | int > 0
+  tags: debug
+
 # TODO: Relocate directories (e.g. Videos -> videos, etc.)
 
-- name: Deleting useless Windows directories
+- name: Deleting Unwanted Directories
   win_file:
-    path: "{{ item }}"
+    path: "{{ my_user.userprofile }}\\{{ item }}"
     state: absent
-  # Some directories might be protected by Windows, skip those
+  # NOTE: Some directories might be protected by Windows, skip those.
   ignore_errors: true
   with_items:
-    - "{{ ansible_facts.env.USERPROFILE }}\\OneDrive"
-    - "{{ ansible_facts.env.USERPROFILE }}\\ansel"
-    - "{{ ansible_facts.env.USERPROFILE }}\\source"
+    - "OneDrive"
+    - "ansel"         # Nvidia
+    - "source"        # Visual Studio
