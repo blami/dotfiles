@@ -18,6 +18,7 @@
 
 - name: Gathering Windows Environment Facts
   win_shell: Get-Item Env:* | Select Key,Value | ConvertTo-Json
+  changed_when: false
   register: out
 - set_fact:
     my_facts: >
@@ -57,6 +58,7 @@
 - name: Checking If Chocolatey Is Installed
   win_shell: choco --version
   register: out
+  changed_when: false
   failed_when: false
 - set_fact:
     my_facts: >
