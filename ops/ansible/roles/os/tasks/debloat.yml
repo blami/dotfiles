@@ -21,12 +21,23 @@
       # TODO: Ubuntu Desktop
     state: absent
     purge: true
+  register: out
 
 # Remove Snap
 - name: Disabling Snap Auto-Installation
   dpkg_selections:
     name: snapd
     selection: hold
+- file:
+    path: /etc/apt/apt.preferences.d
+    state: directory
+- copy:
+    src: "{{ role_path }}/files/apt.preferences.d/no-snap.pref"
+    dest: "/etc/apt/apt.preferences.d/no-snap.pref"
+    owner: root
+    group: root
+    mode: 644
+    force: true
 
 # NOTE: In upgraded installations of Ubuntu this file can be left over and
 # cause APT to not operate properly.
@@ -34,9 +45,7 @@
   file:
     path: /etc/apt/apt.conf.d/20snapd.conf
     state: absent
-  when:
-    - "\"packages\" in ansible_facts"
-    - "\"snapd\" not in ansible_facts.packages"
+  when: "('packages' in ansible_facts and 'snapd' not in ansible_facts.packages) or out.changed"
 
 - name: Removing Snap Directories
   file:

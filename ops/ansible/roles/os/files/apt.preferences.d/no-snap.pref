@@ -1,0 +1,6 @@
+# To prevent repository stub packages from installing Snap this file forbids
+# installation of snapd.
+
+Package: snapd
+Pin: release a=*
+Pin-Priority: -10
