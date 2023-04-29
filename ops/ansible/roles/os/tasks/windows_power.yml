@@ -48,7 +48,7 @@
       "PIONEER BD-RW   BDR-UD03", `
       "PIONEER BD-RW   BDR-UD03 SCSI CdRom Device" `
     )
-    @(Get-PnpDevice | Where-Object { $lookup -Contains $_.FriendlyName -And $_.Status -Eq "OK" }).Count
+    @(Get-PnpDevice | Where-Object { $lookup -contains $_.FriendlyName -and $_.Status -Eq "OK" }).Count
   register: out
   changed_when: false
 - name: Setting AHCI Link Power Management DIPM (All Profiles)
@@ -66,11 +66,11 @@
     # NOTE: DIPM value is 3
     foreach ($g in $guids) {
       $out = powercfg /query $g 0012ee47-9041-4b5d-9b77-535fba8b1442 0b2d69d7-a2a1-449c-9680-f91c70521c60
-      if (-Not($out -Match "Current AC Power Setting Index: 0x00000003")) {
+      if (-not($out -match "Current AC Power Setting Index: 0x00000003")) {
         powercfg /setacvalueindex $g 0012ee47-9041-4b5d-9b77-535fba8b1442 0b2d69d7-a2a1-449c-9680-f91c70521c60 3
         $changed += 1
       }
-      if (-Not($out -Match "Current DC Power Setting Index: 0x00000003")) {
+      if (-not($out -match "Current DC Power Setting Index: 0x00000003")) {
         powercfg /setdcvalueindex $g 0012ee47-9041-4b5d-9b77-535fba8b1442 0b2d69d7-a2a1-449c-9680-f91c70521c60 3
         $changed += 1
       }
