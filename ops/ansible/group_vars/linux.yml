@@ -1,9 +1,11 @@
 ---
+# Linux group variables
+
 my_user:
   # These are defaults for user to be created; if user exists and has different
   # settings, or if playbook is run with -e user=FOO those variables are
   # overriden in tasks/pre_linux.yml
-  username: "blami"
+  username: blami
   gecos: "Ondrej Balaz,,,,blami@blami.net"
   shell: "/usr/bin/zsh"
   home: "/home/blami"
