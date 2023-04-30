@@ -1,0 +1,69 @@
+---
+# User directories variables
+
+# This is shared both by Linux and Windows as I tend to have same home
+# directory organization on both systems. On Windows especially there's a lot
+# of littering done by Apps so I redirect Documents and all special folders to
+# TODO.
+
+# BUG: All directory names are relative to home directory. While they can be
+# nested it will blow up if link is nested in directory.
+
+# Properties explanation:
+# link: "wsl" will link %USERPROFILE%/name to WSL (dirs.yml)
+# link: "windows" will link //wsl.local../name to Windows (windows_dirs.yml)
+# xdg: "XDG_FOO_DIR" will put directory to ~/.config/user-dirs.dirs or set
+# environment variable on Windows to point to that directory.
+# windows_guid: windows_guid of special directory (windows_dirs.yml).
+# windows_icon: windows_icon of directory (windows_dirs.yml).
+
+user_dirs:
+  - name: "desk"
+    xdg: "XDG_DESKTOP_DIR"
+    windows_guid: "B4BFCC3A-DB2C-424C-B029-7FE99A87C641"
+    windows_icon: "%SystemRoot%\\system32\\imageres.dll,-183"
+    link: "wsl"
+  - name: "docs"
+    xdg: "XDG_DOCUMENTS_DIR"
+    # NOTE: Not linked with windows_guid as Windows apps tend to litter Documents a lot
+    windows_icon: "%SystemRoot%\\system32\\imageres.dll,-112"
+    link: "wsl"
+  - name: "downl"
+    xdg: "XDG_DOWNLOAD_DIR"
+    windows_guid: "374DE290-123F-4565-9164-39C4925E467B"
+    windows_icon: "%SystemRoot%\\system32\\imageres.dll,-184"
+    link: "wsl"
+  - name: "tmpl"                      # WARN: In dotfiles, DO NOT LINK
+    xdg: "XDG_TEMPLATES_DIR"
+  - name: "pics"
+    xdg: "XDG_PICTURES_DIR"
+    windows_icon: "%SystemRoot%\\system32\\imageres.dll,-113"
+    link: "wsl"
+  - name: "music"
+    xdg: "XDG_MUSIC_DIR"
+    windows_icon: "%SystemRoot%\\system32\\imageres.dll,-108"
+    link: "wsl"
+  - name: "videos"
+    xdg: "XDG_VIDEOS_DIR"
+    windows_icon: "%SystemRoot%\\system32\\imageres.dll,-189"
+    link: "wsl"
+  - name: "pub"                       # public files
+    xdg: "XDG_PUBLICSHARE_DIR"
+    link: "windows"
+  - name: "bak"                       # backups to pick up
+  - name: "logs"                      # logs (irc, etc.)
+    link: "windows"
+  - name: "mail"                      # maildir
+    link: "windows"
+  - name: "src"                       # source code
+  - name: "public_html"               # local web
+    link: "windows"
+  - name: "drive"                     # Google Drive
+    link: "wsl"
+
+# WSL native directories
+# NOTE: These need to be on native WSL filesystem in case HOME is on NTFS
+wsl_native_dirs:
+  - src: "/home/{{ my_user.username }}/.ssh/ctrl"
+    dest: "{{ my_user.home }}/.ssh/ctrl"
+    mode: "0700"

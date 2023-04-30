@@ -1,0 +1,34 @@
+---
+# Neovim variables
+
+# Packs
+# NOTE: All packs go to 'opt/' subdirectory so that plugin.vim can decide what
+# to start based on whether running standalone or in VSCode. To override set
+# start: true.
+nvim_packs:
+  - name: "lspconfig"
+    group: "plugins"
+    repo: "https://github.com/neovim/nvim-lspconfig"
+  #- name: "treesitter"
+  #  group: "plugins"
+  #  repo: "https://github.com/nvim-treesitter/nvim-treesitter"
+  - name: "cmp"
+    group: "plugins"
+    repo: "https://github.com/hrsh7th/nvim-cmp"
+  - name: "cmp-lsp"
+    group: "plugins"
+    repo: "https://github.com/hrsh7th/cmp-nvim-lsp"
+  - name: "cmp-vsnip"
+    group: "plugins"
+    repo: "https://github.com/hrsh7th/cmp-vsnip"
+  - name: "gitsigns"
+    group: "plugins"
+    repo: "https://github.com/lewis6991/gitsigns.nvim"
+  - name: "colorizer"
+    group: "plugins"
+    repo: "https://github.com/norcalli/nvim-colorizer.lua"
+
+# Spell files
+nvim_spell:
+  - en.utf-8
+  - cs.utf-8
