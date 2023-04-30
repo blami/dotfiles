@@ -1,0 +1,18 @@
+---
+# Change dotfiles remote to SSH
+# See also: dotfiles_ssh.yml
+# NOTE: Needs to be in separate file so it can run after windows_secrets.yml
+
+- stat:
+    path: "{{ my_user.userprofile }}\\.ssh\\{{ my_user.ssh_key }}"
+  register: out
+
+# NOTE: Depends on git being installed by os role and in PATH.
+- name: Changing Dotfiles Repository Remote To SSH (for push)
+  win_shell: |
+      & git --git-dir=.dfgit remote set-url --push origin git@github.com:{{ dotfiles_repo }}
+  args:
+    chdir: "{{ my_user.userprofile }}"
+  # Do not run if SSH key is not present
+  when:
+    - out.stat.exists

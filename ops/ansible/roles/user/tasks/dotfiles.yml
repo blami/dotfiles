@@ -1,6 +1,8 @@
 ---
 # Clone and update dotfiles
+# See also: windows_dotfiles.yml
 
+# NOTE: Depends on git being installed by os role and in PATH.
 - name: Cloning Dotfiles Repository {{ dotfiles_repo }}
   # NOTE: Not using builtin.git as we clone to ~ which already exists.
   shell:
@@ -15,17 +17,14 @@
     creates: "{{ my_user.home }}/.dfgit"
   register: out
 
-# - name: Updating dotfiles
-#   shell:
-#     chdir: "{{ my_user.home }}"
-#     # TODO: Check if pull can be done...
-#     # https://stackoverflow.com/questions/24504400/whats-the-correct-way-to-check-if-its-possible-to-perform-a-fast-forward-merge
-#     cmd: |
-#       umask {{ my_user.umask }}
-#       git --git-dir=.dfgit pull
-#   # Never fail (see TODO above)
-#   failed_when: false
-#   # Do not run if dotfiles were just cloned
-#   when:
-#     - not out.changed
-# 
+- name: Updating Dotfiles
+  shell:
+    chdir: "{{ my_user.home }}"
+    cmd: |
+      umask {{ my_user.umask }}
+      git --git-dir=.dfgit pull --ff-only
+  register: result
+  changed_when: result.stdout != "Already up to date."
+  ignore_errors: true # NOTE: When fast-forward not possible
+  when:
+    - not out.changed
