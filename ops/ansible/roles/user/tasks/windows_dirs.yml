@@ -1,24 +1,81 @@
 ---
 # Setup Windows user directories
 
-- name: Hiding Dotfiles
+- name: Symlinking WSL User Directories To Windows
   win_shell: |
-    $changed = 0
-    $d = @()
-    $d += Get-ChildItem {{ my_user.userprofile }} -Filter AppData -Force
-    $d += Get-ChildItem {{ my_user.userprofile }} -Filter .* -Force
-    $d | foreach {
-      if (-Not ($_.Attributes -Match "Hidden")) {
-        $_.Attributes += "Hidden"
-        $changed += 1
-      }
-    }
-    Write-Host $changed
-  register: result
-  changed_when: result.stdout | int > 0
+      New-Item -ItemType SymbolicLink -Path "{{ item.name }}" -Target "{{ my_facts.wsl_unc_home_dir }}\\{{ item.name }}"
+  args:
+    chdir: "{{ my_user.userprofile }}"
+    creates: "{{ my_user.userprofile }}\\{{ item.name }}"
+  loop_control:
+    label: "{{ item.name }}"
+  with_items: "{{ user_dirs | selectattr('link', 'defined') | selectattr('link', 'equalto', 'windows') }}"
+  when:
+    - my_facts.is_wsl
+    - not my_facts.wsl_home_is_userprofile
   tags: debug
 
-# TODO: Relocate directories (e.g. Videos -> videos, etc.)
+# Rename directories to same case as listed in user_directories (OCD).
+# NOTE: This task should run even if USERPROFILE is WSL ~ as dirs.yml doesn't
+# handle this (Linux is case 
+- name: Fixing Existing Directories Case
+  win_shell: |
+    $changed = 0
+    $dir = Dir | Where-Object { ($_.Name -eq "{{ item.name }}") -and -not ($_.Name -ceq "{{ item.name }}") }
+    foreach ($d in $dir) {
+        Rename-Item $d.FullName ($d.Name + "_tmp")
+        Rename-Item ($d.FullName + "_tmp") ($d.Name.ToLower())
+        $changed += 1
+    }
+    Write-Host $changed
+  args:
+    chdir: "{{ my_user.userprofile }}"
+  register: result
+  changed_when: result.stdout | int > 0
+  loop_control:
+    label: "{{ item.name }}"
+  with_items: "{{ user_dirs }}"
+  tags: debug
+
+- name: Creating User Directories
+  win_file:
+    path: "{{ my_user.userprofile }}\\{{ item.name }}"
+    state: directory
+  loop_control:
+    label: "{{ item.name }}"
+  with_items: 
+    - "{{ user_dirs | rejectattr('link', 'defined') }}"
+    - "{{ user_dirs | selectattr('link', 'defined') | rejectattr('link', 'equalto', 'windows') }}"
+  tags: debug
+
+- name: Adding desktop.ini
+  # NOTE: desktop.ini MUST be moved using Shell method to be picked up
+  win_shell: |
+      $path = 
+      $content = @"
+
+      [.ShellClassInfo]
+      IconResource={{ item.windows_icon }}
+
+      "@
+      Set-Content "{{ my_user.userprofile }}\\{{ item.name }}\\desktop.ini" $content -Encoding Unicode -Force
+      # Required by explorer.exe to pick up desktop.ini
+      (Get-Item "{{ my_user.userprofile }}\\{{ item.name }}" -Force).Attributes = "Readonly","Directory"
+      (Get-Item "{{ my_user.userprofile }}\\{{ item.name }}\\desktop.ini" -Force).Attributes = "Archive","Hidden","System"
+      # TODO: Broadcast change message
+  args:
+    chdir: "{{ my_user.userprofile }}"
+    creates: "{{ my_user.userprofile }}\\{{ item.name }}\\desktop.ini"
+  loop_control:
+    label: "{{ item.name }}"
+  with_items: "{{ user_dirs | selectattr('windows_icon', 'defined') }}"
+  tags: debug
+
+
+# NOTE: This just changes where directories are and does not move any contents.
+#- name: Relocating GUID Directories
+
+
 
 - name: Deleting Unwanted Directories
   win_file:
@@ -27,6 +84,11 @@
   # NOTE: Some directories might be protected by Windows, skip those.
   ignore_errors: true
   with_items:
+    - "Contacts"
+    - "Favorites"
+    - "Links"
     - "OneDrive"
     - "ansel"         # Nvidia
     - "source"        # Visual Studio
+
+# TODO: Make VST3 Junction

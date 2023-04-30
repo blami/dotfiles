@@ -24,7 +24,9 @@
     creates: "{{ my_user.home }}/{{ item.name }}"
   loop_control:
     label: "{{ item.name }}"
-  with_items: "{{ user_dirs }}"
+  with_items:
+    - "{{ user_dirs | rejectattr('link', 'defined') }}"
+    - "{{ user_dirs | selectattr('link', 'defined') | rejectattr('link', 'equalto', 'wsl') }}"
 
 - name: Generating XDG ~/.config/user-dirs.dirs
   template:
