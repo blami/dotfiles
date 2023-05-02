@@ -1,5 +1,5 @@
 ---
-# Variables for all groups
+# Common variables
 
 dotfiles_repo: blami/dotfiles.git
 ntp_server: time.cloudflare.com
