@@ -1,5 +1,5 @@
 ---
-# Additional Chocolatey packages to install
+# Chocolatey packages variables
 
 windows_choco_packages:
   # Essentials
