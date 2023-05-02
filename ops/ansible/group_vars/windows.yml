@@ -10,3 +10,5 @@ my_user:
   is_administrator: false
   # Relative to {{ my_user.userprofile }}\\.ssh
   ssh_key: "keys\\id_blami_rsa"
+
+wsl_distro: Debian
