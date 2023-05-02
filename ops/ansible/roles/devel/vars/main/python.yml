@@ -1,5 +1,5 @@
 ---
-# Python packages to install to ~/.local/lib/pythonX.Y/site-packages
+# Python packages variables
 
 python_packages:
   - black                     # opinionated code formatter

@@ -1,5 +1,5 @@
 ---
-# Go packages to install to GOPATH
+# Go packages variables
 
 go_packages:
   - golang.org/x/tools/gopls
