@@ -11,10 +11,14 @@
     #shell: {{ my_user.shell }}
     # NOTE: Use system home directory see update command bellow
     move_home: false
-    # NOTE: For new user require change on first login
-    password: "{{ 'changeme' | password_hash('sha512') }}"
-    update_password: on_create
   register: out
+
+# NOTE: If user was created force password change on next login
+- name: Forcing User {{ my_user.username }} To Change Password
+  command: chage -d0 {{ my_user.username }}
+  when:
+    - not my_facts.has_my_user
+    - out.changed
 
 - name: Adding User {{ my_user.username }} To Groups
   user:
@@ -24,8 +28,6 @@
   with_items: "{{ my_user.groups }}"
   when:
     - item in ansible_facts.getent_group
-
-# TODO: call chage to force password change
 
 - name: Refreshing User Facts
   set_fact:
