@@ -17,6 +17,8 @@
     - not my_facts.wsl_home_is_userprofile
 
 - name: Creating User Directories
+  # TODO: Support for nested directories, when creating directory must check
+  # and proceed only if no component of path is already existing symlink.
   shell:
     cmd: |
       umask {{ my_user.umask }}

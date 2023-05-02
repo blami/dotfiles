@@ -18,21 +18,22 @@
 # windows_icon: windows_icon of directory (windows_dirs.yml).
 
 user_dirs:
-  - name: "desk"
+  - name: "desk"    # Desktop
     xdg: "XDG_DESKTOP_DIR"
     windows_guid: "B4BFCC3A-DB2C-424C-B029-7FE99A87C641"
     windows_icon: "%SystemRoot%\\system32\\imageres.dll,-183"
     link: "wsl"
-  - name: "docs"
+  - name: "docs"    # Documents
     xdg: "XDG_DOCUMENTS_DIR"
-    # NOTE: Not linked with windows_guid as Windows apps tend to litter Documents a lot
+    # NOTE: Not linked with windows_guid as Windows apps tend to litter "My Documents" a lot
     windows_icon: "%SystemRoot%\\system32\\imageres.dll,-112"
     link: "wsl"
-  - name: "downl"
+  - name: "downl"   # Downloads
     xdg: "XDG_DOWNLOAD_DIR"
     windows_guid: "374DE290-123F-4565-9164-39C4925E467B"
     windows_icon: "%SystemRoot%\\system32\\imageres.dll,-184"
     link: "wsl"
+  - name: "downl/arch"
   - name: "tmpl"                      # WARN: In dotfiles, DO NOT LINK
     xdg: "XDG_TEMPLATES_DIR"
   - name: "pics"

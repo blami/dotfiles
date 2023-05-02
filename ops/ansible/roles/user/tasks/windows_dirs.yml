@@ -13,7 +13,6 @@
   when:
     - my_facts.is_wsl
     - not my_facts.wsl_home_is_userprofile
-  tags: debug
 
 # Rename directories to same case as listed in user_directories (OCD).
 # NOTE: This task should run even if USERPROFILE is WSL ~ as dirs.yml doesn't
@@ -35,28 +34,71 @@
   loop_control:
     label: "{{ item.name }}"
   with_items: "{{ user_dirs }}"
-  tags: debug
 
 - name: Creating User Directories
+  # TODO: Support for nested directories, when creating directory must check
+  # and proceed only if no component of path is already existing symlink.
+  #win_shell:
   win_file:
     path: "{{ my_user.userprofile }}\\{{ item.name }}"
     state: directory
+  args:
+    chdir: "{{ my_user.userprofile }}"
   loop_control:
     label: "{{ item.name }}"
   with_items: 
     - "{{ user_dirs | rejectattr('link', 'defined') }}"
     - "{{ user_dirs | selectattr('link', 'defined') | rejectattr('link', 'equalto', 'windows') }}"
+
+# NOTE: This just changes where directories are and does not move any contents.
+- name: Relocating KNOWNFOLDERS
+  win_shell: |
+    $changed = 0
+    $path = "%USERPROFILE%\{{ item.name }}"
+    $guid = "{{ item.windows_guid }}"
+    $guids = @{
+      # KNOWNFOLDERS GUID                        # Registry key names, registry
+      "B4BFCC3A-DB2C-424C-B029-7FE99A87C641"   = "Desktop"
+      #"374DE290-123F-4565-9164-39C4925E467B"   = "{374DE290-123F-4565-9164-39C4925E467B}"
+      "33E28130-4E1E-4676-835A-98395C3BC3BB"   = "My Pictures"
+      "4BD8D571-6D19-48D3-BE97-422220080E43"   = "My Music"
+      "18989B1D-99B5-455B-841C-AB7C74E4DDFC"   = "My Videos"
+    }
+    # Check currently set path for given guid
+    $name = "{$($guid)}"
+    if ($guids.ContainsKey("{{ item.windows_guid }}")) {
+      $name = $guids["{{ item.windows_guid }}"]
+    }
+    Write-Host $name
+    $cur = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name $name
+    if ($cur -ne $path) {
+        $sig = @{
+          Namespace = "WinAPI"
+          Name = "KnownFolders"
+          Language = "CSharp"
+          MemberDefinition = @"
+    [DllImport("shell32.dll")]
+    public extern static int SHSetKnownFolderPath(ref Guid folderId, uint flags, IntPtr token, [MarshalAs(UnmanagedType.LPWStr)] string path);
+    "@
+        }
+        if (-not ("WinAPI.KnownFolders" -as [type])) { Add-Type @sig }
+        [WinAPI.KnownFolders]::SHSetKnownFolderPath([ref]$guid, 0, 0, $path)
+        New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name $name -PropertyType ExpandString -Value $path -Force
+        $changed = 1
+    }
+    Write-Host $changed
+  loop_control:
+    label: "{{ item.name }}"
+  with_items: "{{ user_dirs | selectattr('windows_guid', 'defined') }}"
   tags: debug
 
 - name: Adding desktop.ini
   # NOTE: desktop.ini MUST be moved using Shell method to be picked up
   win_shell: |
-      $path = 
       $content = @"
 
       [.ShellClassInfo]
       IconResource={{ item.windows_icon }}
-
       "@
       Set-Content "{{ my_user.userprofile }}\\{{ item.name }}\\desktop.ini" $content -Encoding Unicode -Force
       # Required by explorer.exe to pick up desktop.ini
@@ -69,13 +111,6 @@
   loop_control:
     label: "{{ item.name }}"
   with_items: "{{ user_dirs | selectattr('windows_icon', 'defined') }}"
-  tags: debug
-
-
-# NOTE: This just changes where directories are and does not move any contents.
-#- name: Relocating GUID Directories
-
-
 
 - name: Deleting Unwanted Directories
   win_file:
@@ -84,11 +119,10 @@
   # NOTE: Some directories might be protected by Windows, skip those.
   ignore_errors: true
   with_items:
-    - "Contacts"
-    - "Favorites"
-    - "Links"
+    - "Contacts"      # ???
+    - "Favorites"     # ???
+    - "Links"         # ???
     - "OneDrive"
     - "ansel"         # Nvidia
     - "source"        # Visual Studio
-
-# TODO: Make VST3 Junction
+    #- "Creative Cloud"
