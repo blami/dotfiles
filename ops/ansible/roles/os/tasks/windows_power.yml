@@ -1,6 +1,14 @@
 ---
 # Change Windows Power Settings
 
+# NOTE: Fastboot breaks a lot of things (notably dualboot and fw upgrades)
+- name: Disabling Fast Boot
+  win_regedit:
+    path: "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power"
+    name: "HiberbootEnabled"
+    data: 0x00000000
+    type: "dword"
+
 # NOTE: Make shutdowns/restarts faster by killing services earlier.
 - name: Setting Service Kill Timeout To 300ms
   win_regedit:
@@ -96,11 +104,12 @@
     compatibility: 4 # NOTE: Windows 10
     triggers:
       - type: event
-        # NOTE: Microsoft-Windows-Kernel-Power and NOT JUST Kernel-Power
+        # NOTE: Microsoft-Windows-Kernel-Power and NOT JUST Kernel-Power.
         subscription: "<QueryList><Query Id=\"0\" Path=\"System\"><Select Path=\"System\">*[System[Provider[@Name='Microsoft-Windows-Kernel-Power'] and EventID=507]]</Select></Query></QueryList>"
     actions:
-      - path: C:\Windows\System32\wsl.exe
-        arguments: -d Ubuntu -u root -- /usr/local/bin/wsl_clocksync
+        # NOTE: Runs via cmd.exe so it can run minimized.
+      - path: "%WINDIR%\\System32\\cmd.exe"
+        arguments: "/C \"start \"\" /MIN %WINDIR%\\System32\\wsl.exe -d {{ wsl_distro }} -u root -- /usr/local/bin/wsl_clocksync\""
   when:
     - my_facts.is_wsl
     - my_facts.wsl_version == 2
