@@ -1,5 +1,5 @@
 ---
-# Additional APT repositories and packages to install
+# APT repositories and packages variables
 
 apt_repositories:
   # Neovim
@@ -12,11 +12,6 @@ apt_repositories:
     key_id: "A1715D88E1DF1F24"
     sources:
       - "deb http://ppa.launchpad.net/git-core/ppa/ubuntu {{ ansible_distribution_release }} main"
-  # Ansible
-  #- name: "ppa_ansible"
-  #  key_id: "6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367"
-  #  sources:
-  #    - "deb https://ppa.launchpadcontent.net/ansible/ansible/ubuntu {{ ansible_distribution_release }} main"
 
 apt_packages:
   #- snapd                    # WARN: DO NOT add snapd here
