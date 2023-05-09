@@ -1,5 +1,0 @@
-Package: ubuntu-advantage-tools
-Version: 65535~blami
-Architecture: all
-Description: Replace ubuntu-advantage-tools by an empty package.
-Maintainer: Ondrej Balaz <blami@blami.net>
