@@ -2,3 +2,4 @@
 
 Defaults !env_reset
 Defaults !mail_badpass
+Defaults !secure_path
