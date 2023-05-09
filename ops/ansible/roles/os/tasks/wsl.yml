@@ -1,5 +1,6 @@
 ---
 # Configure WSL
+# WARN: Depends on systemd and systemd-sysv being installed by apt.yml!
 
 - name: Converting /tmp To tmpfs
   lineinfile:
@@ -11,26 +12,17 @@
     - my_facts.is_wsl
 
 - name: Installing WSLInterop.conf to binfmt.d
-  copy:
+  file:
+    path: /etc/binfmt.d
+    state: directory
+- copy:
     src: "{{ role_path }}/files/binfmt.d/WSLInterop.conf"
-    dest: "/etc/binfmt.d/WSLInterop.conf"
+    dest: /etc/binfmt.d/WSLInterop.conf
     owner: root
     group: root
     mode: 644
     force: true
   register: out_wsl_wslinterop
-  when:
-    - my_facts.is_wsl
-
-- name: Installing wsl.conf
-  copy:
-    src: "{{ role_path }}/files/wsl.conf"
-    dest: "/etc/wsl.conf"
-    owner: root
-    group: root
-    mode: 644
-    force: true
-  register: out_wsl_wslconf
   when:
     - my_facts.is_wsl
 
@@ -44,9 +36,44 @@
     force: true
   with_items:
     - wsl_clocksync
+    - wsl_hosts
   when:
     - my_facts.is_wsl
-  tags: debug
+
+- name: Installing WSL systemd Units
+  copy:
+    src: "{{ role_path }}/files/systemd/{{ item }}"
+    dest: "/etc/systemd/system"
+    owner: root
+    group: root
+    mode: 644
+    force: true
+  with_items:
+    - wsl_hosts.service
+  when:
+    - my_facts.is_wsl
+
+- name: Enabling WSL systemd Units
+  systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  with_items:
+    - wsl_hosts.service
+  when:
+    - my_facts.is_wsl
+
+- name: Installing wsl.conf
+  template:
+    src: "{{ role_path }}/files/wsl.conf.j2"
+    dest: "/etc/wsl.conf"
+    owner: root
+    group: root
+    mode: 644
+    force: true
+  register: out_wsl_wslconf
+  when:
+    - my_facts.is_wsl
 
 # Terminate WSL to force picking up changes made above
 - name: Restarting WSL

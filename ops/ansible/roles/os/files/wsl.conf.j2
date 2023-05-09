@@ -3,6 +3,7 @@
 [boot]
 systemd = true
 
+
 [automount]
 enabled = true
 mountFsTab = true
@@ -15,3 +16,6 @@ generateResolvConf = true
 
 [interop]
 enabled = true
+
+[user]
+default = {{ my_user.username }}
