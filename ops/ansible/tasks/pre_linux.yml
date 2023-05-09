@@ -71,9 +71,8 @@
       privileges to become 'root' (see -K). If you wish to run this playbook
       with different username than '{{ my_user.username }}' rather than
       creating that user; run playbook with '-e user=USERNAME' argument.
-  when: >
-    (not my_facts.has_become_root and not my_facts.has_my_user)
-    or (my_facts.has_my_user and not my_facts.has_become_my_user)
+  when:
+    - "(not my_facts.has_become_root and not my_facts.has_my_user) or (my_facts.has_my_user and not my_facts.has_become_my_user)"
 
 # If we have no power to change aspects of user simply read them into my_user.
 - name: Gathering User Facts
