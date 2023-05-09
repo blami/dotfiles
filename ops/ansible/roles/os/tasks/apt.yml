@@ -1,5 +1,6 @@
 ---
 # Configure APT and install/remove basic packages
+# TODO: Old kernel autoremoval
 
 - name: Disabling APT Recommendations
   copy:
@@ -10,49 +11,26 @@
     mode: 644
     force: true
 
-# TODO: Setup old kernel/firmware package autoremoval
-
-- name: Removing .distUpgrade Files
-  find:
-    patterns: "*.distUpgrade"
-    paths: /etc/apt
-    recurse: true
-  register: out
-- file:
-    path: "{{ item.path }}"
+- name: Removing Default APT Sources
+  file:
+    path: "{{ item }}"
     state: absent
-  loop_control:
-    label: "{{ item.path }}"
-  with_items: "{{ out.files | default([]) }}"
+  with_items:
+    - "/etc/apt/sources.list"
+    - "/etc/apt/sources.list.d/debian.sources"
+
+- name: Adding Release Priorities
+  copy:
+    src: "{{ role_path }}/files/apt.preferences.d/10release-priority"
+    dest: "/etc/apt/preferences.d/10release-priority"
+    owner: root
+    group: root
+    mode: 644
+    force: true
 
 - include_role:
     name: common
-    tasks_from: apt_repositories
-
-# NOTE: If Ansible is installed from Ubuntu repositories then attempt to
-# upgrade to PPA version will clash on PPA's ansible-core. In case of upgrade 
-
-# If ansible is installed from Ubuntu repositories it will clash with upstream
-# ansible-core package.
-#- name: Upgrading Ansible
-#  shell:
-#    cmd: |
-#      /usr/bin/apt-get remove --purge --yes ansible
-#      /usr/bin/apt-get install --yes ansible
-#    # NOTE: This needs to be done as shell command in one step so that Ansible is
-#    # installed for continuing with the next task.
-#    warn: false
-#  register: out
-#  when:
-#    - "\"packages\" in ansible_facts"
-#    - "\"ansible\" in ansible_facts.packages" 
-#    - "ansible_facts.packages.ansible[0].origin == \"Ubuntu\""
-# # NOTE: In case upgrade is performed it is necessary to terminate to avoid
-# # Python module mixing.
-#- fail:
-#    msg: "Ansible was upgraded. Restart playbook to continue."
-#    when:
-#      - out.changed
+    tasks_from: apt_sources
 
 - name: Upgrading APT Packages
   apt:

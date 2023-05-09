@@ -1,11 +1,10 @@
 ---
-# Install APT packages
-# NOTE: These work only on Debian-like distros
+# Install user APT packages
 
-- name: Installing APT Packages
-  apt:
-    pkg: "{{ apt_packages }}"
-    install_recommends: false
-    state: latest
-  when:
-    - ansible_facts.os_family == "Debian"
+- include_role:
+    name: common
+    tasks_from: apt_sources
+
+- include_role:
+    name: common
+    tasks_from: apt_packages

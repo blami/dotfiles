@@ -3,7 +3,7 @@
 
 - include_role:
     name: common
-    tasks_from: apt_repositories
+    tasks_from: apt_sources
 
 - include_role:
     name: common

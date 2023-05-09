@@ -1,50 +1,33 @@
 ---
 # APT repositories and packages variables
 
-apt_repositories:
-  # Go
-  - name: "ppa_longsleep-golang"
-    key_id: "F6BC817356A3D45E"
-    sources:
-      - "deb http://ppa.launchpad.net/longsleep/golang-backports/ubuntu {{ ansible_distribution_release }} main"
-  # Node.js:
+apt_sources:
   - name: "nodejs"
-    key_id: "1655A0AB68576280"
+    key: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
     sources:
-      # Node.js LTS (16.x)
-      - "deb https://deb.nodesource.com/node_16.x/ {{ ansible_distribution_release }} main"
-      - "deb-src https://deb.nodesource.com/node_16.x/ {{ ansible_distribution_release }} main"
-  # LLVM
+      - "deb [arch=amd64] https://deb.nodesource.com/node_18.x/ {{ ansible_distribution_release }} main"
+      - "deb-src https://deb.nodesource.com/node_18.x/ {{ ansible_distribution_release }} main"
   - name: "llvm"
-    key_id: "15CF4D18AF4F7421"
+    key: "https://apt.llvm.org/llvm-snapshot.gpg.key"
     sources:
-      - "deb http://apt.llvm.org/{{ ansible_distribution_release }}/ llvm-toolchain-{{ ansible_distribution_release }} main"
-      - "deb-src http://apt.llvm.org/{{ ansible_distribution_release }}/ llvm-toolchain-{{ ansible_distribution_release }} main"
-  # PostgreSQL
+      - "deb http://apt.llvm.org/unstable/ llvm-toolchain main"
+      - "deb-src http://apt.llvm.org/unstable/ llvm-toolchain main"
   - name: "postgres"
-    key_id: "7FCC7D46ACCC4CF8"
+    key: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
     sources:
       - "deb http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
-  # Docker
   - name: "docker"
-    key_id: "8D81803C0EBFCD88"
+    key: "https://download.docker.com/linux/debian/gpg"
     sources:
-      - "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
-  # Kubernetes
-  - name: "kubernetes"
-    key_id: "B53DC80D13EDEF05"
-    # NOTE: There is no newer APT dist than yakkety
-    sources:
-      - "deb http://apt.kubernetes.io/ kubernetes-yakkety main"
-  # Google Cloud SDK
+      - "deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
   - name: "gcloud"
-    key_id: "B53DC80D13EDEF05"
+    key: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
     sources:
       - "deb https://packages.cloud.google.com/apt cloud-sdk main"
 
 apt_packages:
   - gdb                       # GNU debugger
-  - golang-go                 # Golang (longsleep PPA)
+  - golang                    # Golang
   - gcc
   - g++
   - libstdc++6                # GNU C++ standard library
@@ -73,7 +56,8 @@ apt_packages:
   - ninja-build               # small fast build system
   #- googletest               # WARN: DO NOT USE system googletest
   # Dynamnic languages
-  - nodejs
+  - nodejs                    # WARN: This will break dependence on system nodejs 
+  #- npm                      # WARN: DO NOT install as it is bundled with upstream nodejs
   - python3
   - python3-dev
   - python3-pip               # python package manager
@@ -95,7 +79,11 @@ apt_packages:
   - devscripts
   - dput
   - quilt
+  - lintian
   - fakeroot
+  - sbuild
+  - schroot
+  - debootstrap
   # Misc
   - protobuf-compiler         # protocol buffers compiler
   - manpages-dev

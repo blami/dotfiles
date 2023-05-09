@@ -1,8 +1,13 @@
 ---
 # APT repositiories and packages variables
 
+apt_sources: []
+
 apt_packages:
   - apcalc
+  - mutt                      # mail client
+  - notmuch                   # mail indexer
+  - offlineimap3              # mail syncing software
   - ffmpeg
   - graphicsmagick
   - graphicsmagick-imagemagick-compat
@@ -11,9 +16,5 @@ apt_packages:
   - mc                        # file manager
   - direnv                    # load .env files
   - fzf                       # fuzzy finder
-  - python3-fontforge
-  # NOTE: redundant with devel role but required for Nvim on non-dev machines
-  - python3-pip
-
-apt_packages_desktop:
-  - google-chrome-stable
+  - python3-fontforge         # required to build Nerdfonts
+  - figlet
