@@ -20,14 +20,33 @@
   when:
     - my_facts.is_wsl
 
-- name: Chekcking WSL Interop
+# BUG: This is not correct and will blow on multi-install systems, but hey...
+- name: Finding WSL Host WINDRIVE mount
   command: >
-    powershell.exe -Command 'Write-Host OK'
+    awk '{if($1=="drvfs" && !system("test -d \""$2"/Windows/System\"")) {print $2 ; exit }}' /proc/mounts
+  register: out
+  changed_when: false
+  when:
+    - my_facts.is_wsl
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "wsl_windrive_mount": out.stdout,
+      }) }}
+    powershell: "{{ out.stdout + '/Windows/System32/WindowsPowerShell/v1.0/powershell.exe' }}"
+  when:
+    - my_facts.is_wsl
+    - out.stdout != ""
+
+- name: Checking WSL Interop
+  command: >
+    {{ powershell }} -Command 'Write-Host OK'
   register: out
   changed_when: false
   ignore_errors: true
   when:
     - my_facts.is_wsl
+    - powershell is defined
 - set_fact:
     my_facts: >
       {{ my_facts | xcombine({
@@ -39,7 +58,7 @@
 
 - name: Gathering WSL Windows Username
   shell: |
-    powershell.exe -Command 'Write-Host $env:USERNAME'
+    {{ powershell }} -Command 'Write-Host $env:USERNAME'
   register: out
   changed_when: false
   when:
@@ -60,8 +79,8 @@
   shell: |
     wslpath -w {{ playbook_dir }}
     wslpath -w {{ my_user.home }}
-    powershell.exe -Command 'Write-Host $env:USERPROFILE'
-    wslpath -u $(powershell.exe -Command 'Write-Host $env:USERPROFILE')
+    {{ powershell }} -Command 'Write-Host $env:USERPROFILE'
+    wslpath -u $({{ powershell }} -Command 'Write-Host $env:USERPROFILE')
   register: out
   changed_when: false
   when:
@@ -86,154 +105,20 @@
   when:
     - my_facts.is_wsl
 
-# Local WinRM setup for WSL
-# NOTE: To disable use --skip-tags localwinrm
-
-# Generate WinRM client certificate
-- name: Generating WSL WinRM Client Certificate
-  shell:
-    cmd: |
-      export OPENSSL_CONF=$(mktemp)
-      cat > $OPENSSL_CONF << EOF
-      distinguished_name = req_distinguished_name
-      [req_distinguished_name]
-      [v3_req_client]
-      extendedKeyUsage = clientAuth
-      subjectAltName = @alt_names
-      [alt_names]
-      otherName.1 = 1.3.6.1.4.1.311.20.2.3;UTF8:{{ my_facts.wsl_win_user }}@localhost
-      EOF
-      [ "{{ my_facts.wsl_hostname }}" != "localhost" ] && echo "otherName.2 = 1.3.6.1.4.1.311.20.2.3;UTF8:{{ my_facts.wsl_win_user }}@{{ my_facts.wsl_hostname }}" >> $OPENSSL_CONF
-
-      mkdir -m 700 -p {{ my_user.home }}/.winrm
-      openssl req -x509 -nodes -days 36500 -newkey rsa:2048 -sha256 -out {{ my_user.home }}/.winrm/localclient.crt -outform PEM -keyout {{ my_user.home }}/.winrm/localclient.key -subj "/CN={{ my_facts.wsl_win_user }}" -extensions v3_req_client
-      rm -rf $OPENSSL_CONF
-    # Do not warn about files/directories being created in shell
-    #warn: false
-    creates: "{{ my_user.home }}/.winrm/localclient.crt"
-  when:
-    - my_facts.is_wsl
-    - my_facts.has_my_user
-  tags: localwinrm
-
-# Generate self-signed server certificate for WinRM service
-- name: Generating WSL WinRM Server Certificate
-  shell:
-    cmd: |
-      export OPENSSL_CONF=$(mktemp)
-      cat > $OPENSSL_CONF << EOF
-      distinguished_name = req_distinguished_name
-      [req_distinguished_name]
-      [v3_req_server]
-      subjectKeyIdentifier = hash
-      keyUsage = critical,digitalSignature,keyEncipherment
-      extendedKeyUsage = clientAuth,serverAuth
-      subjectAltName = @alt_names
-      [alt_names]
-      DNS.1 = localhost
-      EOF
-      [ "{{ my_facts.wsl_hostname }}" != "localhost" ] && echo "DNS.2 = {{ my_facts.wsl_hostname }}" >> $OPENSSL_CONF
-
-      mkdir -m 700 -p {{ my_user.home }}/.winrm
-      openssl req -x509 -nodes -days 36500 -newkey rsa:2048 -sha256 -out {{ my_user.home }}/.winrm/localserver.crt -outform PEM -keyout {{ my_user.home }}/.winrm/localserver.key -subj "/CN=localhost" -extensions v3_req_server
-      openssl pkcs12 -export -out {{ my_user.home }}/.winrm/localserver.pfx -in {{ my_user.home }}/.winrm/localserver.crt -inkey {{ my_user.home }}/.winrm/localserver.key -name "Ansible WSL WinRM Server Certificate" -passout pass:
-      rm -rf $OPENSSL_CONF {{ my_user.home }}/.winrm/localserver.crt {{ my_user.home }}/.winrm/localserver.key
-    # Do not warn about files/directories being created in shell
-    #warn: false
-    creates: "{{ my_user.home }}/.winrm/localserver.pfx"
-  when:
-    - my_facts.is_wsl
-    - my_facts.has_my_user
-  tags: localwinrm
-
-# Check if WinRM listener is set up
-- name: Checking If Ansible Can WinRM To localhost
-  test_winrm:
-    hostname: "{{ my_facts.wsl_hostname }}"
-    winrm_transport: certificate
-    winrm_cert_pem: "{{ my_user.home }}/.winrm/localclient.crt"
-    winrm_cert_key_pem: "{{ my_user.home }}/.winrm/localclient.key"
-    winrm_server_cert_validation: ignore
+# NOTE: Windows host IP is same as DNS server used inside WSL
+- name: Gathering Windows Host IP
+  slurp:
+    src: /mnt/wsl/resolv.conf
   register: out
   when:
     - my_facts.is_wsl
-  tags: localwinrm
+    - my_facts.wsl_version == 2  
 - set_fact:
     my_facts: >
-      {{
-        my_facts | xcombine({
-          "can_winrm": out.can_winrm,
-          "has_pywinrm": out.has_pywinrm
-        })
-      }}
-  when:
-    - my_facts.is_wsl
-    - my_facts.has_my_user
-  tags: localwinrm
-
-# Execute WinRM setup script
-# This step requires interactive Windows elevation but since this is WSL only
-# it will run on the same machine. This is also why all is in single .ps1 to
-# avoid further popups.
-# NOTE: DO NOT swap quotes ('->") as that will cause YAML parser to double \\
-# and render Windows UNC paths invalid.
-- name: Setting Up Local WSL WinRM
-  command: >
-    powershell.exe -Command
-      '$p = Start-Process -PassThru -Wait -Verb RunAs powershell.exe'
-      '"-ExecutionPolicy Bypass -File {{ my_facts.wsl_unc_playbook_dir }}\files\localwinrm.ps1 -User {{ my_facts.wsl_win_user }} -CertDir {{ my_facts.wsl_unc_home_dir }}\.winrm"'
-      ';Exit $p.ExitCode'
-  when:
-    - my_facts.is_wsl
-    - my_facts.has_my_user
-    - not my_facts.can_winrm
-  register: out
-  tags: localwinrm
-- set_fact:
-    my_facts: >
-      {{
-        my_facts | xcombine({
-          "can_winrm": true
-        })
-      }}
-  when:
-    - out.changed
-    - out.rc == 0
-    - my_facts.is_wsl
-    - my_facts.has_my_user
-  tags: localwinrm
-
-# Add localhost to Windows hosts and delegate WSL related facts
-- name: Adding localhost To Windows Hosts
-  add_host:
-    ansible_connection: winrm
-    # NOTE: DO NOT use just 'localhost' as it would override Linux 'localhost'
-    hostname: localhost.windows
-    ansible_winrm_host: "{{ my_facts.wsl_hostname }}"
-    ansible_winrm_transport: certificate
-    ansible_winrm_cert_pem: "{{ my_user.home }}/.winrm/localclient.crt"
-    ansible_winrm_cert_key_pem: "{{ my_user.home }}/.winrm/localclient.key"
-    ansible_winrm_server_cert_validation: ignore
-    ansible_become_method: runas
-    # NOTE: Empty become password set using -K as it won't work on Windows
-    # anyway and local user is expected to have at least Administrator role.
-    ansible_become_password: null
-    groups: windows
-  when:
-    - my_facts.can_winrm
-    - my_facts.is_wsl
-  tags: localwinrm
-- set_fact:
-    my_facts: >
-      {{ dict({
-        "wsl_unc_playbook_dir": my_facts.wsl_unc_playbook_dir,
-        "wsl_unc_home_dir": my_facts.wsl_unc_home_dir,
-        "wsl_user": my_user.username,
-        "wsl_home_is_userprofile": my_facts.wsl_home_is_userprofile,
-        "is_wsl": my_facts.is_wsl,
-        "wsl_version": my_facts.wsl_version,
+      {{ my_facts | xcombine({
+        "wsl_hostip": "127.0.0.1" if my_facts.wsl_version == 1 else out['content'] | b64decode | regex_findall('nameserver\s+(.+)$') | first 
       }) }}
-  delegate_facts: true
-  delegate_to: localhost.windows
   when:
     - my_facts.is_wsl
+
+
