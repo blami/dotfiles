@@ -21,7 +21,7 @@
       go install {{ item }}@latest
   with_items: "{{ go_packages }}"
   when:
-    - not has_go.failed
+    - has_go.rc == 0
 
 # Install golangci-lint latest version to GOPATH.
 # NOTE: Can't go install; see https://golangci-lint.run/usage/install/#install-from-source
@@ -34,4 +34,4 @@
       [ -f {{ my_user.home }}/.profile.d/golang.sh ] && . {{ my_user.home }}/.profile.d/golang.sh
       curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
   when:
-    - not has_go.failed
+    - has_go.rc == 0

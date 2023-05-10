@@ -16,7 +16,7 @@
       umask {{ my_user.umask }}
       npm config set prefix ~/.local/node
   when:
-    - not has_npm.failed
+    - has_npm.rc == 0
 
 - name: Installing npm Packages
   shell:
@@ -26,4 +26,4 @@
       npm install -g {{ item }}
   with_items: "{{ nodejs_packages }}"
   when:
-    - not has_npm.failed
+    - has_npm.rc == 0

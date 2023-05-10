@@ -1,18 +1,30 @@
 ---
 # Setup Python development environment
 
-- name: Detecting pip3
-  command: pip3 --version
+- name: Detecting python3
+  command: python3 --version
   failed_when: false
   changed_when: false
-  register: has_pip3
+  register: has_python3
+
+- name: Creating ~/.local/python Virtual Environment
+  shell:
+    chdir: "{{ my_user.home }}"
+    cmd: |
+      umask {{ my_user.umask }}
+      python3 -m venv .local/python
+    creates: "{{ my_user.home }}/.local/python"
+  register: has_venv
+  when:
+    - has_python3.rc == 0
 
 - name: Installing Python Packages
   shell:
     chdir: "{{ my_user.home }}"
     cmd: |
       umask {{ my_user.umask }}
-      pip3 install {{ item }}
+      .local/python/bin/pip install {{ item }}
   with_items: "{{ python_packages }}"
   when:
-    - not has_pip3.failed
+    - has_python3.rc == 0
+    - has_venv.rc == 0
