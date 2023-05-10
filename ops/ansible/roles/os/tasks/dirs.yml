@@ -1,6 +1,11 @@
 ---
 # Create additional OS-level directories
 
+- name: Removing /media
+  file:
+    path: /media
+    state: absent
+
 # Ansible cache directory to hold various artifacts
 - name: Creating /var/cache/ansible
   file:
