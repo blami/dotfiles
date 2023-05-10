@@ -6,14 +6,15 @@
   user:
     name: "{{ my_user.username }}"
     comment: "{{ my_user.gecos }}"
-    # NOTE: DO NOT set shell as it might not be installed yet; there's task in
-    # user/shell to do that.
-    #shell: {{ my_user.shell }}
+    # NOTE: DO NOT set shell as it might not be installed; see user/tasks/shell.yml
     # NOTE: Use system home directory see update command bellow
     move_home: false
+    # Set empty password, next task will force user to change it on first login
+    password: "{{ '' | password_hash('sha512') }}"
+    update_password: on_create
   register: out
 
-# NOTE: If user was created force password change on next login
+# NOTE: If user was just created force password change on next login
 - name: Forcing User {{ my_user.username }} To Change Password
   command: chage -d0 {{ my_user.username }}
   when:
@@ -23,7 +24,7 @@
 - name: Adding User {{ my_user.username }} To Groups
   user:
     name: "{{ my_user.username }}"
-    groups: "{{ my_user.groups }}"
+    groups: "{{ item }}"
     append: true
   with_items: "{{ my_user.groups }}"
   when:
