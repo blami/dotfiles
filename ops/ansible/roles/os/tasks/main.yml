@@ -3,16 +3,14 @@
 
 # Linux
 - block:
-    - import_tasks: wsl.yml               # run this first as it may restart WSL
-    - import_tasks: ntp.yml
+    - import_tasks: apt.yml               # install essentials (other tasks depend on)
     - import_tasks: locale.yml
-    - import_tasks: dirs.yml
-    - import_tasks: user.yml
+    - import_tasks: ntp.yml
+    - import_tasks: dirs.yml              # OS-level directories
+    - import_tasks: user.yml              # create/configure user
     - import_tasks: sudoers.yml
-    - import_tasks: netplan.yml
-    - import_tasks: debloat.yml           # disable snap
-    - import_tasks: apt.yml
     - import_tasks: bitwarden.yml         # install Bitwarden CLI
+    - import_tasks: wsl.yml               # configure WSL (might restart WSL)
   become: true
   become_user: "root"
   when:
