@@ -1,7 +1,6 @@
-# TODO:
-# - qb64
-# - go
-# - node
-# - python
-# - git
-# - msys?
+---
+# Install Chocolatey
+
+- include_role:
+    name: common
+    tasks_from: windows_choco_packages

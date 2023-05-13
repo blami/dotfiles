@@ -1,0 +1,6 @@
+---
+# Chocolatey packages variables
+
+windows_choco_packages:
+  - vscode
+  - llvm
