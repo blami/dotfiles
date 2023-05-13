@@ -129,7 +129,8 @@
   add_host:
     ansible_connection: winrm
     # NOTE: DO NOT use just 'localhost' as it would override Linux 'localhost'
-    hostname: localhost.windows
+    # NOTE: MUST be same as ansible_winrm_host below.
+    hostname: "{{ my_facts.wsl_hostip }}"
     ansible_winrm_host: "{{ my_facts.wsl_hostip }}"
     ansible_winrm_transport: certificate
     ansible_winrm_cert_pem: "{{ my_user.home }}/.winrm/localclient.crt"
@@ -155,7 +156,7 @@
         "wsl_version": my_facts.wsl_version,
       }) }}
   delegate_facts: true
-  delegate_to: localhost.windows
+  delegate_to: "{{ my_facts.wsl_hostip }}"
   when:
     - my_facts.can_winrm
     - my_facts.has_my_user
