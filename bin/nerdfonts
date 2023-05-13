@@ -444,22 +444,39 @@ class font_patcher:
         # have an internal style defined (in sfnt_names)
         # using '([^-]*?)' to get the item before the first dash "-"
         # using '([^-]*(?!.*-))' to get the item after the last dash "-"
-        _, fallbackStyle = re.match("^([^-]*).*?([^-]*(?!.*-))$", font.fontname).groups()
+        fallbackFamily, fallbackStyle = re.match("^([^-]*).*?([^-]*(?!.*-))$", font.fullname).groups()
+
+        # Parse family and style info from sfnt_names with fallback to ones parsed from filename (fullname).
+        # String ID is at the second index in the Tuple lists
+        sfntNamesStringIDIndex = 2
+
+        # honor Preffered Family over Family
+        familyTupleIndex = None
+        for key in ("Preferred Family", "Family"):
+            try:
+                familyTupleIndex = [x[1] for x in font.sfnt_names].index(key)
+                break
+            except ValueError:
+                pass
+        if familyTupleIndex is not None:
+            family = font.sfnt_names[familyTupleIndex][sfntNamesStringIDIndex]
+        else:
+            family = fallbackFamily
 
         # let us try to get the 'style' from the font info in sfnt_names and fallback to the
-        # parse fontname if it fails:
+        # parsed fullname if it fails:
         try:
             # search tuple:
             subFamilyTupleIndex = [x[1] for x in font.sfnt_names].index("SubFamily")
-
-            # String ID is at the second index in the Tuple lists
-            sfntNamesStringIDIndex = 2
 
             # now we have the correct item:
             subFamily = font.sfnt_names[subFamilyTupleIndex][sfntNamesStringIDIndex]
         except IndexError:
             sys.stderr.write("{}: Could not find 'SubFamily' for given font, falling back to parsed fontname\n".format(projectName))
             subFamily = fallbackStyle
+
+        # TODO: some fonts have style wrongly put at the end of family name
+        # if 'subFamily' or fallbackStyle in family...
 
         # some fonts have inaccurate 'SubFamily', if it is Regular let us trust the filename more:
         if subFamily == "Regular" and len(fallbackStyle):
@@ -469,14 +486,15 @@ class font_patcher:
         if len(subFamily) > 0 and len(subFamily) < len(fallbackStyle):
             subFamily = fallbackStyle
 
-        familyname = f"{font.familyname} {projectNameAbbreviation}"
+        familyname = f"{family} {projectNameAbbreviation}"
         fullname = f"{font.fullname} {projectNameAbbreviation}" # original name + NF
         fontname = f"{familyname}-{subFamily}"
 
         # replace any extra whitespace characters:
         font.familyname = " ".join(familyname.split())
         font.fullname   = " ".join(fullname.split())
-        font.fontname   = " ".join(fontname.split())
+        # Postscript name must not have any spaces in it
+        font.fontname   = "".join(fontname.split())
 
         font.appendSFNTName(str('English (US)'), str('Preferred Family'), font.familyname)
         font.appendSFNTName(str('English (US)'), str('Family'), font.familyname)
