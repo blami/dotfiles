@@ -16,6 +16,7 @@
 # environment variable on Windows to point to that directory.
 # windows_guid: windows_guid of special directory (windows_dirs.yml).
 # windows_icon: windows_icon of directory (windows_dirs.yml).
+# os: "windows" (or "linux") will create directory only on given OS
 
 user_dirs:
   - name: "desk"    # Desktop
@@ -33,19 +34,22 @@ user_dirs:
     windows_guid: "374DE290-123F-4565-9164-39C4925E467B"
     windows_icon: "%SystemRoot%\\system32\\imageres.dll,-184"
     link: "wsl"
-  - name: "downl/arch"
+  #- name: "downl/arch"
   - name: "tmpl"                      # WARN: In dotfiles, DO NOT LINK
     xdg: "XDG_TEMPLATES_DIR"
   - name: "pics"
     xdg: "XDG_PICTURES_DIR"
+    windows_guid: "33E28130-4E1E-4676-835A-98395C3BC3BB"
     windows_icon: "%SystemRoot%\\system32\\imageres.dll,-113"
     link: "wsl"
   - name: "music"
     xdg: "XDG_MUSIC_DIR"
+    windows_guid: "4BD8D571-6D19-48D3-BE97-422220080E43"
     windows_icon: "%SystemRoot%\\system32\\imageres.dll,-108"
     link: "wsl"
   - name: "videos"
     xdg: "XDG_VIDEOS_DIR"
+    windows_guid: "18989B1D-99B5-455B-841C-AB7C74E4DDFC"
     windows_icon: "%SystemRoot%\\system32\\imageres.dll,-189"
     link: "wsl"
   - name: "pub"                       # public files
@@ -61,6 +65,8 @@ user_dirs:
     link: "windows"
   - name: "drive"                     # Google Drive
     link: "wsl"
+  - name: "misc"
+    os: "windows"
 
 # WSL native directories
 # NOTE: These need to be on native WSL filesystem in case HOME is on NTFS
