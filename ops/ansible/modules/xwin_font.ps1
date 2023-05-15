@@ -55,10 +55,8 @@ if (-not (Test-Path -Path $dest)) {
 }
 if (-not (Get-ItemProperty -Path $reg_path -Name $font_name -ErrorAction SilentlyContinue)) {
     if (-not (Test-Path -Path $reg_path)) {
-        # NOTE: Workaround using $r to avoid CLIXML output on stderr
         $r = New-Item -Path $reg_path -Force
     }
-    # NOTE: Workaround using $r to avoid CLIXML output on stderr
     $r = New-ItemProperty -Path $reg_path -Name $font_name -Value $dest -PropertyType string -Force
     $module.Result.changed = $true
 }
