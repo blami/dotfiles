@@ -14,7 +14,6 @@ $file       = (Get-ChildItem -Path $unzipDir -Filter '*RTSSSetup*.exe')[0].FullN
 
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
-  unzipLocation = $toolsDir
   fileType      = 'EXE'
   softwareName  = 'RivaTuner Statistics Server*'
   file          = $file
