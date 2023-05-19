@@ -14,6 +14,5 @@ $packageArgs = @{
   validExitCodes= @(0)
 }
 
-# TODO: Perhaps add to PATH as NSIS cannot do that?
-
 Install-ChocolateyPackage @packageArgs
+Install-ChocolateyPath -PathToInstall "C:\Devel\llvm\bin" -PathType User
