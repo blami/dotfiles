@@ -9,7 +9,7 @@ $packageArgs = @{
   url           = $url
   softwareName  = '*'
 
-  silentArgs    = '/qn /norestart TARGETDIR="C:\Devel\cmake"'
+  silentArgs    = '/qn /norestart INSTALL_ROOT="C:\Devel\cmake\" ADD_CMAKE_TO_PATH="User"'
 
   validExitCodes= @(0, 3010, 1641)
 }
