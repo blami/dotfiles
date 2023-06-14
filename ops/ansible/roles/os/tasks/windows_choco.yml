@@ -30,4 +30,3 @@
 - include_role:
     name: common
     tasks_from: windows_choco_packages
-  tags: debug
