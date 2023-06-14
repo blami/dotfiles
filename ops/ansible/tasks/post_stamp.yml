@@ -1,8 +1,0 @@
----
-# Post-run stamp so that scripts that run Ansible know that play finished
-# without errors.
-
-#- name: Writing Stamp
-#  file:
-#    path: /tmp/ansible.stamp
-#    state: file
