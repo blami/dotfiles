@@ -3,4 +3,13 @@
 
 windows_choco_packages:
   - vscode
+  - msvs
+  - msys2
+  - nasm
   - llvm
+  - cmake
+  - ninja
+  # TODO:
+  #- golang
+  #- python
+  #- nodejs
