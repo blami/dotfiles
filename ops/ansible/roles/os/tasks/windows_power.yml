@@ -17,6 +17,7 @@
     data: "300"
     type: "string"
 
+# NOTE: Avoid wake by mouse.
 - name: Disarming Wake-Up For Input Devices
   win_shell: |
     $changed = 0
@@ -108,6 +109,7 @@
         subscription: "<QueryList><Query Id=\"0\" Path=\"System\"><Select Path=\"System\">*[System[Provider[@Name='Microsoft-Windows-Kernel-Power'] and EventID=507]]</Select></Query></QueryList>"
     actions:
         # NOTE: Runs via cmd.exe so it can run minimized.
+        # TODO: Still spawns cmd.exe window, find a better way to do this...
       - path: "%WINDIR%\\System32\\cmd.exe"
         arguments: "/C \"start \"\" /MIN %WINDIR%\\System32\\wsl.exe -d {{ wsl_distro }} -u root -- /usr/local/bin/wsl_clocksync\""
   when:
