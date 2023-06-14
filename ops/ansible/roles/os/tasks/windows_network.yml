@@ -17,14 +17,3 @@
     name: "EnableLinkedConnections"
     data: 0x00000001
     type: "dword"
-
-# Security
-
-# NOTE: Link-Local Multicast Name Resolution (LLMNR) protocol, a protocol that
-# allow name resolution without the requirement of a DNS server.
-- name: Disabling LLMNR
-  win_regedit:
-    path: "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows NT\\DNSClient"
-    name: "EnableMulticast"
-    data: 0x00000000
-    type: "dword"
