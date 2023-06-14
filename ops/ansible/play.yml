@@ -10,7 +10,6 @@
     - { import_tasks: tasks/pre_debug.yml, tags: [debug, never] }
   post_tasks:
     - { import_tasks: tasks/post_wsl.yml, tags: always }
-    - { import_tasks: tasks/post_stamp.yml, tags: always }
   roles:
     - { role: os,     tags: [os, linux] } 
     - { role: user,   tags: [user, linux] }
@@ -25,10 +24,8 @@
     - { import_tasks: tasks/pre_bitwarden.yml, tags: always }
     - { import_tasks: tasks/pre_debug.yml, tags: [debug, never] }
   post_tasks:
-    - { import_tasks: tasks/post_stamp.yml, tags: always }
   roles:
     - { role: os,     tags: [os, windows] }
     - { role: user,   tags: [user, windows] }
     - { role: devel,  tags: [devel, windows, never] }
     - { role: kube,   tags: [kube, windows, never] }
-
