@@ -51,7 +51,7 @@
     - "{{ user_dirs | selectattr('link', 'defined') | rejectattr('link', 'equalto', 'windows') }}"
 
 - name: Relocating User Shell Folders
-  xwin_shellfolder:
+  xwin_shell_folder:
     guid: "{{ item.windows_guid }}"
     path: "%USERPROFILE%\\{{ item.name }}"
     move_files: true
