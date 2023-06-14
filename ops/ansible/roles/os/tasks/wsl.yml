@@ -56,6 +56,7 @@
 - name: Enabling WSL systemd Units
   systemd:
     name: "{{ item }}"
+    daemon_reload: true
     enabled: true
     state: started
   with_items:
