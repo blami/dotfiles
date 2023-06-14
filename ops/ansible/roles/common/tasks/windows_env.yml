@@ -10,21 +10,9 @@
   with_dict: "{{ windows_env }}"
   loop_control:
     label: "{{ item.key }}={{ item.value}}"
+  when:
+    - windows_env
 
-- name: Adding Directories PATH
-  win_shell: |
-    $changed = 0
-    if (Test-Path -Path "{{ item }}" -PathType Container) {
-      $changed = 1
-      $path = [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine)
-      foreach($p in $path.split(";")) {
-        if ($p -eq "{{ item }}") { $changed = 0 ; break }
-      }
-      if ($changed) {
-        [Environment]::SetEnvironmentVariable("Path", $path + ";{{ item }}", [EnvironmentVariableTarget]::Machine)
-      }
-    }
-    Write-Host $changed
-  register: result
-  changed_when: result.stdout | int > 0
-  with_items: "{{ windows_path }}"
+# TODO: Use win_path to add machine and user PATH variables
+#- name: Adding Directories PATH
+#  win_path:
