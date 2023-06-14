@@ -1,13 +1,13 @@
 ---
-# Base OS setup
+# Setup base operating system
 
 # Linux
 - block:
-    - import_tasks: apt.yml               # install essentials (other tasks depend on)
+    - import_tasks: apt.yml               # setup APT and install essentials
     - import_tasks: locale.yml
     - import_tasks: ntp.yml
     - import_tasks: dirs.yml              # OS-level directories
-    - import_tasks: user.yml              # create/configure user
+    - import_tasks: user.yml              # create and/or configure user
     - import_tasks: sudoers.yml
     - import_tasks: bitwarden.yml         # install Bitwarden CLI
     - import_tasks: wsl.yml               # configure WSL (might restart WSL)
@@ -19,11 +19,11 @@
 
 # Windows
 - block:
-    - import_tasks: windows_debloat.yml
-    - import_tasks: windows_net.yml
-    - import_tasks: windows_power.yml
+    - import_tasks: windows_choco.yml     # install essentials
+    - import_tasks: windows_debloat.yml   # de-bloat Windows
     - import_tasks: windows_ntp.yml
-    - import_tasks: windows_choco.yml
+    - import_tasks: windows_network.yml
+    - import_tasks: windows_power.yml
   # WARN: 'become' to user itself is required to allow credential delegation;
   # user is expected to be an Administrator.
   become: true
