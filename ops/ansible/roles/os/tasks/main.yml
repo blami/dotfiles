@@ -10,6 +10,8 @@
     - import_tasks: user.yml              # create and/or configure user
     - import_tasks: sudoers.yml
     - import_tasks: bitwarden.yml         # install Bitwarden CLI
+    - import_tasks: systemd.yml           # configure systemd
+    #- import_tasks: grub.yml
     - import_tasks: wsl.yml               # configure WSL (might restart WSL)
   become: true
   become_user: "root"

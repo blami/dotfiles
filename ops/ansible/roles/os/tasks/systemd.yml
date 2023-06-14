@@ -1,0 +1,16 @@
+---
+# Configure systemd
+
+- name: Deploying systemd Configs
+  copy:
+    src: "{{ role_path }}/files/systemd/{{ item }}"
+    dest: "/etc/systemd/{{ item }}"
+    owner: root
+    group: root
+    mode: 644
+    force: true
+  with_items:
+    - journald.conf
+    - user.conf
+
+# NOTE: See wsl.yml for WSL related custom units
