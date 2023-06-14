@@ -7,8 +7,8 @@ windows_choco_packages:
   - 7-zip
   - git
   - googlechrome          # latest, self-updating
-  - googledrive           # latest, self-updating
   - imgburn
+  - insync
   - irfanview
   - irfanview-plugins
   - neovim
