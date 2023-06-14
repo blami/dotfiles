@@ -69,7 +69,7 @@
     - SubscribedContent-353694Enabled
     - SubscribedContent-353696Enabled
 
-- name: Disabling Get The Most Out Of Windows Bloatware
+- name: Disabling \"Get The Most Out Of Windows\" Bloatware
   win_regedit:
     path: "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager"
     name: "ScoobeSystemSettingEnabled"
@@ -117,11 +117,26 @@
   win_scheduled_task:
     name: "{{ item.task }}"
     path: "{{ item.path }}" 
-    enabled: no
+    enabled: false
   with_items:
     - { path: \Microsoft\Windows\Defrag, task: ScheduledDefrag }
     - { path: \Microsoft\Windows\Windows Error Reporting, task: QueueReporting } # NOTE: WerSvc
     - { path: \Microsoft\XblGameSave, task: XblGameSaveTask }
+
+# Startup Tasks
+
+- name: Disabling Startup Tasks
+  xwin_startup_app:
+    name: "{{ item }}"
+    enabled: false
+  with_items:
+    - "OneDrive"
+    - "AdobeAAMUpdater-1.0"
+    - "Adobe CCXProcess"
+    - "Adobe Creative Cloud"
+    - "Xilinx Information Center.lnk"
+    - "91750D7E.Slack_8she8kybcnzg4"
+    - "Microsoft.WindowsTerminal_8wekyb3d8bbwe"
 
 # Telemetry
 
