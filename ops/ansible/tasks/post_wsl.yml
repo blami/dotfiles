@@ -57,7 +57,7 @@
   tags: localwinrm
 
 - name: Checking If Ansible Can WinRM To localhost
-  test_winrm:
+  xtest_winrm:
     hostname: "{{ my_facts.wsl_hostip }}"
     winrm_transport: certificate
     winrm_cert_pem: "{{ my_user.home }}/.winrm/localclient.crt"
@@ -101,7 +101,7 @@
   tags: localwinrm
 
 - name: Re-Checking If Ansible Can WinRM To localhost
-  test_winrm:
+  xtest_winrm:
     hostname: "{{ my_facts.wsl_hostip }}"
     winrm_transport: certificate
     winrm_cert_pem: "{{ my_user.home }}/.winrm/localclient.crt"
