@@ -18,7 +18,7 @@
 
 $spec = @{
     options = @{
-        name = @{ type = "string"; required = $true }
+        name = @{ type = "str"; required = $true }
         enabled = @{ type = "bool"; required = $true }
     }
 }
@@ -27,7 +27,7 @@ $module = [Ansible.Basic.AnsibleModule]::Create($args, $spec)
 $name = $module.Params.name
 $enabled = $module.Params.enabled
 
-Function Toggle-NonUWP($name, $enabled) {
+Function Set-NonUWPApp($name, $enabled) {
     # These are registry paths Task Manager uses
     # NOTE: UWP apps use different mechanism (see below)
     $reg_paths = @(
@@ -36,7 +36,7 @@ Function Toggle-NonUWP($name, $enabled) {
         "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\StartupFolder",
         "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run",
         "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run32",
-        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\StartupFolder",
+        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\StartupFolder"
     )
 
     # NOTE: 0x3 seems to disable just fine, so no need to bother with arrays...
@@ -56,7 +56,7 @@ Function Toggle-NonUWP($name, $enabled) {
     return $changed
 }
 
-Function Toggle-UWP($name, $enabled) {
+Function Set-UWPApp($name, $enabled) {
     $reg_path = "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\$name"
     if (-not(Test-Path -Path $reg_path)) { return }
 
@@ -64,7 +64,7 @@ Function Toggle-UWP($name, $enabled) {
     $reg_key = Get-ChildItem -Path $reg_path | Where {$_.Property -contains "State" -and $_.Property -contains "UserEnabledStartupOnce"}
     if ($reg_key -eq $null) { return $false }
 
-    $reg_subkey = "$reg_path\$(reg_key.PSChildName)"
+    $reg_subkey = "$reg_path\$($reg_key.PSChildName)"
     # NOTE: Task Manager uses 0x2 for enabled and 0x1 for disabled
     $value = if ($enabled) { 0x2 } else { 0x1 }
     $o = Get-ItemProperty -Path $reg_subkey
@@ -75,9 +75,5 @@ Function Toggle-UWP($name, $enabled) {
     return $false
 }
 
-$changed = $false
-$changed = Toggle-NonUWP($name, $enabled)
-$changed = $changed -or Toggle-UWP($name, $enabled)
-
-$module.Result.changed = $changed
+$module.Result.changed = $($(Set-NonUWPApp $name $enabled) -or $(Set-UWPApp $name $enabled))
 $module.ExitJson()

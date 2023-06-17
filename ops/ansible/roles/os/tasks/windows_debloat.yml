@@ -1,6 +1,8 @@
 ---
 # Debloat Windows
 # NOTE: This should run as user for which setup is made (see main.yml)
+# NOTE: See following scripts:
+# - https://github.com/farag2/Sophia-Script-for-Windows/blob/master/src/Sophia_Script_for_Windows_11/Module/Sophia.psm1
 
 - name: Uninstalling Pre-Installed Apps
   win_package:
