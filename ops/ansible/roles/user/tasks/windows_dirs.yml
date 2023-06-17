@@ -64,21 +64,9 @@
 # directory... 
 
 - name: Adding desktop.ini
-  # NOTE: desktop.ini MUST be moved using Shell method to be picked up
-  win_shell: |
-      $content = @"
-
-      [.ShellClassInfo]
-      IconResource={{ item.windows_icon }}
-      "@
-      Set-Content "{{ my_user.userprofile }}\\{{ item.name }}\\desktop.ini" $content -Encoding Unicode -Force
-      # Required by explorer.exe to pick up desktop.ini
-      (Get-Item "{{ my_user.userprofile }}\\{{ item.name }}" -Force).Attributes = "Readonly","Directory"
-      (Get-Item "{{ my_user.userprofile }}\\{{ item.name }}\\desktop.ini" -Force).Attributes = "Archive","Hidden","System"
-      # TODO: Broadcast change message
-  args:
-    chdir: "{{ my_user.userprofile }}"
-    creates: "{{ my_user.userprofile }}\\{{ item.name }}\\desktop.ini"
+  xwin_desktop_ini:
+    path: "{{ my_user.userprofile }}\\{{ item.name }}"
+    icon: "{{ item.windows_icon }}"
   loop_control:
     label: "{{ item.name }}"
   with_items: "{{ user_dirs | selectattr('windows_icon', 'defined') }}"
