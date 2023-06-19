@@ -10,6 +10,10 @@ apt_sources:
       # NOTE: See tasks/apt.yml and files/apt.preferences.d/10release-priority
       - "deb https://deb.debian.org/debian unstable main contrib non-free non-free-firmware"
       - "deb https://deb.debian.org/debian experimental main contrib non-free non-free-firmware"
+  - name: "insync"
+    key: "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xaeeb94e9c5a3b54ecfa4a66aa684470caccaf35c"
+    sources:
+      - "deb https://apt.insync.io/debian sid non-free contrib"
 
 apt_packages:
   - acl                       # manage filesystem access lists
@@ -44,6 +48,7 @@ apt_packages:
   - icdiff                    # side by side diff
   - inetutils-telnet
   - init                      # NOTE: init metapackage
+  #- insync-headless          # WARN: only non-WSL systems, see tasks/apt.yml
   - ipcalc                    # IP address/mask/subnet arithmetics calculator
   - iproute2
   - iputils-arping
