@@ -6,9 +6,6 @@
 # of littering done by Apps so I redirect Documents and all special folders to
 # TODO.
 
-# BUG: All directory names are relative to home directory. While they can be
-# nested it will blow up if link is nested in directory.
-
 # Properties explanation:
 # link: "wsl" will link %USERPROFILE%/name to WSL (dirs.yml)
 # link: "windows" will link //wsl.local../name to Windows (windows_dirs.yml)
@@ -18,55 +15,69 @@
 # windows_icon: windows_icon of directory (windows_dirs.yml).
 # os: "windows" (or "linux") will create directory only on given OS
 
+# WARN: When nesting parent directory has to go first!
+
 user_dirs:
-  - name: "desk"    # Desktop
+  - name: "bak"                       # backups to pick up
+  - name: "desk"                      # desktop
     xdg: "XDG_DESKTOP_DIR"
     windows_guid: "B4BFCC3A-DB2C-424C-B029-7FE99A87C641"
     windows_icon: "%SystemRoot%\\system32\\imageres.dll,-183"
     link: "wsl"
-  - name: "docs"    # Documents
+  - name: "docs"                      # documents
     xdg: "XDG_DOCUMENTS_DIR"
     # NOTE: Not linked with windows_guid as Windows apps tend to litter "My Documents" a lot
     windows_icon: "%SystemRoot%\\system32\\imageres.dll,-112"
     link: "wsl"
-  - name: "downl"   # Downloads
+  - name: "downl"                     # downloads
     xdg: "XDG_DOWNLOAD_DIR"
     windows_guid: "374DE290-123F-4565-9164-39C4925E467B"
     windows_icon: "%SystemRoot%\\system32\\imageres.dll,-184"
     link: "wsl"
-  #- name: "downl/arch"
-  - name: "tmpl"                      # WARN: In dotfiles, DO NOT LINK
-    xdg: "XDG_TEMPLATES_DIR"
-  - name: "pics"
-    xdg: "XDG_PICTURES_DIR"
-    windows_guid: "33E28130-4E1E-4676-835A-98395C3BC3BB"
-    windows_icon: "%SystemRoot%\\system32\\imageres.dll,-113"
+  - name: "downl/arch"                # downloads (archived)
+  - name: "drive"                     # Google Drive
+    windows_icon: "%USERPROFILE%\\.local\\share\\pixmaps\\folder_drive.ico,0"
     link: "wsl"
-  - name: "music"
-    xdg: "XDG_MUSIC_DIR"
-    windows_guid: "4BD8D571-6D19-48D3-BE97-422220080E43"
-    windows_icon: "%SystemRoot%\\system32\\imageres.dll,-108"
-    link: "wsl"
-  - name: "videos"
-    xdg: "XDG_VIDEOS_DIR"
-    windows_guid: "18989B1D-99B5-455B-841C-AB7C74E4DDFC"
-    windows_icon: "%SystemRoot%\\system32\\imageres.dll,-189"
-    link: "wsl"
-  - name: "pub"                       # public files
-    xdg: "XDG_PUBLICSHARE_DIR"
-    link: "windows"
-  - name: "bak"                       # backups to pick up
   - name: "logs"                      # logs (irc, etc.)
     link: "windows"
   - name: "mail"                      # maildir
     link: "windows"
-  - name: "src"                       # source code
+  - name: "music"                     # music
+    xdg: "XDG_MUSIC_DIR"
+    windows_guid: "4BD8D571-6D19-48D3-BE97-422220080E43"
+    windows_icon: "%SystemRoot%\\system32\\imageres.dll,-108"
+    link: "wsl"
+  - name: "pics"                      # pictures
+    xdg: "XDG_PICTURES_DIR"
+    windows_guid: "33E28130-4E1E-4676-835A-98395C3BC3BB"
+    windows_icon: "%SystemRoot%\\system32\\imageres.dll,-113"
+    link: "wsl"
+  - name: "pub"                       # public files
+    xdg: "XDG_PUBLICSHARE_DIR"
+    link: "wsl"
   - name: "public_html"               # local web
     link: "windows"
-  - name: "drive"                     # Google Drive
+  - name: "src"                       # source code
+    windows_icon: "%USERPROFILE%\\.local\\share\\pixmaps\\folder_src.ico,0"
+  - name: "tmpl"                      # WARN: In dotfiles, DO NOT LINK
+    xdg: "XDG_TEMPLATES_DIR"
+  - name: "videos"                    # videos
+    xdg: "XDG_VIDEOS_DIR"
+    windows_guid: "18989B1D-99B5-455B-841C-AB7C74E4DDFC"
+    windows_icon: "%SystemRoot%\\system32\\imageres.dll,-189"
     link: "wsl"
-  - name: "misc"
+  - name: "vm"                        # virtual machines
+    link: "wsl"
+  # NOTE: On Windows 11 My Documents live in OneDrive, in order to keep
+  # OneDrive deleted My Documents needs to be relocated.
+  - name: "windocs"                   # my documents
+    windows_guid: "FDD39AD0-238F-46AF-ADB4-6C85480369C7"
+    windows_icon: "%USERPROFILE%\\.local\\share\\pixmaps\\folder_windocs.ico,0"
     os: "windows"
+
+# Google Drive symlinks
+# Symlinks to directories and files inside Google Drive to HOME
+drive_links: []
 
 # WSL native directories
 # NOTE: These need to be on native WSL filesystem in case HOME is on NTFS
