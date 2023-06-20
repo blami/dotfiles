@@ -26,9 +26,10 @@
 
 # Windows
 - block:
-    #- import_tasks: windows_dotfiles.yml
+    - import_tasks: windows_dotfiles.yml
     - import_tasks: windows_dirs.yml
-    #- import_tasks: windows_secrets.yml
+    - import_tasks: windows_secrets.yml
+    - import_tasks: windows_dotfiles_ssh.yml
     - import_tasks: windows_fonts.yml
   # WARN: 'become' to user itself is required to allow credential delegation;
   # user is expected to be an Administrator.
