@@ -61,12 +61,12 @@ $icon = $module.Params.icon
 $info = $module.Params.info
 $state = $module.Params.state
 
+$module.Result.changed = $false
+
 if ((-not ($path)) -or (-not ($path.Attributes.HasFlag([IO.FileAttributes]::Directory)))) {
     $module.FailJson("$($path.FullName)) does not exist or is not a directory")
 }
 $ini_path = Join-Path -Path $path -ChildPath "desktop.ini"
-
-$module.Result.changed = $false
 
 if ($state -eq "absent") {
     if (Test-Path -Path $ini_path) {
