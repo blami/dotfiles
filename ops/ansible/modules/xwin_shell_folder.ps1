@@ -92,7 +92,7 @@ foreach ($guid in $items.Keys) {
         $r = [WinAPI.KnownFolders]::SHSetKnownFolderPath([ref]$guid, 0, 0, $path)
         $r = New-ItemProperty -Path $reg_path -Name $reg_key -PropertyType ExpandString -Value $path -Force
         # Move files
-        if ($move_files) {
+        if ($move_files -and (Test-Path -Path $cur_path[1])) {
             $new_path = $(Get-Item -Path $reg_path).GetValue($reg_key)
             if (-not (Test-Path -Path $new_path)) {
                 $module.FailJson("target directory $new_path does not exist")
