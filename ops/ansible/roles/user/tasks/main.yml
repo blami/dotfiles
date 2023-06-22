@@ -31,6 +31,7 @@
     - import_tasks: windows_secrets.yml
     - import_tasks: windows_dotfiles_ssh.yml
     - import_tasks: windows_fonts.yml
+    - import_tasks: windows_cursors.yml
   # WARN: 'become' to user itself is required to allow credential delegation;
   # user is expected to be an Administrator.
   become: true
