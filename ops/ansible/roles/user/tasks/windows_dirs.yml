@@ -84,7 +84,6 @@
   loop_control:
     label: "{{ item.name }}"
   with_items: "{{ user_dirs | selectattr('windows_guid', 'defined') }}"
-  tags: debug
 
 - name: Adding desktop.ini
   xwin_desktop_ini:
@@ -93,7 +92,6 @@
   loop_control:
     label: "{{ item.name }}"
   with_items: "{{ user_dirs | selectattr('windows_icon', 'defined') }}"
-  tags: debug
 
 # TODO: Move various garbage like 'My Documents', 'Favorites', etc. to one
 # directory... 
