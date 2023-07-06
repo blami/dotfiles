@@ -45,6 +45,7 @@ apt_packages:
   - groff-base
   - gzip
   - htop
+  - hwdata                    # hardware identification/configuration data
   - icdiff                    # side by side diff
   - inetutils-telnet
   - init                      # NOTE: init metapackage
@@ -120,6 +121,7 @@ apt_packages:
   - ucf
   - udev
   - unzip
+  - usbip                     # tools for sharing USB over IP (mostly WSL)
   - usbutils
   - wdiff
   - wget
