@@ -76,9 +76,20 @@
   when:
     - my_facts.is_wsl
 
+# NOTE: Linger session assures /run/user/UID is owned by user even when not
+# logging in through PAM (which is in case of WSL)
+- name: Setting {{ my_user.username }} Session Linger
+  shell: |
+    loginctl show-user -P Linger {{ my_user.username }}
+    loginctl enable-linger {{ my_user.username }}
+  register: out_wsl_linger
+  changed_when: out_wsl_linger.stdout == "no"
+  when:
+    - my_facts.is_wsl
+
 # Terminate WSL to force picking up changes made above
 - name: Restarting WSL
   command: "/mnt/c/Windows/System32/wsl.exe -t {{ my_facts.wsl_distro }}"
   when: 
-    - (out_wsl_tmpfs.changed or out_wsl_wslinterop.changed or out_wsl_wslconf.changed)
+    - (out_wsl_tmpfs.changed or out_wsl_wslinterop.changed or out_wsl_wslconf.changed or out_wsl_linger.changed)
     - my_facts.is_wsl
