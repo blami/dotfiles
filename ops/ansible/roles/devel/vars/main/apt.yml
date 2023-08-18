@@ -75,9 +75,10 @@ apt_packages:
   # General Linux stuff
   - pkg-config
   - libtool-bin
-  # Ubuntu/Debian packaging
+  # Debian packaging
   - devscripts
   - dput
+  - git-buildpackage
   - quilt
   - lintian
   - fakeroot
