@@ -53,7 +53,6 @@
     label: "{{ item.name }}"
   # NOTE: DO NOT use multiple with_items as order matters!
   with_items: "{{ user_dirs_filtered }}"
-  tags: debug
 
 - name: Generating XDG ~/.config/user-dirs.dirs
   template:
