@@ -1,0 +1,68 @@
+---
+# Install Neovim
+
+- name: Detecting Neovim
+  stat:
+    path: /usr/local/bin/nvim
+  register: out_nvim_bin
+  when:
+    # NOTE: Neovim native binary is only available for amd64
+    - ansible_architecture in ("x86_64",)
+  tags: debug
+
+- name: Downloading Neovim
+  get_url: 
+    url: https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz
+    # NOTE: Keep .zip so changed=true can be used as trigger to upgrade
+    dest: /var/cache/ansible/nvim.tar.gz
+  register: out_nvim_download
+  when:
+    - ansible_architecture in ("x86_64",)
+  tags: debug
+
+- name: Installing Neovim
+  shell:
+    cmd: |
+      tar -xf /var/cache/ansible/nvim.tar.gz -C /usr/local --strip-components 1
+    # NOTE: This requires shell because of stacking multiple commands
+    #warn: false
+  register: out_nvim_install
+  when:
+    - ansible_architecture in ("x86_64",)
+    # NOTE: Only install if download changed or binary is missing
+    - out_nvim_download.changed or not out_nvim_bin.stat.exists
+  tags: debug
+
+- name: Installing Neovim Wrappers
+  copy:
+    src: "{{ role_path }}/files/nvim/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    owner: root
+    group: root
+    mode: 0755
+    force: true
+  register: out
+  with_list:
+    - ex
+    - rview
+    - view
+    - vimdiff
+  when:
+    - ansible_architecture in ("x86_64",)
+  tags: debug
+
+- name: Setting Neovim Alternatives
+  shell:
+    cmd: |
+      update-alternatives --install /usr/bin/editor editor /usr/local/bin/nvim 50 --slave /usr/share/man/man1/editor.1.gz editor.1.gz /usr/local/share/man/man1/nvim.1.gz
+      update-alternatives --install /usr/bin/ex ex /usr/local/bin/ex 50
+      update-alternatives --install /usr/bin/rvim rvim /usr/local/bin/nvim 50
+      update-alternatives --install /usr/bin/rview rview /usr/local/bin/rview 50
+      update-alternatives --install /usr/bin/vi vi /usr/local/bin/nvim 50
+      update-alternatives --install /usr/bin/vim vim /usr/local/bin/nvim 50
+      update-alternatives --install /usr/bin/view view /usr/local/bin/view 50
+      update-alternatives --install /usr/bin/vimdiff vimdiff /usr/local/bin/vimdiff 50
+  when:
+    - ansible_architecture in ("x86_64",)
+    - out_nvim_install.changed
+  tags: debug

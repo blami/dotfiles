@@ -9,6 +9,7 @@
     - import_tasks: dirs.yml              # OS-level directories
     - import_tasks: user.yml              # create and/or configure user
     - import_tasks: sudoers.yml
+    - import_tasks: nvim.yml              # install Neovim (upstream)
     - import_tasks: bitwarden.yml         # install Bitwarden CLI
     - import_tasks: systemd.yml           # configure systemd
     #- import_tasks: grub.yml

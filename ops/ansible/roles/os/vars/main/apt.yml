@@ -79,7 +79,7 @@ apt_packages:
   - mosh                      # mobile shell
   - mtr                       # traceroute & ping
   - ncurses-term              # additional terminal type definitions
-  - neovim
+  #- neovim                   # NOTE: using binaries from Github directly
   - net-tools                 # netstat & co.
   - netcat-openbsd
   - netperf                   # network speed meter
