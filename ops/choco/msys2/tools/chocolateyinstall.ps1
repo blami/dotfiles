@@ -14,4 +14,17 @@ $packageArgs = @{
   validExitCodes= @(0)
 }
 
+function Invoke-MSys2($Command) {
+    $params = @{
+        FilePath    = "C:\Devel\msys2\msys2_shell.cmd"
+        NoNewWindow = $true
+        Wait        = $true
+        ArgumentList = "-defterm", "-no-start", "-c", "`"$Command`""
+    }
+    Write-Host "Running MSYS2 command:" $params.ArgumentList
+    Start-Process @params
+}
+
 Install-ChocolateyPackage @packageArgs
+Invoke-Msys2 "pacman --noconfirm -Syuu"
+Invoke-Msys2 "pacman --noconfirm -S mingw-w64-i686-toolchain mingw-w64-x86_64-toolchain"
