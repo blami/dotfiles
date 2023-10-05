@@ -1,0 +1,285 @@
+"File:          vimrc
+"Description:   Vim configuration entry-point
+"               This configuration should work with Vim 7.4 which is oldest
+"               version I use. Not all features may work but most should.
+
+"TODO: Fence features with if has(...)
+
+if has('vim_starting')
+    set encoding=utf-8                      "internal encoding (buffers,"registers, exprs, viminfo...)
+    scriptencoding utf-8
+endif
+
+
+"{{{ Variables
+"NOTE: To check environment variable use if exists('$VAR')
+let g:vimdir = $HOME . '/.vim/'
+
+"let g:sudo=1
+"}}}
+
+
+"{{{ Editing
+set nocompatible                            "not needed because ~/.vimrc exists
+set cpoptions=aABceFs                       "compatible mode options
+
+set formatoptions=tcrqj                     "see :help fo-table
+set nowrap
+set textwidth=79
+set nojoinspaces                            "do NOT insert 2 spaces after .!?
+set linebreak breakat=\ \	.;:,!?。…！？   "break long lines at these characters
+
+"History
+set history=8000
+
+"Indentation and Tab behavior
+set expandtab                               "indent using spaces
+set shiftwidth=4 softtabstop=4 tabstop=4    "Tab key and indent are 4 spaces
+set shiftround                              "indent to multiple of shiftwidth
+set smarttab smartindent                    "smart indentation Tab/BSpc behavior
+set autoindent copyindent breakindent       "automatically indent new lines
+set backspace=indent,eol,start
+"}}}
+
+
+"{{{ Search and Replace
+set re=0                                    "use autoselection (NOTE =1 breaks Typescript)
+set magic                                   "enable magic in regex e.g. ( matches \( groups... 
+set ignorecase smartcase                    "ignore case on search/replace unless uppercase char used
+set wrapscan                                "wrap around search/replace
+set incsearch                               "incremental search (search as you type)
+set gdefault                                "invert regex /g
+"}}}
+
+
+"{{{ Diff
+set diffopt=vertical                        "open diff in vertical split
+set diffopt+=filler,iwhite                  "show filler lines, ignore spaces
+set diffopt+=internal,algorithm:histogram   "use internal diff library, same algo as git
+set diffopt+=indent-heuristic               "use indentation heuristics
+"}}}
+
+
+"{{{ Spell Checking
+let g:spelllangs=['en', 'cs']
+set nospell                                 "by default do not spellcheck
+let &spelllang=get(g:spelllangs, 0)
+let &spellfile=
+    \ g:vimdir . '/spell/' . &g:spelllang . '.utf8.add,'
+    \ .g:vimdir . '/spell/common.utf8.add'
+"set complete+=kspell                       "show spell completions
+"}}}
+
+
+"{{{ User Interface
+"Editing
+set list                                    "show non-printable characters by default (see autocmd.vim!)
+if has('multi_byte') && &encoding ==# 'utf-8'
+    set listchars=tab:⯈\ ,trail:·,eol:,extends:$,precedes:^
+else
+    set listchars=tab:>\ ,trail:.,eol:$,extends:$,precedes:^
+endif
+set matchpairs=(:),{:},[:],「:」,【:】      "match pair characters (highlight match)
+set matchtime=1
+set noshowmatch                             "don't briefly skip to matching bracket
+set hlsearch                                "highlight search matches
+
+"Colors, Fonts and Highlighting
+"colors blami
+set background=dark
+syntax on
+set report=0                                "always report new lines
+set synmaxcol=200                           "highlight syntax in first 200 columns
+"if has('win32')
+"   set guicursor=
+"   set guifont=
+"endif
+
+"Scrolling
+set scrolloff=2                             "show at least 2 lines above/below
+set sidescroll=8                            "show at least 8 columns left/right
+set scrolljump=5                            "jump by 5 lines when cursor leaves screen
+set nostartofline                           "keep cursor on same column when going up/down
+
+"Folds
+set foldenable foldmethod=marker            "fold by {{{ markers only
+set foldlevel=100                           "don't fold automatically only on zC
+set foldopen=block,hor,mark,percent,quickfix,tag
+
+"Gutter and Columns
+set signcolumn=yes                          "show signs (warnings, git, etc.)
+set number numberwidth=4                    "show line numbers
+set colorcolumn=80,120                      "highlight 80th and 120th column
+"Diagnostic sign definitions
+"sign define DiagError      text=   texthl=...
+
+"Splits
+set splitbelow splitright                   "open splits under or on right
+
+"Completion
+set complete-=i                             "do not scan included files
+set completeopt=menu,menuone,noselect,noinsert "show menu (even for one match), do not select and insert match
+
+"Commandline
+set cmdheight=1                             "command line height
+set noshowmode showcmd                      "no current -- MODE -- in command line; and pressed keys if more are expected
+set shortmess+=I                            "no intro (faster start on slow terminals)
+set shortmess+=cm                           "no completion messages (match X of Y...); [+] instead of modified
+set shortmess-=S                            "show search [X/Y] message
+set nowildmenu                              "disable completion in statusline
+"Ignored completion patterns
+set wildignore+=*.o,*.obj,*.a,*.so,*.pyc,*.pyo,*.gem,*.exe,*.dll
+set wildignore+=*.zip,*.rar,*.7z,*.ace,*.tar.gz,*.tar.bz2,*.tar.xz
+set wildignore+=.DS_Store,.git,.gitkeep
+
+"Statusline
+set laststatus=2                            "always show statusline
+set noruler                                 "disable built-in ruler
+func! StatusLine()                          "function that produces statusline
+    let s = ''
+    let is_cur = g:statusline_winid == win_getid() "is current window
+    let is_wide = winwidth(g:statusline_winid) > 80 "is wider than 80 columns?
+
+    "Special buffers
+    "1 [Help] gui.txt[RO]                                             1,1/5 57%
+    "1 [Terminal]...
+
+
+    "Normal buffers
+    "1 N vimrc[+][RO] [vim] unix,utf-8 [status]        en [leds] >#72 1,1/5 57%
+    "Left side
+    let s .= '%n'                                                               "buffer number
+    if is_cur | let s .= ' %1*N%*' | endif                                      "mode
+    let s .= ' %t%m%r'                                                          "file name[+][RO]
+    let s .= ' %2*[%{&ft!=""?&ft:"-"}]%*'                                       "file type
+    if is_wide | let s .= ' %{&ff}%{&fenc!=""?",".&fenc." ":""}' | endif        "format,encoding
+    if (is_cur && is_wide) | let s .= '%3*-%*' | endif                          "status pages TODO:
+    "Right side
+    let s .= '%='
+    let s .= '%{&spell!=0?strpart(&spelllang,0,2)." ":""}'                      "spell lang
+    let s .= 'PFf$L '                                                           "leds TODO:
+    let s .= '%4*%{matchstr(&fo,"t")!=""?">":""}'                               "comment(#) and text(>) width
+    let s .= '%{matchstr(&fo,"c")!=""?"#":""}'
+    let s .= '%{matchstr(&fo,"[tc]")!=""?&tw." ":""}'
+    "if is_wide | let s .= '%b,0x%B' | endif "character under cursor dec, hex TODO: move to status
+    let s .= '%c,%l' | if is_wide | let s .= '/%L' | endif | let s .= '%* %P'   "ruler
+
+    "Remove all highlight groups if not active window
+    return is_cur?l:s:substitute(l:s, '%[1-9]\?\*','','g')
+endfunc
+set statusline=%!StatusLine()
+
+"Tabline
+set showtabline=1                           "show tabline only with 2+ tabs
+function! TabLine()                         "function that produces tabline
+    let t = ''
+
+    "1:aaa|2:bbb|3:ccc|                                                 t3w1b10
+    let t .= 'bbb%=aaa'
+    return t
+endfunction
+set tabline=%!TabLine()
+"}}}
+
+
+"{{{ OS integration
+"Terminal
+set ttyfast
+set termguicolors                           "allow more colors in terminal
+set lazyredraw
+set noerrorbells belloff=all                "no ^A beeps
+set timeout timeoutlen=750                  "key mapping sequence timeout (ms)
+set ttimeout ttimeoutlen=50                 "key code sequence timeout (ms)
+
+"Clipboard
+if has('clipboard')
+    set clipboard=unnamedplus
+    "Multi-OS clipboard wrapper
+    let g:clipboard={
+        \ 'name': 'clip',
+        \ 'copy':   {'+': ['clip', '-c'], '*': ['clip', '-c'], },
+        \ 'paste':  {'+': ['clip', '-p'], '*': ['clip', '-p'], },
+        \ 'cache_enabled': 0,
+        \ }
+endif
+
+"Window Title
+"VIM: [hostname] filename [+-=][RO]
+set title titlestring=VIM:\ [%{hostname()}]\ %t\ %m%r
+set titleold=VIM
+
+
+if has('win32')
+    set shell=bash.exe                      "use WSL2 bash.exe on Windows
+endif
+"}}}
+
+
+"{{{ Directories and Files
+"NOTE: Following directories are expected to be in place because of .gitkeep
+"NOTE: // at the end means full file paths will be encoded in filename
+"Backup
+let &backupdir=g:vimdir . 'backup//'
+set backup nowritebackup                    "delete old backup, backup current file
+set backupskip+=~/tmp/*,/private/tmp/*,/private/var/*,*/shm/*,*.gpg,*.asc,*.key
+"Swap
+let &dir=g:vimdir . 'swap//'
+set swapfile
+"Undo
+let &undodir=g:vimdir . 'undo//'
+set undofile
+"viminfo
+let &viminfo="!,'100,<1000,s10,h,n" . g:vimdir . 'viminfo' "see :help viminfo
+"Disable persistence when using sudo to avoid 'root' files in ~
+if $SUDO_USER !=# '' && $USER !=# $SUDO_USER
+        \ && $HOME !=# expand('~'.$USER)
+        \ && $HOME ==# expand('~'.$SUDO_USER)
+    set noswapfile
+    set nobackup
+    set noundofile
+    set viminfo='NONE'
+endif
+
+"Loading Files
+set modeline                                "process 'vim:' modeline in files
+set exrc secure                             "load safe parts of per-project .exrc/.vimrc
+set hidden                                  "hide buffers instead of closing
+set autoread                                "re-read files when changed outside
+set switchbuf+=useopen,usetab               "re-use open window/tab for switching buffers
+
+"File Encoding
+set fileencoding=utf-8
+set fileencodings=ucs-bom,utf-8
+"set bomb                                   "prepend file with BOM if needed
+"set binary                                 "edit file as binary
+set fileformats=unix,dos,mac                "<EOL> formats to try
+
+"Netrw
+let g:netrw_dirhistmax = 0                  "DO NOT save netrw history in .netrwhist file
+"}}}
+
+
+"{{{ Includes and Plugins
+filetype plugin on
+filetype indent on
+
+"Disable bundled plugins
+let g:loaded_getscript = 1
+let g:loaded_getscriptPlugin = 1
+let g:loaded_vimball = 1
+let g:loaded_vimballPlugin = 1
+let g:loaded_matchit = 1
+let g:loaded_matchparen = 1
+let g:loaded_2html_plugin = 1
+let g:loaded_logiPat = 1
+let g:loaded_rrhelper = 1
+let g:loaded_spellfile_plugin=1             "DO NOT download spellfiles
+
+"NOTE: Other configs are sourced from after/plugin/source.vim to have plugins
+"and packs loaded. This is so that e.g. keymap config, etc. can rely on g:
+"variables being set by plugins, etc.
+
+"abbrev.vim
+"autocmd.vim
+"keymap.vim
+"}}}

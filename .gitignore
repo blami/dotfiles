@@ -9,7 +9,6 @@ _sort
 /ops/choco/*.nupkg
 /ops/ansible/debug*.yml
 
-
 # User directories
 /bak
 /blog
@@ -60,18 +59,27 @@ _sort
 /.local/share/fonts/**/*NF.[to]tf
 /.local/share/lftp
 /.local/share/mc/history
-/.local/share/nvim
 /.local/share/weechat/*
 !/.local/share/weechat
 !/.local/share/weechat/python
 /.local/state
 /.local/go
 /.local/node
+/.local/python
 /.npm
 /.npmrc
 /.solstudio
 /.vscode-server
 /.viminfo
+/.vim/viminfo
+/.vim/backup/*
+!/.vim/backup/.gitkeep
+/.vim/undo/*
+!/.vim/undo/.gitkeep
+/.vim/spell/*
+!/.vim/spell/*.add
+/.vim/swap/*
+!/.vim/swap/.gitkeep
 /.wget-hsts
 /.yarnrc
 /.*_history*
