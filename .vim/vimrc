@@ -14,8 +14,7 @@ endif
 "{{{ Variables
 "NOTE: To check environment variable use if exists('$VAR')
 let g:vimdir = $HOME . '/.vim/'
-
-"let g:sudo=1
+"let g:sudo=0                               "TODO: move sudo check from below here...
 "}}}
 
 
@@ -43,7 +42,7 @@ set backspace=indent,eol,start
 
 
 "{{{ Search and Replace
-set re=0                                    "use autoselection (NOTE =1 breaks Typescript)
+set re=0                                    "use autoselection (=1 breaks Typescript)
 set magic                                   "enable magic in regex e.g. ( matches \( groups... 
 set ignorecase smartcase                    "ignore case on search/replace unless uppercase char used
 set wrapscan                                "wrap around search/replace
@@ -137,32 +136,66 @@ set laststatus=2                            "always show statusline
 set noruler                                 "disable built-in ruler
 func! StatusLine()                          "function that produces statusline
     let s = ''
-    let is_cur = g:statusline_winid == win_getid() "is current window
-    let is_wide = winwidth(g:statusline_winid) > 80 "is wider than 80 columns?
+    let is_cur = g:statusline_winid == win_getid()                              "is current window?
+    let is_wide = winwidth(g:statusline_winid) > 80                             "is wider than 80 columns?
+    let is_spec = 0                                                             "is special buffer (hide stuff)?
 
-    "Special buffers
-    "1 [Help] gui.txt[RO]                                             1,1/5 57%
-    "1 [Terminal]...
+    "Get current mode (single uppercase letter)
+    let m = mode()[0]
+    if m ==# ''| let m = 'v' | endif
+    if m ==# ''| let m = 's' | endif
+    if m ==# 'r' | let m = '?' | endif
+    let m = toupper(m)
 
+    "Get buffer number and type of currently drawn statusline window
+    let bufnr = getwininfo(g:statusline_winid)[0]['bufnr']
+    let bt = getbufvar(l:bufnr, '&bt')
 
-    "Normal buffers
-    "1 N vimrc[+][RO] [vim] unix,utf-8 [status]        en [leds] >#72 1,1/5 57%
     "Left side
-    let s .= '%n'                                                               "buffer number
-    if is_cur | let s .= ' %1*N%*' | endif                                      "mode
-    let s .= ' %t%m%r'                                                          "file name[+][RO]
-    let s .= ' %2*[%{&ft!=""?&ft:"-"}]%*'                                       "file type
-    if is_wide | let s .= ' %{&ff}%{&fenc!=""?",".&fenc." ":""}' | endif        "format,encoding
-    if (is_cur && is_wide) | let s .= '%3*-%*' | endif                          "status pages TODO:
+    let s ..= '%n'                                                              "buffer number
+    if is_cur | let s ..= ' %1*' .. m .. '%*' | endif                           "mode
+    "Special buffers
+    "1 N [Help] gui.txt[RO]                                           1,1/5 All
+    if bt ==# 'help'
+        let s ..= ' [Help] %t%r'                                                "file name[RO]
+        let is_spec = 1
+    "1 N [Terminal]                                                   1,1/5 All
+    elseif bt ==# 'terminal'
+        let s ..= ' [Terminal]'                                                 "TODO: make this nicer
+        let is_spec = 1
+    "1 N [Quickfix List]                                              1,1/5 All
+    "1 N [Location List] :grep foo /bar/*                             1,1/5 All
+    "NOTE: See override in after/ftplugin/qf.vim
+    elseif bt ==# 'quickfix'
+        let s ..= ' %t%{exists("w:quickfix_title")?" "..w:quickfix_title:""}'
+        let is_spec = 1
+    "1 N [Command Line]                                               1,1/5 All
+    elseif bt ==# 'nofile'
+        let s ..= ' %t'
+        let is_spec = 1
+    "Normal buffers
+    "1 N vimrc[+][RO] [vim] unix,utf-8 -                en LeDS >#72 1,1/50 10%
+    else
+        let s ..= ' %t%m%r'                                                     "file name[+][RO]
+        let s ..= ' %2*[%{&ft!=""?&ft:"-"}]%*'                                  "file type
+        if is_wide | let s ..= ' %{&ff}%{&fenc!=""?","..&fenc.." ":""}' | endif "format,encoding
+        if (is_cur && is_wide) | let s ..= '%3*-%*' | endif                     "status pages TODO:
+    endif
+
     "Right side
-    let s .= '%='
-    let s .= '%{&spell!=0?strpart(&spelllang,0,2)." ":""}'                      "spell lang
-    let s .= 'PFf$L '                                                           "leds TODO:
-    let s .= '%4*%{matchstr(&fo,"t")!=""?">":""}'                               "comment(#) and text(>) width
-    let s .= '%{matchstr(&fo,"c")!=""?"#":""}'
-    let s .= '%{matchstr(&fo,"[tc]")!=""?&tw." ":""}'
-    "if is_wide | let s .= '%b,0x%B' | endif "character under cursor dec, hex TODO: move to status
-    let s .= '%c,%l' | if is_wide | let s .= '/%L' | endif | let s .= '%* %P'   "ruler
+    let s ..= '%='
+    "Special buffers (hide everything except ruler at the end)
+    if is_spec
+        let s ..= '%4*'
+    "Normal buffers
+    else
+        let s ..= '%{&spell!=0?strpart(&spelllang,0,2).." ":""}'                "spell lang
+        let s ..= '----- '                                                      "leds TODO:
+        let s ..= '%4*%{matchstr(&fo,"t")!=""?">":""}'                          "comment(#) and text(>) width
+        let s ..= '%{matchstr(&fo,"c")!=""?"#":""}'
+        let s ..= '%{matchstr(&fo,"[tc]")!=""?&tw.." ":""}'
+    endif
+    let s ..= '%c,%l' | if is_wide | let s ..= '/%L' | endif | let s ..= '%* %P' "ruler
 
     "Remove all highlight groups if not active window
     return is_cur?l:s:substitute(l:s, '%[1-9]\?\*','','g')
@@ -171,13 +204,23 @@ set statusline=%!StatusLine()
 
 "Tabline
 set showtabline=1                           "show tabline only with 2+ tabs
-function! TabLine()                         "function that produces tabline
+func! TabLine()                             "function that produces tabline
     let t = ''
 
     "1:aaa|2:bbb|3:ccc|                                                 t3w1b10
-    let t .= 'bbb%=aaa'
+    "Left side
+    for i in range(tabpagenr('$'))
+        let t ..= i + 1 == tabpagenr() ? '%#TabLineSel#' : '%#TabLine#'
+        let t ..= '%' .. (i + 1) .. 'T'
+        let t ..= ' ' .. (i + 1) .. ' '
+    endfor
+    let t ..= '%#TabLineFill#%T'
+
+    "Right side
+    let t ..= '%='
+
     return t
-endfunction
+endfunc
 set tabline=%!TabLine()
 "}}}
 
@@ -204,8 +247,8 @@ if has('clipboard')
 endif
 
 "Window Title
-"VIM: [hostname] filename [+-=][RO]
-set title titlestring=VIM:\ [%{hostname()}]\ %t\ %m%r
+"VIM: [hostname] filename
+set title titlestring=VIM:\ [%{hostname()}]\ %t
 set titleold=VIM
 
 
