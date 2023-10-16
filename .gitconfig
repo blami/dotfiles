@@ -14,6 +14,8 @@
 [core]
 	; Always exclude globally ignored files
 	excludesfile = ~/.gitignore_global
+	; DO NOT mess with CRLF on Windows
+	autocrlf = false
 
 [color]
 	filemode = false
