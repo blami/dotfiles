@@ -74,7 +74,7 @@ let &spellfile=
 "Editing
 set list                                    "show non-printable characters by default (see autocmd.vim!)
 if has('multi_byte') && &encoding ==# 'utf-8'
-    set listchars=tab:⯈\ ,trail:·,eol:,extends:$,precedes:^
+    set listchars=tab:⯈\ ,trail:·,eol:↲,extends:$,precedes:^
 else
     set listchars=tab:>\ ,trail:.,eol:$,extends:$,precedes:^
 endif
@@ -84,7 +84,7 @@ set noshowmatch                             "don't briefly skip to matching brac
 set hlsearch                                "highlight search matches
 
 "Colors, Fonts and Highlighting
-"colors blami
+colors blami
 set background=dark
 syntax on
 set report=0                                "always report new lines
@@ -93,6 +93,14 @@ set synmaxcol=200                           "highlight syntax in first 200 colum
 "   set guicursor=
 "   set guifont=
 "endif
+
+if has('gui')
+    set guioptions=cde
+    if has('win32')
+        set guifont=IBM\ Plex\ Mono:h12
+        set guicursor=n-v-c:block-Cursor
+    endif
+endif
 
 "Scrolling
 set scrolloff=2                             "show at least 2 lines above/below
@@ -114,6 +122,7 @@ set colorcolumn=80,120                      "highlight 80th and 120th column
 
 "Splits
 set splitbelow splitright                   "open splits under or on right
+set fillchars=vert:\ ,stl:\ ,stlnc:\        "remove fillchars
 
 "Completion
 set complete-=i                             "do not scan included files
@@ -134,73 +143,7 @@ set wildignore+=.DS_Store,.git,.gitkeep
 "Statusline
 set laststatus=2                            "always show statusline
 set noruler                                 "disable built-in ruler
-func! StatusLine()                          "function that produces statusline
-    let s = ''
-    let is_cur = g:statusline_winid == win_getid()                              "is current window?
-    let is_wide = winwidth(g:statusline_winid) > 80                             "is wider than 80 columns?
-    let is_spec = 0                                                             "is special buffer (hide stuff)?
-
-    "Get current mode (single uppercase letter)
-    let m = mode()[0]
-    if m ==# ''| let m = 'v' | endif
-    if m ==# ''| let m = 's' | endif
-    if m ==# 'r' | let m = '?' | endif
-    let m = toupper(m)
-
-    "Get buffer number and type of currently drawn statusline window
-    let bufnr = getwininfo(g:statusline_winid)[0]['bufnr']
-    let bt = getbufvar(l:bufnr, '&bt')
-
-    "Left side
-    let s ..= '%n'                                                              "buffer number
-    if is_cur | let s ..= ' %1*' .. m .. '%*' | endif                           "mode
-    "Special buffers
-    "1 N [Help] gui.txt[RO]                                           1,1/5 All
-    if bt ==# 'help'
-        let s ..= ' [Help] %t%r'                                                "file name[RO]
-        let is_spec = 1
-    "1 N [Terminal]                                                   1,1/5 All
-    elseif bt ==# 'terminal'
-        let s ..= ' [Terminal]'                                                 "TODO: make this nicer
-        let is_spec = 1
-    "1 N [Quickfix List]                                              1,1/5 All
-    "1 N [Location List] :grep foo /bar/*                             1,1/5 All
-    "NOTE: See override in after/ftplugin/qf.vim
-    elseif bt ==# 'quickfix'
-        let s ..= ' %t%{exists("w:quickfix_title")?" "..w:quickfix_title:""}'
-        let is_spec = 1
-    "1 N [Command Line]                                               1,1/5 All
-    elseif bt ==# 'nofile'
-        let s ..= ' %t'
-        let is_spec = 1
-    "Normal buffers
-    "1 N vimrc[+][RO] [vim] unix,utf-8 -                en LeDS >#72 1,1/50 10%
-    else
-        let s ..= ' %t%m%r'                                                     "file name[+][RO]
-        let s ..= ' %2*[%{&ft!=""?&ft:"-"}]%*'                                  "file type
-        if is_wide | let s ..= ' %{&ff}%{&fenc!=""?","..&fenc.." ":""}' | endif "format,encoding
-        if (is_cur && is_wide) | let s ..= '%3*-%*' | endif                     "status pages TODO:
-    endif
-
-    "Right side
-    let s ..= '%='
-    "Special buffers (hide everything except ruler at the end)
-    if is_spec
-        let s ..= '%4*'
-    "Normal buffers
-    else
-        let s ..= '%{&spell!=0?strpart(&spelllang,0,2).." ":""}'                "spell lang
-        let s ..= '----- '                                                      "leds TODO:
-        let s ..= '%4*%{matchstr(&fo,"t")!=""?">":""}'                          "comment(#) and text(>) width
-        let s ..= '%{matchstr(&fo,"c")!=""?"#":""}'
-        let s ..= '%{matchstr(&fo,"[tc]")!=""?&tw.." ":""}'
-    endif
-    let s ..= '%c,%l' | if is_wide | let s ..= '/%L' | endif | let s ..= '%* %P' "ruler
-
-    "Remove all highlight groups if not active window
-    return is_cur?l:s:substitute(l:s, '%[1-9]\?\*','','g')
-endfunc
-set statusline=%!StatusLine()
+set statusline=%!statusline#Statusline()
 
 "Tabline
 set showtabline=1                           "show tabline only with 2+ tabs
