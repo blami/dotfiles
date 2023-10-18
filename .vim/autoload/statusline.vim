@@ -3,8 +3,8 @@
 
 
 "{{{ Statusline
-"Output statusline
-func! statusline#Statusline() abort
+"Print out opinionated statusline.
+func! statusline#statusline() abort
     let l:s = ''
     let l:cur = g:statusline_winid == win_getid()                               "is current window?
     let l:w = winwidth(g:statusline_winid)                                      "is wider than 80 columns?
@@ -74,7 +74,7 @@ func! statusline#Statusline() abort
         let l:s ..= ' %t%m%r'                                                   "file name[+][RO]
         let l:s ..= ' %2*[%{&ft!=""?&ft:"-"}]%*'                                "file type
         if l:w >= 80 | let s ..= ' %{&ff}%{&fenc!=""?","..&fenc.." ":""}' | endif "format,encoding
-        if (l:cur && l:w >= 80) | let l:s ..= '%3*' .. '-' .. '%*' | endif      "status pages TODO
+        if (l:cur && l:w >= 80) | let l:s ..= '%3*' .. statusline#page() .. '%*' | endif      "status pages TODO
     endif
 
     "Right side
@@ -95,3 +95,9 @@ func! statusline#Statusline() abort
     "Remove all highlight groups if not active window
     return l:cur?l:s:substitute(l:s, '%[1-9]\?\*','','g')
 endfunc
+
+"{{{ Pages
+func! statusline#page() abort
+    return '-'
+endfunc
+"}}}
