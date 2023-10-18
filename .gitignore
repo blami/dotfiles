@@ -1,6 +1,10 @@
 # Dotfiles
 /.dfgit
 
+# Local configs
+/*_local
+/*_local.*
+
 # Temporary
 _bak
 _sort
