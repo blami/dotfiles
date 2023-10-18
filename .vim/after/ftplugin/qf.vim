@@ -13,4 +13,4 @@ setl colorcolumn=
 setl nolist
 
 "NOTE: Required to override Vim's statusline
-setl statusline=%!StatusLine()
+setl statusline=%!statusline#statusline()

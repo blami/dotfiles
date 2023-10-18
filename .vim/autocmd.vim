@@ -11,3 +11,6 @@ autocmd BufReadPost *
 "Special buffers
 autocmd CmdwinEnter * setl nonu scl=no cc= nolist
 autocmd TerminalOpen * setl nonu scl=no cc= nolist
+
+"TODO Highlighting
+autocmd WinEnter,BufWinEnter * call todo#highlight()
