@@ -38,12 +38,15 @@ _sort
 /.gnupg
 /.netrc
 /.rnd
-/.ssh/agent
 /.ssh/authorized_keys
 /.ssh/config_hosts
-/.ssh/ctrl
 /.ssh/id_*
-/.ssh/keys
+/.ssh/agent/*
+!/.ssh/agent/.gitkeep
+/.ssh/ctrl/*
+!/.ssh/ctrl/.gitkeep
+/.ssh/keys/*
+!/.ssh/keys/.gitkeep
 /.ssh/known_hosts*
 /.winrm
 
