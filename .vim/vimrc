@@ -1,6 +1,6 @@
 "File:          vimrc
 "Description:   Vim configuration entry-point
-"               This configuration should work with Vim 7.4 which is oldest
+"               This configuration should work with Vim 8 which is oldest
 "               version I use. Not all features may work but most should.
 
 "TODO: Fence features with if has(...)
@@ -13,7 +13,7 @@ endif
 
 "{{{ Variables
 "NOTE: To check environment variable use if exists('$VAR')
-let g:vimdir = $HOME . '/.vim/'
+let g:vimdir = $HOME .. '/.vim/'
 "let g:sudo=0                               "TODO: move sudo check from below here...
 "}}}
 
@@ -179,7 +179,7 @@ set ttimeout ttimeoutlen=50                 "key code sequence timeout (ms)
 
 "Clipboard
 if has('clipboard')
-    set clipboard=unnamedplus
+    set clipboard=unnamed
     "Multi-OS clipboard wrapper
     let g:clipboard={
         \ 'name': 'clip',
@@ -218,8 +218,8 @@ set undofile
 let &viminfo="!,'100,<1000,s10,h,n" . g:vimdir . 'viminfo' "see :help viminfo
 "Disable persistence when using sudo to avoid 'root' files in ~
 if $SUDO_USER !=# '' && $USER !=# $SUDO_USER
-        \ && $HOME !=# expand('~'.$USER)
-        \ && $HOME ==# expand('~'.$SUDO_USER)
+        \ && $HOME !=# expand('~' .. $USER)
+        \ && $HOME ==# expand('~' .. $SUDO_USER)
     set noswapfile
     set nobackup
     set noundofile
@@ -261,11 +261,25 @@ let g:loaded_vimballPlugin = 1
 filetype plugin on
 filetype indent on
 
-"NOTE: Other configs are sourced from after/plugin/source.vim to have plugins
-"and packs loaded. This is so that e.g. keymap config, etc. can rely on g:
-"variables being set by plugins, etc.
+"Include config snippets either pre- or post- loading all other config (so that
+"e.g. keymap or autocmd can leverage g: variables set by plugins.
+let g:vimrc_includes = [
+            \ ['terminfo.vim',  'pre'],
+            \ ['abbrev.vim',    'post'],
+            \ ['autocmd.vim',   'post'],
+            \ ['keymap.vim',    'post'],
+            \ ]
 
-"abbrev.vim
-"autocmd.vim
-"keymap.vim
+func! g:VimrcInclude(arg) abort
+    for l:i in g:vimrc_includes
+        if l:i[1] ==# a:arg || 'all' ==# a:arg
+            let l:f = g:vimdir .. l:i[0]
+            if filereadable(l:f) | exe 'source ' .. l:f | endif
+        endif
+    endfor
+endfunc
+
+call g:VimrcInclude('pre')
+"call g:VimrcInclude('post') is in after/plugin/vimrc.vim
+"call g:VimrcInclude('all') for $MYVIMRC reloads is in autocmd.vim
 "}}}
