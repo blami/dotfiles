@@ -103,7 +103,7 @@ export LIBVIRT_DEFAULT_URI
 # }}}
 
 
-# {{{ PATH and profile
+# {{{ PATH cleaning and profile
 autoload -Uz pathmunge
 
 # In WSL remove native Windows paths from PATH first
@@ -114,7 +114,18 @@ fi
 # Source snippets in ~/.profile.d
 for s in ~/.profile.d/*.sh(N) ; source $s
 builtin unset -v s
+# }}}
 
+
+# {{{ Includes
+# Local configuration
+[ -r ~/.zprofile_local ] && . ~/.zprofile_local || builtin true
+[ -r ~/.zprofile_$HOST ] && . ~/.zprofile_$HOST || builtin true
+# }}}
+
+
+# {{{ Custom PATH
+# NOTE: This goes here so it is always in front and not overriden by _local
 # Setup PATH in ~/local
 pathmunge $HOME/local/bin
 # Setup PATH in ~ always as last component
@@ -123,16 +134,6 @@ pathmunge $HOME/bin/$OSARCH
 pathmunge $HOME/bin/$OS
 pathmunge $HOME/bin
 export PATH
-# }}}
-
-
-# {{{ Includes
-# Local configuration
-[ -r ~/.zprofile_local ] && . ~/.zprofile_local
-[ -r ~/.zprofile_$HOST ] && . ~/.zprofile_$HOST
-
-# Clear exit code (if any file doesn't exist)
-builtin true
 # }}}
 
 
