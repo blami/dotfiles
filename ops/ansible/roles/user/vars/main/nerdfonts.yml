@@ -7,6 +7,8 @@ nerdfonts:
   #- fira code/*.ttf
   #- go/Go-Mono*.ttf
   #- hack/*.ttf
-  - monolisa/*.ttf
+  - ibm plex/IBMPlexMono*.ttf
+  #- moderndos/*.ttf
+  #- monolisa/*.ttf
   #- profont/*.ttf
   #- ubuntu/UbuntuMono*.ttf
