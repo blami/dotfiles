@@ -13,6 +13,9 @@ let s:todo_patterns = [
     \ ]
 
 func! todo#highlight(...) abort
+    if(!hlexists('CustomTodo'))
+        return
+    endif
     let l:matchid=0
     for l:g in getmatches()
         if l:g['group'] == 'CustomTodo'
