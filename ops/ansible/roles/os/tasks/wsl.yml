@@ -37,6 +37,7 @@
   with_items:
     - wsl_clocksync
     - wsl_hosts
+    - wsl_resolvconf
   when:
     - my_facts.is_wsl
 
