@@ -1,11 +1,16 @@
 # tic -x -o ~/.terminfo ~/.terminfo/terminfo
 
-# Semicolon separated (works with Windows Terminal)
+# * add support for 24bit semicolon separated colors
+# * remove F13-F24 (shifted F-keys) to allow <S-F5> etc. keybindings in Neovim
 xterm-256color|xterm with 24-bit direct color mode,
   use=xterm-256color,
   setb24=\E[48;2;%p1%{65536}%/%d;%p1%{256}%/%{255}%&%d;%p1%{255}%&%dm,
   setf24=\E[38;2;%p1%{65536}%/%d;%p1%{256}%/%{255}%&%d;%p1%{255}%&%dm,
+  #kf17=,kf18=,
+
+# * add support for 24bit semicolon separated colors
 screen-256color|screen with 24-bit direct color mode,
   use=screen-256color,
   setb24=\E[48;2;%p1%{65536}%/%d;%p1%{256}%/%{255}%&%d;%p1%{255}%&%dm,
   setf24=\E[38;2;%p1%{65536}%/%d;%p1%{256}%/%{255}%&%d;%p1%{255}%&%dm,
+
