@@ -9,7 +9,6 @@ windows_choco_packages:
   - llvm
   - cmake
   - ninja
-  # TODO:
-  #- golang
+  - golang
   #- python
   #- nodejs
