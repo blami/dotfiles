@@ -12,3 +12,8 @@ directories or components being installed) and only for my personal use.
 
 * Version `0.0` means that package points to **latest** version URL. This also
   usually means that software updates itself.
+
+## TODO 
+
+* `msvs` deploy C/C++ and Windows SDK
+* Uninstall scripts for almost everything
