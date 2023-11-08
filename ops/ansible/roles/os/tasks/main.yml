@@ -4,20 +4,19 @@
 # Linux
 - block:
     - import_tasks: apt.yml               # setup APT and install essentials
+    - import_tasks: rpm.yml               # setup RPM and install essentials
     - import_tasks: locale.yml
     - import_tasks: ntp.yml
     - import_tasks: dirs.yml              # OS-level directories
     - import_tasks: user.yml              # create and/or configure user
     - import_tasks: sudoers.yml
-    - import_tasks: nvim.yml              # install Neovim (upstream)
     - import_tasks: bitwarden.yml         # install Bitwarden CLI
     - import_tasks: systemd.yml           # configure systemd
-    #- import_tasks: grub.yml
     - import_tasks: wsl.yml               # configure WSL (might restart WSL)
   become: true
   become_user: "root"
   when:
-    - ansible_facts.os_family == "Debian"
+    - ansible_facts.system == "Linux"
     - my_facts.has_become_root
 
 # Windows

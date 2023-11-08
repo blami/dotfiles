@@ -4,6 +4,7 @@
 # Linux
 - block:
     - import_tasks: apt.yml
+    - import_tasks: rpm.yml
     - import_tasks: shell.yml
   become: true
   become_user: "root"
@@ -16,7 +17,7 @@
     - import_tasks: dirs.yml
     - import_tasks: secrets.yml
     - import_tasks: dotfiles_ssh.yml
-    - import_tasks: nvim.yml
+    - import_tasks: vim.yml
     - import_tasks: nerdfonts.yml
   become: true
   become_user: "{{ my_user.username }}"
