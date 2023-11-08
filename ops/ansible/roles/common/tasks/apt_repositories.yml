@@ -8,6 +8,8 @@
   loop_control:
     label: "{{ item.name }} {% if 'key_id' in item %}{{ item.key_id }}{% elif 'key_url' in item%}{{ item.key_url }}{% endif %}"
   with_items: "{{ apt_repositories }}"
+  when:
+    - ansible_facts.os_family == "Debian"
 
 - name: Adding APT Repositories
   apt_repository:
@@ -18,7 +20,11 @@
   with_subelements: 
     - "{{ apt_repositories }}"
     - "sources"
+  when:
+    - ansible_facts.os_family == "Debian"
 
 - name: Updating APT Cache
   apt:
     update_cache: true
+  when:
+    - ansible_facts.os_family == "Debian"

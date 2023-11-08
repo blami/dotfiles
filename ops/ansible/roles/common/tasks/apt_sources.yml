@@ -10,6 +10,8 @@
     label: "{{ item.name }} {{ item.key }}"
   with_items:
     - "{{ apt_sources | selectattr('key', 'defined') }}"
+  when:
+    - ansible_facts.os_family == "Debian"
 
 - name: Adding APT Sources
   apt_repository:
@@ -20,7 +22,11 @@
   with_subelements: 
     - "{{ apt_sources }}"
     - "sources"
+  when:
+    - ansible_facts.os_family == "Debian"
 
 - name: Updating APT Cache
   apt:
     update_cache: true
+  when:
+    - ansible_facts.os_family == "Debian"
