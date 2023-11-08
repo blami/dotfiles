@@ -9,9 +9,12 @@
     group: root
     mode: 644
     force: true
+  when:
+    - ansible_facts.os_family == "Debian"
   register: out
 
 - name: Regenerating Locales
   command: "/usr/sbin/locale-gen"
   when:
+    - ansible_facts.os_family == "Debian"
     - out.changed
