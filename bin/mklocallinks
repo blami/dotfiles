@@ -18,6 +18,7 @@ read -r -d '' FILES <<- EOF
     .zsh
     .gitconfig
     .tmux.conf
+    .ssh/config
 EOF
 
 if [ $# -ne 1 ]; then
@@ -38,6 +39,6 @@ for F in $FILES; do
         # If local symlink already exists delete it
         [ -L ${F}_local ] && rm ${F}_local
 
-        ln -s ${F}_${SUFFIX} ${F}_local
+        ln -s $(basename ${F})_${SUFFIX} ${F}_local
     fi
 done
