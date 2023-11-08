@@ -3,12 +3,13 @@
 # See also: dotfiles.yml
 
 # NOTE: Depends on git being installed by os role and in PATH.
+# TODO: This produces unsafe .dfgit directory, figure out how to fix that.
 - name: Cloning Dotfiles Repository {{ dotfiles_repo }}
   win_shell: |
     & git init --separate-git-dir .dfgit
     & git --git-dir=.dfgit remote add -f -m main origin https://github.com/{{ dotfiles_repo }}
     & git --git-dir=.dfgit reset --hard origin/main
-    & git --git-dir=.dfgit checkout main
+    & git --git-dir=.dfgit -o core.autocrlf=false checkout main
     Remove-Item .git -ErrorAction Ignore
   args:
     chdir: "{{ my_user.userprofile }}"

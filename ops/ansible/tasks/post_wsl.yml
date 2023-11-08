@@ -17,7 +17,7 @@
       [alt_names]
       otherName.1 = 1.3.6.1.4.1.311.20.2.3;UTF8:{{ my_facts.wsl_win_user }}@localhost
       EOF
-      [ "{{ my_facts.wsl_hostname }}" != "localhost" ] && echo "otherName.2 = 1.3.6.1.4.1.311.20.2.3;UTF8:{{ my_facts.wsl_win_user }}@{{ my_facts.wsl_hostname }}" >> $OPENSSL_CONF
+      #[ "{{ my_facts.wsl_hostname }}" != "localhost" ] && echo "otherName.2 = 1.3.6.1.4.1.311.20.2.3;UTF8:{{ my_facts.wsl_win_user }}@{{ my_facts.wsl_hostname }}" >> $OPENSSL_CONF
 
       mkdir -m 700 -p {{ my_user.home }}/.winrm
       openssl req -x509 -nodes -days 36500 -newkey rsa:2048 -sha256 -out {{ my_user.home }}/.winrm/localclient.crt -outform PEM -keyout {{ my_user.home }}/.winrm/localclient.key -subj "/CN={{ my_facts.wsl_win_user }}" -extensions v3_req_client
@@ -44,7 +44,7 @@
       [alt_names]
       DNS.1 = localhost
       EOF
-      [ "{{ my_facts.wsl_hostname }}" != "localhost" ] && echo "DNS.2 = {{ my_facts.wsl_hostname }}" >> $OPENSSL_CONF
+      #[ "{{ my_facts.wsl_hostname }}" != "localhost" ] && echo "DNS.2 = {{ my_facts.wsl_hostname }}" >> $OPENSSL_CONF
 
       mkdir -m 700 -p {{ my_user.home }}/.winrm
       openssl req -x509 -nodes -days 36500 -newkey rsa:2048 -sha256 -out {{ my_user.home }}/.winrm/localserver.crt -outform PEM -keyout {{ my_user.home }}/.winrm/localserver.key -subj "/CN=localhost" -extensions v3_req_server

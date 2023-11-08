@@ -79,7 +79,6 @@ apt_packages:
   - mosh                      # mobile shell
   - mtr                       # traceroute & ping
   - ncurses-term              # additional terminal type definitions
-  #- neovim                   # NOTE: using binaries from Github directly
   - net-tools                 # netstat & co.
   - netcat-openbsd
   - netperf                   # network speed meter
@@ -123,6 +122,7 @@ apt_packages:
   - unzip
   - usbip                     # tools for sharing USB over IP (mostly WSL)
   - usbutils
+  - vim-motif                 # using 'motif' to get clipboard on console (WSL)
   - wdiff
   - wget
   - whiptail

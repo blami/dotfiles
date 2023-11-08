@@ -4,7 +4,6 @@
 go_packages:
   - golang.org/x/tools/gopls
   - golang.org/x/tools/cmd/goimports
-  - golang.org/x/tools/cmd/godoc
   - golang.org/x/lint/golint
   - google.golang.org/protobuf/cmd/protoc-gen-go
   - google.golang.org/grpc/cmd/protoc-gen-go-grpc

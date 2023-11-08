@@ -22,3 +22,6 @@ autocmd! SourcePost vimrc
             \ if !has('vim_starting') |
             \   call g:VimrcInclude('all') |
             \ endif
+
+"Signal handlers
+"autocmd! SigUSR1 * call ...

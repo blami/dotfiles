@@ -1,4 +1,5 @@
 # Setup Powershell redirection to $env:USERPROFILE\.profile.ps1
+$ErrorActionPreference = "stop"
 
 $profileContent = @"
 # This file is auto-generated. Make changes in USERPROFILE\.profile.ps1

@@ -8,7 +8,7 @@
 if has('vim_starting')
     set encoding=utf-8                      "internal encoding (buffers,"registers, exprs, viminfo...)
     scriptencoding utf-8
-endif
+endif "has('vim_starting')
 
 
 "{{{ Variables
@@ -19,12 +19,13 @@ let g:vimdir = $HOME .. '/.vim/'
 
 
 "{{{ Editing
-set nocompatible                            "not needed because ~/.vimrc exists
-set cpoptions=aABceFs                       "compatible mode options
-
-set formatoptions=tcrqj                     "see :help fo-table
-set nowrap
-set textwidth=79
+if has('vim_starting')
+    "set nocompatible                       "not needed because ~/.vimrc exists
+    "set cpoptions=aABceFs                  "compatible mode options
+    set formatoptions=tcrqj                 "see :help fo-table
+    set nowrap
+    set textwidth=79
+endif "has('vim_starting')
 set nojoinspaces                            "do NOT insert 2 spaces after .!?
 set linebreak breakat=\ \	.;:,!?。…！？   "break long lines at these characters
 
@@ -32,8 +33,10 @@ set linebreak breakat=\ \	.;:,!?。…！？   "break long lines at these charac
 set history=8000
 
 "Indentation and Tab behavior
-set expandtab                               "indent using spaces
-set shiftwidth=4 softtabstop=4 tabstop=4    "Tab key and indent are 4 spaces
+if has('vim_starting')
+    set expandtab                           "indent using spaces
+    set shiftwidth=4 softtabstop=4 tabstop=4 "Tab key and indent are 4 spaces
+endif "has('vim_starting')
 set shiftround                              "indent to multiple of shiftwidth
 set smarttab smartindent                    "smart indentation Tab/BSpc behavior
 set autoindent copyindent breakindent       "automatically indent new lines
@@ -89,10 +92,6 @@ set background=dark
 syntax on
 set report=0                                "always report new lines
 set synmaxcol=200                           "highlight syntax in first 200 columns
-"if has('win32')
-"   set guicursor=
-"   set guifont=
-"endif
 
 if has('gui')
     set guioptions=cde
@@ -247,7 +246,6 @@ let g:netrw_dirhistmax = 0                  "DO NOT save netrw history in .netrw
 
 "{{{ Includes and Plugins
 "Disable bundled plugins
-let g:loaded_2html_plugin = 1
 let g:loaded_getscript = 1
 let g:loaded_getscriptPlugin = 1
 let g:loaded_logiPat = 1
