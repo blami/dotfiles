@@ -4,6 +4,7 @@
 # Linux
 - block:
     - import_tasks: apt.yml
+    - import_tasks: rpm.yml
   become: true
   become_user: "root"
   when:
