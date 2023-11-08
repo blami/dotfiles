@@ -1,6 +1,7 @@
 ---
 # Configure NTP servers
 
+# TODO: only when file actually exists...
 - name: Configuring NTP Servers
   replace:
     path: /etc/systemd/timesyncd.conf
@@ -13,4 +14,5 @@
     name: systemd-timesyncd
     state: restarted
   when:
+    - my_facts.has_systemd
     - out.changed
