@@ -6,6 +6,6 @@
   command: >
     update-alternatives --set fakeroot /usr/bin/fakeroot-tcp
   when:
-    - ansible_facts.os.family == "Debian"
     - my_facts.is_wsl == 1
     - "'fakeroot' in ansible_facts.packages"
+    - ansible_facts.os.family == "Debian"
