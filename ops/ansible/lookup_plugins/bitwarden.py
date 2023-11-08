@@ -2,7 +2,7 @@ import base64
 import json
 import os
 import sys
-from subprocess import PIPE, STDOUT, Popen
+from subprocess import PIPE, STDOUT, Popen, TimeoutExpired
 
 from ansible.errors import AnsibleError
 from ansible.plugins.lookup import LookupBase
@@ -53,9 +53,10 @@ EXAMPLES = """
 
 
 class Bitwarden:
-    def __init__(self, path="bw", session=None):
+    def __init__(self, path="bw", session=None, timeout=5):
         self._path = path
         self._session = session
+        self._timeout = timeout
         self._status = False
 
     def _run(self, args: str, raw=False) -> dict:
@@ -73,11 +74,14 @@ class Bitwarden:
                 stderr=STDOUT,
                 env=env,
             )
-            out, _ = p.communicate()
+            out, _ = p.communicate(timeout=self._timeout)
             if not raw:
                 out = out.decode()
                 out = out.strip()
             rc = p.wait()
+        except TimeoutExpired as err:
+            p.kill()
+            raise RuntimeError(f"{self._path} timed out after {self._timeout}s")
         except Exception as err:
             raise RuntimeError(err) from err
         if rc != 0:
