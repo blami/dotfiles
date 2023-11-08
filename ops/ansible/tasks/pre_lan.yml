@@ -13,7 +13,7 @@
             "has_lan": out.rc == 0
           }) }}
   when:
-    - ansible_facts.os_family == "Debian"
+    - ansible_facts.system == "Linux"
 
 - block:
     - name: Checking If In LAN

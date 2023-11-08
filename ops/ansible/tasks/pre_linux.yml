@@ -12,6 +12,7 @@
     my_user: >
       {{ my_user | xcombine({
         "username": user,
+        "home": "/home/{{ user }}",
       }) }}
   when:
     - "'user' in vars"
@@ -85,8 +86,6 @@
   when:
     - not my_facts.has_become_root
 
-# Gather additional facts
-
 - name: Gathering Groups
   getent:
     database: group
@@ -95,6 +94,18 @@
 - name: Gathering Installed Packages
   package_facts:
     manager: auto
+
+- name: Checking systemd
+  command:
+    cmd: "/bin/systemctl"
+  register: out
+  failed_when: false
+  changed_when: false
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "has_systemd": false if out.rc != 0 else true
+      }) }}
 
 # TODO: This is quite naive approach; find something better?
 - name: Gathering Desktop Environment Facts
