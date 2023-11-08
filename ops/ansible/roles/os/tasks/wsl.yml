@@ -2,6 +2,19 @@
 # Configure WSL
 # WARN: Depends on systemd and systemd-sysv being installed by apt.yml!
 
+# TODO: Check if WSL's "init" still relies on /etc/fstab and see if systemd
+# unit would do this better?
+- name: Installing Empty /etc/fstab
+  copy:
+    content: ""
+    dest: /etc/fstab
+    owner: root
+    group: root
+    mode: 644
+    force: false
+  when:
+    - my_facts.is_wsl
+
 - name: Converting /tmp To tmpfs
   lineinfile:
     path: /etc/fstab
@@ -63,6 +76,7 @@
   with_items:
     - wsl_hosts.service
   when:
+    - my_facts.has_systemd
     - my_facts.is_wsl
 
 - name: Installing wsl.conf
@@ -77,15 +91,23 @@
   when:
     - my_facts.is_wsl
 
+- name: Unmasking systemd-logind
+  systemd:
+    name: systemd-logind
+    masked: false
+  when:
+    - my_facts.has_systemd
+
 # NOTE: Linger session assures /run/user/UID is owned by user even when not
 # logging in through PAM (which is in case of WSL)
 - name: Setting {{ my_user.username }} Session Linger
   shell: |
-    loginctl show-user -P Linger {{ my_user.username }}
+    loginctl show-user -p Linger {{ my_user.username }}
     loginctl enable-linger {{ my_user.username }}
   register: out_wsl_linger
   changed_when: out_wsl_linger.stdout == "no"
   when:
+    - my_facts.has_systemd
     - my_facts.is_wsl
 
 # Terminate WSL to force picking up changes made above
