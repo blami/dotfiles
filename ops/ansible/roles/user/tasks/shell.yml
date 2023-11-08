@@ -11,5 +11,7 @@
 - name: Changing User Shell To {{ my_user.shell | basename }}
   command: >
     usermod -s {{ my_user.shell }} {{ my_user.username }}
+  register: usermod_out
+  changed_when: "'usermod: no changes' not in usermod_out.stderr_lines"
   when:
     - not out.failed
