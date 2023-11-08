@@ -2,6 +2,12 @@
 # Patch Nerd Fonts
 # NOTE: Depends on apt.yml installing dependencies
 
+- name: Detecting Fontforge
+  command: "python3 -c \"import fontforge\""
+  failed_when: false
+  changed_when: false
+  register: has_fontforge
+
 - find:
     paths: "{{ my_user.home }}/.local/share/fonts/truetype/{{ item | dirname }}"
     patterns: "{{ item | basename }}"
@@ -9,6 +15,8 @@
     file_type: file
   with_items: "{{ nerdfonts }}"
   register: out
+  when:
+    - has_fontforge.rc == 0
 
 # This takes long so using creates:; to re-patch simply delete all *NF.[ot]tf:
 # $ find ~/.local/share/fonts/truetype -iname \*NF.[ot]tf -delete
@@ -19,3 +27,5 @@
     creates:  "{{ item | regex_replace('^(.*)(\\.[to]tf)$', '\\1 NF\\2') }}"
   # Only files that do not already contain NF.ext
   with_items: "{{ out.results | map(attribute='files') | flatten | map(attribute='path') | reject('regex', 'NF\\.[ot]tf$') }}"
+  when:
+    - has_fontforge.rc == 0
