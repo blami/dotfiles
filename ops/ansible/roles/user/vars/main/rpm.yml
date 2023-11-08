@@ -1,0 +1,10 @@
+---
+# RPM packages variable
+
+rpm_packages:
+  - calc
+  - GraphicsMagick
+  - weechat                   # irc client
+  - xdg-user-dirs
+  - mc                        # file manager
+  - fontforge                 # required to build Nerdfonts

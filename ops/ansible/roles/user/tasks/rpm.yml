@@ -1,0 +1,6 @@
+---
+# Install user RPM packages
+
+- include_role:
+    name: common
+    tasks_from: rpm_packages

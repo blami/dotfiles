@@ -1,0 +1,91 @@
+---
+# RPM packages variables
+
+# NOTE: This is mostly mirror of apt.yml
+rpm_packages:
+  - acl                       # manage filesystem access lists
+  - bind-utils
+  - bcc                       # BPF compiler collection
+  - bpftrace                  # BPF tracing analyzer
+  - bzip2
+  - cpio
+  - cpuid
+  - cryptsetup
+  - curl
+  - dosfstools
+  - fakeroot                  # simulate running as root
+  - gawk
+  - gdisk
+  - gettext
+  - git
+  - git-lfs
+  - gnupg2
+  - groff
+  - gzip
+  - htop
+  - hwdata                    # hardware identification/configuration data
+  - telnet
+  - ipcalc                    # IP address/mask/subnet arithmetics calculator
+  - iproute
+  - iputils
+  - dhcp-client
+  - dhcp-common
+  - jq                        # JSON parser and query language
+  - kmod
+  - less
+  - lftp
+  - liblockfile
+  - logrotate
+  - lsof                      # list open files
+  - ltrace
+  - m4                        # macro processor
+  - make
+  - man-db
+  - mosh                      # mobile shell
+  - mtr                       # traceroute & ping
+  - ncurses-term              # additional terminal type definitions
+  - net-tools                 # netstat & co.
+  - netcat
+  - netperf                   # network speed meter
+  - nftables
+  - nmap
+  - openssh
+  - p7zip
+  - pciutils
+  - powertop                  # power management utility
+  - procps-ng                 # /proc utilities
+  - psmisc
+  - pv                        # progressbar
+  - pwgen
+  - python3
+  - python3-winrm             # required to Ansible-remote to Windows
+  - rclone
+  - rsnapshot
+  - rsync
+  - sensible-utils
+  - ShellCheck                # lint shell scripts
+  - socat
+  - sqlite
+  - squashfs-tools
+  - fuse-sshfs                # mount filesystems over ssh and fuse
+  - strace
+  - stress-ng                 # stress test system (load)
+  - sudo
+  - systemd
+  - systemd-libs
+  - systemd-pam
+  - systemd-timesyncd
+  - tmux
+  - traceroute
+  - wireshark-cli
+  - systemd-udev
+  - unzip
+  - usbutils
+  - wdiff
+  - wget
+  - xdelta
+  - xz
+  - zip
+  - zsh
+
+#rpm_packages_remove:
