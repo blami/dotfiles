@@ -20,6 +20,7 @@ my_user:
     - video
     - plugdev
     - netdev
+    - wheel
     # NOTE: DO NOT put non-system (such as docker) groups here
   umask: "002"
   # Relative to {{ my_user.home }}/.ssh
