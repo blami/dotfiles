@@ -23,7 +23,7 @@
 # BUG: This is not correct and will blow on multi-install systems, but hey...
 - name: Finding WSL Host WINDRIVE mount
   command: >
-    awk '{if($1=="drvfs" && !system("test -d \""$2"/Windows/System\"")) {print $2 ; exit }}' /proc/mounts
+    awk '{if(match($1, /^drvfs.?$/) && !system("test -d \""$2"/Windows/System\"")) {print $2 ; exit }}' /proc/mounts
   register: out
   changed_when: false
   when:
