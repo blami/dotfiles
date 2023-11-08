@@ -1,5 +1,5 @@
 ---
-# Install user APT packages
+# Install devel APT packages
 
 - include_role:
     name: common
