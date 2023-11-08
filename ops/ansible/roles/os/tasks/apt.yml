@@ -10,6 +10,8 @@
     group: root
     mode: 644
     force: true
+  when:
+    - ansible_facts.os_family == "Debian"
 
 - name: Removing Default APT Sources
   file:
@@ -18,6 +20,8 @@
   with_items:
     - "/etc/apt/sources.list"
     - "/etc/apt/sources.list.d/debian.sources"
+  when:
+    - ansible_facts.os_family == "Debian"
 
 - name: Adding Release Priorities
   copy:
@@ -27,6 +31,8 @@
     group: root
     mode: 644
     force: true
+  when:
+    - ansible_facts.os_family == "Debian"
 
 - include_role:
     name: common
@@ -36,6 +42,8 @@
   apt:
     upgrade: "safe"
     autoremove: true
+  when:
+    - ansible_facts.os_family == "Debian"
 
 - include_role:
     name: common
