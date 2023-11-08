@@ -82,10 +82,10 @@ apt_packages:
   - net-tools                 # netstat & co.
   - netcat-openbsd
   - netperf                   # network speed meter
-  - netplan.io
   - nftables
   - nmap
   - openssh-client
+  - openssh-server
   - p7zip
   - pciutils
   - powertop                  # power management utility
@@ -127,7 +127,6 @@ apt_packages:
   - wget
   - whiptail
   - xdelta3
-  - xz-utils
   - xz-utils
   - zip
   - zsh
