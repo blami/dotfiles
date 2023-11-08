@@ -1,9 +1,10 @@
 # Dotfiles
 /.dfgit
 
-# Local configs
+# Local configs and symlinks
 /*_local
 /*_local.*
+.ssh/*_local
 
 # Temporary
 _bak
@@ -37,6 +38,7 @@ _sort
 /.gitcookies
 /.gnupg
 /.netrc
+/.proxy
 /.rnd
 /.ssh/authorized_keys
 /.ssh/config_hosts
@@ -57,6 +59,7 @@ _sort
 /.config/user-dirs.dirs
 /.config/wslu
 /.config/yarn
+/.gitdirs
 /.landscape
 /.lesshst.*
 /.local/bin
@@ -102,3 +105,25 @@ _sort
 !/AppData/Roaming
 !/AppData/Local/nvim
 !/AppData/Roaming/GHISLER
+
+# BB
+/.bbdfgit*
+/bin/bb
+/bb
+/*_bb
+/*_bb.*
+/.ssh/*_bb
+/ops/ansible/bb*
+
+# Trash
+*.bak
+*.log
+*~
+._*
+.DS_Store
+.Spotlight-V100
+.Trashes
+__pycache__
+Desktop.ini
+Thumbs.db
+venv*

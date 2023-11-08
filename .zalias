@@ -138,7 +138,9 @@ alias psef='ps -ef'
 # VCS
 # Git
 alias g='git'
-alias dfgit="git --git-dir=$HOME/.dfgit --work-tree=$HOME" # dfgit for .dfgit
+alias dfgit="git --git-dir=$HOME/.dfgit --work-tree=$HOME -c core.excludesfile=$HOME/.dfgitignore" # dfgit for .dfgit
+
+(( $+commands[docker] )) && alias dk='docker'
 # }}}
 
 
