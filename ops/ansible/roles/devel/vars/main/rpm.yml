@@ -29,6 +29,8 @@ rpm_packages:
   # Various clients
   - postgresql                # postgresql client
   - mysql                     # mysql client
+  # Docker
+  - docker-ce
   - docker-ce-cli             # docker client
   #- kubectl
   #- google-cloud-sdk          # gcloud utility and other Google Cloud tools

@@ -28,7 +28,7 @@ apt_sources:
 apt_packages:
   - cscope
   - gdb                       # GNU debugger
-  - golang                    # Golang
+  #- golang                    # WARN: DO NOT install, using upstream tarball
   - gcc
   - g++
   - libstdc++6                # GNU C++ standard library
@@ -69,8 +69,9 @@ apt_packages:
   # Various clients
   - postgresql-client         # postgresql client
   - mysql-client              # mysql client
+  # Docker
+  - docker-ce
   - docker-ce-cli             # docker client
-  - docker-compose
   - kubectl
   - google-cloud-sdk          # gcloud utility and other Google Cloud tools
   # General Linux stuff
