@@ -5,6 +5,7 @@
 - block:
     - import_tasks: apt.yml
     - import_tasks: rpm.yml
+    - import_tasks: docker.yml
   become: true
   become_user: "root"
   when:
@@ -12,7 +13,7 @@
     - my_facts.has_become_root
 
 - block:
-    - import_tasks: go.yml
+    - import_tasks: golang.yml
     - import_tasks: nodejs.yml
     - import_tasks: python.yml
   become: true

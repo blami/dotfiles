@@ -6,16 +6,14 @@
 [ -d $HOME/.local/go ] || mkdir -p $HOME/.local/go/bin
 GOPATH=$HOME/.local/go
 
-# NOTE: On systems where I don't have root I tend to merge $GOROOT and $GOPATH
 for goroot in "$GOPATH" \
     "$HOME/.local/$OSARCH/go" \
-    "/opt/google/go" \
-    "/cygdrive/c/devel/go"; do
+    "/usr/local/go" \
+    "/opt/go" ; do
 
-    if [ -d "$goroot" ]; then
+    if [ -d "$goroot/bin" ]; then
         pathmunge $goroot/bin after
         export PATH
-        break
     fi
 done
 unset -v goroot

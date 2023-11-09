@@ -1,0 +1,73 @@
+---
+# Setup Go development environment and install packages
+
+# In order to get GOPATH right (as defined in .profile.d/golang.sh) we need to
+# source that file (and hence provide pathmunge() kludge)
+
+
+# Download and install latest upstream Go to /usr/local/go
+# TODO: Figure out architecture from ansible_architecture rather than hardcode
+- name: Downloading Go
+  get_url:
+    url: "https://dl.google.com/go/{{ lookup('url', 'https://go.dev/dl/') | regex_search('go[0-9.]+\\.linux-amd64.tar.gz') }}"
+    dest: /var/cache/ansible/go.tar.gz
+    # Gracious timeout for HTTP proxies
+    timeout: 600
+  register: out_go_download
+  become: true
+  become_user: root
+  when:
+    - my_facts.has_become_root
+
+# NOTE: Check if /usr/local/go exists as condition for unpacking
+- stat:
+    path: /usr/local/go/bin/go
+  register: out
+  when:
+    - my_facts.has_become_root
+- name: Installing Go To /usr/local/go
+  shell:
+    cmd: |
+      [ -d /usr/local/go ] && rm -rf /usr/local
+      tar -xf /var/cache/ansible/go.tar.gz -C /usr/local
+  become: true
+  become_user: root
+  when:
+    - my_facts.has_become_root
+    - not ('skipped' in out_go_download or out.stat.exists) or out_go_download.changed
+
+- name: Detecting Go
+  shell: |
+    umask {{ my_user.umask }}
+    pathmunge() { PATH=$PATH:$1 ; }
+    [ -f {{ my_user.home }}/.profile.d/golang.sh ] && . {{ my_user.home }}/.profile.d/golang.sh
+    go version
+  failed_when: false
+  changed_when: false
+  register: has_go
+
+- name: Installing Go Packages To GOPATH
+  shell:
+    chdir: "{{ my_user.home }}"
+    cmd: |
+      umask {{ my_user.umask }}
+      pathmunge() { PATH=$PATH:$1 ; }
+      [ -f {{ my_user.home }}/.profile.d/golang.sh ] && . {{ my_user.home }}/.profile.d/golang.sh
+      # Install globally (tools that go to GOPATH/bin)
+      go install {{ item }}@latest
+  with_items: "{{ go_packages }}"
+  when:
+    - has_go.rc == 0
+
+# Install golangci-lint latest version to GOPATH
+# NOTE: Can't go install; see https://golangci-lint.run/usage/install/#install-from-source
+- name: Installing golangci-lint To GOPATH
+  shell:
+    chdir: "{{ my_user.home }}"
+    cmd: |
+      umask {{ my_user.umask }}
+      pathmunge() { PATH=$PATH:$1 ; }
+      [ -f {{ my_user.home }}/.profile.d/golang.sh ] && . {{ my_user.home }}/.profile.d/golang.sh
+      curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
+  when:
+    - has_go.rc == 0
