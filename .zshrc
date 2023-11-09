@@ -155,10 +155,18 @@ add-zsh-hook precmd hash_precmd
 [ -r ~/.zbindkey ] && . ~/.zbindkey || builtin true
 # }}}
 
+# {{{ Traps
+# NOTE: Fire ALRM every minute, update prompt
+TMOUT=60
+TRAPALRM() {
+    zle reset-prompt
+}
+# }}}
 
 # {{{ Prompt
 # NOTE: Moved to the end of file to ensure prompt_precmd hook is last
 prompt blami
 # }}}
+
 
 # vim:set ft=zsh:

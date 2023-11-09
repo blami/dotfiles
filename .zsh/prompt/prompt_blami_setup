@@ -34,14 +34,14 @@ autoload -Uz cwdlast cwdellipse
 # TODO: Come up with something better for the entire rprompt?
 RPROMPT=""
 function zle-line-init zle-keymap-select {
-    #case $KEYMAP in
-    #    vicmd)
-    #        RPROMPT="N"
-    #        ;;
-    #    viins|main)
-    #        RPROMPT="I"
-    #       ;;
-    #esac
+    case $KEYMAP in
+        vicmd)
+            RPROMPT="N"
+            ;;
+        viins|main)
+            RPROMPT="I"
+           ;;
+    esac
     zle reset-prompt
     zle && zle -R
 }

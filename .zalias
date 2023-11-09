@@ -37,7 +37,7 @@ alias path='echo -e ${PATH//:/\\n}'
 # Directory shortcuts
 alias src="cd $HOME/src"
 alias doc="cd $HOME/docs"
-alias sb="cd $HOME/ws/sandbox"
+alias sb="cd $HOME/sandbox"
 alias etc='cd /etc'
 
 # Disable globbing for some commands
@@ -75,8 +75,6 @@ fi
 
 # {{{ Text editing
 alias tn='tr -d "\n"'                   # trim newlines
-# Editor
-(( $+commands[nvim] )) && alias vim='nvim'
 alias vi='vim'
 alias v='vim'
 alias nvimdiff='vim -d'
@@ -151,6 +149,8 @@ alias irc='weechat'
 
 # {{{ Typos
 # NOTE These are only typo corrections for typos I do very often
+alias :q='exit'
+alias :wq='exit'
 alias exot='exit'
 alias exut='exit'
 alias ccd='cd'
