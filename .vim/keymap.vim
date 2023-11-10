@@ -89,6 +89,9 @@ noremap                     K               <nop>
 "}}}
 
 
+"Help
+map                         <f1>            :help 
+imap                        <f1>            <esc>:help 
 
 
 "Write using sudo
