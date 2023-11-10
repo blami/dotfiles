@@ -32,14 +32,14 @@ autoload -Uz cwdlast cwdellipse
 # {{{ Vi-mode status
 # NOTE: Need to set RPROMPT for zle-line-init (first prompt)
 # TODO: Come up with something better for the entire rprompt?
-RPROMPT=""
+#RPROMPT=""
 function zle-line-init zle-keymap-select {
     case $KEYMAP in
         vicmd)
-            RPROMPT="N"
+            VIMODE="n"
             ;;
         viins|main)
-            RPROMPT="I"
+            VIMODE="i"
            ;;
     esac
     zle reset-prompt
@@ -162,6 +162,9 @@ prompt_blami_precmd() {
     PS2="%_> "
     PS3="#? "
     PS4="%N %I+ "
+
+    # RPROMPT
+    RPROMPT="${VIMODE}"
 
     # Set window title
     case $TERM in

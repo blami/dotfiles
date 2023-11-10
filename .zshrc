@@ -156,8 +156,8 @@ add-zsh-hook precmd hash_precmd
 # }}}
 
 # {{{ Traps
-# NOTE: Fire ALRM every minute, update prompt
-TMOUT=60
+# Fire ALRM every 10s to update prompt(s)
+TMOUT=10
 TRAPALRM() {
     zle reset-prompt
 }
