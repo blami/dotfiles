@@ -1,10 +1,13 @@
 
 
-# Capitalized, short (50 chars or less) summary
+# <type>[<scope>][!]: Capitalized, short (50 chars or less) summary
 #
 # More detailed explanatory text. Wrap it to about 72 characters. In
 # some contexts, the first line is treated as the subject of an email
 # and the rest of the text as the body.
+#
+# Tokens <type>, <scope> and ! in title are from Conventional Commits
+# (https://www.conventionalcommits.org/).
 #
 # Write your commit message in the imperative: "Fix bug" and not "Fixed
 # bug" or "Fixes bug."
@@ -16,4 +19,8 @@
 # * Typically a hyphen or asterisk is used for the bullet, followed by a
 # single space, with blank lines in between.
 #
+# Trailer: These lines are trailers (see: git-interpret-trailers(1)) and
+#   have <token>: <value> format. The <value> may be split over multiple
+#   lines with each line starting with at least one whitespace.
 # Resolves: #123
+# Signed-off-by: Alice <alice@git.com>
