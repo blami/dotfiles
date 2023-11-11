@@ -24,7 +24,7 @@
 	logf = log --all --follow
 	; Scott Chacon's Git Wrangling
 	lol = log --graph --decorate --pretty=oneline --abbrev-commit
-	lola = lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
 
 	; Diff
 	df = diff
