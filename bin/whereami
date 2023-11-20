@@ -49,7 +49,7 @@ done; shift $((OPTIND-1))
 # NOTE: Can't rely on mtime as some systems don't update it
 # CUR_DATE is array in format: "DoY WoY MoY"
 IFS=" " read -ra CUR_DATE <<<"$(date +'%j %U %m')"
-CACHE=${XDG_CACHE_DIR:-~/.local/cache}/whereami
+CACHE=${XDG_CACHE_HOME:-~/.cache}/whereami
 [ ! -d "$(dirname "$CACHE")" ] && mkdir -p "$(dirname "$CACHE")"
 if [ -r "$CACHE" ] && [ -n "$CACHE_EXP" ] ; then
     OUT=$(head -1 "$CACHE")
