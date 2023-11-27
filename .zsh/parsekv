@@ -1,0 +1,17 @@
+#!/usr/bin/zsh
+# Parse key-value pairs out of delimiter delimited file into $KV assoc array
+# Usage: file [delim]
+
+typeset -A KV=()
+
+parsekv () {
+    local delim=${2:-=}
+    KV=()
+    IFS=$'\n' ; for l in $(<$1); do
+        k=$(printf "%s" ${${${l%%"$delim"*}##[[:space:]]##}%%[[:space:]]##})
+        v=$(printf "%s" ${${${l#*"$delim"}##[[:space:]]##}%%[[:space:]]##})
+        KV[$k]=$v
+    done
+}
+
+parsekv $@
