@@ -107,7 +107,7 @@ alias q='exit'
 alias curl='curl -w "\nstatus=%{http_code} %{redirect_url} size=%{size_download} time=%{time_total} content-type=%{content_type}\n"'
 alias ports='netstat -tulanp'           # show listen ports
 alias httph='curl -I -L'                # show HTTP headers (URL must follow)
-(( $+commands[python3] )) && alias serve='python3 -m http.server' # serve current directory on port 8000
+alias serve='python3 -m http.server'    # serve current directory on port 8000
 
 alias wget='wget -c'                    # resume downloads
 
@@ -138,7 +138,7 @@ alias psef='ps -ef'
 alias g='git'
 alias dfgit="git --git-dir=$HOME/.dfgit --work-tree=$HOME -c core.excludesfile=$HOME/.dfgitignore" # dfgit for .dfgit
 
-(( $+commands[docker] )) && alias dk='docker'
+alias dk='docker'
 # }}}
 
 
