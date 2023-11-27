@@ -1,15 +1,16 @@
 #!/bin/bash
 # Geolocate by external IP
 
-# Output: CONTINENT COUNTRY CITY or exit 1 in case of failure
-# Takes -c d|w|m argument to cache result for day, week or month to speed up
-# query. Without it it will always refresh the cache.
+# Output: COUNTRY or exit 1 in case of failure
+# Arguments:
+#   -c d|w|m        cache result for day, week or month
+#   -d COUNTRY      default to COUNTRY in case of retrieval error
+#
 # NOTE: This is mostly for use in my other scripts such as SSH jumps or VPNs
 # and its not particularly user or debug friendly. 
 
 
 command -v curl >/dev/null 2>&1 || exit 1
-command -v jq >/dev/null 2>&1 || exit 1
 
 http_request() {
     RESP=$(curl -sL -H "$2" -w "\n%{response_code}" "$1") || return 1
@@ -22,24 +23,20 @@ http_request() {
 }
 
 CACHE_EXP=
-while getopts "c:" OPT; do
+DEFAULT=
+while getopts "c:d:" OPT; do
     case "$OPT" in
     c)
         case "$OPTARG" in
-        d)
-            CACHE_EXP=0
-            ;;
-        w)
-            CACHE_EXP=1
-            ;;
-        m)
-            CACHE_EXP=2
-            ;;
+        d)  CACHE_EXP=0 ;;
+        w)  CACHE_EXP=1 ;;
+        m)  CACHE_EXP=2 ;;
         *)
             >&2 echo "$(basename "$0"): -c takes only d,w or m"
             exit 1
-        esac
-        ;;
+        esac ;;
+    d)
+        DEFAULT=$OPTARG ;;
     \?)
         exit 1 ;;
     esac
@@ -60,11 +57,9 @@ if [ -r "$CACHE" ] && [ -n "$CACHE_EXP" ] ; then
     fi
 fi
 
-# Get actual GEO information
-IP=$(http_request "https://ifconfig.me") || exit 1
-GEO=$(http_request "https://tools.keycdn.com/geo.json?host=$IP" "User-Agent: keycdn-tools:https://$IP") || exit 1
-
-OUT=$(jq -r ".data.geo | [.continent_code,.country_code,.city] | join(\" \")" <<< "$GEO") || exit 1
+# Get current country code from ifconfig.io
+OUT=$(http_request "https://ifconfig.io/country_code") || [ -n "$DEFAULT" ] || exit 1
+OUT=${OUT:-$DEFAULT}
 [ -z "$OUT" ] && exit 1
 
 # Write to cache and output
