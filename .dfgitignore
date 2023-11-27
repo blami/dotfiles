@@ -37,6 +37,7 @@ _sort
 /.config/weechat/certs
 /.gitcookies
 /.gnupg
+/.krb5
 /.netrc
 /.proxy
 /.rnd

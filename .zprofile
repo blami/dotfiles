@@ -66,8 +66,16 @@ export TMP TMPDIR
 # }}}
 
 
+# {{{ Kerberos directory
+[ ! -d $HOME/.krb5/cc ] && mkdir -p $HOME/.krb5/cc
+chmod 700 $HOME/.krb5 $HOME/.krb5/cc
+KRB5CCNAME=DIR:$HOME/.krb5/cc/
+export KRB5CCNAME
+# }}}
+
+
 # {{{ Misc environment
-(( $+commands[nvim] )) && EDITOR=nvim || EDITOR=vim
+EDITOR=vim
 VISUAL=$EDITOR
 PAGER=less
 LESSHISTFILE=-
@@ -83,11 +91,22 @@ MYFULLNAME='Ondrej Balaz'
 MYEMAIL='blami@blami.net'
 export MYFULLNAME MYEMAIL
 
-# Debian/Ubuntu development environment
+# Debian development environment
 DEBFULLNAME='Ondrej Balaz'
 DEBEMAIL='blami@blami.net'
-UBUMAIL='Ondrej Balaz <blami@blami.net>'
-export DEBFULLNAME DEBEMAIL UBUMAIL
+export DEBFULLNAME DEBEMAIL
+
+# CPU cores (useful with make -j)
+#CPUS=1
+#case "$OS" in
+#    linux)
+#        CPUINFO=$(</proc/cpuinfo)
+#
+#
+#        CPUS=$(awk '/^cpu cores/{print $4; exit}' /proc/cpuinfo)
+#        ;;
+#esac
+#export CPUS
 
 # Color output on MacOS X
 CLICOLOR=1
