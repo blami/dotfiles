@@ -222,7 +222,7 @@ if $SUDO_USER !=# '' && $USER !=# $SUDO_USER
     set noswapfile
     set nobackup
     set noundofile
-    set viminfo='NONE'
+    set viminfo="nNONE"
 endif
 
 "Loading Files
