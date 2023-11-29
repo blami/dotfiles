@@ -6,18 +6,19 @@
 # |     .- date in format DD.MM
 # |     | .- day of the week mtwhfsu (weekend is red)
 # |     | |
-# |     | |   .- user
-# |     | |   |   .- @ (@> for SSH connection)
-# |     | |   |   |.- host (HOSTNICK if set)
-# |     | |   |   ||   .- host HOSTOK
-# |     | |   |   ||   |
-# |     | |   |   ||   |  .- environment (.env)
-# |     | |   |   ||   |  |     .- symlink
-# |     | |   |   ||   |  |     |  .- shortened path
-# |     | |   |   ||   |  |     |  |       .- vcs branch (red if dirty)
-# v     v v   v   vv   v  v     v  v       v
-# 23:55 31w12 user@host● [env:][@]~..di/r[ master]
-# [255 ][&2 ][@]dir $ _                                                     I
+# |     | |   .- username
+# |     | |   |    .--- Kerberos ticket (if KRB5P is set to principal)
+# |     | |   |    | .- @ (@> for SSH connection)
+# |     | |   |    | |.- host (HOSTNICK if set)
+# |     | |   |    | ||   .- host HOSTOK
+# |     | |   |    | ||   |
+# |     | |   |    | ||   |  .- environment (.env)
+# |     | |   |    | ||   |  |     .- symlink
+# |     | |   |    | ||   |  |     |  .- shortened path
+# |     | |   |    | ||   |  |     |  |       .- vcs branch (red if dirty)
+# v     v v   v    v vv   v  v     v  v       v
+# 23:55 31w12 user[^]@host● [env:][@]~..di/r[ master]
+# [255 ][&2 ][@]dir $ _                                                     i
 # ^     ^    ^  ^   ^                                                       ^
 # |     |    |  |   `- pound (EUID=0 is #)                                  |
 # |     |    |  `- last path component                                      |
@@ -32,14 +33,14 @@ autoload -Uz cwdlast cwdellipse
 # {{{ Vi-mode status
 # NOTE: Need to set RPROMPT for zle-line-init (first prompt)
 # TODO: Come up with something better for the entire rprompt?
-#RPROMPT=""
+RPROMPT="i"
 function zle-line-init zle-keymap-select {
     case $KEYMAP in
         vicmd)
-            VIMODE="n"
+            RPROMPT="n"
             ;;
         viins|main)
-            VIMODE="i"
+            RPROMPT="i"
            ;;
     esac
     zle reset-prompt
@@ -87,7 +88,7 @@ prompt_blami_precmd() {
     esac
     # TODO: Make delimiter . if alarm set?
     local dlm=':'
-    PS1+="%D{%H}${dlm}%D{%M} %D{%d}${dow}%D{%m} " #"
+    PS1+="[%D{%H}${dlm}%D{%M} %D{%d}${dow}%D{%m} " #"
 
     # User and hostname
     # -----------------
@@ -105,13 +106,15 @@ prompt_blami_precmd() {
         *) host_ok="●" ;;
     esac
     local host_os="${OS:0:1:u}"
-    PS1+="%n${host}${host_ok} " #"
-
-    # Env
-    # ---
-    if [ ! -z $MYENV ]; then
-        PS1+="$MYENV:"
-    fi
+    local user="%n"
+    # Kerberos ticket check
+    (( $+commands[klist] )) && [ -n "$KRB5P" ] && {
+        # NOTE: Read klist -l output from 3rd line and look for principal
+        local IFS=$'\n' ; for l in $(klist -l 2>/dev/null | tail +3); do
+            [[ "$l" =~ "^$KRB5P" && ! "$l" =~ "\(Expired\)$" ]] && user=$user^
+        done
+    }
+    PS1+="${user}${host}${host_ok}] " #"
 
     # Working directory
     # -----------------
@@ -126,7 +129,6 @@ prompt_blami_precmd() {
     if [ $COLUMNS -gt 80 ]; then
         # Environment (.env)
         local env=
-
         # Current working directory elipsized
         local cwd="${cwd_ln}$(cwdellipse)"
 
@@ -162,9 +164,6 @@ prompt_blami_precmd() {
     PS2="%_> "
     PS3="#? "
     PS4="%N %I+ "
-
-    # RPROMPT
-    RPROMPT="${VIMODE}"
 
     # Set window title
     case $TERM in
