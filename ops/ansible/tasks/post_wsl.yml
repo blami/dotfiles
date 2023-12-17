@@ -142,8 +142,8 @@
     ansible_become_password: null
     groups: windows
   when:
-    - my_facts.can_winrm
     - my_facts.is_wsl
+    - my_facts.can_winrm
   tags: localwinrm
 - set_fact:
     my_facts: >
@@ -158,7 +158,7 @@
   delegate_facts: true
   delegate_to: "{{ my_facts.wsl_hostip }}"
   when:
-    - my_facts.can_winrm
-    - my_facts.has_my_user
     - my_facts.is_wsl
+    - my_facts.has_my_user
+    - my_facts.can_winrm
   tags: localwinrm
