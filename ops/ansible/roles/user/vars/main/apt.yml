@@ -4,7 +4,7 @@
 apt_sources: []
 
 apt_packages:
-  - apcalc
+  #- apcalc
   - mutt                      # mail client
   - notmuch                   # mail indexer
   - offlineimap3              # mail syncing software
