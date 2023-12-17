@@ -13,6 +13,8 @@
     password: "{{ '' | password_hash('sha512') }}"
     update_password: on_create
   register: out
+  when:
+    - not my_facts.is_ldap_my_user
 
 # NOTE: If user was just created force password change on next login
 - name: Forcing User {{ my_user.username }} To Change Password
@@ -28,6 +30,7 @@
     append: true
   with_items: "{{ my_user.groups }}"
   when:
+    - not my_facts.is_ldap_my_user
     - item in ansible_facts.getent_group
 
 - name: Refreshing User Facts
@@ -42,3 +45,5 @@
         "has_my_user": true,
         "has_become_my_user": true
       }) }}
+  when:
+    - not my_facts.is_ldap_my_user
