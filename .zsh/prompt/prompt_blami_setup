@@ -93,10 +93,8 @@ prompt_blami_precmd() {
     # User and hostname
     # -----------------
     local host=${HOSTNICK:-$HOST}
-    local title_host=$host
     if [ ! -z $SSH_CONNECTION ]; then
         host="@>${host}"
-        title_host="@${title_host}"
     else
         host="@${host}"
     fi
@@ -168,7 +166,7 @@ prompt_blami_precmd() {
     # Set window title
     case $TERM in
         *xterm*|*rxvt)
-            print -Pn "\e]0;SH: [${title_host}] ${cwd_ln}${cwd_name}\a"
+            print -Pn "\e]0;SH: [${host#@}] ${cwd_ln}${cwd_name}\a"
             ;;
     esac
 }
