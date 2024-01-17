@@ -1,11 +1,8 @@
 # WSL related environment
 # NOTE: This uses pathmunge
+# NOTE: This also uses wslpath
 
-if [ ! -z "$WSL" ]; then
-
-# Export some useful variables
-WINUSER=
-WINHOME=
+[ -n "$WSL" ] || return
 
 # Add ~/bin/wsl to PATH
 [ -d ~/bin/wsl ] && pathmunge ~/bin/wsl after
@@ -33,7 +30,25 @@ for dir in "/mnt/c/Devel/python3" \
 done
 
 unset -v dir
-fi
+
+# Export some useful variables
+typeset -A winenv
+winenv=($(powershell.exe -Command 'Write-Host `
+    "OS" $env:OS `
+    "OSVER" $([System.Environment]::OSVersion).Version.Major `
+    "COMPUTERNAME" $env:COMPUTERNAME `
+    "USERNAME" $env:USERNAME `
+    "USERDOMAIN" $env:USERDOMAIN `
+    "USERPROFILE" $env:USERPROFILE
+    '))
+
+WINUSER=${winenv[USERNAME]}
+WINDOMAIN=${winenv[USERDOMAIN]}
+WINHOME=$(wslpath -u "${winenv[USERPROFILE]}")
+WINVER=${winenv[OSVER]}
+export WINUSER WINDOMAIN WINHOME WINVER
+
+unset -v winenv
 
 
 # vim:set ft=zsh:
