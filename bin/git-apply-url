@@ -1,4 +1,4 @@
-#!/bin/bash -xe
+#!/bin/bash -e
 # Apply patch from given URL
 
 wget -O - -q --no-check-certificate | patch -p1
