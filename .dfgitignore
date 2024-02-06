@@ -30,6 +30,9 @@ _sort
 /src
 /videos
 
+# Not using
+/.bash*
+
 # Sensitive
 /.aws
 /.azure
@@ -91,6 +94,7 @@ _sort
 !/.vim/spell/*.add
 /.vim/swap/*
 !/.vim/swap/.gitkeep
+/.vim/pack/*
 /.wget-hsts
 /.yarnrc
 /.*_history*
@@ -109,6 +113,7 @@ _sort
 
 # BB
 /.bbdfgit*
+/BB*
 /bin/bb
 /bb
 /*_bb
