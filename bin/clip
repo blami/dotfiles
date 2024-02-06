@@ -1,18 +1,12 @@
-#!/bin/bash -e
-# Interact with OS clipboard
+#!/bin/bash -ue
+# Interact with OS clipboard using OSC52 escape sequence
 # Copyright (c) Ondrej Balaz. Licensed under UNLICENSE.
 
+PROG="$(basename "$0")"
 HELP=$(cat <<EOF
-$0 - Interact with OS clipboard
-Usage: $0 -p        paste contents of OS clipboard to stdout
-       $0 -c        copy stdin to OS clipboard
-
-For various desktop environments different tools to interact with clipboard are
-required to be installed and in \$PATH:
-* X11           - xclip
-* Wayland       - wl-clipboard 
-* Apple OS X    - pbpaste, pbcopy
-* WSL           - powershell.exe
+$PROG - Interact with OS clipboard using OSC52 escape
+Usage: $PROG -p             paste contents of OS clipboard to stdout
+       $PROG -c [ARG...]    copy stdin (or ARG) to OS clipboard
 
 This script depends on \$OSTYPE for OS detection, if your bash doesn't provide
 it set it manually.
@@ -22,66 +16,6 @@ Download and bug-reports: https://github.com/blami/dotfiles
 EOF
 )
 
-DE=
-case "$OSTYPE" in
-    linux*)
-        # In case of Linux attempt to use currently running desktop environment
-        # (either X11 or Wayland session); If session runs in WSL use Windows
-        # clipboard even if in session or tmux.
-        DE=$XDG_SESSION_TYPE
-        [ ! -z "$WSL_DISTRO_NAME" ] && DE=wsl
-        ;;
-    darwin*)
-        DE=osx
-        ;;
-    # TODO: *bsd?
-esac
-
-# X11 using xclip
-x11() {
-    command -v xclip || exit 1
-    case "$1" in
-        "c") xclip -sel clipboard -i ;;
-        "p") xclip -sel clipboard -o ;;
-    esac
-}
-
-# Wayland using wl-clipboard commands
-wayland() {
-    command -v wl-copy || exit 1
-    command -v wl-paste || exit 1
-    case "$1" in
-        "c") wl-copy ;;
-        "p") wl-paste ;;
-    esac
-}
-
-# Windows Subsystem for Linux using powershell.exe (Set|Get)-Clipboard
-wsl() {
-    command -v powershell.exe || exit 1
-    case "$1" in
-        "c")
-            local in=$(cat)
-            local x=$(powershell.exe -Command "\"$in\" | Set-Clipboard")
-            ;;
-        "p") 
-            #(powershell.exe -Command \
-            #    "Write-Host (Get-Clipboard -Raw).Replace(\"\`r\`n\", \"\`n\")")
-            echo "$out"
-            ;;
-    esac
-}
-
-# Apple OS X using pbcopy and pbpaste commands
-osx() {
-    command -v pbcopy || exit 1
-    command -v pbpaste || exit 1
-    case "$1" in
-        "c") pbcopy ;;
-        "p") pbpaste ;;
-    esac
-}
-
 # Process arguments
 ACTION=
 while getopts "hpc" OPT; do
@@ -90,8 +24,8 @@ while getopts "hpc" OPT; do
         echo "$HELP"; exit 0
         ;;
     c|p)
-        if [ ! -z "$ACTION" ]; then
-            >&2 echo "$0: -p and -c are mutually exclusive" ; exit 1
+        if [ -n "$ACTION" ]; then
+            >&2 echo "$PROG: -p and -c are mutually exclusive" ; exit 1
         fi
         ACTION=$OPT
         ;;
@@ -101,8 +35,20 @@ while getopts "hpc" OPT; do
     esac
 done ; shift $((OPTIND-1))
 if [ -z "$ACTION" ]; then
-    >&2 echo "$0: -p or -c expected" ; exit 1
+    >&2 echo "$PROG: -p or -c expected" ; exit 1
 fi
 
-# Run proper command for given desktop environment; if not detected just exit
-[ ! -z "$DE" ] && $DE $ACTION || exit 1
+case "$ACTION" in
+    c)
+        [ $# -eq 0 ] && TEXT=$(</dev/stdin) || TEXT="$*"
+        # shellcheck disable=SC1003
+        printf '\033]52;c;%s\033\\' "$(base64 <<< "$TEXT")"
+        ;;
+
+    p)
+        # TODO: Windows Terminal does not support paste for security reasons
+        # see: https://github.com/microsoft/terminal/issues/9479
+        #TEXT=$(printf '\033]52;c;?\033\\')
+        exit 2
+        ;;
+esac
