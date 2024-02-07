@@ -1,0 +1,39 @@
+#!/bin/bash -e
+# Change author and commiter in the git repository
+# Usage: git change-author "Old <old@email.com>" "New <new@email.com>"
+
+[ $# -ne 2 ] && {
+    >&2 echo "usage: change-author \"Old <old@email.com>\" \"New <new@email.com>\""
+    exit 1
+}
+
+# NOTE: extglob is needed for *( ).
+shopt -s extglob
+PARSE_NAME=
+PARSE_EMAIL=
+parse() {
+    [[ $1 =~ ^([^<]+)[:space:]*\<([^@]+@[^>]+)\>.*$ ]] || return 1
+    PARSE_NAME="${BASH_REMATCH[1]%%*( )}"
+    PARSE_EMAIL="${BASH_REMATCH[2]}"
+    return 0
+}
+
+parse "$1" || exit 2
+OLD_NAME=$PARSE_NAME
+OLD_EMAIL=$PARSE_EMAIL
+
+parse "$2" || exit 2
+NEW_NAME=$PARSE_NAME
+NEW_EMAIL=$PARSE_EMAIL
+
+# Danger zone...
+FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch -f --env-filter "
+    if [ \"\$GIT_COMMITTER_EMAIL\" = \"$OLD_EMAIL\" ]; then
+        export GIT_COMMITTER_NAME=\"$NEW_NAME\"
+        export GIT_COMMITTER_EMAIL=\"$NEW_EMAIL\"
+    fi
+    if [ \"\$GIT_AUTHOR_EMAIL\" = \"$OLD_EMAIL\" ]; then
+        export GIT_AUTHOR_NAME=\"$NEW_NAME\"
+        export GIT_AUTHOR_EMAIL=\"$NEW_EMAIL\"
+    fi
+" --tag-name-filter cat -- --branches --tags
