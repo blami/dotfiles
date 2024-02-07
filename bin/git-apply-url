@@ -1,4 +1,10 @@
 #!/bin/bash -e
 # Apply patch from given URL
+# Usage: git apply-url https://url/patch.diff
+
+[ $# -ne 1 ] && {
+    >&2 echo "usage: apply-url https://url/patch.diff"
+    exit 1
+}
 
 wget -O - -q --no-check-certificate | patch -p1
