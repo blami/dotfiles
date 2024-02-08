@@ -19,7 +19,7 @@ parse() {
 }
 
 parse "$1" || exit 2
-OLD_NAME=$PARSE_NAME
+#OLD_NAME=$PARSE_NAME
 OLD_EMAIL=$PARSE_EMAIL
 
 parse "$2" || exit 2
