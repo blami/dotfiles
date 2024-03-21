@@ -128,7 +128,6 @@ alias t='tmux'
 alias ta='tmux a'
 
 # System commands (systemctl, etc.)
-alias psef='ps -ef'
 # }}}
 
 

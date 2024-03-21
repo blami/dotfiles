@@ -1,0 +1,28 @@
+#!/usr/bin/zsh
+# Grep through list of running processes
+
+# Usage: psef name[ name...]
+
+psef () {
+    RE=\.\*
+    if [ $# -ne 0 ]; then
+        RE=
+        for N in $@; do
+            [ -z $RE ] && RE=$N || RE=$RE\|$N
+        done
+        RE=\($RE\)
+    fi
+
+    H=
+    ps -e -o user,pid,ppid,stime,time,c,ni,args | while read -r p ; do
+        # print header
+        [ -z $H ] && { echo $p ; H=1 ; continue }
+        # see if line matches
+        pa=(${=p})
+        if [[ ${pa[8]} =~ $RE ]]; then
+            echo $p
+        fi
+    done
+}
+
+psef $@
