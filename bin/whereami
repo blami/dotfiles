@@ -9,7 +9,6 @@
 # NOTE: This is mostly for use in my other scripts such as SSH jumps or VPNs
 # and its not particularly user or debug friendly. 
 
-
 command -v curl >/dev/null 2>&1 || exit 1
 
 http_request() {
