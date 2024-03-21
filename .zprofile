@@ -67,9 +67,9 @@ export TMP TMPDIR
 
 
 # {{{ Kerberos directory
-[ ! -d $HOME/.krb5/cc ] && mkdir -p $HOME/.krb5/cc
-chmod 700 $HOME/.krb5 $HOME/.krb5/cc
-KRB5CCNAME=DIR:$HOME/.krb5/cc/
+[ ! -d $HOME/.krb5 ] && mkdir -p $HOME/.krb5
+chmod 700 $HOME/.krb5
+KRB5CCNAME=FILE:$HOME/.krb5/cc
 export KRB5CCNAME
 # }}}
 
