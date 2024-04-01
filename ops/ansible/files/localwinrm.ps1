@@ -1,18 +1,22 @@
-# This is re-runable script that sets up WinRM with client certificate 
+# This is re-runable script that sets up WinRM with client certificate
 # authentication and HTTPS self-signed certificate; so that $User can remote in
 # from $Firewall networks.
 
+# Reset
+# winrm invoke Restore winrm/Config
+# TODO: remove firewall rule
+# TODO: remove certificates
+# net stop winrm
+
 # Expectations when remoting from WSL to hosting Windows are:
-# - $User is actually the same user as one running Ansible
 # - $Firewall is set to 127.0.0.1,172.0.0.0/8 (second item is for WSL2)
 # - Every time client certificate mapping is required user has to input 
 #   password interactively.
 
 # Parameters
 Param (
-    [string]$User = $env:USERNAME,                          # username
     [string]$CertDir = -join($env:USERPROFILE, "\.winrm"),  # certs location
-    [string]$Firewall = "127.0.0.1,172.0.0.0/8"             # source IPs
+    [string]$Firewall = "127.0.0.1,172.0.0.1/8"             # source IPs
 )
 
 # Error handling
@@ -48,6 +52,7 @@ Function Setup-Listener {
             -CertStoreLocation cert:\LocalMachine\My `
             -Password (New-Object -TypeName System.Security.SecureString)
     }
+    Write-Host "server thumbprint", $Cert.Thumbprint
 
     # Setup WinRM service
     if (!(Get-Service "WinRM")) {
@@ -85,7 +90,7 @@ Function Setup-Listener {
             -ValueSet @{Hostname="localhost"; CertificateThumbprint=$Cert.Thumbprint}
     }
 
-    # Disable all auth methods but ClientCertificate
+    # Disable Basic and enable Certificate
     Set-Item -Path WSMan:\localhost\Service\Auth\Basic -Value $false
     Set-Item -Path WSMan:\localhost\Service\Auth\Certificate -Value $true
 }
@@ -115,16 +120,33 @@ Function Setup-Firewall {
     }
 }
 
-# Set up given $User as certificate authenticated WinRM user
+# Set up Ansible user as certificate authenticated WinRM user
 Function Setup-User {
     Write-Host "setting up WinRM user"
 
-    # Check if user exists
+    # Generate random password
+    $Password = -join ((48..57) + (65..90) + (97..122) | Get-Random -Count 16 | ForEach-Object {[char]$_})
+    $Credential = [PSCredential]::New(
+        "Ansible",
+        $(ConvertTo-SecureString -AsPlainText -Force $Password))
+    Write-Host "user: Ansible, password: $Password"
+
+    # Create user
     try {
-        $AnsibleUser = Get-LocalUser $User
+        # Reset password to new one if user already exists
+        Get-LocalUser -Name "Ansible" | Set-LocalUser -Password $Credential.Password
     } catch {
-        Write-Error "user $User does not exist"
+        # Create new user
+        New-LocalUser `
+            -Name $Credential.UserName `
+            -Description "Ansible WinRM User" `
+            -Password $Credential.Password `
+            -PasswordNeverExpires `
     }
+    # Add user to Administrators group
+    # BUG: There's bug in Get-LocalGroupMember (see https://github.com/PowerShell/PowerShell/issues/2996)
+    #if (Get-LocalGroupMember "Administrators").Name -contains $user
+    Add-LocalGroupMember -Group "Administrators" -Member $Credential.UserName -ErrorAction SilentlyContinue
 
     # Load, verify and add client certificate to store if needed.
     $CertPath = -join($CertDir, "\localclient.crt")
@@ -149,27 +171,15 @@ Function Setup-User {
             $Store.Close()
         }
     }
+    Write-Host "client thumbprint", $Cert.Thumbprint
 
     # Map client certificate to user
     $HasCert = Get-ChildItem -Path WSMan:\localhost\ClientCertificate | Where-Object { `
-        $_.Keys -like "Subject=$($AnsibleUser.Name)@localhost" -and `
+        $_.Keys -like "Subject=Ansible@localhost" -and `
         $_.Keys -like "Issuer=$($Cert.Thumbprint)" }
     if(!$HasCert) {
-        # Obtain user password
-        Write-Host "mapping client certificate to user"
-        $PasswordPrompt = "password"
-        if ($AnsibleUser.PrincipalSource -eq "MicrosoftAccount") {
-            $PasswordPrompt = "Microsoft Account password"
-        }
-
-        $Credential = Get-Credential `
-            -Message "Enter $PasswordPrompt to map client certificate" `
-            -Username $AnsibleUser.Name
-        if (-not $Credential) {
-            Write-Error "unable to obtain user credential"
-        }
         New-Item -Path WSMan:\localhost\ClientCertificate `
-            -Subject "$($AnsibleUser.Name)@localhost" `
+            -Subject "$($Credential.UserName)@localhost" `
             -URI * `
             -Issuer $Cert.Thumbprint `
             -Credential $Credential `
