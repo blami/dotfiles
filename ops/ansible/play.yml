@@ -4,7 +4,6 @@
   hosts: linux
   pre_tasks:
     - { import_tasks: tasks/pre_linux.yml, tags: always }
-    - { import_tasks: tasks/pre_lan.yml, tags: always }
     - { import_tasks: tasks/pre_wsl.yml, tags: always }
     - { import_tasks: tasks/pre_bitwarden.yml, tags: always }
     - { import_tasks: tasks/pre_debug.yml, tags: [debug, never] }
@@ -20,7 +19,6 @@
   hosts: windows
   pre_tasks:
     - { import_tasks: tasks/pre_windows.yml, tags: always }
-    - { import_tasks: tasks/pre_lan.yml, tags: always }
     - { import_tasks: tasks/pre_bitwarden.yml, tags: always }
     - { import_tasks: tasks/pre_debug.yml, tags: [debug, never] }
   post_tasks:
