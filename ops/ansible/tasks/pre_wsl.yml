@@ -1,5 +1,5 @@
 ---
-# WSL detection and checks
+# WSL checks
 
 # NOTE: It is OK to use env lookups here as WSL runs locally.
 - name: Detecting WSL
@@ -71,6 +71,7 @@
   when:
     - my_facts.is_wsl
 
+# NOTE: Paths have following meaning
 # wsl_unc_playbook_dir    - Windows UNC path to playbook itself
 # wsl_unc_home_dir        - Windows UNC path to WSL (Linux) home directory
 # wsl_unc_userprofile_dir - Windows UNC path to Windows home directory
@@ -120,5 +121,4 @@
       }) }}
   when:
     - my_facts.is_wsl
-
 
