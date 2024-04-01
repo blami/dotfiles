@@ -24,6 +24,32 @@
   when:
     - my_facts.is_wsl
 
+- name: Installing wsl.conf
+  template:
+    src: "{{ role_path }}/files/wsl.conf.j2"
+    dest: "/etc/wsl.conf"
+    owner: root
+    group: root
+    mode: 644
+    force: true
+  register: out_wsl_wslconf
+  when:
+    - my_facts.is_wsl
+
+- name: Installing .wslconfig
+  template:
+    src: "{{ role_path }}/files/wslconfig.j2"
+    dest: "/etc/wsl.conf"
+    owner: root
+    group: root
+    mode: 644
+    force: true
+  register: out_wsl_wslconfig
+  when:
+    - my_facts.is_wsl
+
+# TODO: Restart here!, maybe use https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_handlers.html
+
 - name: Installing WSLInterop.conf to binfmt.d
   file:
     path: /etc/binfmt.d
@@ -38,6 +64,15 @@
   register: out_wsl_wslinterop
   when:
     - my_facts.is_wsl
+
+- name: Enabling systemd-binfmt Unit
+  systemd:
+    name: systemd-binfmt
+    enabled: true
+    state: started
+  when:
+    - my_facts.is_wsl
+    - my_facts.has_systemd
 
 - name: Installing WSL Scripts
   copy:
@@ -79,18 +114,6 @@
     - my_facts.has_systemd
     - my_facts.is_wsl
 
-- name: Installing wsl.conf
-  template:
-    src: "{{ role_path }}/files/wsl.conf.j2"
-    dest: "/etc/wsl.conf"
-    owner: root
-    group: root
-    mode: 644
-    force: true
-  register: out_wsl_wslconf
-  when:
-    - my_facts.is_wsl
-
 - name: Unmasking systemd-logind
   systemd:
     name: systemd-logind
@@ -110,6 +133,7 @@
     - my_facts.has_systemd
     - my_facts.is_wsl
 
+# TODO: Make this better to restart right after systemd is enabled!
 # Terminate WSL to force picking up changes made above
 - name: Restarting WSL
   command: "/mnt/c/Windows/System32/wsl.exe -t {{ my_facts.wsl_distro }}"
