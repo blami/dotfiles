@@ -1,5 +1,6 @@
-#!/bin/bash -xe
+#!/bin/sh -e
 # Show all branches that are already merged
+# Usage: git merged-branches
 
 for branch in $(git branch -r --merged | grep -v HEAD)
 do
