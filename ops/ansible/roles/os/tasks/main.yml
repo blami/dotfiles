@@ -21,11 +21,10 @@
 
 # Windows
 - block:
-    - import_tasks: windows_choco.yml     # install essentials
-    - import_tasks: windows_debloat.yml   # de-bloat Windows
-    - import_tasks: windows_ntp.yml
-    - import_tasks: windows_network.yml
-    - import_tasks: windows_power.yml
+    #- import_tasks: windows_debloat.yml   # de-bloat Windows
+    #- import_tasks: windows_ntp.yml
+    #- import_tasks: windows_network.yml
+    #- import_tasks: windows_power.yml
   # WARN: 'become' to user itself is required to allow credential delegation;
   # user is expected to be an Administrator.
   become: true

@@ -24,7 +24,6 @@
 
 # Windows
 - block:
-    - import_tasks: windows_choco.yml
   # WARN: 'become' to user itself is required to allow credential delegation;
   # user is expected to be an Administrator.
   become: true
