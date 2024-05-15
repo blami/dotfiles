@@ -1,9 +1,36 @@
 ---
-# Common variables
+# Variables for all host groups.
 
-dotfiles_repo: blami/dotfiles.git
-ntp_server: time.cloudflare.com
+# User
+# NOTE: This is shared by both Linux and Windows tasks.
+my_user:
+  username: "blami"
+  gecos: "Ondrej Balaz,,,,blami@blami.net"
+  shell: "/usr/bin/zsh"
+  home: "/home/blami"
+  groups:
+    - adm
+    - dialout
+    - cdrom
+    - floppy
+    - audio
+    - dip
+    - video
+    - plugdev
+    - netdev
+    - wheel
+  umask: "002"
+  win_username: "blami"
+  win_domain_username: "LOCALDOMAIN\\blami"
 
-my_lan:
-  router: router.lan.blami.net
-  printer: printer.w.lan.blami.net
+
+# Facts
+# An empty dictionary where custom facts are gathered.
+my_facts:
+  has_my_user: false
+  has_become_my_user: false
+  has_become_root: false
+  is_administrator: false
+  is_msaccount: false
+  is_ldap_account: false
+  is_my_user: false

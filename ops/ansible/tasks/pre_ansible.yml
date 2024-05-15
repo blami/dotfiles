@@ -1,0 +1,42 @@
+---
+# Setup Ansible.
+
+- debug:
+    msg: "{{ vars }}"
+
+# - name: "Creating ~/.ansible/cache"
+#   file:
+#     path: "~/.ansible/cache"
+#     mode: 700
+#     state: directory
+#     recurse: true
+#   when:
+#     - ansible_facts.system in ("Linux",)
+#   # NOTE: delegate to self and the actual inventory_hostname to have the cache
+#   # directory created both on control node and managed node. delegate_facts is
+#   # needed if control node is Linux and managed node Windows...
+#   delegate_to: "{{ item }}"
+#   delegate_facts: true
+#   with_items: "{{ ['localhost', inventory_hostname] | unique }}"
+# - set_fact:
+#     my_facts: >
+#       {{ my_facts | xcombine({
+#         "control_cache_dir": "~/.ansible/cache",
+#         "managed_cache_dir": "~/.ansible/cache",
+#       }) }}
+# 
+# # NOTE: No need to delegate as only managed node can be Windows and control
+# # node would be handled by above in that case.
+# - name: "Creating %TEMP%/ansible_cache"
+#   win_file:
+#     path: "%TEMP%/ansible_cache"
+#     state: directory
+#   when:
+#     - ansible_facts.system in ("Windows", )
+# - set_fact:
+#     my_facts: >
+#       {{ my_facts | xcombine({
+#         "managed_cache_dir": "~/.ansible/cache",
+#       }) }}
+#   when:
+#     - ansible_facts.system in ("Windows", )

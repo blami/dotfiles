@@ -1,0 +1,69 @@
+---
+# Check user and become rights on target system and set my_facts.
+
+# Linux
+- block:
+  - name: "Checking If User {{ my_user.username }} Exists"
+    getent:
+      database: "passwd"
+      key: "{{ my_user.username }}"
+    changed_when: false
+    failed_when: false
+  - set_fact:
+      my_facts: >
+        {{ my_facts | xcombine({
+          "has_my_user": true if "getent_passwd" in vars and my_user.username in getent_passwd else false
+        }) }}
+
+  # NOTE: This is to support local "ansible" user with enough privileges to
+  # sudo root if needed.
+  - name: "Checking If User Running Ansible Is {{ my_user.username }}"
+    set_fact:
+      my_facts: >
+        {{ my_facts | xcombine({
+          "is_my_user": ansible_user_id == my_user.username
+        }) }}
+
+  - name: "Checking Become {{ my_user.username }}"
+    command:
+      cmd: "/bin/true"
+    become: true
+    become_user: "{{ my_user.username }}"
+    register: out
+    ignore_errors: true
+  - set_fact:
+      my_facts: >
+        {{ my_facts | xcombine({
+          "has_become_my_user": false if ("failed" in out and out.failed) else true
+        }) }}
+
+  - name: "Checking Become root"
+    command:
+      cmd: "/bin/true"
+    become: true
+    become_user: "root"
+    register: out
+    ignore_errors: true
+  - set_fact:
+      my_facts: >
+        {{ my_facts | xcombine({
+          "has_become_root": false if ("failed" in out and out.failed) else true
+        }) }}
+
+  # Permission checks
+  #- name: "Checking Permissions"
+  #  fail:
+  #    msg: >
+  #      Ansible has not enough permissions to continue playbook.
+  #
+  #      This playbook can run with or without permission to become 'root'
+
+  when:
+    - ansible_facts.system in ("Linux",)
+
+
+# Windows
+- name: "Checking Become {{ my_user.win_domain_username }}"
+  debug: msg="TODO"
+  when:
+    - ansible_facts.system in ("Windows",)

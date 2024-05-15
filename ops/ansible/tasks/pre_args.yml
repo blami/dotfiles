@@ -1,0 +1,17 @@
+---
+# Process -e arguments and store overrides to the proper vars. See README.md
+# for available arguments.
+
+- name: "Processing Arguments"
+  set_fact:
+    "{{ item.value[0] }}": >
+      {{ vars[item.value[0]] | xcombine({
+        item.value[1]: vars[item.key]
+      }) }}
+  when:
+    - item.key in vars
+  # NOTE: item.key is variable passed to -e, item.value is list of dict to
+  # store to and which key.
+  with_dict:
+    "user": ["my_user", "username"]
+    "win_user": ["my_user", "win_username"]

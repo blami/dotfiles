@@ -1,12 +1,9 @@
 ---
-# Windows group variables
+# Variables for linux hosts group.
 
-my_user:
-  # These are defaults and overriden in tasks/pre_windows.yml
-  username: blami
-  # NOTE: not using "home" to avoid WSL Linux-Windows confusion
-  userprofile: "C:\\Users\\blami"
-  msaccount: null
-  is_administrator: false
-  # Relative to {{ my_user.userprofile }}\\.ssh
-  ssh_key: "keys\\id_blami_rsa"
+# Configuration
+ansible_cache_dir: "C:\\X\\ansible"
+
+# User
+
+

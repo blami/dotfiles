@@ -1,7 +1,0 @@
----
-# Configure RPM and install/remove basic packages
-# TODO: Old kernel autoremoval
-
-- include_role:
-    name: common
-    tasks_from: rpm_packages
