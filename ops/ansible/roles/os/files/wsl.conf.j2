@@ -2,7 +2,8 @@
 
 [boot]
 systemd = true
-
+# DO NOT let WSL handle binfmt; use /etc/binfmt.d/WSLInterop.conf instead
+protect_binfmt = true
 
 [automount]
 enabled = true

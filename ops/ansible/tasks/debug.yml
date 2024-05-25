@@ -1,0 +1,12 @@
+---
+# Print various variables
+
+- name: "DEBUG: Print Variables"
+  debug:
+    msg: "{{ vars[item] }}"
+  with_items:
+    #- ansible_facts
+    - my_user
+    - my_facts
+    - env
+    - ansible_system

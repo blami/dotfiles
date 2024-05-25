@@ -1,9 +1,0 @@
----
-# Node.js variables
-
-nodejs_packages:
-  - eslint
-  - prettier
-  - typescript
-  - typescript-language-server
-  - yarn

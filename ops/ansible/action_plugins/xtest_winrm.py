@@ -42,6 +42,9 @@ class ActionModule(ActionBase):
                 cert_key_pem=args.get("winrm_cert_key_pem"),
                 server_cert_validation=args.get("winrm_server_cert_validation"),
                 # TODO: Kerberos is not supported here...
+                read_timeout_sec = 5,
+                operation_timeout_sec = 4,
+                proxy=args.get("proxy", None),
             )
             shell = proto.open_shell()
             encoded_script = b64encode(script.encode("utf_16_le")).decode("ascii")

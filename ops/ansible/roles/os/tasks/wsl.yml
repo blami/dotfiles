@@ -1,10 +1,8 @@
 ---
 # Configure WSL
-# WARN: Depends on systemd and systemd-sysv being installed by apt.yml!
+# WARN: Depends on systemd and systemd-sysv
 
-# TODO: Check if WSL's "init" still relies on /etc/fstab and see if systemd
-# unit would do this better?
-- name: Installing Empty /etc/fstab
+- name: "Installing Empty /etc/fstab"
   copy:
     content: ""
     dest: /etc/fstab
@@ -15,7 +13,7 @@
   when:
     - my_facts.is_wsl
 
-- name: Converting /tmp To tmpfs
+- name: "Converting /tmp To tmpfs"
   lineinfile:
     path: /etc/fstab
     regexp: "^tmpfs	/tmp	tmpfs	defaults	1 0$"
@@ -24,7 +22,7 @@
   when:
     - my_facts.is_wsl
 
-- name: Installing wsl.conf
+- name: "Installing wsl.conf"
   template:
     src: "{{ role_path }}/files/wsl.conf.j2"
     dest: "/etc/wsl.conf"
@@ -36,21 +34,9 @@
   when:
     - my_facts.is_wsl
 
-- name: Installing .wslconfig
-  template:
-    src: "{{ role_path }}/files/wslconfig.j2"
-    dest: "/etc/wsl.conf"
-    owner: root
-    group: root
-    mode: 644
-    force: true
-  register: out_wsl_wslconfig
-  when:
-    - my_facts.is_wsl
-
-# TODO: Restart here!, maybe use https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_handlers.html
-
-- name: Installing WSLInterop.conf to binfmt.d
+# NOTE: Instead of relying on WSL to do this properly we protect_binfmt in
+# wsl.conf and install own WSLInterop.conf manually.
+- name: "Installing WSLInterop.conf to binfmt.d"
   file:
     path: /etc/binfmt.d
     state: directory
@@ -65,14 +51,36 @@
   when:
     - my_facts.is_wsl
 
-- name: Enabling systemd-binfmt Unit
-  systemd:
-    name: systemd-binfmt
-    enabled: true
-    state: started
+# TODO: Put this in common/tasks/wsl.yml
+- block:
+  - name: "Shutting Down WSL for Changes To Take Effect"
+    command: '{{ my_facts.wsl_windrive_mount }}/Windows/System32/wsl.exe -t {{ my_facts.wsl_distro }}'
+    when:
+      - my_facts.wsl_windrive_mount
+      - my_facts.has_wsl_interop
+
+  - name: "Shut Down WSL for Changes To Take Effect"
+    fail:
+      msg: >
+        Ansible is unable to shut down WSL for changes to take effect because
+        WSLInterop is not working. Run: wsl -t {{ my_facts.wsl_distro }} in CMD or Powershell.
+    when:
+      - not my_facts.has_wsl_interop
+
   when:
     - my_facts.is_wsl
-    - my_facts.has_systemd
+    - (out_wsl_tmpfs.changed or out_wsl_wslconf.changed or out_wsl_wslinterop.changed)
+
+# BUG: Enabling systemd ruined interop in early systemd-able WSL releases
+# because systemd-binfmt would override WSLInterop.
+#- name: Enabling systemd-binfmt Unit
+#  systemd:
+#    name: systemd-binfmt
+#    enabled: true
+#    state: started
+#  when:
+#    - my_facts.is_wsl
+#    - my_facts.has_systemd
 
 - name: Installing WSL Scripts
   copy:
@@ -89,54 +97,48 @@
   when:
     - my_facts.is_wsl
 
-- name: Installing WSL systemd Units
-  copy:
-    src: "{{ role_path }}/files/systemd/{{ item }}"
-    dest: "/etc/systemd/system"
-    owner: root
-    group: root
-    mode: 644
-    force: true
-  with_items:
-    - wsl_hosts.service
-  when:
-    - my_facts.is_wsl
+#- name: Installing WSL systemd Units
+#  copy:
+#    src: "{{ role_path }}/files/systemd/{{ item }}"
+#    dest: "/etc/systemd/system"
+#    owner: root
+#    group: root
+#    mode: 644
+#    force: true
+#  with_items:
+#    - wsl_hosts.service
+#  when:
+#    - my_facts.is_wsl
 
-- name: Enabling WSL systemd Units
-  systemd:
-    name: "{{ item }}"
-    daemon_reload: true
-    enabled: true
-    state: started
-  with_items:
-    - wsl_hosts.service
-  when:
-    - my_facts.has_systemd
-    - my_facts.is_wsl
+#- name: Enabling WSL systemd Units
+#  systemd:
+#    name: "{{ item }}"
+#    daemon_reload: true
+#    enabled: true
+#    state: started
+#  with_items:
+#    - wsl_hosts.service
+#  when:
+#    - my_facts.has_systemd
+#    - my_facts.is_wsl
 
-- name: Unmasking systemd-logind
-  systemd:
-    name: systemd-logind
-    masked: false
-  when:
-    - my_facts.has_systemd
+# NOTE: This should be here or go to systemd.yml?
+# - name: Unmasking systemd-logind
+#   systemd:
+#     name: systemd-logind
+#     masked: false
+#   when:
+#     - my_facts.has_systemd
+# 
+# # NOTE: Linger session assures /run/user/UID is owned by user even when not
+# # logging in through PAM (which is in case of WSL)
+# - name: Setting {{ my_user.username }} Session Linger
+#   shell: |
+#     loginctl show-user -p Linger {{ my_user.username }}
+#     loginctl enable-linger {{ my_user.username }}
+#   register: out_wsl_linger
+#   changed_when: out_wsl_linger.stdout == "no"
+#   when:
+#     - my_facts.has_systemd
+#     - my_facts.is_wsl
 
-# NOTE: Linger session assures /run/user/UID is owned by user even when not
-# logging in through PAM (which is in case of WSL)
-- name: Setting {{ my_user.username }} Session Linger
-  shell: |
-    loginctl show-user -p Linger {{ my_user.username }}
-    loginctl enable-linger {{ my_user.username }}
-  register: out_wsl_linger
-  changed_when: out_wsl_linger.stdout == "no"
-  when:
-    - my_facts.has_systemd
-    - my_facts.is_wsl
-
-# TODO: Make this better to restart right after systemd is enabled!
-# Terminate WSL to force picking up changes made above
-- name: Restarting WSL
-  command: "/mnt/c/Windows/System32/wsl.exe -t {{ my_facts.wsl_distro }}"
-  when: 
-    - (out_wsl_tmpfs.changed or out_wsl_wslinterop.changed or out_wsl_wslconf.changed or out_wsl_linger.changed)
-    - my_facts.is_wsl

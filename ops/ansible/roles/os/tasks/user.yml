@@ -1,8 +1,8 @@
 ---
-# Create user account
+# Setup my_user user account
 
 # In case user already exists this will just update fields.
-- name: Setting Up User {{ my_user.username }}
+- name: "Setting Up User {{ my_user.username }}"
   user:
     name: "{{ my_user.username }}"
     comment: "{{ my_user.gecos }}"
@@ -14,36 +14,35 @@
     update_password: on_create
   register: out
   when:
-    - not my_facts.is_ldap_my_user
+    - not my_user.is_local
 
 # NOTE: If user was just created force password change on next login
-- name: Forcing User {{ my_user.username }} To Change Password
+- name: "Forcing User {{ my_user.username }} To Change Password"
   command: chage -d0 {{ my_user.username }}
   when:
     - not my_facts.has_my_user
     - out.changed
 
-- name: Adding User {{ my_user.username }} To Groups
+- name: "Adding User {{ my_user.username }} To Groups"
   user:
     name: "{{ my_user.username }}"
     groups: "{{ item }}"
     append: true
   with_items: "{{ my_user.groups }}"
   when:
-    - not my_facts.is_ldap_my_user
+    - not my_user.is_local
     - item in ansible_facts.getent_group
 
-- name: Refreshing User Facts
+- name: "Refreshing User Facts"
   set_fact:
     my_user: >
       {{ my_user | xcombine({
         "home": out['home']
       }) }}
-    # NOTE: This is not 100% correct but will work in most cases
     my_facts: >
       {{ my_facts | xcombine({
         "has_my_user": true,
         "has_become_my_user": true
       }) }}
   when:
-    - not my_facts.is_ldap_my_user
+    - not my_user.is_local

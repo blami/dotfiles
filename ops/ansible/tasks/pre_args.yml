@@ -1,0 +1,17 @@
+---
+# Process -e arguments and store overrides to the proper vars. See README.md
+# for available arguments.
+
+- name: "Processing Arguments"
+  set_fact:
+    my_user: >
+      {{ my_user | xcombine({
+        "username":     vars.get("username", my_user.get("username", None)),
+        "home":         vars.get("home", my_user.get("home", None)),
+      }) }}
+    env: >
+      {{ env | xcombine({
+        "http_proxy":   vars.get("http_proxy", env.get("http_proxy", None)),
+        "https_proxy":  vars.get("https_proxy", env.get("https_proxy", None)),
+        "no_proxy":     vars.get("no_proxy", env.get("no_proxy", None)),
+      }, remove_none=True) }}
