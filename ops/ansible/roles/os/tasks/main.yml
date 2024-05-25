@@ -1,0 +1,29 @@
+---
+# Operating system setup
+
+# Linux
+- block:
+    # NOTE: Install packages first as they create groups
+    - import_tasks: user.yml              # create and/or configure user
+    - import_tasks: wsl.yml               # configure WSL (might restart WSL)
+  become: true
+  become_user: "root"
+  when:
+    - ansible_facts.system in ("Linux",)
+    - my_facts.has_become_root
+
+# Windows
+- block:
+   - import_tasks: win_choco.yml          # install Chocolatey
+
+#     #- import_tasks: windows_debloat.yml   # de-bloat Windows
+#     #- import_tasks: windows_ntp.yml
+#     #- import_tasks: windows_network.yml
+#     #- import_tasks: windows_power.yml
+#   # WARN: 'become' to user itself is required to allow credential delegation;
+#   # user is expected to be an Administrator.
+  become: true
+  become_user: "{{ my_user.win_domain_username }}"
+  when:
+    - ansible_facts.os_family in ("Windows",)
+    - my_facts.has_administrator

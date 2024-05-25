@@ -1,0 +1,157 @@
+---
+# WSL additional fact gathering and checks before Linux roles run.
+
+# NOTE: It is OK to use env lookups here as WSL runs locally.
+- name: "Detecting WSL"
+  set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "is_wsl": true if lookup("env", "WSL_DISTRO_NAME") else false,
+      }) }}
+
+- name: "Gathering WSL Facts"
+  set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "wsl_version": 2 if lookup("env", "WSL_INTEROP") else 1,
+        "wsl_distro": lookup("env", "WSL_DISTRO_NAME"),
+        "wsl_host_hostname": "{}.local".format(ansible_hostname) if lookup("env", "WSL_INTEROP") else "localhost",
+      }) }}
+  when:
+    - my_facts.is_wsl
+
+- name: "Finding WSL Host WINDRIVE Directory"
+  command: >
+    awk '{if(match($4, /;path=[A-Z]{1}:\\/) && !system("test -d \""$2"/Windows/System\"")) {print $2 ; exit }}' /proc/mounts
+  register: out
+  changed_when: false
+  when:
+    - my_facts.is_wsl
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "wsl_windrive_dir": out.stdout,
+        "wsl_powershell": out.stdout + '/Windows/System32/WindowsPowerShell/v1.0/powershell.exe'
+      }) }}
+  when:
+    - my_facts.is_wsl
+    - out.stdout != ""
+
+- name: "Checking WSL Interop"
+  command: >
+    {{ my_facts.wsl_powershell }} -Command 'Write-Host OK'
+  register: out
+  changed_when: false
+  ignore_errors: true
+  when:
+    - my_facts.is_wsl
+    - my_facts.wsl_powershell
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "has_wsl_interop": not out.failed,
+      }) }}
+  when:
+    - my_facts.is_wsl
+
+# NOTE: Override my_user.win_username and my_user.win_domain_username as when
+# running from WSL user already exists.
+# NOTE: This is being passed in post_wsl.yml to Windows localhost.
+- name: "Gathering WSL Windows Username"
+  shell: |
+    {{ my_facts.wsl_powershell }} -Command '$env:USERNAME,"$env:USERDOMAIN\$env:USERNAME" | Write-Host'
+  register: out
+  changed_when: false
+  when:
+    - my_facts.is_wsl
+    - my_facts.wsl_powershell
+    - my_facts.has_wsl_interop
+- set_fact:
+    my_user: >
+      {{ my_user | xcombine({
+        "win_username": out.stdout_lines[0],
+        "win_domain_username": out.stdout_lines[1],
+      }) }}
+  when:
+    - my_facts.is_wsl
+    - my_facts.has_wsl_interop
+
+# Gather paths, this is split into two different shells as first does not
+# require has_wsl_interop and second does.
+# NOTE: Paths have following meaning
+# wsl_unc_playbook_dir    - Windows UNC path to playbook itself
+# wsl_unc_home_dir        - Windows UNC path to WSL (Linux) home directory
+- name: "Gathering WSL Paths"
+  shell: |
+    wslpath -w {{ playbook_dir }}
+    wslpath -w {{ my_user.home }}
+  register: out
+  changed_when: false
+  when:
+    - my_facts.is_wsl
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "wsl_unc_playbook_dir": out.stdout_lines[0] if "stdout_lines" in out else None,
+        "wsl_unc_home_dir": out.stdout_lines[1] if "stdout_lines" in out else None,
+      }) }}
+  when:
+    - my_facts.is_wsl
+# NOTE: Paths are for user running WSL; they have following meaning
+# wsl_unc_userprofile_dir - Windows UNC path to Windows home directory 
+# wsl_userprofile_dir     - Linux (/mnt/c...) path to Windows home directory
+- name: "Gathering WSL Interop Paths"
+  shell: |
+    {{ my_facts.wsl_powershell }} -Command 'Write-Host $env:USERPROFILE'
+    wslpath -u $({{ my_facts.wsl_powershell }} -Command 'Write-Host $env:USERPROFILE')
+  register: out
+  changed_when: false
+  when:
+    - my_facts.is_wsl
+    - my_facts.wsl_powershell
+    - my_facts.has_wsl_interop
+# NOTE: Set this even if we were unable to gather paths so anything using it
+# can when: wsl_*_dir
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "wsl_unc_userprofile_dir": out.stdout_lines[0] if "stdout_lines" in out else None,
+        "wsl_userprofile_dir": out.stdout_lines[1] if "stdout_lines" in out else None,
+      }) }}
+  when:
+    - my_facts.is_wsl
+
+- name: Checking If $HOME Is %USERPROFILE%
+  set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "wsl_home_is_userprofile": true if my_facts.wsl_unc_home_dir == my_facts.wsl_unc_userprofile_dir else false
+      }) }}
+  when:
+    - my_facts.is_wsl
+
+# TODO: awk '/32 host/ { print f } {f=$2}' <<< "$(</proc/net/fib_trie)"
+#- name: Gathering WSL Guest IP (Linux)
+#  set_fact:
+#    my_facts: >
+#      {{ my_facts | xcombine({
+#        "wsl_guest_ip": "127.0.0.1" if my_facts.wsl_version == 1 else ansible_default_ipv4.address
+#      }) }}
+#  when:
+#    - my_facts.is_wsl
+
+# NOTE: Windows host IP is same as DNS server used inside WSL
+- name: Gathering WSL Host IP (Windows)
+  slurp:
+    src: /mnt/wsl/resolv.conf
+  register: out
+  when:
+    - my_facts.is_wsl
+    - my_facts.wsl_version == 2
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "wsl_host_ip": "127.0.0.1" if my_facts.wsl_version == 1 else out['content'] | b64decode | regex_findall('nameserver\s+(.+)$') | first 
+      }) }}
+  when:
+    - my_facts.is_wsl

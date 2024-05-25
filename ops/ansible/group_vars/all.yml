@@ -1,13 +1,30 @@
 ---
 # Variables for all host groups.
+# See README.md in ansible/ directory for further explanation.
+
+# Settings
+dotfiles: blami/dotfiles.git
+ntp: time.cloudflare.com
+
+# Environment
+# NOTE: This is passed to (almost all) subshells in Linux world.
+# TODO: Maybe should go to Linux then?
+env:
+  http_proxy:
+  https_proxy:
+  no_proxy:
 
 # User
-# NOTE: This is shared by both Linux and Windows tasks.
+# NOTE: This is shared by both Linux and Windows tasks but separated using win_
+# prefix.
 my_user:
+  # -e user=NAME
   username: "blami"
   gecos: "Ondrej Balaz,,,,blami@blami.net"
   shell: "/usr/bin/zsh"
-  home: "/home/blami"
+  # -e home=PATH
+  # NOTE: empty defaults to /home/{{ my_user.username }}
+  home:
   groups:
     - adm
     - dialout
@@ -20,17 +37,35 @@ my_user:
     - netdev
     - wheel
   umask: "002"
+  # is_local applies to both Linux and Windows (AD)
+  is_local: true
   win_username: "blami"
   win_domain_username: "LOCALDOMAIN\\blami"
-
+  is_msaccount: false
 
 # Facts
-# An empty dictionary where custom facts are gathered.
+# NOTE: This is shared by both Linux and Windows tasks.
 my_facts:
+  # tasks/pre_user.yml
   has_my_user: false
   has_become_my_user: false
   has_become_root: false
-  is_administrator: false
-  is_msaccount: false
-  is_ldap_account: false
-  is_my_user: false
+  has_administrator: false
+  # tasks/pre_linux.yml
+  has_systemd: false
+  # tasks/pre_wsl.yml, roles/os/tasks/wsl.yml
+  is_wsl: false
+  has_wsl_interop: false
+  wsl_distro:
+  wsl_powershell:
+  wsl_unc_home_dir:
+  wsl_unc_playbook_dir:
+  wsl_unc_userprofile_dir:
+  wsl_version:
+  wsl_windrive_dir:
+  wsl_home_is_userprofile: false
+  wsl_host_hostname:
+  wsl_host_ip:
+  wsl_guest_ip:
+  # tasks/pre_windows.yml
+  win_choco_source:

@@ -1,5 +1,14 @@
 ---
+# Linux-only additional fact gathering and checks.
 
-- name: Test
-  debug:
-    msg: Hello World
+- name: "Checking if systemd is PID1"
+  command:
+    cmd: "/bin/systemctl"
+  register: out
+  failed_when: false
+  changed_when: false
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "has_systemd": false if out.rc != 0 else true
+      }) }}

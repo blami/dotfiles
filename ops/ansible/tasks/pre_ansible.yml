@@ -1,9 +1,6 @@
 ---
 # Setup Ansible.
 
-- debug:
-    msg: "{{ vars }}"
-
 # - name: "Creating ~/.ansible/cache"
 #   file:
 #     path: "~/.ansible/cache"

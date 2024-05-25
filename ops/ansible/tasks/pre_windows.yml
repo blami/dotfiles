@@ -1,0 +1,9 @@
+---
+# Windows-only additional fact gathering and checks.
+
+- name: Gathering Chocolatey Source Facts
+  set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "win_choco_source": my_facts.wsl_unc_home_dir + "\ops\choco" if my_facts.is_wsl else None
+      }) }}

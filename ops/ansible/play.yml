@@ -2,9 +2,23 @@
 
 - name: Linux
   hosts: linux
-
   pre_tasks:
-    - import_tasks: tasks/pre_args.yml
-    - import_tasks: tasks/pre_user.yml
-    - import_tasks: tasks/pre_ansible.yml
-    - import_tasks: tasks/debug.yml
+    - { import_tasks: tasks/pre_args.yml,       tags: always }
+    - { import_tasks: tasks/pre_user.yml,       tags: always }
+    - { import_tasks: tasks/pre_linux.yml,      tags: always }
+    - { import_tasks: tasks/pre_wsl.yml,        tags: always }
+    #- { import_tasks: tasks/debug.yml,          tags: always }
+  post_tasks:
+    - { import_tasks: tasks/post_wsl.yml,       tags: always }
+  roles:
+    - { role: os,                               tags: [os, linux] }
+    - { role: user,                             tags: [user, linux] }
+
+- name: Windows
+  hosts: windows
+  pre_tasks:
+    - { import_tasks: tasks/pre_user.yml,       tags: always }
+    - { import_tasks: tasks/pre_windows.yml,    tags: always }
+    #- { import_tasks: tasks/debug.yml,          tags: always }
+  roles:
+    - { role: os,                               tags: [os, windows] }

@@ -1,0 +1,23 @@
+---
+# User setup
+
+# Linux
+- block:
+    - import_tasks: shell.yml
+  become: true
+  become_user: "root"
+  when:
+    - ansible_facts.system in ("Linux",)
+    - my_facts.has_become_root
+
+- block:
+    - import_tasks: dotfiles.yml
+  become: true
+  become_user: "{{ my_user.username }}"
+  when:
+    - ansible_facts.system in ("Linux",)
+    - my_facts.has_become_my_user
+
+
+# Windows
+# TODO:

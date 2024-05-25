@@ -1,0 +1,126 @@
+---
+# Setup WinRM connection and dynamically add localhost as Windows host so that
+# Ansible run on localhost can also manage Windows world.
+# NOTE: This cannot be in pre_wsl.yml as at that point e.g. ~ might not exist.
+# NOTE: To disable use --skip-tags localwinrm .
+
+# Generate WinRM client certificate
+- name: "Generating WSL WinRM Client Certificate"
+  shell:
+    cmd: |
+      export OPENSSL_CONF=$(mktemp)
+      cat > $OPENSSL_CONF << EOF
+      distinguished_name = req_distinguished_name
+      [req_distinguished_name]
+      [v3_req_client]
+      extendedKeyUsage = clientAuth
+      subjectAltName = @alt_names
+      [alt_names]
+      otherName.1 = 1.3.6.1.4.1.311.20.2.3;UTF8:Ansible@localhost
+      EOF
+      [ "{{ my_facts.wsl_host_hostname }}" != "localhost" ] && echo "otherName.2 = 1.3.6.1.4.1.311.20.2.3;UTF8:Ansible@{{ my_facts.wsl_host_hostname }}" >> $OPENSSL_CONF
+      [ "{{ ansible_hostname }}" != "localhost" ] && echo "otherName.3 = 1.3.6.1.4.1.311.20.2.3;UTF8:Ansible@{{ ansible_hostname }}" >> $OPENSSL_CONF
+
+      mkdir -m 700 -p {{ my_user.home }}/.ansible/winrm
+      openssl req -x509 -nodes -days 36500 -newkey rsa:2048 -sha256 -out {{ my_user.home }}/.ansible/winrm/localclient.crt -outform PEM -keyout {{ my_user.home }}/.ansible/winrm/localclient.key -subj "/CN=Ansible" -extensions v3_req_client
+      openssl pkcs12 -export -out {{ my_user.home }}/.ansible/winrm/localclient.pfx -in {{ my_user.home }}/.ansible/winrm/localclient.crt -inkey {{ my_user.home }}/.ansible/winrm/localclient.key -name "Ansible WSL WinRM Client Certificate" -passout pass:
+      rm -rf $OPENSSL_CONF
+    creates: "{{ my_user.home }}/.ansible/winrm/localclient.crt"
+  when:
+    - my_facts.is_wsl
+    - my_facts.has_my_user
+  tags: localwinrm
+
+# Generate self-signed server certificate for WinRM service
+- name: "Generating WSL WinRM Server Certificate"
+  shell:
+    cmd: |
+      export OPENSSL_CONF=$(mktemp)
+      cat > $OPENSSL_CONF << EOF
+      distinguished_name = req_distinguished_name
+      [req_distinguished_name]
+      [v3_req_server]
+      basicConstraints = CA:FALSE
+      subjectKeyIdentifier = hash
+      keyUsage = critical,digitalSignature,keyEncipherment
+      extendedKeyUsage = clientAuth,serverAuth
+      subjectAltName = @alt_names
+      [alt_names]
+      DNS.1 = localhost
+      EOF
+      [ "{{ my_facts.wsl_host_hostname }}" != "localhost" ] && echo "DNS.2 = {{ my_facts.wsl_host_hostname }}" >> $OPENSSL_CONF
+      [ "{{ ansible_hostname }}" != "localhost" ] && echo "DNS.3 = {{ ansible_hostname }}" >> $OPENSSL_CONF
+
+      mkdir -m 700 -p {{ my_user.home }}/.ansible/winrm
+      openssl req -x509 -nodes -days 36500 -newkey rsa:2048 -sha256 -out {{ my_user.home }}/.ansible/winrm/localserver.crt -outform PEM -keyout {{ my_user.home }}/.ansible/winrm/localserver.key -subj "/CN=localhost" -extensions v3_req_server
+      openssl pkcs12 -export -out {{ my_user.home }}/.ansible/winrm/localserver.pfx -in {{ my_user.home }}/.ansible/winrm/localserver.crt -inkey {{ my_user.home }}/.ansible/winrm/localserver.key -name "Ansible WSL WinRM Server Certificate" -passout pass:
+      rm -rf $OPENSSL_CONF {{ my_user.home }}/.ansible/winrm/localserver.crt {{ my_user.home }}/.ansible/winrm/localserver.key
+    creates: "{{ my_user.home }}/.ansible/winrm/localserver.pfx"
+  when:
+    - my_facts.is_wsl
+    - my_facts.has_my_user
+  tags: localwinrm
+
+- import_tasks: tasks/post_wsl_winrm_check.yml
+
+# Execute WinRM setup script
+# This step requires interactive Windows elevation but since this is WSL only
+# it will run on the same machine. This is also why all is in single .ps1 to
+# avoid further popups.
+# WARN: DO NOT swap quotes ('->") as that will cause YAML parser to double \\
+# and render Windows UNC paths invalid.
+- name: "Setting Up Local WSL WinRM"
+  command: >
+    {{ my_facts.wsl_powershell }} -Command
+      '$p = Start-Process -PassThru -Wait -Verb RunAs powershell.exe'
+      '"-ExecutionPolicy Bypass -File {{ my_facts.wsl_unc_playbook_dir }}\scripts\winrm.ps1 -ServerCertPath {{ my_facts.wsl_unc_home_dir }}\.ansible\winrm\localserver.pfx -ClientCertPath {{ my_facts.wsl_unc_home_dir }}\.ansible\winrm\localclient.pfx -User Ansible -FirewallInterface -FirewallLocalSubnet `"vEthernet (WSL)`" -FirewallRuleName `"Ansible WSL WinRM (HTTPS)`""'
+      ';Exit $p.ExitCode'
+  when:
+    - my_facts.is_wsl
+    - my_facts.wsl_unc_playbook_dir
+    - my_facts.has_my_user
+    - not my_facts.can_winrm
+  register: out
+  tags: localwinrm
+
+- import_tasks: tasks/post_wsl_winrm_check.yml
+
+- fail:
+    msg: "WARNING: Unable to WinRM to Windows host, no Windows tasks will be executed!"
+  when:
+    - my_facts.is_wsl
+    - not my_facts.can_winrm
+  ignore_errors: true
+
+- name: "Adding {{ my_facts.wsl_host_ip }} To Windows Hosts"
+  add_host:
+    ansible_connection: winrm
+    # NOTE: DO NOT use just 'localhost' as it would override Linux 'localhost'
+    # NOTE: MUST be same as ansible_winrm_host below.
+    hostname: "{{ my_facts.wsl_host_ip }}"
+    ansible_winrm_host: "{{ my_facts.wsl_host_ip }}"
+    ansible_winrm_transport: certificate
+    ansible_winrm_cert_pem: "{{ my_user.home }}/.ansible/winrm/localclient.crt"
+    ansible_winrm_cert_key_pem: "{{ my_user.home }}/.ansible/winrm/localclient.key"
+    ansible_winrm_server_cert_validation: ignore
+    ansible_become_method: runas
+    # NOTE: Empty become password set using -K as it won't work on Windows
+    # anyway and local user is expected to have at least Administrator role.
+    ansible_become_password: null
+    groups: windows
+  when:
+    - my_facts.is_wsl
+    - my_facts.has_my_user
+    - my_facts.can_winrm
+  tags: localwinrm
+- set_fact:
+    # NOTE: pre_windows.yml will do overrides
+    my_user: "{{ my_user }}"
+    my_facts: "{{ my_facts }}"
+  delegate_facts: true
+  delegate_to: "{{ my_facts.wsl_host_ip }}"
+  when:
+    - my_facts.is_wsl
+    - my_facts.has_my_user
+    - my_facts.can_winrm
+  tags: localwinrm

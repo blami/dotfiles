@@ -3,26 +3,34 @@
 
 # Linux
 - block:
-  - name: "Checking If User {{ my_user.username }} Exists"
+  - name: "Defaulting User Home to /home/{{ my_user.username }}"
+    set_fact:
+      my_user: >
+        {{ my_user | xcombine({
+          "home": "/home/" + my_user.username
+        }) }}
+    when:
+      - not my_user.home
+
+  # NOTE: Calling getent twice, once to popuplate ansible_facts.getent_passwd
+  # and second time ansible_facts.getent_group as some roles might depend on
+  # that (e.g. os/tasks/user.yml).
+  - name: "Checking if User {{ my_user.username }} Exists"
     getent:
       database: "passwd"
       key: "{{ my_user.username }}"
     changed_when: false
     failed_when: false
+  - getent:
+      database: "group"
+      split: ":"
   - set_fact:
       my_facts: >
         {{ my_facts | xcombine({
           "has_my_user": true if "getent_passwd" in vars and my_user.username in getent_passwd else false
         }) }}
 
-  # NOTE: This is to support local "ansible" user with enough privileges to
-  # sudo root if needed.
-  - name: "Checking If User Running Ansible Is {{ my_user.username }}"
-    set_fact:
-      my_facts: >
-        {{ my_facts | xcombine({
-          "is_my_user": ansible_user_id == my_user.username
-        }) }}
+  # TODO: Check if local account
 
   - name: "Checking Become {{ my_user.username }}"
     command:
@@ -30,6 +38,7 @@
     become: true
     become_user: "{{ my_user.username }}"
     register: out
+    changed_when: false
     ignore_errors: true
   - set_fact:
       my_facts: >
@@ -43,6 +52,7 @@
     become: true
     become_user: "root"
     register: out
+    changed_when: false
     ignore_errors: true
   - set_fact:
       my_facts: >
@@ -50,20 +60,56 @@
           "has_become_root": false if ("failed" in out and out.failed) else true
         }) }}
 
-  # Permission checks
-  #- name: "Checking Permissions"
-  #  fail:
-  #    msg: >
-  #      Ansible has not enough permissions to continue playbook.
-  #
-  #      This playbook can run with or without permission to become 'root'
+  - name: "Checking Permissions"
+    fail:
+      msg: >
+        Ansible has not enough permissions to continue. See README.md for details.
+    when:
+      - "(my_facts.has_my_user and not my_facts.has_become_my_user) or (not my_facts.has_my_user and not my_facts.has_become_root)"
+
+  # NOTE: If not having enough permissions just update my_user with whatever
+  # the current values are.
+  - name: "Refreshing User Facts"
+    set_fact: >
+      my_user: >
+        {{ my_user | xcombine({
+          "home": ansible_facts.user_dir,
+          "shell": ansible_facts.user_shell
+        }) }}
+    when:
+      - "(my_facts.has_my_user and not my_facts.has_become_root)"
 
   when:
     - ansible_facts.system in ("Linux",)
 
 
 # Windows
-- name: "Checking Become {{ my_user.win_domain_username }}"
-  debug: msg="TODO"
+- block:
+  # TODO: Check if user exists?
+
+  - name: "Checking Become {{ my_user.win_domain_username }}"
+    win_shell: $true
+    become: true
+    become_user: "{{ my_user.win_domain_username }}"
+    register: out
+    changed_when: false
+    ignore_errors: true
+  - set_fact:
+      my_facts: >
+        {{ my_facts | xcombine({
+          "has_become_my_user": false if ("failed" in out and out.failed) else true
+        }) }}
+
+  - name: "Checking If Ansible is Local Administrator"
+    win_whoami:
+    register: out
+    changed_when: false
+    ignore_errors: true
+  - set_fact:
+      my_facts: >
+        {{ my_facts | xcombine({
+          "has_administrator": (out.groups | selectattr('account_name', 'contains', 'Administrators') | list | length) > 0,
+        }) }}
+
   when:
-    - ansible_facts.system in ("Windows",)
+    - ansible_facts.os_family in ("Windows",)

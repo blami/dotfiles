@@ -4,14 +4,14 @@
 
 - name: "Processing Arguments"
   set_fact:
-    "{{ item.value[0] }}": >
-      {{ vars[item.value[0]] | xcombine({
-        item.value[1]: vars[item.key]
+    my_user: >
+      {{ my_user | xcombine({
+        "username":     vars.get("username", my_user.get("username", None)),
+        "home":         vars.get("home", my_user.get("home", None)),
       }) }}
-  when:
-    - item.key in vars
-  # NOTE: item.key is variable passed to -e, item.value is list of dict to
-  # store to and which key.
-  with_dict:
-    "user": ["my_user", "username"]
-    "win_user": ["my_user", "win_username"]
+    env: >
+      {{ env | xcombine({
+        "http_proxy":   vars.get("http_proxy", env.get("http_proxy", None)),
+        "https_proxy":  vars.get("https_proxy", env.get("https_proxy", None)),
+        "no_proxy":     vars.get("no_proxy", env.get("no_proxy", None)),
+      }, remove_none=True) }}

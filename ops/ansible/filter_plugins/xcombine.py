@@ -6,7 +6,11 @@ from ansible.errors import AnsibleFilterError
 
 def xcombine(*args, **kw):
     """Combine all given dictionaries to one, if there are overlapping keys
-    overwrite them by later values. Ignore undefined or None dictionaries."""
+    overwrite them by later values. Ignore undefined or None dictionaries.
+
+    If keyword argument remove_none=True is passed then all None value keys
+    will be removed from result.
+    """
     result = {}
     for arg in args:
         if isinstance(arg, AnsibleUndefined) or arg is None:
@@ -16,8 +20,11 @@ def xcombine(*args, **kw):
             result.update(arg)
         else:
             raise AnsibleFilterError("Argument is not a dictionary")
-    return result
 
+    if kw.get("remove_none", False):
+        result = {k: v for k, v in result.items()} # if v is not None}
+
+    return result
 
 class FilterModule(object):
     def filters(self):

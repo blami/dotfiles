@@ -1,0 +1,9 @@
+# Assing low priorities to all packages from 'unstable' and 'experimental' so
+# they never get installed automatically.
+Package: *
+Pin: release a=unstable
+Pin-Priority: 50
+
+Package: *
+Pin: release a=experimental
+Pin-Priority: 1
