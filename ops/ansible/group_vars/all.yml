@@ -41,7 +41,7 @@ my_user:
   is_local: true
   # -e win_username=NAME
   win_username: "blami"
-  win_domain_username: "LOCALDOMAIN\\blami"
+  win_domain_username:
   # NOTE: empty defaults to C:\Users\{{ my_user.win_username }}
   win_userprofile:
   is_msaccount: false
