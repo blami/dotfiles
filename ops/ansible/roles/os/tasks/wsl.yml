@@ -51,19 +51,30 @@
   when:
     - my_facts.is_wsl
 
-# TODO: Put this in common/tasks/wsl.yml
+# TODO: Put this in _common/tasks/wsl.yml
 - block:
-  - name: "Shutting Down WSL for Changes To Take Effect"
-    command: '{{ my_facts.wsl_windrive_mount }}/Windows/System32/wsl.exe -t {{ my_facts.wsl_distro }}'
+  # NOTE: Touch file for bootstrap.ps1 so it knows it should re-run Ansible
+  - name: "Creating bootstrap.ps1 Re-Run Stamp"
+    shell: |
+      mkdir -p "{{ my_facts.wsl_userprofile_dir }}/.ansible"
+      touch "{{ my_facts.wsl_userprofile_dir }}/.ansible/{{ my_facts.wsl_distro }}.retry"
     when:
-      - my_facts.wsl_windrive_mount
       - my_facts.has_wsl_interop
+      - my_facts.wsl_userprofile_dir
+      - bootstrapps1 is defined
+
+  - name: "Shutting Down WSL for Changes To Take Effect"
+    command: '{{ my_facts.wsl_windrive_dir }}/Windows/System32/wsl.exe -t {{ my_facts.wsl_distro }}'
+    when:
+      - my_facts.has_wsl_interop
+      - my_facts.wsl_windrive_dir
 
   - name: "Shut Down WSL for Changes To Take Effect"
-    fail:
+    pause:
       msg: >
         Ansible is unable to shut down WSL for changes to take effect because
         WSLInterop is not working. Run: wsl -t {{ my_facts.wsl_distro }} in CMD or Powershell.
+    failed_when: true
     when:
       - not my_facts.has_wsl_interop
 
@@ -122,23 +133,23 @@
 #    - my_facts.has_systemd
 #    - my_facts.is_wsl
 
-# NOTE: This should be here or go to systemd.yml?
-# - name: Unmasking systemd-logind
-#   systemd:
-#     name: systemd-logind
-#     masked: false
-#   when:
-#     - my_facts.has_systemd
-# 
-# # NOTE: Linger session assures /run/user/UID is owned by user even when not
-# # logging in through PAM (which is in case of WSL)
-# - name: Setting {{ my_user.username }} Session Linger
-#   shell: |
-#     loginctl show-user -p Linger {{ my_user.username }}
-#     loginctl enable-linger {{ my_user.username }}
-#   register: out_wsl_linger
-#   changed_when: out_wsl_linger.stdout == "no"
-#   when:
-#     - my_facts.has_systemd
-#     - my_facts.is_wsl
+# Unmask systemd-logind on WSL and set user session to linger; this will assure
+# that /run/user/UID is owned by user even when not logging in through PAM (WSL
+# does not use PAM).
+- name: Unmasking systemd-logind
+  systemd:
+    name: systemd-logind
+    masked: false
+  when:
+    - my_facts.is_wsl
+    - my_facts.has_systemd
 
+- name: Setting {{ my_user.username }} Session Linger
+  shell: |
+    loginctl show-user -p Linger {{ my_user.username }}
+    loginctl enable-linger {{ my_user.username }}
+  register: out_wsl_linger
+  changed_when: out_wsl_linger.stdout == "no"
+  when:
+    - my_facts.is_wsl
+    - my_facts.has_systemd

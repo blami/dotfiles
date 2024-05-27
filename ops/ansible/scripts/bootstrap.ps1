@@ -21,8 +21,7 @@
     Name of default user of distribution when logging into it (not created automatically!)
 .PARAMETER DistroCommands
     List of commands to execute as root when distro is installed.
-    NOTE: When passing on commandline "'command -1','command -2','command -3 %var%'" notation needs to be used.
-    NOTE: %VARIABLE% placeholders for variables can be used, these are evaluated at execution. 
+    NOTE: %VARIABLE% placeholders for variables can be used, these are evaluated at execution.
 .PARAMETER Ansible
     Whether or not to run AnsibleCommands after distro is installed.
 .PARAMETER AnsibleBranch
@@ -31,8 +30,7 @@
     Name of user passed to playbook as -e user=... (not user Ansible is run as!)
 .PARAMETER AnsibleCommands
     List of commands to execute as root to run Ansible.
-    NOTE: When passing on commandline "'command -1','command -2','command -3 %var%'" notation needs to be used.
-    NOTE: %VARIABLE% placeholders for variables can be used, these are evaluated at execution. 
+    NOTE: %VARIABLE% placeholders for variables can be used, these are evaluated at execution.
 .PARAMETER Proxy
     In case proxy is needed inside the WSL this will be exported as http_proxy= and https_proxy= before each 
     command.
@@ -78,17 +76,15 @@ param (
 	[string]$WSLIconUri = "https://raw.githubusercontent.com/blami/dotfiles/main/.local/share/pixmaps/debian.ico",
 	[string]$WSLCommandLine = "",
 	[switch]$Ansible = $false,
-	[string]$AnsibleBranch = "main",
-	#[string]$AnsibleMyUser = $env:USERNAME,
 	[string[]]$AnsibleCommands = @(
 		"DEBIAN_FRONTEND=noninteractive ; apt-get -o Acquire::ForceIPv4=true update && apt-get -o Acquire::ForceIPv4=true install -y python3-apt python3-winrm ansible",
-		"rm -rf /tmp/dotfiles ; git clone --depth 1 https://github.com/blami/dotfiles.git -b %AnsibleBranch% /tmp/dotfiles"
-		"cd /tmp/dotfiles ; LC_ALL=C.utf-8 ansible-playbook -i play.yml"
+		"rm -rf /tmp/dotfiles ; git clone --depth 1 https://github.com/blami/dotfiles.git /tmp/dotfiles"
+		"cd /tmp/dotfiles ; LC_ALL=C.utf-8 ansible-playbook play.yml -e `"user=%WSLDistroUser% bootstrapps1=1`""
 	),
     [string]$Proxy = "",
     [string]$NoProxy = "",
-	[switch]$Default = $false,
-	[switch]$Force = $false
+	[switch]$Default,
+	[switch]$Force
 )
 
 $ErrorActionPreference = "Stop"
@@ -242,7 +238,7 @@ if ($WSLDistroExists -and $Force) {
 	Remove-Item -Path $WSLDistroDir -Recurse -Force -ErrorAction SilentlyContinue
 	$WSLDistroExists = $false
 }
-if (!$WSLDistroExists) {
+if (!($WSLDistroExists)) {
 	Write-Host -ForegroundColor DarkYellow "> Installing WSL distribution"
 	if (!(Test-Path $WSLDistroDir)) {
 		$_ = (New-Item -ItemType Directory -Path $WSLDistroDir)
@@ -324,7 +320,7 @@ if ($Ansible) {
 			Write-Host -ForegroundColor DarkYellow "> Retry ${AnsibleRetry}"
 		}
 		Invoke-Commands -Distro $WSLDistro -User "root" -Commands $AnsibleCommands
-		$AnsibleRetryPath = Join-Path -Path $env:USERPROFILE ".ansible-$WSLDistro.retry"
+		$AnsibleRetryPath = Join-Path -Path $env:USERPROFILE ".ansible/${WSLDistro}.retry"
 		if (Test-Path -Path $AnsibleRetryPath) {
 			Write-Host -ForegroundColor DarkYellow "> Retry file found, will re-run. Sleeping 5s"
 			Remove-Item $AnsibleRetryPath
