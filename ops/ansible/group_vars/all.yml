@@ -35,7 +35,7 @@ my_user:
     - video
     - plugdev
     - netdev
-    - wheel
+    - sudo
   umask: "002"
   # is_local applies to both Linux and Windows (AD)
   is_local: true
@@ -71,6 +71,8 @@ my_facts:
   wsl_host_hostname:
   wsl_host_ip:
   wsl_guest_ip:
+  # tasks/post_wsl.yml
+  can_winrm: false
   # tasks/pre_windows.yml
   has_choco: false
   win_choco_source:
