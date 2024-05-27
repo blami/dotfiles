@@ -1,7 +1,11 @@
 ---
 # Setup WinRM connection and dynamically add localhost as Windows host so that
 # Ansible run on localhost can also manage Windows world.
-# NOTE: This cannot be in pre_wsl.yml as at that point e.g. ~ might not exist.
+# NOTE: Split from pre_wsl.yml so that this can depend on changes made in Linux
+#       world on localhost.
+# NOTE: This depends on iterop and puts certificates to Windows world
+#       %USERPROFILE% directory as that way then can be reused by multiple
+#       distributions and do not depend on ~ existing
 # NOTE: To disable use --skip-tags localwinrm .
 
 # Generate WinRM client certificate
@@ -21,14 +25,15 @@
       [ "{{ my_facts.wsl_host_hostname }}" != "localhost" ] && echo "otherName.2 = 1.3.6.1.4.1.311.20.2.3;UTF8:Ansible@{{ my_facts.wsl_host_hostname }}" >> $OPENSSL_CONF
       [ "{{ ansible_hostname }}" != "localhost" ] && echo "otherName.3 = 1.3.6.1.4.1.311.20.2.3;UTF8:Ansible@{{ ansible_hostname }}" >> $OPENSSL_CONF
 
-      mkdir -m 700 -p {{ my_user.home }}/.ansible/winrm
-      openssl req -x509 -nodes -days 36500 -newkey rsa:2048 -sha256 -out {{ my_user.home }}/.ansible/winrm/localclient.crt -outform PEM -keyout {{ my_user.home }}/.ansible/winrm/localclient.key -subj "/CN=Ansible" -extensions v3_req_client
-      openssl pkcs12 -export -out {{ my_user.home }}/.ansible/winrm/localclient.pfx -in {{ my_user.home }}/.ansible/winrm/localclient.crt -inkey {{ my_user.home }}/.ansible/winrm/localclient.key -name "Ansible WSL WinRM Client Certificate" -passout pass:
+      mkdir -m 700 -p {{ my_facts.wsl_userprofile_dir }}/.ansible/winrm
+      openssl req -x509 -nodes -days 36500 -newkey rsa:2048 -sha256 -out {{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localclient.crt -outform PEM -keyout {{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localclient.key -subj "/CN=Ansible" -extensions v3_req_client
+      openssl pkcs12 -export -out {{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localclient.pfx -in {{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localclient.crt -inkey {{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localclient.key -name "Ansible WSL WinRM Client Certificate" -passout pass:
       rm -rf $OPENSSL_CONF
-    creates: "{{ my_user.home }}/.ansible/winrm/localclient.crt"
+    creates: "{{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localclient.crt"
   when:
     - my_facts.is_wsl
-    - my_facts.has_my_user
+    - my_facts.has_wsl_interop
+    - my_facts.wsl_userprofile_dir
   tags: localwinrm
 
 # Generate self-signed server certificate for WinRM service
@@ -51,17 +56,30 @@
       [ "{{ my_facts.wsl_host_hostname }}" != "localhost" ] && echo "DNS.2 = {{ my_facts.wsl_host_hostname }}" >> $OPENSSL_CONF
       [ "{{ ansible_hostname }}" != "localhost" ] && echo "DNS.3 = {{ ansible_hostname }}" >> $OPENSSL_CONF
 
-      mkdir -m 700 -p {{ my_user.home }}/.ansible/winrm
-      openssl req -x509 -nodes -days 36500 -newkey rsa:2048 -sha256 -out {{ my_user.home }}/.ansible/winrm/localserver.crt -outform PEM -keyout {{ my_user.home }}/.ansible/winrm/localserver.key -subj "/CN=localhost" -extensions v3_req_server
-      openssl pkcs12 -export -out {{ my_user.home }}/.ansible/winrm/localserver.pfx -in {{ my_user.home }}/.ansible/winrm/localserver.crt -inkey {{ my_user.home }}/.ansible/winrm/localserver.key -name "Ansible WSL WinRM Server Certificate" -passout pass:
-      rm -rf $OPENSSL_CONF {{ my_user.home }}/.ansible/winrm/localserver.crt {{ my_user.home }}/.ansible/winrm/localserver.key
-    creates: "{{ my_user.home }}/.ansible/winrm/localserver.pfx"
+      mkdir -m 700 -p {{ my_facts.wsl_userprofile_dir }}/.ansible/winrm
+      openssl req -x509 -nodes -days 36500 -newkey rsa:2048 -sha256 -out {{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localserver.crt -outform PEM -keyout {{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localserver.key -subj "/CN=localhost" -extensions v3_req_server
+      openssl pkcs12 -export -out {{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localserver.pfx -in {{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localserver.crt -inkey {{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localserver.key -name "Ansible WSL WinRM Server Certificate" -passout pass:
+      rm -rf $OPENSSL_CONF {{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localserver.crt {{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localserver.key
+    creates: "{{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localserver.pfx"
   when:
     - my_facts.is_wsl
-    - my_facts.has_my_user
+    - my_facts.has_wsl_interop
+    - my_facts.wsl_userprofile_dir
   tags: localwinrm
 
-- import_tasks: tasks/post_wsl_winrm_check.yml
+# Test WinRM connection
+- include_role:
+    name: _common
+    tasks_from: winrm_check
+  vars:
+    winrm_host: "{{ my_facts.wsl_host_ip }}"
+    winrm_clientcert: "{{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localclient.crt"
+    winrm_clientkey: "{{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localclient.key"
+  when:
+    - my_facts.is_wsl
+    - my_facts.has_wsl_interop
+    - my_facts.wsl_userprofile_dir
+  tags: localwinrm
 
 # Execute WinRM setup script
 # This step requires interactive Windows elevation but since this is WSL only
@@ -73,22 +91,37 @@
   command: >
     {{ my_facts.wsl_powershell }} -Command
       '$p = Start-Process -PassThru -Wait -Verb RunAs powershell.exe'
-      '"-ExecutionPolicy Bypass -File {{ my_facts.wsl_unc_playbook_dir }}\scripts\winrm.ps1 -ServerCertPath {{ my_facts.wsl_unc_home_dir }}\.ansible\winrm\localserver.pfx -ClientCertPath {{ my_facts.wsl_unc_home_dir }}\.ansible\winrm\localclient.pfx -User Ansible -FirewallInterface -FirewallLocalSubnet `"vEthernet (WSL)`" -FirewallRuleName `"Ansible WSL WinRM (HTTPS)`""'
+      '"-ExecutionPolicy Bypass -File {{ my_facts.wsl_unc_playbook_dir }}\scripts\winrm.ps1 -ServerCertPath {{ my_user.win_userprofile }}\.ansible\winrm\localserver.pfx -ClientCertPath {{ my_user.win_userprofile }}\.ansible\winrm\localclient.pfx -User Ansible -FirewallInterface -FirewallLocalSubnet `"vEthernet (WSL)`" -FirewallRuleName `"Ansible WSL WinRM (HTTPS)`""'
       ';Exit $p.ExitCode'
   when:
     - my_facts.is_wsl
+    - my_facts.has_wsl_interop
     - my_facts.wsl_unc_playbook_dir
-    - my_facts.has_my_user
+    - my_facts.wsl_userprofile_dir
     - not my_facts.can_winrm
   register: out
   tags: localwinrm
 
-- import_tasks: tasks/post_wsl_winrm_check.yml
+# Re-test WinRM connection
+- include_role:
+    name: _common
+    tasks_from: winrm_check
+  vars:
+    winrm_host: "{{ my_facts.wsl_host_ip }}"
+    winrm_clientcert: "{{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localclient.crt"
+    winrm_clientkey: "{{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localclient.key"
+  when:
+    - out.changed
+    - my_facts.is_wsl
+    - my_facts.has_wsl_interop
+    - my_facts.wsl_userprofile_dir
+  tags: localwinrm
 
 - fail:
     msg: "WARNING: Unable to WinRM to Windows host, no Windows tasks will be executed!"
   when:
     - my_facts.is_wsl
+    - my_facts.has_wsl_interop
     - not my_facts.can_winrm
   ignore_errors: true
 
@@ -100,8 +133,8 @@
     hostname: "{{ my_facts.wsl_host_ip }}"
     ansible_winrm_host: "{{ my_facts.wsl_host_ip }}"
     ansible_winrm_transport: certificate
-    ansible_winrm_cert_pem: "{{ my_user.home }}/.ansible/winrm/localclient.crt"
-    ansible_winrm_cert_key_pem: "{{ my_user.home }}/.ansible/winrm/localclient.key"
+    ansible_winrm_cert_pem: "{{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localclient.crt"
+    ansible_winrm_cert_key_pem: "{{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localclient.key"
     ansible_winrm_server_cert_validation: ignore
     ansible_become_method: runas
     # NOTE: Empty become password set using -K as it won't work on Windows
@@ -110,8 +143,10 @@
     groups: windows
   when:
     - my_facts.is_wsl
-    - my_facts.has_my_user
+    - my_facts.has_wsl_interop
+    - my_facts.wsl_userprofile_dir
     - my_facts.can_winrm
+  register: out
   tags: localwinrm
 - set_fact:
     # NOTE: pre_windows.yml will do overrides
@@ -120,7 +155,8 @@
   delegate_facts: true
   delegate_to: "{{ my_facts.wsl_host_ip }}"
   when:
+    - out.changed
     - my_facts.is_wsl
-    - my_facts.has_my_user
+    - my_facts.has_wsl_interop
     - my_facts.can_winrm
   tags: localwinrm

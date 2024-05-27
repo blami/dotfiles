@@ -18,7 +18,7 @@ env:
 # NOTE: This is shared by both Linux and Windows tasks but separated using win_
 # prefix.
 my_user:
-  # -e user=NAME
+  # -e username=NAME
   username: "blami"
   gecos: "Ondrej Balaz,,,,blami@blami.net"
   shell: "/usr/bin/zsh"
@@ -39,8 +39,11 @@ my_user:
   umask: "002"
   # is_local applies to both Linux and Windows (AD)
   is_local: true
+  # -e win_username=NAME
   win_username: "blami"
   win_domain_username: "LOCALDOMAIN\\blami"
+  # NOTE: empty defaults to C:\Users\{{ my_user.win_username }}
+  win_userprofile:
   is_msaccount: false
 
 # Facts
@@ -60,6 +63,7 @@ my_facts:
   wsl_powershell:
   wsl_unc_home_dir:
   wsl_unc_playbook_dir:
+  wsl_userprofile_dir:
   wsl_unc_userprofile_dir:
   wsl_version:
   wsl_windrive_dir:
@@ -68,4 +72,5 @@ my_facts:
   wsl_host_ip:
   wsl_guest_ip:
   # tasks/pre_windows.yml
+  has_choco: false
   win_choco_source:

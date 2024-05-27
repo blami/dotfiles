@@ -57,9 +57,9 @@
 # NOTE: Override my_user.win_username and my_user.win_domain_username as when
 # running from WSL user already exists.
 # NOTE: This is being passed in post_wsl.yml to Windows localhost.
-- name: "Gathering WSL Windows Username"
+- name: "Gathering WSL Windows Username and USERPROFILE"
   shell: |
-    {{ my_facts.wsl_powershell }} -Command '$env:USERNAME,"$env:USERDOMAIN\$env:USERNAME" | Write-Host'
+    {{ my_facts.wsl_powershell }} -Command '$env:USERNAME,"$env:USERDOMAIN\$env:USERNAME","$env:USERPROFILE" | Write-Host'
   register: out
   changed_when: false
   when:
@@ -71,6 +71,7 @@
       {{ my_user | xcombine({
         "win_username": out.stdout_lines[0],
         "win_domain_username": out.stdout_lines[1],
+        "win_userprofile": out.stdout_lines[2],
       }) }}
   when:
     - my_facts.is_wsl
