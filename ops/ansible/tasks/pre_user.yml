@@ -85,21 +85,6 @@
 
 # Windows
 - block:
-  # TODO: Check if user exists?
-
-  - name: "Checking Become {{ my_user.win_domain_username }}"
-    win_shell: $true
-    become: true
-    become_user: "{{ my_user.win_domain_username }}"
-    register: out
-    changed_when: false
-    ignore_errors: true
-  - set_fact:
-      my_facts: >
-        {{ my_facts | xcombine({
-          "has_become_my_user": false if ("failed" in out and out.failed) else true
-        }) }}
-
   - name: "Checking If Ansible is Local Administrator"
     win_whoami:
     register: out
@@ -110,6 +95,61 @@
         {{ my_facts | xcombine({
           "has_administrator": (out.groups | selectattr('account_name', 'contains', 'Administrators') | list | length) > 0,
         }) }}
+
+  - name: "Defaulting User Home and/or Domain Username"
+    set_fact:
+      my_user: >
+        {{ my_user | xcombine({
+          "win_userprofile": "C:\\Users\\" + my_user.win_username if not my_user.win_userprofile else my_user.win_userprofile,
+          "win_domain_username": "LOCALDOMAIN\\" + my_user.win_username if not my_user.win_domain_username else my_user.win_domain_username
+        }) }}
+    when:
+      - not my_user.home or not my_user.win_domain_username
+
+  - name: "Checking if User {{ my_user.win_domain_username }} Exists"
+    win_user:
+      name: "{{ my_user.win_domain_username }}"
+    check_mode: true
+    register: out
+  - set_fact:
+      my_facts: >
+        {{ my_facts | xcombine({
+          "has_my_user": false if ("failed" in out and out.failed) else true
+        }) }}
+
+  - name: "Checking Become {{ my_user.win_domain_username }}"
+    win_shell: $true
+    become: true
+    become_user: "{{ my_user.win_domain_username }}"
+    register: out
+    changed_when: false
+    ignore_errors: true
+    when:
+      - my_facts.has_my_user
+  - set_fact:
+      my_facts: >
+        {{ my_facts | xcombine({
+          "has_become_my_user": false if (not my_facts.has_my_user or ("failed" in out and out.failed)) else true
+        }) }}
+
+  # TODO: If it is WSL then refresh user facts?
+  - name: "Gathering User Facts"
+    win_whoami:
+    register: out
+    changed_when: false
+    become: true
+    become_user: "{{ my_user.win_domain_username }}"
+    when:
+      - my_facts.has_my_user
+      - my_facts.has_become_my_user
+  - set_fact:
+      my_user: >
+        {{ my_user | xcombine({
+          "win_userprofile": ansible_facts.env.USERPROFILE,
+        }) }}
+    when:
+      - my_facts.has_become_user
+
 
   when:
     - ansible_facts.os_family in ("Windows",)
