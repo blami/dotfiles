@@ -124,6 +124,7 @@
     - my_facts.has_wsl_interop
     - not my_facts.can_winrm
   ignore_errors: true
+  tags: localwinrm
 
 - name: "Adding {{ my_facts.wsl_host_ip }} To Windows Hosts"
   add_host:
