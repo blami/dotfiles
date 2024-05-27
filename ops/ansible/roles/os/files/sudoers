@@ -1,0 +1,21 @@
+# /etc/sudoers - sudo security policy
+# THIS FILE MUST BE EDITED WITH 'visudo' COMMAND AS USER 'root'
+
+Defaults    env_reset
+Defaults    always_set_home
+Defaults    env_keep = "http_proxy https_proxy ftp_proxy all_proxy no_proxy HTTP_PROXY HTTPS_PROXY FTP_PROXY ALL_PROXY NO_PROXY"
+Defaults    env_keep += "LANG LC_ALL LC_ADDRESS LC_CTYPE LC_COLLATE LC_IDENTIFICATION LC_MEASUREMENT LC_MESSAGES LC_MONETARY LC_NAME LC_NUMERIC LC_PAPER LC_TELEPHONE LC_TIME"
+
+Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin
+
+# Refuse to run if password can't be hidden; fix CVE-2005-4890
+Defaults    !visiblepw
+Defaults    use_pty
+
+# Rules
+# NOTE: Everything else should go to /etc/sudoers.d
+root        ALL=(ALL)   ALL
+%sudo       ALL=(ALL)   ALL
+
+# Read drop-in files from /etc/sudoers.d
+@includedir /etc/sudoers.d

@@ -1,0 +1,22 @@
+---
+# Configure sudo
+
+# NOTE: On non-Debian systems is sometimes wheel used instead of sudo; to use
+# my /etc/sudoers file sudo is required.
+- name: "Adding sudo group"
+  group:
+    name: sudo
+    system: true
+    state: present
+
+- name: "Installing sudo files"
+  copy:
+    src: "{{ role_path }}/files/{{ item }}"
+    dest: "/etc/{{ item }}"
+    owner: root
+    group: root
+    mode: 644
+    force: true
+  with_items:
+    - sudoers
+    - sudoers.d/99-sudo_defaults

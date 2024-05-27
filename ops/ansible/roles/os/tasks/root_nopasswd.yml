@@ -1,0 +1,10 @@
+---
+# Remove root password
+
+- name: "Removing root Password"
+  user:
+    name: root
+    password: ""
+    state: present
+  when:
+    - my_user.is_local

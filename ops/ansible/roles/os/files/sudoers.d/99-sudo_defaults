@@ -1,0 +1,5 @@
+# /etc/sudoers.d/99-defaults - set less-strict defaults for %sudo
+
+Defaults:%sudo  !env_reset
+Defaults:%sudo  !always_set_home
+Defaults:%sudo  !secure_path

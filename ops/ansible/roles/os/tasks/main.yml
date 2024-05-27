@@ -4,8 +4,10 @@
 # Linux
 - block:
     # NOTE: Install packages first as they create groups
-    - import_tasks: user.yml              # create and/or configure user
-    - import_tasks: wsl.yml               # configure WSL (might restart WSL)
+    - import_tasks: sudo.yml
+    - import_tasks: user.yml
+    - import_tasks: root_nopasswd.yml
+    - import_tasks: wsl.yml
   become: true
   become_user: "root"
   when:
