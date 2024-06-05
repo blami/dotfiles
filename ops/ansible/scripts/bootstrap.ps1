@@ -105,7 +105,8 @@ function Invoke-Commands {
 	param (
 		[string]$WSLDistro = $WSLDistro,
 		[string]$User = "root",
-		[string[]]$Commands
+		[string[]]$Commands,
+  		[switch]$Exit = $true
 	)
 
     $ProxyEnv = ""
@@ -127,7 +128,7 @@ function Invoke-Commands {
 		& wsl -d $WSLDistro -u "$User" --exec bash -c "$(if ($Proxy) {"export http_proxy=${Proxy} https_proxy=${Proxy} ; "})$Command"
         if ($LASTEXITCODE -ne 0) {
             Write-Error "Last command return code: ${LASTEXITCODE}"
-            exit 1
+            if($Exit) { exit 1 }
         }
 	}
 }
@@ -319,7 +320,7 @@ if ($Ansible) {
 		if ($AnsibleRetry -gt 1) {
 			Write-Host -ForegroundColor DarkYellow "> Retry ${AnsibleRetry}"
 		}
-		Invoke-Commands -Distro $WSLDistro -User "root" -Commands $AnsibleCommands -EA SilentlyContinue
+		Invoke-Commands -Distro $WSLDistro -User "root" -Commands $AnsibleCommands -Exit:$false
 		$AnsibleRetryPath = Join-Path -Path $env:USERPROFILE ".ansible/${WSLDistro}.retry"
 		if (Test-Path -Path $AnsibleRetryPath) {
 			Write-Host -ForegroundColor DarkYellow "> Retry file found, will re-run. Sleeping 5s"
