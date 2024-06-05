@@ -63,6 +63,9 @@
       - my_facts.wsl_userprofile_dir
       - bootstrapps1 is defined
 
+  - pause:
+      seconds: 5
+
   - name: "Shutting Down WSL for Changes To Take Effect"
     command: '{{ my_facts.wsl_windrive_dir }}/Windows/System32/wsl.exe -t {{ my_facts.wsl_distro }}'
     when:
