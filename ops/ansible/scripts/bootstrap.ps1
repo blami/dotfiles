@@ -319,7 +319,7 @@ if ($Ansible) {
 		if ($AnsibleRetry -gt 1) {
 			Write-Host -ForegroundColor DarkYellow "> Retry ${AnsibleRetry}"
 		}
-		Invoke-Commands -Distro $WSLDistro -User "root" -Commands $AnsibleCommands
+		Invoke-Commands -Distro $WSLDistro -User "root" -Commands $AnsibleCommands -EA SilentlyContinue
 		$AnsibleRetryPath = Join-Path -Path $env:USERPROFILE ".ansible/${WSLDistro}.retry"
 		if (Test-Path -Path $AnsibleRetryPath) {
 			Write-Host -ForegroundColor DarkYellow "> Retry file found, will re-run. Sleeping 5s"
