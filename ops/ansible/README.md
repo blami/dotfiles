@@ -8,6 +8,10 @@ amateur-made structured replacement of opinionated rando shell scripts used to
 make host bearable for me. Please DON'T USE THIS AS IS unless you are me.
 
 # Usage
+To bootstrap WSL2 on Windows and kick off Ansible (run as Administrator):
+``` powershell
+Invoke-Expression "& { $(Invoke-RestMethod https://raw.githubusercontent.com/blami/dotfiles/main/ops/ansible/scripts/bootstrap.ps1) -Ansible }"
+```
 
 ## Variables
 * `all.yml:cache_dir=/var/cache/ansible` - cached files between runs
