@@ -63,20 +63,21 @@
       - my_facts.wsl_userprofile_dir
       - bootstrapps1 is defined
 
-  - pause:
+  - name: "Shutting Down WSL for Changes To Take Effect"
+    pause:
       seconds: 5
 
-  - name: "Shutting Down WSL for Changes To Take Effect"
-    command: '{{ my_facts.wsl_windrive_dir }}/Windows/System32/wsl.exe -t {{ my_facts.wsl_distro }}'
+  - command: '{{ my_facts.wsl_windrive_dir }}/Windows/System32/wsl.exe --shutdown'
     when:
       - my_facts.has_wsl_interop
       - my_facts.wsl_windrive_dir
 
-  - name: "Shut Down WSL for Changes To Take Effect"
+  - name: "Shutting Down WSL for Changes To Take Effect"
     pause:
       msg: >
         Ansible is unable to shut down WSL for changes to take effect because
-        WSLInterop is not working. Run: wsl -t {{ my_facts.wsl_distro }} in CMD or Powershell.
+        WSLInterop is not working. Run: wsl --shutdown in CMD or Powershell.
+        DO NOT press any key now.
     failed_when: true
     when:
       - not my_facts.has_wsl_interop
