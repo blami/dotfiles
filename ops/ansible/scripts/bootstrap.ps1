@@ -126,9 +126,8 @@ function Invoke-Commands {
 		}
 		Write-Host -ForegroundColor DarkYellow "> Running $Command"
 		& wsl -d $WSLDistro -u "$User" --exec bash -c "$(if ($Proxy) {"export http_proxy=${Proxy} https_proxy=${Proxy} ; "})$Command"
-        if ($LASTEXITCODE -ne 0) {
+        if (($LASTEXITCODE -ne 0) -and $Exit) {
             Write-Error "Last command return code: ${LASTEXITCODE}"
-            if($Exit) { exit 1 }
         }
 	}
 }
