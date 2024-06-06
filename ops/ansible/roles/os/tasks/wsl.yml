@@ -61,7 +61,7 @@
     when:
       - my_facts.has_wsl_interop
       - my_facts.wsl_userprofile_dir
-      - bootstrapps1 is defined
+      - "bootstrapps1" in vars
 
   - name: "Shutting Down WSL for Changes To Take Effect"
     pause:
