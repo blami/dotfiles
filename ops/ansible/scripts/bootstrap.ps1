@@ -79,7 +79,7 @@ param (
 	[string[]]$AnsibleCommands = @(
 		"DEBIAN_FRONTEND=noninteractive ; apt-get -o Acquire::ForceIPv4=true update && apt-get -o Acquire::ForceIPv4=true install -y python3-apt python3-winrm ansible",
 		"rm -rf /tmp/dotfiles ; git clone --depth 1 https://github.com/blami/dotfiles.git /tmp/dotfiles"
-		"cd /tmp/dotfiles/ops/ansible ; LC_ALL=C.utf-8 ansible-playbook play.yml -e `"user=%WSLDistroUser% bootstrapps1=1`""
+		"cd /tmp/dotfiles/ops/ansible ; LC_ALL=C.utf-8 ansible-playbook play.yml -e 'user=%WSLDistroUser% bootstrapps1=1'"
 	),
     [string]$Proxy = "",
     [string]$NoProxy = "",
