@@ -1,0 +1,10 @@
+---
+# Install DEB packages
+
+- name: "Installing DEB Packages"
+  apt:
+    pkg: "{{ deb_packages }}"
+    install_recommends: false
+    state: latest
+  when:
+    - ansible_facts.os_family in ("Debian",)
