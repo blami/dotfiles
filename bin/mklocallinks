@@ -14,6 +14,7 @@ read -r -d '' FILES <<- EOF
     .zlogin
     .zlogout
     .zprofile
+    .zshenv
     .zshrc
     .zsh
     .gitconfig

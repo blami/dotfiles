@@ -108,7 +108,7 @@ prompt_blami_precmd() {
     # Kerberos ticket check
     (( $+commands[klist] )) && [ -n "$KRB5P" ] && {
         # NOTE: Read klist -l output from 3rd line and look for principal
-        local IFS=$'\n' ; for l in $(klist -l 2>/dev/null | tail +3); do
+        local IFS=$'\n' ; for l in $(klist -l 2>/dev/null ); do
             [[ "$l" =~ "^$KRB5P" && ! "$l" =~ "\(Expired\)$" ]] && user=$user^
         done
     }

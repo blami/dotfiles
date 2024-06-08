@@ -168,5 +168,10 @@ TRAPALRM() {
 prompt blami
 # }}}
 
+# Profile
+if [ -n "${ZPROF+1}" ]; then
+    zprof
+fi
+
 
 # vim:set ft=zsh:
