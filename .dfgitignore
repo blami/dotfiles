@@ -119,6 +119,7 @@ _sort
 /*_bb
 /*_bb.*
 /.ssh/*_bb
+/ops/ansible/BB*
 /ops/ansible/bb*
 /ops/ansible/*/bb
 
