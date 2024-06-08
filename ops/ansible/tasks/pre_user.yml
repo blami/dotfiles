@@ -148,8 +148,7 @@
           "win_userprofile": ansible_facts.env.USERPROFILE,
         }) }}
     when:
-      - my_facts.has_become_user
-
+      - my_facts.has_become_my_user
 
   when:
     - ansible_facts.os_family in ("Windows",)
