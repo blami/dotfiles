@@ -22,7 +22,7 @@ def xcombine(*args, **kw):
             raise AnsibleFilterError("Argument is not a dictionary")
 
     if kw.get("remove_none", False):
-        result = {k: v for k, v in result.items()} # if v is not None}
+        result = {k: v for k, v in result.items() if v is not None}
 
     return result
 
