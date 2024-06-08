@@ -120,7 +120,7 @@ _sort
 /*_bb.*
 /.ssh/*_bb
 /ops/ansible/bb*
-/ops/ansible/roles/bb
+/ops/ansible/*/bb
 
 # Trash
 *.bak
