@@ -51,7 +51,24 @@
   when:
     - my_facts.is_wsl
 
-# TODO: Put this in _common/tasks/wsl.yml
+# NOTE: This can be only done here as os role creates the user.
+- name: "Setting {{ my_user.username }} As Default WSL User"
+  shell: |
+    OLD_UID=$({{ my_facts.wsl_powershell }} -Command "Write-Host (Get-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss\*\ DistributionName | Where-Object -Property DistributionName -eq rhel8 | Get-ItemProperty -Name DefaultUid -EA SilentlyContinue).DefaultUid")
+    NEW_UID=$(id -ur {{ my_user.username }})
+    if [ "$OLD_UID" != "$NEW_UID" ]; then
+      {{ my_facts.wsl_powershell }} -Command "Get-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss\*\ DistributionName | Where-Object -Property DistributionName -eq {{ my_facts.wsl_distro }} | Set-ItemProperty -Name DefaultUid -Value $NEW_UID"
+      echo "changed"
+    fi
+  register: out_wsl_defaultuid
+  changed_when:
+    - out_wsl_defaultuid.stdout is match('changed')
+  when:
+    - my_facts.is_wsl
+    - my_facts.wsl_powershell
+    - my_facts.has_wsl_interop
+
+# Restart WSL if needed
 - block:
   # NOTE: Touch file for bootstrap.ps1 so it knows it should re-run Ansible
   - name: "Creating bootstrap.ps1 Re-Run Stamp"
@@ -84,20 +101,18 @@
 
   when:
     - my_facts.is_wsl
-    - (out_wsl_tmpfs.changed or out_wsl_wslconf.changed or out_wsl_wslinterop.changed)
+    - (out_wsl_tmpfs.changed or out_wsl_wslconf.changed or out_wsl_wslinterop.changed or out_wsl_defaultuid.changed)
 
-# BUG: Enabling systemd ruined interop in early systemd-able WSL releases
-# because systemd-binfmt would override WSLInterop.
-#- name: Enabling systemd-binfmt Unit
-#  systemd:
-#    name: systemd-binfmt
-#    enabled: true
-#    state: started
-#  when:
-#    - my_facts.is_wsl
-#    - my_facts.has_systemd
+- name: "Enabling systemd-binfmt Unit"
+  systemd:
+    name: systemd-binfmt
+    enabled: true
+    state: started
+  when:
+    - my_facts.is_wsl
+    - my_facts.has_systemd
 
-- name: Installing WSL Scripts
+- name: "Installing WSL Scripts"
   copy:
     src: "{{ role_path }}/files/{{ item }}"
     dest: "/usr/local/bin"
@@ -107,8 +122,6 @@
     force: true
   with_items:
     - wsl_clocksync
-    - wsl_hosts
-    - wsl_resolvconf
   when:
     - my_facts.is_wsl
 
