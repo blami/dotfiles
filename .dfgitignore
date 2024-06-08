@@ -39,6 +39,7 @@ _sort
 /.config/Bitwarden*
 /.config/weechat/certs
 /.gitcookies
+/.git-credentials
 /.gnupg
 /.krb5
 /.netrc
