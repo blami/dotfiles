@@ -54,7 +54,7 @@
 # NOTE: This can be only done here as os role creates the user.
 - name: "Setting {{ my_user.username }} As Default WSL User"
   shell: |
-    OLD_UID=$({{ my_facts.wsl_powershell }} -Command "Write-Host (Get-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss\*\ DistributionName | Where-Object -Property DistributionName -eq rhel8 | Get-ItemProperty -Name DefaultUid -EA SilentlyContinue).DefaultUid")
+    OLD_UID=$({{ my_facts.wsl_powershell }} -Command "Write-Host (Get-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss\*\ DistributionName | Where-Object -Property DistributionName -eq {{ my_facts.wsl_distro }} | Get-ItemProperty -Name DefaultUid -EA SilentlyContinue).DefaultUid")
     NEW_UID=$(id -ur {{ my_user.username }})
     if [ "$OLD_UID" != "$NEW_UID" ]; then
       {{ my_facts.wsl_powershell }} -Command "Get-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss\*\ DistributionName | Where-Object -Property DistributionName -eq {{ my_facts.wsl_distro }} | Set-ItemProperty -Name DefaultUid -Value $NEW_UID"
