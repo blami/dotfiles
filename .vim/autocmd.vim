@@ -18,10 +18,12 @@ autocmd! TerminalOpen * setl nonu scl=no cc= nolist
 autocmd! WinEnter,BufWinEnter * call todo#highlight(1)
 
 "Configuration reload
-autocmd! SourcePost vimrc
+if v:version >= 802
+    autocmd! SourcePost vimrc
             \ if !has('vim_starting') |
             \   call g:VimrcInclude('all') |
             \ endif
+endif
 
 "Signal handlers
 "autocmd! SigUSR1 * call ...

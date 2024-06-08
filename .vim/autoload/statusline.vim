@@ -6,6 +6,9 @@
 "Print out opinionated statusline.
 func! statusline#statusline() abort
     let l:s = ''
+    if v:version < 802
+        let g:statusline_winid = win_getid()
+    endif
     let l:cur = g:statusline_winid == win_getid()                               "is current window?
     let l:w = winwidth(g:statusline_winid)                                      "is wider than 80 columns?
     let l:sbt = 0                                                               "is special buffer type
@@ -47,50 +50,50 @@ func! statusline#statusline() abort
     if &paste                           | let l:led[4] = 'P' | endif            "paste mode (global)
 
     "Left side
-    let l:s ..= '%n'                                                            "buffer number
-    if l:cur | let l:s ..= ' %1*' .. m .. '%*' | endif                          "mode
+    let l:s .= '%n'                                                            "buffer number
+    if l:cur | let l:s .= ' %1*' . m . '%*' | endif                          "mode
     "Special buffers
     "1 N [Help] gui.txt[RO]                                           1,1/5 All
     if l:bt ==# 'help'
-        let l:s ..= ' [Help] %t%r'                                              "file name[RO]
+        let l:s .= ' [Help] %t%r'                                              "file name[RO]
         let l:sbt = 1
     "1 N [Terminal]                                                   1,1/5 All
     elseif l:bt ==# 'terminal'
-        let l:s ..= ' [Terminal] %t'                                            "[TERMINAL] [...]
+        let l:s .= ' [Terminal] %t'                                            "[TERMINAL] [..]
         let l:sbt = 1
     "1 N [Quickfix List]                                              1,1/5 All
     "1 N [Location List] :grep foo /bar/*                             1,1/5 All
     "NOTE: See override in after/ftplugin/qf.vim
     elseif l:bt ==# 'quickfix'
-        let l:s ..= ' %t%{exists("w:quickfix_title")?" "..w:quickfix_title:""}'
+        let l:s .= ' %t%{exists("w:quickfix_title")?" ".w:quickfix_title:""}'
         let l:sbt = 1
     "1 N [Command Line]                                               1,1/5 All
     elseif l:bt ==# 'nofile'
-        let l:s ..= ' %t'
+        let l:s .= ' %t'
         let l:sbt = 1
     "Normal buffers
     "1 N vimrc[+][RO] [vim] unix,utf-8 -               en ----- >#72 1,1/50 10%
     else
-        let l:s ..= ' %t%m%r'                                                   "file name[+][RO]
-        let l:s ..= ' %2*[%{&ft!=""?&ft:"-"}]%*'                                "file type
-        if l:w >= 80 | let s ..= ' %{&ff}%{&fenc!=""?","..&fenc.." ":""}' | endif "format,encoding
-        if (l:cur && l:w >= 80) | let l:s ..= '%3*' .. statusline#page() .. '%*' | endif      "status pages TODO
+        let l:s .= ' %t%m%r'                                                   "file name[+][RO]
+        let l:s .= ' %2*[%{&ft!=""?&ft:"-"}]%*'                                "file type
+        if l:w >= 80 | let s .= ' %{&ff}%{&fenc!=""?",".&fenc." ":""}' | endif "format,encoding
+        if (l:cur && l:w >= 80) | let l:s .= '%3*' . statusline#page() . '%*' | endif      "status pages TODO
     endif
 
     "Right side
-    let l:s ..= '%='
+    let l:s .= '%='
     "Special buffers (hide everything except ruler at the end)
     if l:sbt
-        let s ..= '%4*'
+        let s .= '%4*'
     "Normal buffers
     else
-        let l:s ..= '%{&spell!=0?strpart(&spelllang,0,2).." ":""}'              "spell lang
-        let l:s ..= join(l:led,'') .. ' '                                       "leds
-        let l:s ..= '%4*%{&tw && matchstr(&fo,"t")!=""?">":""}'                 "comment(#) and text(>) width
-        let l:s ..= '%{&tw && matchstr(&fo,"c")!=""?"#":""}'
-        let l:s ..= '%{&tw && matchstr(&fo,"[tc]")!=""?&tw.." ":""}'
+        let l:s .= '%{&spell!=0?strpart(&spelllang,0,2)." ":""}'              "spell lang
+        let l:s .= join(l:led,'') . ' '                                       "leds
+        let l:s .= '%4*%{&tw && matchstr(&fo,"t")!=""?">":""}'                 "comment(#) and text(>) width
+        let l:s .= '%{&tw && matchstr(&fo,"c")!=""?"#":""}'
+        let l:s .= '%{&tw && matchstr(&fo,"[tc]")!=""?&tw." ":""}'
     endif
-    let l:s ..= '%c,%l%* %P'                                                    "ruler
+    let l:s .= '%c,%l%* %P'                                                    "ruler
 
     "Remove all highlight groups if not active window
     return l:cur?l:s:substitute(l:s, '%[1-9]\?\*','','g')

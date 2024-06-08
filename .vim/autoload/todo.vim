@@ -26,7 +26,7 @@ func! todo#highlight(...) abort
     let l:arg = get(a:, 1, !matchid)
     let l:todo_patterns = get(g:, 'todo_patterns', s:todo_patterns)
     if l:arg && l:matchid == 0
-        call matchadd('CustomTodo', '\(' .. join(l:todo_patterns, '\|') .. '\)', 10)
+        call matchadd('CustomTodo', '\(' . join(l:todo_patterns, '\|') . '\)', 10)
     elseif !l:arg && l:matchid != 0
         call matchdelete(l:matchid)
     endif
@@ -36,7 +36,7 @@ func! todo#quickfix() abort
     let l:todo_patterns = get(g:, 'todo_patterns', s:todo_patterns)
     let l:matches = []
     for l:p in l:todo_patterns
-        exec 'silent g/' .. l:p .. '/call add(l:matches, [getpos(".")[1], match(getline("."), l:p)])'
+        exec 'silent g/' . l:p . '/call add(l:matches, [getpos(".")[1], match(getline("."), l:p)])'
     endfor
     let l:qf = getqflist()
     for l:m in l:matches

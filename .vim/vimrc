@@ -13,7 +13,7 @@ endif "has('vim_starting')
 
 "{{{ Variables
 "NOTE: To check environment variable use if exists('$VAR')
-let g:vimdir = $HOME .. '/.vim/'
+let g:vimdir = $HOME . '/.vim/'
 "let g:sudo=0                               "TODO: move sudo check from below here...
 "}}}
 
@@ -57,8 +57,10 @@ set gdefault                                "invert regex /g
 "{{{ Diff
 set diffopt=vertical                        "open diff in vertical split
 set diffopt+=filler,iwhite                  "show filler lines, ignore spaces
-set diffopt+=internal,algorithm:histogram   "use internal diff library, same algo as git
-set diffopt+=indent-heuristic               "use indentation heuristics
+if has("patch-8.1.0360")
+    set diffopt+=internal,algorithm:histogram "use internal diff library, same algo as git
+    set diffopt+=indent-heuristic           "use indentation heuristics
+endif
 "}}}
 
 
@@ -153,8 +155,8 @@ func! TabLine()                             "function that produces tabline
     "Left side
     for i in range(tabpagenr('$'))
         let t ..= i + 1 == tabpagenr() ? '%#TabLineSel#' : '%#TabLine#'
-        let t ..= '%' .. (i + 1) .. 'T'
-        let t ..= ' ' .. (i + 1) .. ' '
+        let t ..= '%' . (i + 1) . 'T'
+        let t ..= ' ' . (i + 1) . ' '
     endfor
     let t ..= '%#TabLineFill#%T'
 
@@ -217,8 +219,8 @@ set undofile
 let &viminfo="!,'100,<1000,s10,h,n" . g:vimdir . 'viminfo' "see :help viminfo
 "Disable persistence when using sudo to avoid 'root' files in ~
 if $SUDO_USER !=# '' && $USER !=# $SUDO_USER
-        \ && $HOME !=# expand('~' .. $USER)
-        \ && $HOME ==# expand('~' .. $SUDO_USER)
+        \ && $HOME !=# expand('~' . $USER)
+        \ && $HOME ==# expand('~' . $SUDO_USER)
     set noswapfile
     set nobackup
     set noundofile
@@ -263,6 +265,7 @@ filetype indent on
 "e.g. keymap or autocmd can leverage g: variables set by plugins.
 let g:vimrc_includes = [
             \ ['terminfo.vim',  'pre'],
+            \ ['lsp.vim',       'pre'],
             \ ['abbrev.vim',    'post'],
             \ ['autocmd.vim',   'post'],
             \ ['keymap.vim',    'post'],
@@ -271,8 +274,8 @@ let g:vimrc_includes = [
 func! g:VimrcInclude(arg) abort
     for l:i in g:vimrc_includes
         if l:i[1] ==# a:arg || 'all' ==# a:arg
-            let l:f = g:vimdir .. l:i[0]
-            if filereadable(l:f) | exe 'source ' .. l:f | endif
+            let l:f = g:vimdir . l:i[0]
+            if filereadable(l:f) | exe 'source ' . l:f | endif
         endif
     endfor
 endfunc
@@ -281,3 +284,16 @@ call g:VimrcInclude('pre')
 "call g:VimrcInclude('post') is in after/plugin/vimrc.vim
 "call g:VimrcInclude('all') for $MYVIMRC reloads is in autocmd.vim
 "}}}
+
+"packadd lsp
+"let lspServers = [#{
+"	\	  name: 'go',
+"	\	  filetype: ['go', 'gomod'],
+"	\	  path: 'gopls',
+"	\	  args: ['serve'],
+"    \     syncInit: v:true,
+"	\ }]
+"autocmd VimEnter * call LspAddServer(lspServers)
+
+"let lspOpts = #{autoHighlightDiags: v:true}
+"autocmd VimEnter * call LspOptionsSet(lspOpts)
