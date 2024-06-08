@@ -1,14 +1,36 @@
 ---
 # Setup Ansible.
+# TODO: Do we need any directory on controller node? probably not...
+#
+- block:
 
-# - name: "Creating ~/.ansible/cache"
-#   file:
-#     path: "~/.ansible/cache"
-#     mode: 700
-#     state: directory
-#     recurse: true
-#   when:
-#     - ansible_facts.system in ("Linux",)
+  # NOTE: Create ansible cache on the managed node.
+  - name: "Creating /var/cache/ansible"
+    file:
+      path: "/var/cache/ansible"
+      state: directory
+      owner: root
+      group: root
+      mode: 0777
+      recurse: true
+    become: true
+    become_user: "root"
+    when:
+      - my_facts.has_become_root
+
+  - name: "Checking /var/cache/ansible Exists"
+    stat:
+      path: "/var/cache/ansible"
+    register: out
+  - set_fact:
+      my_cache_dir: "/var/cache/ansible"
+    when:
+      - out.stat.exists
+      - out.stat.mode == "0777"
+
+  when:
+    - ansible_facts.system in ("Linux",)
+
 #   # NOTE: delegate to self and the actual inventory_hostname to have the cache
 #   # directory created both on control node and managed node. delegate_facts is
 #   # needed if control node is Linux and managed node Windows...

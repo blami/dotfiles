@@ -76,3 +76,8 @@ my_facts:
   # tasks/pre_windows.yml
   has_choco: false
   win_choco_source:
+
+# Ansible
+# NOTE: my_cache_dir is overriden by tasks/pre_ansible.yml if
+# /var/cache/ansible can be created or already exists. /tmp is just fallback.
+my_cache_dir: /tmp
