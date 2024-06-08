@@ -11,12 +11,12 @@ MSVSINST="/mnt/c/Program Files (x86)/Microsoft Visual Studio"
 
 [ -d "$MSVSINST" ] || return
 
+# BUG: This takes relatively long time to do so cache in ~/.msvs.env?
+#[ -r ~/.msvs.env ] 
+
 MSVSDIR=$("$MSVSINST"/Installer/vswhere.exe -latest -property installationPath)
 MSVSDIR=${MSVSDIR%$'\r'}
 [ -n "$MSVSDIR" ] || return
-
-# BUG: This takes relatively long time to do so cache in ~/.msvs.env?
-#[ -r ~/.msvs.env ] 
 
 # Run vcvarsall.bat and store environment
 # NOTE: In case vcvarsall.bat is not installed output will be empty 2>/dev/null
