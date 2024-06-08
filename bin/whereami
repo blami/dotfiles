@@ -57,9 +57,9 @@ if [ -r "$CACHE" ] && [ -n "$CACHE_EXP" ] ; then
 fi
 
 # Get current country code from ifconfig.io
-OUT=$(http_request "https://ifconfig.io/country_code") || [ -n "$DEFAULT" ] || exit 1
+OUT=$(http_request "https://ifconfig.io/country_code") || [ -n "$DEFAULT" ] || exit 12
 OUT=${OUT:-$DEFAULT}
-[ -z "$OUT" ] && exit 1
+[ -z "$OUT" ] && exit 13
 
 # Write to cache and output
 cat >"$CACHE" <<EOF
