@@ -8,7 +8,7 @@
     chdir: "{{ my_user.home }}"
     cmd: |
       umask {{ my_user.umask }}
-      git init --separate-git-dir .dfgit
+      git init --separate-git-dir .dfgit -b main
       git --git-dir=.dfgit remote add -f -m main origin https://github.com/{{ dotfiles }}
       git --git-dir=.dfgit reset --hard origin/main
       git --git-dir=.dfgit checkout main
