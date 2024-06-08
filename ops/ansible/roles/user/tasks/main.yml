@@ -12,6 +12,8 @@
 
 - block:
     - import_tasks: dotfiles.yml
+    # TODO: -import_tasks: secrets.yml
+    - import_tasks: dotfiles_ssh.yml
   become: true
   become_user: "{{ my_user.username }}"
   when:

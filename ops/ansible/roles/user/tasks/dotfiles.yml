@@ -2,7 +2,7 @@
 # Clone and update dotfiles
 # NOTE: Depends on git being installed by os role and in PATH.
 
-- name: Cloning Dotfiles Repository {{ dotfiles }}
+- name: "Cloning Dotfiles Repository {{ dotfiles }}"
   # NOTE: Not using builtin.git as we clone to ~ which already exists.
   shell:
     chdir: "{{ my_user.home }}"
@@ -18,7 +18,7 @@
   environment: "{{ env }}"
   register: out
 
-- name: Updating Dotfiles
+- name: "Updating Dotfiles"
   shell:
     chdir: "{{ my_user.home }}"
     cmd: |

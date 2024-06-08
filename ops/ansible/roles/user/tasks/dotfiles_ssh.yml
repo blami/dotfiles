@@ -1,0 +1,17 @@
+---
+# Change dotfiles remote to SSH
+# NOTE: Needs to be in separate file so it can run after secrets.yml
+
+- stat:
+    path: "{{ my_user.home }}/.ssh/{{ my_user.ssh_key }}"
+  register: out
+
+- name: "Changing Dotfiles Repository Remote To SSH"
+  shell:
+    chdir: "{{ my_user.home }}"
+    cmd: |
+      umask {{ my_user.umask }}
+      git --git-dir=.dfgit remote set-url --push origin git@github.com:{{ dotfiles }}
+  # Do not run if SSH key is not present
+  when:
+    - out.stat.exists

@@ -22,6 +22,8 @@ my_user:
   username: "blami"
   gecos: "Ondrej Balaz,,,,blami@blami.net"
   shell: "/usr/bin/zsh"
+  # NOTE: relative to ~/.ssh/
+  ssh_key: "keys/id_blami_rsa"
   # -e home=PATH
   # NOTE: empty defaults to /home/{{ my_user.username }}
   home:
