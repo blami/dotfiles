@@ -1,13 +1,17 @@
 ---
 # Setup Chocolatey
 
-# Install latest Chocolatey
-# NOTE: Needs chocolatey community source temporarily enabled.
-# TODO: Figure out how to update chocolatey using local source?
+# NOTE: Temporarily enable "chocolatey" community source to upgrade choco.
+- win_chocolatey_source:
+    name: chocolatey
+    state: present
+  when:
+    - my_facts.has_choco
+
 - name: "Installing Chocolatey"
   win_chocolatey:
     name: chocolatey
-    state: present
+    state: latest
 
 - name: "Disabling Chocolatey Community Source"
   win_chocolatey_source:
@@ -17,7 +21,12 @@
 - name: "Enabling Chocolatey Local Source"
   win_chocolatey_source:
     name: local
-    source: "{{ my_facts.win_choco_source }}"
+    source: "{{ choco_source_dir }}"
     state: present
   when:
-    - my_facts.win_choco_source
+    - choco_source_dir
+
+# NOTE: Install packages
+- include_role:
+    name: _common
+    tasks_from: win_choco_packages

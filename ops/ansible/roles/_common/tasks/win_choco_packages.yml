@@ -1,0 +1,37 @@
+---
+# Pack and install local Chocolatey packages
+
+# WARN: Tasks here rely on WSL UNC path being accessible. With 'certificate'
+# WinRM auth this requires become_user: DOMAIN\USER (see os/tasks/main.yml). If
+# performed as other become_user: they won't work.
+
+# NOTE: Only pack if .nupkg does not exist or there was write to .nuspec after
+# .nupkg was created.
+- name: "Packing Local Chocolatey Packages"
+  win_shell: |
+    Get-ChildItem -Path {{ choco_source_dir }} -Filter *.nuspec -Recurse | ForEach-Object {
+      $nupkg = Get-ChildItem -Path {{ choco_source_dir }} -Filter "$($_.BaseName)*.nupkg" | Sort LastWriteTime | Select -Last 1 
+      if(!($nupkg -and ($_.LastWriteTime -lt $nupkg.LastWriteTime))) {
+        & choco pack $_.FullName
+        if($LASTEXITCODE -ne 0) { Write-Host $_.Name ; Exit 1 }
+      }
+    }
+  args:
+    chdir: "{{ choco_source_dir }}"
+  register: out
+  changed_when:
+    - out.stdout is search('Successfully created package')
+  when:
+    - my_facts.has_choco
+    - choco_source_dir
+
+- name: "Installing Local Chocolatey Packages"
+  win_chocolatey:
+    name: "{{ item }}"
+    state: "latest"
+  loop_control:
+    label: "{{ item }}"
+  with_items: "{{ win_choco_packages }}"
+  when:
+    - my_facts.has_choco
+    - choco_source_dir

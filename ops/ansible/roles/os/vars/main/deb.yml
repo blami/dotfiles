@@ -1,0 +1,141 @@
+---
+# APT repositories and packages variables
+
+deb_sources:
+  - name: "debian"
+    sources:
+      - "deb https://deb.debian.org/debian testing main contrib non-free non-free-firmware"
+      - "deb https://deb.debian.org/debian-security/ testing-security main contrib non-free-firmware"
+      - "deb https://deb.debian.org/debian testing-backports main contrib non-free-firmware"
+      # NOTE: See tasks/apt.yml and files/apt.preferences.d/10release-priority
+      - "deb https://deb.debian.org/debian unstable main contrib non-free non-free-firmware"
+      - "deb https://deb.debian.org/debian experimental main contrib non-free non-free-firmware"
+
+deb_packages:
+  - acl                       # manage filesystem access lists
+  - apt-listchanges           # show package change history
+  - apt-transport-https       # https support for APT
+  - apt-utils
+  - aptitude
+  - bind9-dnsutils
+  - bind9-host
+  - bpfcc-tools               # BPF compiler collection
+  - bpftrace                  # BPF tracing analyzer
+  - bzip2
+  - cpio
+  - cpuid
+  - cryptsetup-bin
+  - curl
+  - dbus
+  - dnsutils                  # dig
+  - dosfstools
+  - equivs
+  - fakeroot                  # simulate running as root
+  - file
+  - gawk
+  - gdisk
+  - gettext-base
+  - git
+  - git-lfs
+  - gnupg
+  - groff-base
+  - gzip
+  - htop
+  - hwdata                    # hardware identification/configuration data
+  - icdiff                    # side by side diff
+  - inetutils-telnet
+  - init                      # NOTE: init metapackage
+  - ipcalc                    # IP address/mask/subnet arithmetics calculator
+  - iproute2
+  - iputils-arping
+  - iputils-ping
+  - iputils-tracepath
+  - isc-dhcp-client
+  - isc-dhcp-common
+  - isoquery
+  - jq                        # JSON parser and query language
+  - kmod
+  - less
+  - lftp
+  - libc-l10n
+  - liblockfile-bin
+  - libnss-systemd
+  - libpam-systemd
+  - lm-sensors
+  - locales
+  - logrotate
+  - lsof                      # list open files
+  - ltrace
+  - m4                        # macro processor
+  - make
+  - man-db
+  - manpages
+  - mosh                      # mobile shell
+  - mtr                       # traceroute & ping
+  - ncurses-term              # additional terminal type definitions
+  - net-tools                 # netstat & co.
+  - netcat-openbsd
+  - netperf                   # network speed meter
+  - nftables
+  - nmap
+  - openssh-client
+  - openssh-server
+  - p7zip
+  - pciutils
+  - powertop                  # power management utility
+  - procps                    # /proc utilities
+  - psmisc
+  - pv                        # progressbar
+  - pwgen
+  - python3
+  - python3-pynvim
+  - python3-winrm             # required to Ansible-remote to Windows
+  - rclone
+  - reportbug
+  - rsnapshot
+  - rsync
+  - sensible-utils
+  - shellcheck                # lint shell scripts
+  - socat
+  - sqlite3
+  - squashfs-tools
+  - sshfs                     # mount filesystems over ssh and fuse
+  - strace
+  - stress-ng                 # stress test system (load)
+  - sudo
+  - systemd
+  - systemd-cron              # cron/anacron replacement
+  - systemd-sysv
+  - systemd-timesyncd
+  - systemd-resolved
+  - tmux
+  - traceroute
+  - tshark                    # network traffic capture and analysis
+  - ucf
+  - udev
+  - unzip
+  - usbip                     # tools for sharing USB over IP (mostly WSL)
+  - usbutils
+  - vim-motif                 # using 'motif' to get clipboard on console (WSL)
+  - wdiff
+  - wget
+  - whiptail
+  - xdelta3
+  - xz-utils
+  - zip
+  - zsh
+
+deb_packages_remove:
+ #- cron
+ #- cron-daemon-common
+ - doc-debian
+ - debconf-i18n
+ - nano
+ - ifupdown                   # replaced by systemd
+ - vim-tiny
+ - bash-completion
+ - netcat-traditional
+ - wamerican
+ - fdisk
+ - debian-faq
+ - apparmor

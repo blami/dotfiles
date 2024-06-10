@@ -1,0 +1,5 @@
+---
+# Chocolatey packages variables
+
+win_choco_packages:
+  - firefox               # latest

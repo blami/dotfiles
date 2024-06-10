@@ -3,10 +3,17 @@
 
 # Linux
 - block:
-    # NOTE: Install packages first as they create groups
+    # NOTE: Install packages first as they create groups and other tasks might
+    # rely on them.
+    - import_tasks: deb.yml
+      when: ansible_facts.os_family == "Debian"
+    - import_tasks: rpm.yml
+      when: ansible_facts.os_family == "RedHat"
     - import_tasks: sudo.yml
     - import_tasks: user.yml
-    - import_tasks: root_nopasswd.yml
+    - import_tasks: locale.yml
+    - import_tasks: ntp.yml
+    - import_tasks: dirs.yml
     - import_tasks: wsl.yml
   become: true
   become_user: "root"

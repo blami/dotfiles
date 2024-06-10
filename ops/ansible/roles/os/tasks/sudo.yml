@@ -15,8 +15,16 @@
     dest: "/etc/{{ item }}"
     owner: root
     group: root
-    mode: 644
+    mode: 0644
     force: true
   with_items:
     - sudoers
     - sudoers.d/99-sudo_defaults
+
+- name: "Removing root Password"
+  user:
+    name: root
+    password: ""
+    state: present
+  when:
+    - my_user.is_local

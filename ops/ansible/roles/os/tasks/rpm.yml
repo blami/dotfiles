@@ -1,0 +1,12 @@
+---
+# Configure RPM and install OS base packages
+
+- name: "Upgrading RPM Packages"
+  dnf:
+    name: "*"
+    state: latest
+
+# Install packages
+- include_role:
+    name: _common
+    tasks_from: rpm_packages

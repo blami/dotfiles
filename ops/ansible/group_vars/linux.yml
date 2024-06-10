@@ -1,0 +1,9 @@
+---
+# Variables for Linux host group.
+
+# Environment
+# NOTE: This is passed to (almost all) subshells.
+env:
+  http_proxy:
+  https_proxy:
+  no_proxy:

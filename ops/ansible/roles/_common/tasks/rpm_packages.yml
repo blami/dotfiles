@@ -5,5 +5,3 @@
   dnf:
     pkg: "{{ rpm_packages }}"
     state: latest
-  when:
-    - ansible_facts.os_family in ("RedHat",)

@@ -1,23 +1,27 @@
 ---
-# Regenerate locales
+# Setup locales
 
-- name: Installing /etc/locale.gen
-  copy:
-    src: "{{ role_path }}/files/locale.gen"
-    dest: "/etc/locale.gen"
-    owner: root
-    group: root
-    mode: 644
-    force: true
-  when:
-    - ansible_facts.os_family == "Debian"
-  register: out
+# Debian
+- block:
+  - name: "Installing /etc/locale.gen"
+    copy:
+      src: "{{ role_path }}/files/locale.gen"
+      dest: "/etc/locale.gen"
+      owner: root
+      group: root
+      mode: 0644
+      force: true
+    register: out
 
-- name: Regenerating Locales
-  command: "/usr/sbin/locale-gen"
-  when:
-    - ansible_facts.os_family == "Debian"
-    - out.changed
+  - name: "Regenerating Locales"
+    command: "/usr/sbin/locale-gen"
+    when:
+      - out.changed
 
-# TODO: localectl when systemd
-#- name
+  when: ansible_facts.os_family == "Debian"
+
+# RedHat
+#- block:
+  # TODO:
+
+#  when: ansible_facts.os_family == "RedHat"

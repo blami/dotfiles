@@ -1,0 +1,65 @@
+---
+# RPM packages variables
+
+rpm_packages:
+  - acl                       # manage filesystem access lists
+  - bind-utils
+  - bzip2
+  - cpio
+  - curl
+  - dosfstools
+  - fakeroot                  # simulate running as root
+  - gawk
+  - gdisk
+  - gettext
+  - git
+  - gnupg2
+  - groff
+  - gzip
+  - htop
+  - hwdata                    # hardware identification/configuration data
+  - telnet
+  - iproute
+  - iputils
+  - jq                        # JSON parser and query language
+  - kmod
+  - less
+  - lsof                      # list open files
+  - make
+  - man-db
+  - mosh                      # mobile shell
+  - ncurses-term              # additional terminal type definitions
+  - net-tools                 # netstat & co.
+  - netcat
+  - nftables
+  - openssh
+  - p7zip
+  - pciutils
+  - procps-ng                 # /proc utilities
+  - psmisc
+  - python3
+  - python3-winrm             # required to Ansible-remote to Windows
+  - rclone
+  - rsnapshot
+  - rsync
+  - socat
+  - sqlite
+  - strace
+  - sudo
+  - systemd
+  - systemd-libs
+  - systemd-pam
+  - systemd-timesyncd
+  - tmux
+  - traceroute
+  - systemd-udev
+  - unzip
+  - usbutils
+  - wdiff
+  - wget
+  - xdelta
+  - xz
+  - zip
+  - zsh
+
+#rpm_packages_remove:

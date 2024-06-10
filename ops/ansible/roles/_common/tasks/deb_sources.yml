@@ -1,0 +1,25 @@
+---
+# Add DEB package sources
+
+- name: "Adding DEB Package Source GPG Keys"
+  get_url:
+    url: "{{ item.key }}"
+    dest: "/etc/apt/trusted.gpg.d/{{ item.name }}{% if (item.key | splitext)[1] == '.gpg' %}.gpg{% else %}.asc{% endif %}"
+  loop_control:
+    label: "{{ item.name }} {{ item.key }}"
+  with_items:
+    - "{{ deb_sources | selectattr('key', 'defined') }}"
+
+- name: "Adding DEB Package Sources"
+  apt_repository:
+    repo: "{{ item.1 }}"
+    filename: "{{ item.0.name }}"
+  loop_control:
+    label: "{{ item.0.name }}.list {{ (item.1 | split)[-2] }}"
+  with_subelements: 
+    - "{{ deb_sources }}"
+    - "sources"
+
+- name: "Updating APT Cache"
+  apt:
+    update_cache: true

@@ -6,14 +6,6 @@
 dotfiles: blami/dotfiles.git
 ntp: time.cloudflare.com
 
-# Environment
-# NOTE: This is passed to (almost all) subshells in Linux world.
-# TODO: Maybe should go to Linux then?
-env:
-  http_proxy:
-  https_proxy:
-  no_proxy:
-
 # User
 # NOTE: This is shared by both Linux and Windows tasks but separated using win_
 # prefix.
@@ -77,7 +69,6 @@ my_facts:
   can_winrm: false
   # tasks/pre_windows.yml
   has_choco: false
-  win_choco_source:
 
 # Ansible
 # NOTE: my_cache_dir is overriden by tasks/pre_ansible.yml if

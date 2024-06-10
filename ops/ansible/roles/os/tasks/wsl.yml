@@ -8,7 +8,7 @@
     dest: /etc/fstab
     owner: root
     group: root
-    mode: 644
+    mode: 0644
     force: false
   when:
     - my_facts.is_wsl
@@ -28,7 +28,7 @@
     dest: "/etc/wsl.conf"
     owner: root
     group: root
-    mode: 644
+    mode: 0644
     force: true
   register: out_wsl_wslconf
   when:
@@ -45,7 +45,7 @@
     dest: /etc/binfmt.d/WSLInterop.conf
     owner: root
     group: root
-    mode: 644
+    mode: 0644
     force: true
   register: out_wsl_wslinterop
   when:
@@ -118,7 +118,7 @@
     dest: "/usr/local/bin"
     owner: root
     group: root
-    mode: 755
+    mode: 0755
     force: true
   with_items:
     - wsl_clocksync
@@ -131,7 +131,7 @@
 #    dest: "/etc/systemd/system"
 #    owner: root
 #    group: root
-#    mode: 644
+#    mode: 0644
 #    force: true
 #  with_items:
 #    - wsl_hosts.service

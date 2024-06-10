@@ -1,9 +1,11 @@
 ---
-# Variables for linux hosts group.
+# Variables for Windows host group.
 
-# Configuration
-ansible_cache_dir: "C:\\X\\ansible"
+# Chocolatey
+# NOTE: On WSL this is overriden by WSL ~/ops/choco; see tasks/pre_windows.yml.
+choco_source_dir: "C:\\Choco"
 
-# User
-
-
+# Environment
+# NOTE: This is passed to (almost all) subshells.
+env:
+  FOO: ""

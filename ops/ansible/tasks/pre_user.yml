@@ -111,6 +111,7 @@
       name: "{{ my_user.win_domain_username }}"
     check_mode: true
     register: out
+    changed_when: false
   - set_fact:
       my_facts: >
         {{ my_facts | xcombine({

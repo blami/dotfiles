@@ -1,0 +1,20 @@
+---
+# Configure NTP servers
+# NOTE: See group_vars/all.yml
+
+- name: "Configuring NTP Server {{ ntp }}"
+  replace:
+    path: /etc/systemd/timesyncd.conf
+    regexp: '^#?((.*)NTP)=.*$'
+    replace: '\1={{ ntp }}'
+  register: out
+  when:
+    - my_facts.has_systemd
+
+- name: "Restarting timesyncd"
+  systemd:
+    name: systemd-timesyncd
+    state: restarted
+  when:
+    - my_facts.has_systemd
+    - out.changed

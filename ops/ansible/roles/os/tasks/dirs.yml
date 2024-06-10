@@ -1,0 +1,7 @@
+---
+# OS-level directories
+
+- name: "Removing /media"
+  file:
+    path: /media
+    state: absent

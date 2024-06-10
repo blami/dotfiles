@@ -1,0 +1,13 @@
+---
+# Add RPM sources
+
+- name: "Adding RPM Package Sources"
+  yum_repository:
+    name: "{{ item.name }}"
+    description: "{{ item.desc }}"
+    baseurl: "{{ item.repo }}"
+    gpgkey: "{{ item.key }}"
+  loop_control:
+    label: "{{ item.name }}"
+  with_items:
+    - "{{ rpm_sources }}"
