@@ -2,7 +2,7 @@
 "Language:      YAML
 
 "if exists("b:did_ftplugin") | finish | endif
-"let b:did_ftplugin = 1
+let b:did_ftplugin = 1
 
 "Formatting
 setl expandtab shiftwidth=2 softtabstop=2 tabstop=4
