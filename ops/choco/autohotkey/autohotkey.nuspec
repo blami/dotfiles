@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>autohotkey</id>
+    <version>2.0.2</version>
+    <title>Autohotkey</title>
+    <authors>Lexikos</authors>
+    <summary>Automation. Hotkeys. Scripting.</summary>
+    <description>-</description>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>

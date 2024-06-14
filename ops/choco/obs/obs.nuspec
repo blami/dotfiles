@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>obs</id>
+    <version>30.1.2</version>
+    <title>OBS Studio</title>
+    <authors>OBS Project</authors>
+    <summary>Software for video recording and live streaming.</summary>
+    <description>-</description>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
