@@ -81,6 +81,21 @@
     - my_facts.wsl_userprofile_dir
   tags: localwinrm
 
+- name: "Detecting WSL Ethernet Adapter"
+  command:
+    cmd: >
+      {{ my_facts.wsl_powershell }} -Command
+        '(Get-NetIPInterface -AddressFamily IPv4 | Where-Object { $_.InterfaceAlias -match "^vEthernet \(WSL.*" }).InterfaceAlias'
+    expand_argument_vars: false
+  when:
+    - my_facts.is_wsl
+    - my_facts.has_wsl_interop
+  register: out
+  changed_when: false
+  failed_when:
+    - "out.rc != 0 or out.stdout_lines|length != 1"
+  tags: localwinrm
+
 # Execute WinRM setup script
 # This step requires interactive Windows elevation but since this is WSL only
 # it will run on the same machine. This is also why all is in single .ps1 to
@@ -88,16 +103,19 @@
 # WARN: DO NOT swap quotes ('->") as that will cause YAML parser to double \\
 # and render Windows UNC paths invalid.
 - name: "Setting Up Local WSL WinRM"
-  command: >
-    {{ my_facts.wsl_powershell }} -Command
-      '$p = Start-Process -PassThru -Wait -Verb RunAs powershell.exe'
-      '"-ExecutionPolicy Bypass -File {{ my_facts.wsl_unc_playbook_dir }}\scripts\winrm.ps1 -ServerCertPath {{ my_user.win_userprofile }}\.ansible\winrm\localserver.pfx -ClientCertPath {{ my_user.win_userprofile }}\.ansible\winrm\localclient.pfx -User Ansible -FirewallInterface -FirewallLocalSubnet `"vEthernet (WSL)`" -FirewallRuleName `"Ansible WSL WinRM (HTTPS)`""'
-      ';Exit $p.ExitCode'
+  command:
+    cmd: >
+      {{ my_facts.wsl_powershell }} -Command
+        '$p = Start-Process -PassThru -Wait -Verb RunAs powershell.exe'
+        '"-ExecutionPolicy Bypass -File {{ my_facts.wsl_unc_playbook_dir }}\scripts\winrm.ps1 -ServerCertPath {{ my_user.win_userprofile }}\.ansible\winrm\localserver.pfx -ClientCertPath {{ my_user.win_userprofile }}\.ansible\winrm\localclient.pfx -User Ansible -FirewallIface `"{{ out.stdout_lines[0] }}`" -FirewallLocalSubnet -FirewallRuleName `"Ansible WSL WinRM (HTTPS)`""'
+        ';Exit $p.ExitCode'
+    expand_argument_vars: false
   when:
     - my_facts.is_wsl
     - my_facts.has_wsl_interop
     - my_facts.wsl_unc_playbook_dir
     - my_facts.wsl_userprofile_dir
+    - my_facts.has_pywinrm
     - not my_facts.can_winrm
   register: out
   tags: localwinrm
@@ -117,13 +135,16 @@
     - my_facts.wsl_userprofile_dir
   tags: localwinrm
 
-- fail:
-    msg: "WARNING: Unable to WinRM to Windows host, no Windows tasks will be executed!"
+- block:
+  - fail:
+      msg: "WARNING: Unable to WinRM to Windows host, no Windows tasks will be executed!"
+    ignore_errors: true
+  - pause:
+      seconds: 10
   when:
     - my_facts.is_wsl
     - my_facts.has_wsl_interop
     - not my_facts.can_winrm
-  ignore_errors: true
   tags: localwinrm
 
 - name: "Adding {{ my_facts.wsl_host_ip }} To Windows Hosts"

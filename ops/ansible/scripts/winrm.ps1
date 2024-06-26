@@ -31,14 +31,17 @@
 .PARAMETER Remove
     Will remove all existing setup based on given arguments
 
+.EXAMPLE
+  powershell.exe -ExecutionPolicy Bypass -Command "& .\winrm.ps1 -ServerCertPath '.ansible\winrm\localserver.pfx' -ClientCertPath '.ansible\winrm\localclient.pfx' -User 'Ansible' -FirewallIface 'vEthernet (WSL)' -FirewallLocalSubnet -FirewallRuleName 'Ansible WSL WinRM (HTTPS)' }"
+
 .NOTES
   Version:          1.0
   Author:           Ondrej Balaz
 #>
 
 param (
-    [string]$ServerCertPath,
-    [string]$ClientCertPath,
+    [Parameter(mandatory=$true)][string]$ServerCertPath,
+    [Parameter(mandatory=$true)][string]$ClientCertPath,
     [string]$User = "Ansible",
     [string]$FirewallIPs,
     [string]$FirewallIface,
@@ -190,10 +193,21 @@ if (!($Remove)) {
     }
     Write-Host -ForegroundColor DarkYellow "> Adding to Administrators group"
     Add-LocalGroupMember -Group "Administrators" -Member $User -EA SilentlyContinue
+
+    # Hide user on login screen
+    Write-Host -ForegroundColor DarkYellow "> Hiding user from login screen"
+    if (!(Test-Path -Path "registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\SpecialAccounts\UserList")) {
+        New-Item -Path "registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\SpecialAccounts\UserList" -Force
+    }
+    Set-ItemProperty -Path "registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\SpecialAccounts\UserList" -Name $User -Type DWord -Value 0
 } else {
     # Remove user
     Write-Host -ForegroundColor DarkYellow "> Removing local user"
     Remove-LocalUser -Name $User -EA SilentlyContinue
+    # Cleanup directories
+    # TODO: Does not work if any files inside the profile are used...
+    Write-Host -ForegroundColor DarkYellow "> Removing local user profile"
+    Get-CimInstance -ClassName Win32_UserProfile | Where-Object { $_.LocalPath -like "C:\Users\${User}*"} | Remove-CimInstance -Confirm:$false
 }
 
 # Certificate mapping
