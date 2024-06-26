@@ -12,6 +12,6 @@
   command: >
     usermod -s {{ my_user.shell }} {{ my_user.username }}
   register: usermod_out
-  changed_when: "'usermod: no changes' not in usermod_out.stderr_lines"
+  changed_when: "'usermod: no changes' not in usermod_out.stdout_lines"
   when:
     - not out.failed
