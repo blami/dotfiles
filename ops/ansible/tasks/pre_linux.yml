@@ -1,6 +1,11 @@
 ---
 # Linux-only additional fact gathering and checks.
 
+- name: "Gathering Package Facts"
+  package_facts:
+    manager: auto
+
+# NOTE: service_mgr fact fails on WSL (shows systemd but in fact its not).
 - name: "Checking if systemd is PID1"
   command:
     cmd: "/bin/systemctl"
