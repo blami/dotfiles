@@ -10,8 +10,7 @@
     state: directory
   loop_control:
     label: "{{ item.path }}"
-  with_items: "{{ dirs }}"
-  tags: debug
+  with_items: "{{ os_dirs }}"
 
 - name: "Removing OS Directories"
   file:

@@ -1,7 +1,8 @@
 ---
-# OS-level directories
+# OS-level directories variables
 
-dirs:
-  - { path: "/bak",       mode: "0700" }
-  - { path: "/mnt/media" }
-  - { path: "/mnt/net" }
+os_dirs:
+  - path: "/bak"
+    mode: "0700"
+  - path: "/mnt/media"
+  - path: "/mnt/net"
