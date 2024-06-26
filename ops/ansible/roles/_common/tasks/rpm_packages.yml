@@ -5,3 +5,7 @@
   dnf:
     pkg: "{{ rpm_packages }}"
     state: latest
+
+- name: "Gathering Package Facts"
+  package_facts:
+    manager: auto

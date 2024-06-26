@@ -1,5 +1,5 @@
 ---
-# APT repositories and packages variables
+# DEB package sources and packages
 
 deb_sources:
   - name: "debian"
@@ -126,8 +126,6 @@ deb_packages:
   - zsh
 
 deb_packages_remove:
- #- cron
- #- cron-daemon-common
  - doc-debian
  - debconf-i18n
  - nano

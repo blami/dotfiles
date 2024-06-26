@@ -42,8 +42,6 @@
   apt:
     upgrade: "safe"
     autoremove: true
-  when:
-    - ansible_facts.os_family == "Debian"
 
 # Install packages
 - include_role:

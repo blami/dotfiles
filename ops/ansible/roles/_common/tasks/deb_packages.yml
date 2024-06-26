@@ -3,6 +3,16 @@
 
 - name: "Installing DEB Packages"
   apt:
-    pkg: "{{ deb_packages }}"
+    pkg: "{{ vars['deb_packages_' + item if item else 'deb_packages'] }}"
+    default_release: "{{ item }}"
     install_recommends: false
     state: latest
+  when:
+    - "('deb_packages_' + item if item else 'deb_packages') in vars"
+  with_items:
+    -
+    - unstable
+
+- name: "Gathering Package Facts"
+  package_facts:
+    manager: auto
