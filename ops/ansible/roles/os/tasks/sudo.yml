@@ -10,8 +10,8 @@
     state: present
 
 - name: "Installing sudo files"
-  copy:
-    src: "{{ role_path }}/files/{{ item }}"
+  template:
+    src: "{{ role_path }}/files/{{ item }}.j2"
     dest: "/etc/{{ item }}"
     owner: root
     group: root
@@ -20,6 +20,7 @@
   with_items:
     - sudoers
     - sudoers.d/99-sudo_defaults
+    - sudoers.d/20-ansible
 
 - name: "Removing root Password"
   user:

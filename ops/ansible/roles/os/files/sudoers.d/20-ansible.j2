@@ -1,0 +1,5 @@
+# /etc/sudoers.d/20-ansible - allow user run Ansible become passwordless
+# NOTE: Requires sudo 1.9.10
+# WARN: This is as specific as possible but definitely not secure!
+
+{{ my_user.username }} ALL=(ALL:ALL) NOPASSWD: /bin/sh ^-c echo\ BECOME-SUCCESS-[a-z0-9]+\ ;\ /usr/bin/python3\ /home/{{ my_user.username }}/\.ansible/tmp/ansible-tmp-[0-9\.-]+/AnsiballZ_[a-zA-Z0-9_\.-]+\.py$
