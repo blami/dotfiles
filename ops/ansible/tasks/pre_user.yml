@@ -1,6 +1,25 @@
 ---
 # Check user and become rights on target system and set my_facts.
 
+# Control node
+# NOTE: Control node is assumed to be always Linux
+- block:
+  - name: "Checking Become root On Control Node"
+    command:
+      cmd: "/bin/true"
+    become: true
+    become_user: "root"
+    register: out
+    changed_when: false
+    ignore_errors: true
+  - set_fact:
+      my_control_node_facts: >
+        {{ my_control_node_facts | xcombine({
+          "has_become_root": false if ("failed" in out and out.failed) else true
+        }) }}
+
+  delegate_to: localhost
+
 # Linux
 - block:
   - name: "Defaulting User Home to /home/{{ my_user.username }}"
