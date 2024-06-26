@@ -1,7 +1,21 @@
 ---
 # OS-level directories
 
-- name: "Removing /media"
+- name: "Creating OS Directories"
   file:
-    path: /media
+    path: "{{ item.path }}"
+    mode: "{{ item.mode | default('0755') }}"
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    state: directory
+  loop_control:
+    label: "{{ item.path }}"
+  with_items: "{{ dirs }}"
+  tags: debug
+
+- name: "Removing OS Directories"
+  file:
+    path: "{{ item }}"
     state: absent
+  with_items:
+    - "/media"
