@@ -1,61 +1,70 @@
 ---
 # Setup Ansible.
-# TODO: Do we need any directory on controller node? probably not...
-#
-- block:
 
-  # NOTE: Create ansible cache on the managed node.
-  - name: "Creating /var/cache/ansible"
-    file:
-      path: "/var/cache/ansible"
-      state: directory
-      owner: root
-      group: root
-      mode: 0777
-      recurse: true
-    become: true
-    become_user: "root"
-    when:
-      - my_facts.has_become_root
+# Linux
+# NOTE: Cannot use block with ansible_facts.system in ("Linux",) because we
+# also delegate task to localhost here.
 
-  - name: "Checking /var/cache/ansible Exists"
-    stat:
-      path: "/var/cache/ansible"
-    register: out
-  - set_fact:
-      my_cache_dir: "/var/cache/ansible"
-    when:
-      - out.stat.exists
-      - out.stat.mode == "0777"
-
+# Create /var/cache/ansible for various downloads on controller node and
+# managed node.
+- name: "Creating /var/cache/ansible"
+  file:
+    path: "/var/cache/ansible"
+    state: directory
+    owner: root
+    group: root
+    mode: 0777
+    recurse: true
+  become: true
+  become_user: "root"
   when:
-    - ansible_facts.system in ("Linux",)
+    - "(item == 'localhost' and my_control_node_facts.has_become_root) or (item != 'localhost' and my_facts.has_become_root)"
+    - "hostvars[item].ansible_facts.system in ('Linux', )"
+  delegate_to: "{{ item }}"
+  with_items:
+    - "{{ ['localhost', inventory_hostname] | unique }}"
 
-#   # NOTE: delegate to self and the actual inventory_hostname to have the cache
-#   # directory created both on control node and managed node. delegate_facts is
-#   # needed if control node is Linux and managed node Windows...
-#   delegate_to: "{{ item }}"
-#   delegate_facts: true
-#   with_items: "{{ ['localhost', inventory_hostname] | unique }}"
-# - set_fact:
-#     my_facts: >
-#       {{ my_facts | xcombine({
-#         "control_cache_dir": "~/.ansible/cache",
-#         "managed_cache_dir": "~/.ansible/cache",
-#       }) }}
-# 
-# # NOTE: No need to delegate as only managed node can be Windows and control
-# # node would be handled by above in that case.
-# - name: "Creating %TEMP%/ansible_cache"
-#   win_file:
-#     path: "%TEMP%/ansible_cache"
-#     state: directory
-#   when:
-#     - ansible_facts.system in ("Windows", )
-# - set_fact:
-#     my_facts: >
-#       {{ my_facts | xcombine({
-#         "managed_cache_dir": "~/.ansible/cache",
-#       }) }}
-#   when:
-#     - ansible_facts.system in ("Windows", )
+- name: "Checking /var/cache/ansible Exists"
+  stat:
+    path: "/var/cache/ansible"
+  register: out
+  when:
+    - "hostvars[item].ansible_facts.system in ('Linux', )"
+  delegate_to: "{{ item }}"
+  with_items:
+    - "{{ ['localhost', inventory_hostname] | unique }}"
+# NOTE: Needs to be done twice to cover when localhost == inventory_hostname
+- set_fact:
+    my_control_node_cache_dir: "/var/cache/ansible"
+  when:
+    - "hostvars[item.item].ansible_facts.system in ('Linux', )"
+    - item.item == 'localhost'
+    - item.stat.exists
+    - item.stat.mode == "0777"
+  with_items: "{{ out.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+- set_fact:
+    my_cache_dir: "/var/cache/ansible"
+  when:
+    - "hostvars[item.item].ansible_facts.system in ('Linux', )"
+    - item.item == inventory_hostname
+    - item.stat.exists
+    - item.stat.mode == "0777"
+  with_items: "{{ out.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+
+# NOTE: This is needed on Debian systems to gather package facts.
+- name: "Installing python3-apt DEB Package"
+  apt:
+    pkg: "python3-apt"
+    install_recommends: false
+    state: latest
+  when:
+    - my_facts.has_become_root
+    - ansible_facts.os_family == "Debian"
+
+
+# Windows
+# TODO

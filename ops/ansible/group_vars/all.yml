@@ -70,7 +70,18 @@ my_facts:
   # tasks/pre_windows.yml
   has_choco: false
 
+# Control Node Facts
+my_control_node_facts:
+  # tasks/pre_user.yml
+  has_become_root: false
+  # roles/_common/bitwarden.yml
+  has_bitwarden: false
+  has_bitwarden_unlocked: false
+  bitwarden_session:
+
+
 # Ansible
 # NOTE: my_cache_dir is overriden by tasks/pre_ansible.yml if
 # /var/cache/ansible can be created or already exists. /tmp is just fallback.
+my_control_node_cache_dir: /tmp
 my_cache_dir: /tmp

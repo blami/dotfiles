@@ -1,10 +1,18 @@
 ---
 
+# Linux
+# NOTE: Gather facts on controller node (localhost) and Linux hosts. This is
+# used with cache (see ansible.cfg) to later refer to controller node facts.
+- hosts: localhost linux
+  tasks: []
 - name: Linux
   hosts: linux
+  # NOTE: Already done
+  gather_facts: false
   pre_tasks:
     - { import_tasks: tasks/pre_args.yml,       tags: always }
     - { import_tasks: tasks/pre_user.yml,       tags: always }
+    - { import_tasks: tasks/pre_ansible.yml,    tags: always }
     - { import_tasks: tasks/pre_linux.yml,      tags: always }
     - { import_tasks: tasks/pre_wsl.yml,        tags: always }
     #- { import_tasks: tasks/debug.yml,          tags: always }
@@ -13,7 +21,13 @@
   roles:
     - { role: os,                               tags: [os, linux] }
     - { role: user,                             tags: [user, linux] }
+    - { role: devel,                            tags: [never, devel, linux] }
+    #- { role: roles/kube/control,               tags: }
+    #- { role: roles/kube/node,                  tags: }
+    #- { role: roles/ad/server,                  tags: }
+    #- { role: roles/ad/client,                  tags: }
 
+# Windows
 - name: Windows
   hosts: windows
   pre_tasks:
