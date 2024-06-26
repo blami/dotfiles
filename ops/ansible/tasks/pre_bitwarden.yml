@@ -1,5 +1,0 @@
----
-# Setup and unlock Bitwarden vault on control node so that lookups can be made
-# during the play.
-
-- name: 
