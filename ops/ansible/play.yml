@@ -15,6 +15,7 @@
     - { import_tasks: tasks/pre_ansible.yml,    tags: always }
     - { import_tasks: tasks/pre_linux.yml,      tags: always }
     - { import_tasks: tasks/pre_wsl.yml,        tags: always }
+    - { import_tasks: tasks/pre_bitwarden.yml,  tags: always }
     #- { import_tasks: tasks/debug.yml,          tags: always }
   post_tasks:
     - { import_tasks: tasks/post_wsl.yml,       tags: always }
