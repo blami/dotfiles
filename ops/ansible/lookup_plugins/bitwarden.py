@@ -115,18 +115,18 @@ class Bitwarden:
         except:
             return False
 
-        unlocked = out.get("status") == "unlocked"
+        status = out.get("status")
 
         # BUG: There's a bug in bitwarden that reports vault is locked even if
         # it is not. This is to temporarily workaround it.
-        if not unlocked:
+        if status != "unlocked":
             try:
                 self._run(["list", "folders"])
                 unlocked = True
             except:
                 unlocked = False
 
-        return unlocked
+        return status
 
     def get_field(self, query, field):
         """Get value of any given field in item object. Nested fields can be

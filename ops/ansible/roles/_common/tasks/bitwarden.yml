@@ -1,0 +1,58 @@
+---
+# Setup Bitwarden CLI on control node.
+# NOTE: All tasks here are delegated to localhost as they should run only on
+# control node.
+
+# NOTE: This requires root on control node
+- name: "Installing Bitwarden CLI"
+  unarchive:
+    src: "https://vault.bitwarden.com/download/?app=cli&platform=linux"
+    dest: "/usr/local/bin"
+    remote_src: true
+    owner: root
+    group: root
+    mode: 0755
+  become: true
+  become_user: root
+  delegate_to: localhost
+  when:
+    - "hostvars['localhost'].ansible_architecture in ('x86_64', )"
+    - my_control_node_facts.has_become_root
+
+- name: "Checking Bitwarden CLI Installation"
+  command: "/usr/local/bin/bw -v"
+  failed_when: false
+  delegate_to: localhost
+  register: out
+- set_fact:
+    my_control_node_facts: >
+      {{ my_control_node_facts | xcombine({
+        "has_bitwarden": out.rc == 0,
+      }) }}
+
+# Load bitwarden session
+# Either $BW_SESSION env or $XDG_RUNTIME_DIR/bw
+- set_fact:
+    my_control_node_facts: >
+      {{ my_control_node_facts | xcombine({
+        "bitwarden_session": lookup("env", "BW_SESSION"),
+      }) }}
+
+- name: "Checking Bitwarden CLI Status"
+  set_fact:
+    my_control_node_facts: >
+      {{ my_control_node_facts | xcombine({
+        "has_bitwarden_unlocked": lookup("bitwarden", session=my_control_node_facts.bitwarden_session) == "unlocked",
+      }) }}
+
+- fail:
+    msg: "{{ my_control_node_facts }}"
+
+- block:
+  - fail:
+      msg: "WARNING: Bitwarden CLI is not available or unlocked!"
+    ignore_errors: true
+  - pause:
+      seconds: 10
+  when:
+    - not my_control_node_facts.has_bitwarden
