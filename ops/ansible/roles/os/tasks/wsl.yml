@@ -112,19 +112,19 @@
     - my_facts.is_wsl
     - my_facts.has_systemd
 
-- name: "Installing WSL Scripts"
-  copy:
-    src: "{{ role_path }}/files/{{ item }}"
-    dest: "/usr/local/bin"
-    owner: root
-    group: root
-    mode: 0755
-    force: true
-  with_items:
-    - wsl_clocksync
-  when:
-    - my_facts.is_wsl
-
+# - name: "Installing WSL Scripts"
+#   copy:
+#     src: "{{ role_path }}/files/{{ item }}"
+#     dest: "/usr/local/bin"
+#     owner: root
+#     group: root
+#     mode: 0755
+#     force: true
+#   with_items:
+#     - wsl_clocksync
+#   when:
+#     - my_facts.is_wsl
+# 
 #- name: Installing WSL systemd Units
 #  copy:
 #    src: "{{ role_path }}/files/systemd/{{ item }}"
@@ -153,7 +153,7 @@
 # Unmask systemd-logind on WSL and set user session to linger; this will assure
 # that /run/user/UID is owned by user even when not logging in through PAM (WSL
 # does not use PAM).
-- name: Unmasking systemd-logind
+- name: "Unmasking systemd-logind"
   systemd:
     name: systemd-logind
     masked: false
@@ -161,7 +161,7 @@
     - my_facts.is_wsl
     - my_facts.has_systemd
 
-- name: Setting {{ my_user.username }} Session Linger
+- name: "Setting {{ my_user.username }} Session Linger"
   shell: |
     loginctl show-user -p Linger {{ my_user.username }}
     loginctl enable-linger {{ my_user.username }}
