@@ -1,0 +1,52 @@
+---
+# Check if host has given commands and set my_facts.has.
+# NOTE: vars: need to be set for this to work; has_command variable is a
+# dictionary of commands to check and when control_node is set to true, check
+# is done on control node and fact is stored in my_control_node_facts instead
+# of my_facts.
+#
+# vars:
+#  has_command:
+#    - command: gpg --version
+#      fact: has_gpg
+#    - command: go -version
+#      fact: has_go
+#    ...
+#   control_node: true
+#
+# NOTE: Sets my_facts.{{ fact }} to true/false depending on whether rc was 0
+
+- name: "Checking If Host Has Command"
+  command: "{{ item.command }}"
+  failed_when: false
+  changed_when: false
+  register: out
+  loop_control:
+    label: "{{ item.command | split | first }}"
+  with_items: "{{ has_command }}"
+  delegate_to: "{% if control_node | default(false) %}localhost{% else %}{{ omit }}{% endif %}"
+# TODO: Needs to be done twice in case whole include_role is delegated to
+# localhost (control node).
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        item.item.fact: item.rc == 0
+      }) }}
+  loop_control:
+    label: "{{ item.item.command | split | first }}"
+  with_items: "{{ out.results }}"
+  when:
+    - not control_node | default(false)
+- set_fact:
+    my_control_node_facts: >
+      {{ my_control_node_facts | xcombine({
+        item.item.fact: item.rc == 0
+      }) }}
+  loop_control:
+    label: "{{ item.item.command | split | first }}"
+  with_items: "{{ out.results }}"
+  when:
+    - control_node | default(false)
+
+# TODO: - name: "Checking If Host Has File?"
+# TODO: - name: "Checking If Host Has Device?"

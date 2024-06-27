@@ -6,14 +6,9 @@
     manager: auto
 
 # NOTE: service_mgr fact fails on WSL (shows systemd but in fact its not).
-- name: "Checking if systemd is PID1"
-  command:
-    cmd: "/bin/systemctl"
-  register: out
-  failed_when: false
-  changed_when: false
-- set_fact:
-    my_facts: >
-      {{ my_facts | xcombine({
-        "has_systemd": false if out.rc != 0 else true
-      }) }}
+- include_role:
+    name: _common
+    tasks_from: check_has
+  vars:
+    has_command:
+      - { command: "systemctl", fact: "has_systemd" }
