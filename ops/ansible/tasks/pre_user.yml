@@ -18,6 +18,13 @@
           "has_become_root": false if ("failed" in out and out.failed) else true
         }) }}
 
+  - name: "Gathering Ansible Username On Control Node"
+    set_fact:
+      my_control_node_facts: >
+        {{ my_control_node_facts | xcombine({
+          "ansible_user": ansible_facts.user_id
+        }) }}
+
   delegate_to: localhost
 
 # Linux
@@ -30,6 +37,13 @@
         }) }}
     when:
       - not my_user.home
+
+  - name: "Gathering Ansible Username"
+    set_fact:
+      my_control_facts: >
+        {{ my_facts | xcombine({
+          "ansible_user": ansible_facts.user_id
+        }) }}
 
   # NOTE: Calling getent twice, once to popuplate ansible_facts.getent_passwd
   # and second time ansible_facts.getent_group as some roles might depend on
