@@ -12,6 +12,6 @@
     cmd: |
       umask {{ my_user.umask }}
       git --git-dir=.dfgit remote set-url --push origin git@github.com:{{ dotfiles }}
-  # Do not run if SSH key is not present
+  # NOTE: only if SSH key is present
   when:
     - out.stat.exists
