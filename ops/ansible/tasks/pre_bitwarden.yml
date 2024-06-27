@@ -2,6 +2,10 @@
 # Setup Bitwarden CLI on control node.
 # NOTE: All tasks here are delegated to localhost as they should run only on
 # control node.
+#
+# As of now this requires second run after login and unlock with exported
+# BW_SESSION.
+# TODO: Maybe automate that part?
 
 # NOTE: This requires root on control node
 - name: "Installing Bitwarden CLI"
@@ -19,40 +23,19 @@
     - "hostvars['localhost'].ansible_architecture in ('x86_64', )"
     - my_control_node_facts.has_become_root
 
-- name: "Checking Bitwarden CLI Installation"
-  command: "/usr/local/bin/bw -v"
-  failed_when: false
-  delegate_to: localhost
-  register: out
-- set_fact:
-    my_control_node_facts: >
-      {{ my_control_node_facts | xcombine({
-        "has_bitwarden": out.rc == 0,
-      }) }}
-
-# Load bitwarden session
-# Either $BW_SESSION env or $XDG_RUNTIME_DIR/bw
-- set_fact:
-    my_control_node_facts: >
-      {{ my_control_node_facts | xcombine({
-        "bitwarden_session": lookup("env", "BW_SESSION"),
-      }) }}
-
 - name: "Checking Bitwarden CLI Status"
   set_fact:
     my_control_node_facts: >
       {{ my_control_node_facts | xcombine({
-        "has_bitwarden_unlocked": lookup("bitwarden", session=my_control_node_facts.bitwarden_session) == "unlocked",
+        "has_bitwarden": lookup("bitwarden") == "unlocked",
       }) }}
-
-- fail:
-    msg: "{{ my_control_node_facts }}"
 
 - block:
   - fail:
-      msg: "WARNING: Bitwarden CLI is not available or unlocked!"
+      msg: "WARNING: Bitwarden CLI on control node is not available or unlocked!"
     ignore_errors: true
   - pause:
-      seconds: 10
+      seconds: 5
+
   when:
     - not my_control_node_facts.has_bitwarden
