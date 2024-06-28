@@ -1,0 +1,34 @@
+---
+# User for all nodes.
+
+# NOTE: This is shared by Linux and Windows tasks.
+my_user:
+  # -e username=NAME
+  username: "blami"
+  gecos: "Ondrej Balaz,,,,blami@blami.net"
+  shell: "/usr/bin/zsh"
+  # NOTE: relative to ~/.ssh/
+  ssh_key: "keys/id_blami_rsa"
+  # -e home=PATH
+  # NOTE: empty defaults to /home/{{ my_user.username }}
+  home:
+  groups:
+    - adm
+    - dialout
+    - cdrom
+    - floppy
+    - audio
+    - dip
+    - video
+    - plugdev
+    - netdev
+    - sudo
+  umask: "002"
+  # is_local applies to both Linux and Windows (AD)
+  is_local: true
+  # -e win_username=NAME
+  win_username: "blami"
+  win_domain_username:
+  # NOTE: empty defaults to C:\Users\{{ my_user.win_username }}
+  win_userprofile:
+  is_msaccount: false

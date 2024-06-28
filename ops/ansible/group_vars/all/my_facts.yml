@@ -1,0 +1,42 @@
+---
+# Facts for all nodes.
+
+# NOTE: This is shared by Linux and Windows tasks.
+my_facts:
+  # tasks/pre_user.yml
+  ansible_user:
+  has_my_user: false
+  has_become_my_user: false
+  has_become_root: false
+  has_administrator: false
+  # tasks/pre_linux.yml
+  has_systemd: false
+  # roles/user/tasks/secrets.yml
+  has_gpg: false
+  # tasks/pre_wsl.yml, roles/os/tasks/wsl.yml
+  is_wsl: false
+  has_wsl_interop: false
+  wsl_distro:
+  wsl_powershell:
+  wsl_unc_home_dir:
+  wsl_unc_playbook_dir:
+  wsl_userprofile_dir:
+  wsl_unc_userprofile_dir:
+  wsl_version:
+  wsl_windrive_dir:
+  wsl_home_is_userprofile: false
+  wsl_host_hostname:
+  wsl_host_ip:
+  wsl_guest_ip:
+  # tasks/post_wsl.yml
+  can_winrm: false
+  # tasks/pre_windows.yml
+  has_choco: false
+
+# Control Node Facts
+my_control_node_facts:
+  # tasks/pre_user.yml
+  ansible_user:
+  has_become_root: false
+  # tasks/pre_bitwarden.yml
+  has_bitwarden: false

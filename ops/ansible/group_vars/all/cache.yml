@@ -1,0 +1,7 @@
+---
+# Ansible cache directory.
+
+# NOTE: my_cache_dir is overriden by tasks/pre_ansible.yml if
+# /var/cache/ansible can be created or already exists. /tmp is just fallback.
+control_node_cache_dir: /tmp
+cache_dir: /tmp
