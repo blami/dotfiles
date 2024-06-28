@@ -1,0 +1,12 @@
+---
+# Configure APT and install OS base packages
+
+# Add sources
+- include_role:
+    name: _common
+    tasks_from: deb_sources
+
+# Install packages
+- include_role:
+    name: _common
+    tasks_from: deb_packages
