@@ -1,0 +1,5 @@
+---
+# ACME
+
+acme_dir: "/acme"
+acme_email: "blami@blami.net"

@@ -1,5 +1,5 @@
 ---
-# RPM packages variables
+# RPM sources and packages
 
 rpm_packages:
   - acl                       # manage filesystem access lists

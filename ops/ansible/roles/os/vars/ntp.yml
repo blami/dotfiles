@@ -1,0 +1,4 @@
+---
+# NTP server
+
+ntp: "time.cloudflare.com"

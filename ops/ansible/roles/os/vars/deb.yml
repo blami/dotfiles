@@ -1,5 +1,5 @@
 ---
-# DEB package sources and packages
+# DEB sources and packages
 
 deb_sources:
   - name: "debian"
@@ -7,7 +7,7 @@ deb_sources:
       - "deb https://deb.debian.org/debian testing main contrib non-free non-free-firmware"
       - "deb https://deb.debian.org/debian-security/ testing-security main contrib non-free-firmware"
       - "deb https://deb.debian.org/debian testing-backports main contrib non-free-firmware"
-      # NOTE: See tasks/apt.yml and files/apt.preferences.d/10release-priority
+      # NOTE: See tasks/deb.yml and files/apt.preferences.d/10release-priority
       - "deb https://deb.debian.org/debian unstable main contrib non-free non-free-firmware"
       - "deb https://deb.debian.org/debian experimental main contrib non-free non-free-firmware"
 
