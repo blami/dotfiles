@@ -1,0 +1,13 @@
+---
+# Setup ACME in /acme.
+# See: vars/main/acme.yml
+
+# NOTE: I prefer to use vanilla http://acme.sh over the distribution packaged
+# versions. It is installed to `/acme` (config and certificates will be stored
+# there too); with `cron` job configured in `root`'s `crontab` to periodically
+# re-new and re-deploy certificates as needed:
+- name: "Deploying ACME to {{ acme_dir }}"
+  shell:
+    cmd: |
+      wget -O - https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh | sh -s -- --install-online --home {{ acme_dir }} --email {{ acme_email }}
+    creates: "{{ acme_dir }}"
