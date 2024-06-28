@@ -37,7 +37,9 @@ _sort
 /.aws
 /.azure
 /.config/Bitwarden*
-/.config/weechat/certs
+/.config/bw
+/.config/weechat/certs/*
+!/.config/weechat/certs/.gitkeep
 /.gitcookies
 /.git-credentials
 /.gnupg
