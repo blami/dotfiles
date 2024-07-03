@@ -3,6 +3,8 @@
 
 # Linux
 - block:
+    - import_tasks: deb.yml
+      when: ansible_facts.os_family == "Debian"
     - import_tasks: shell.yml
   become: true
   become_user: "root"
@@ -12,7 +14,8 @@
 
 - block:
     - import_tasks: dotfiles.yml
-    # TODO: -import_tasks: secrets.yml
+    - import_tasks: secrets.yml
+      when: my_control_node_facts.has_bitwarden
     - import_tasks: dotfiles_ssh.yml
   become: true
   become_user: "{{ my_user.username }}"
