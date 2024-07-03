@@ -1,6 +1,8 @@
 ﻿$ErrorActionPreference = 'Stop' # stop on all errors
 $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
-$url        = 'https://get.videolan.org/vlc/3.0.18/win64/vlc-3.0.18-win64.exe'
+
+(Invoke-WebRequest -URI "https://get.videolan.org/vlc/last/win64/").Content -match 'vlc-([0-9]+\.[0-9]+\.[0-9]+)-win64.exe'
+$url        = "https://get.videolan.org/vlc/last/win64/vlc-$($matches[1])-win64.exe"
 
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
