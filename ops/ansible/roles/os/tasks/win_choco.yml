@@ -13,6 +13,11 @@
     name: chocolatey
     state: latest
 
+- name: "Installing Chocolatey-AU"
+  win_chocolatey:
+    name: chocolatey-au
+    state: latest
+
 - name: "Disabling Chocolatey Community Source"
   win_chocolatey_source:
     name: chocolatey
