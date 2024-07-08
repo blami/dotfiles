@@ -1,7 +1,6 @@
 ---
-# Vim variables
+# Vim
 
-# Spell files
 vim_spell:
   - en.utf-8
   - cs.utf-8
