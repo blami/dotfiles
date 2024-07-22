@@ -1,6 +1,6 @@
 ﻿$ErrorActionPreference = 'Stop' # stop on all errors
 $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
-$url        = 'https://totalcommander.ch/1052/tcmd1052x64.exe'
+$url        = 'https://totalcommander.ch/1052/tcmd1103x64.exe'
 
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
