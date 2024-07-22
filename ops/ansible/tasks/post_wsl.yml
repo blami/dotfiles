@@ -107,7 +107,7 @@
     cmd: >
       {{ my_facts.wsl_powershell }} -Command
         '$p = Start-Process -PassThru -Wait -Verb RunAs powershell.exe'
-        '"-ExecutionPolicy Bypass -File {{ my_facts.wsl_unc_playbook_dir }}\scripts\winrm.ps1 -ServerCertPath {{ my_user.win_userprofile }}\.ansible\winrm\localserver.pfx -ClientCertPath {{ my_user.win_userprofile }}\.ansible\winrm\localclient.pfx -User Ansible -FirewallIface `"{{ out.stdout_lines[0] }}`" -FirewallLocalSubnet -FirewallRuleName `"Ansible WSL WinRM (HTTPS)`""'
+        '"-ExecutionPolicy Bypass -File {{ my_facts.wsl_unc_playbook_dir }}\..\scripts\winrm.ps1 -ServerCertPath {{ my_user.win_userprofile }}\.ansible\winrm\localserver.pfx -ClientCertPath {{ my_user.win_userprofile }}\.ansible\winrm\localclient.pfx -User Ansible -FirewallIface `"{{ out.stdout_lines[0] }}`" -FirewallLocalSubnet -FirewallRuleName `"Ansible WSL WinRM (HTTPS)`""'
         ';Exit $p.ExitCode'
     expand_argument_vars: false
   when:

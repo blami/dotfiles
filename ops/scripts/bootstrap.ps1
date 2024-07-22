@@ -24,8 +24,6 @@
     NOTE: %VARIABLE% placeholders for variables can be used, these are evaluated at execution.
 .PARAMETER Ansible
     Whether or not to run AnsibleCommands after distro is installed.
-.PARAMETER AnsibleBranch
-    Name of git branch that can be used in AnsibleCommands when checking out playbook repo.
 .PARAMETER AnsibleMyUser
     Name of user passed to playbook as -e user=... (not user Ansible is run as!)
 .PARAMETER AnsibleCommands
@@ -188,7 +186,7 @@ if ($WinFeatRestart) {
 
 # Install WSL Update
 Write-Host -ForegroundColor DarkGreen "* Installing WSL Updates"
-if (!(Get-Package -Name "Windows Subsystem for Linux Update")) {
+if (!(Get-Package -Name "Windows Subsystem for Linux Update" -EA SilentlyContinue)) {
 	Write-Host -ForegroundColor DarkYellow "> Installing WSL Update MSI"
 	Invoke-WebRequest -Uri $WSLUpdateUri -OutFile (Join-Path $env:TEMP (Split-Path -Path $WSLUpdateUri -Leaf))
 	Invoke-Expression -Command "$(Join-Path $env:TEMP (Split-Path -Path $WSLUpdateUri -Leaf)) /quiet"
