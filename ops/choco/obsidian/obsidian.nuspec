@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>obsidian</id>
+    <version>1.6.5</version>
+    <title>obsidian</title>
+    <authors>Obsidian</authors>
+    <summary>Private and flexible writing app that adapts to the way you think.</summary>
+    <description>-</description>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
