@@ -1,0 +1,60 @@
+---
+# Create and remove directories
+#
+# Create and/or remove directories in given prefix.
+#
+# NOTE: vars: need to be set for this to work; prefix variable is added in
+# front of each directory path and dirs variable is a list of directories to be
+# created/removed with following properties:
+#
+# vars:
+#   prefix: {{ my_user_facts.home }}
+#   wsl_prefix: {{ my_facts... }}
+#   umask: {{ my_user.umask }}
+#   dirs:
+#     - path: "/dir"              # relative to prefix
+#     - state: (present|absent)   # whether to create or remove directory
+#     - mode: "0755"              # octal mode (Linux)
+#     - owner: "root"             # owner (Linux)
+#     - group: "root"             # group (Linux)
+#     - xdg: "XDG_X_DIR"          # name of XDG to put in user-dirs.dir or set
+#     - win_guid: "12345-...."    # Windows GUID of special directory
+#     - win_icon: "%SystemRoot%\\system32..." # Windows icon path (ico or dll)
+#     - wsl_link: "/mnt/..."      # if WSL make this link to given Windows path
+#     - win_wsl_link: "..."       # if WSL make this link to given WSL path
+# 
+
+# NOTE: 
+
+- block:
+  - name: "Symlinking Windows Directories To WSL"
+    debug:
+      msg: |
+        path: "{{ prefix | default("/") }}/{{ item.path }}"
+        dest: "{{ item.wsl_link }}"
+    loop_control:
+      label: "{{ item.path }}"
+    with_items: "{{ dirs | selectattr('wsl_link', 'defined') }}"
+    when:
+      - my_facts.is_wsl
+
+  - name: "Creating Directories"
+    debug:
+      msg: |
+        path: "{{ prefix | default('/') }}/{{ item.path }}"
+        mode: "{{ item.mode | default(omit) }}"
+        owner: "{{ item.owner | default(omit) }}"
+        group: "{{ item.group | default(omit) }}"
+    loop_control:
+      label: "{{ item.path }}"
+    with_items: "{% if my_facts.is_wsl %}{{ dirs | selectattr('wsl_link', 'undefined') }}{% else %}{{ dirs }}{% endif %}"
+
+
+
+
+#  when:
+    # OS is linux
+
+# TODO: Windows
+#- block:
+
