@@ -1,6 +1,9 @@
 ---
-# Test if WinRM connection can be established with host that not necessarily
+# Check WinRM connection
+#
+# Check if WinRM connection can be established with host that not necessarily
 # has to be part of inventory.
+#
 # NOTE: vars: need to be set for this to work: winrm_test_host,
 #       winrm_test_clientcert, winrm_test_clientkey.
 # NOTE: Sets my_facts.can_winrm and my_facts.has_pywinrm
