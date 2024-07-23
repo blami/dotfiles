@@ -15,14 +15,13 @@
     - { import_tasks: tasks/pre_ansible.yml,    tags: always }
     - { import_tasks: tasks/pre_linux.yml,      tags: always }
     - { import_tasks: tasks/pre_wsl.yml,        tags: always }
-    - { import_tasks: tasks/pre_bitwarden.yml,  tags: always }
     #- { import_tasks: tasks/debug.yml,          tags: always }
   post_tasks:
     - { import_tasks: tasks/post_wsl.yml,       tags: always }
   roles:
     - { role: os,                               tags: [os, linux] }
     - { role: user,                             tags: [user, linux] }
-    - { role: devel,                            tags: [never, devel, linux] }
+    #- { role: devel,                            tags: [never, devel, linux] }
     #- { role: roles/kube/control,               tags: }
     #- { role: roles/kube/node,                  tags: }
     #- { role: roles/ad/server,                  tags: }
