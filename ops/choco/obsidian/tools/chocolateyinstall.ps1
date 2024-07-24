@@ -15,3 +15,9 @@ $packageArgs = @{
 }
 
 Install-ChocolateyPackage @packageArgs
+
+# Remove desktop icon
+$desktop = [Environment]::GetFolderPath("DesktopDirectory")
+if ($desktop) {
+    Remove-Item -Path (Join-Path $desktop "Obsidian.lnk") -EA SilentlyContinue
+}
