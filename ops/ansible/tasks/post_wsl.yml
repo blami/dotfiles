@@ -81,20 +81,6 @@
     - my_facts.wsl_userprofile_dir
   tags: localwinrm
 
-- name: "Detecting WSL Ethernet Adapter"
-  command:
-    cmd: >
-      {{ my_facts.wsl_powershell }} -Command
-        '(Get-NetIPInterface -AddressFamily IPv4 | Where-Object { $_.InterfaceAlias -match "^vEthernet \(WSL.*" }).InterfaceAlias'
-    expand_argument_vars: false
-  when:
-    - my_facts.is_wsl
-    - my_facts.has_wsl_interop
-  register: out
-  changed_when: false
-  failed_when:
-    - "out.rc != 0 or out.stdout_lines|length != 1"
-  tags: localwinrm
 
 # Execute WinRM setup script
 # This step requires interactive Windows elevation but since this is WSL only
@@ -107,7 +93,7 @@
     cmd: >
       {{ my_facts.wsl_powershell }} -Command
         '$p = Start-Process -PassThru -Wait -Verb RunAs powershell.exe'
-        '"-ExecutionPolicy Bypass -File {{ my_facts.wsl_unc_playbook_dir }}\..\scripts\winrm.ps1 -ServerCertPath {{ my_user.win_userprofile }}\.ansible\winrm\localserver.pfx -ClientCertPath {{ my_user.win_userprofile }}\.ansible\winrm\localclient.pfx -User Ansible -FirewallIface `"{{ out.stdout_lines[0] }}`" -FirewallLocalSubnet -FirewallRuleName `"Ansible WSL WinRM (HTTPS)`""'
+        '"-ExecutionPolicy Bypass -File {{ my_facts.wsl_unc_playbook_dir }}\..\scripts\winrm.ps1 -ServerCertPath {{ my_user.win_userprofile }}\.ansible\winrm\localserver.pfx -ClientCertPath {{ my_user.win_userprofile }}\.ansible\winrm\localclient.pfx -User Ansible -FirewallIface `"{{ my_facts.wsl_host_iface }}`" -FirewallLocalSubnet -FirewallRuleName `"Ansible WSL WinRM (HTTPS)`""'
         ';Exit $p.ExitCode'
     expand_argument_vars: false
   when:

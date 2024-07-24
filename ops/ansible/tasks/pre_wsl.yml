@@ -131,28 +131,48 @@
   when:
     - my_facts.is_wsl
 
-# TODO: awk '/32 host/ { print f } {f=$2}' <<< "$(</proc/net/fib_trie)"
-#- name: Gathering WSL Guest IP (Linux)
-#  set_fact:
-#    my_facts: >
-#      {{ my_facts | xcombine({
-#        "wsl_guest_ip": "127.0.0.1" if my_facts.wsl_version == 1 else ansible_default_ipv4.address
-#      }) }}
-#  when:
-#    - my_facts.is_wsl
-
-# NOTE: Windows host IP is same as DNS server used inside WSL
-- name: Gathering WSL Host IP (Windows)
-  slurp:
-    src: /mnt/wsl/resolv.conf
-  register: out
+- name: "Detecting WSL Ethernet Adapter"
+  command:
+    cmd: >
+      {{ my_facts.wsl_powershell }} -Command
+        '(Get-NetIPInterface -AddressFamily IPv4 | Where-Object { $_.InterfaceAlias -match "^vEthernet \(WSL.*" }).InterfaceAlias'
+    expand_argument_vars: false
   when:
     - my_facts.is_wsl
     - my_facts.wsl_version == 2
+    - my_facts.has_wsl_interop
+  register: out
+  changed_when: false
+  failed_when:
+    - "out.rc != 0 or out.stdout_lines|length != 1"
 - set_fact:
     my_facts: >
       {{ my_facts | xcombine({
-        "wsl_host_ip": "127.0.0.1" if my_facts.wsl_version == 1 else out['content'] | b64decode | regex_findall('nameserver\s+(.+)$') | first 
+        "wsl_host_iface": "" if my_facts.wsl_version == 1 else out.stdout_lines[0]
       }) }}
   when:
     - my_facts.is_wsl
+
+- name: "Gathering WSL Host IP"
+  command:
+    cmd: >
+      {{ my_facts.wsl_powershell }} -Command
+        '(Get-NetIPConfiguration -InterfaceAlias "{{ my_facts.wsl_host_iface }}").IPv4Address.IPAddress'
+    expand_argument_vars: false
+  when:
+    - my_facts.is_wsl
+    - my_facts.wsl_version == 2
+    - my_facts.has_wsl_interop
+  register: out
+  changed_when: false
+  failed_when:
+    - "out.rc != 0 or out.stdout_lines|length != 1"
+- set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "wsl_host_ip": "127.0.0.1" if my_facts.wsl_version == 1 else out.stdout_lines[0]
+      }) }}
+  when:
+    - my_facts.is_wsl
+
+# TODO: Gather guest IP address
