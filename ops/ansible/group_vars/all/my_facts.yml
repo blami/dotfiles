@@ -26,6 +26,7 @@ my_facts:
   wsl_windrive_dir:
   wsl_home_is_userprofile: false
   wsl_host_hostname:
+  wsl_host_iface:
   wsl_host_ip:
   wsl_guest_ip:
   # tasks/post_wsl.yml

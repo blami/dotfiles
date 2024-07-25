@@ -20,7 +20,7 @@
   when:
     - my_facts.is_wsl
 
-- name: "Finding WSL Host WINDRIVE Directory"
+- name: "Finding WSL Host %WINDRIVE% Directory"
   command: >
     awk '{if(match($4, /;path=[A-Z]{1}:\\/) && !system("test -d \""$2"/Windows/System\"")) {print $2 ; exit }}' /proc/mounts
   register: out
@@ -57,7 +57,7 @@
 # NOTE: Override my_user.win_username and my_user.win_domain_username as when
 # running from WSL user already exists.
 # NOTE: This is being passed in post_wsl.yml to Windows localhost.
-- name: "Gathering WSL Windows Username and USERPROFILE"
+- name: "Gathering WSL Windows Username and %USERPROFILE%"
   shell: |
     {{ my_facts.wsl_powershell }} -Command '$env:USERNAME,"$env:USERDOMAIN\$env:USERNAME","$env:USERPROFILE" | Write-Host'
   register: out
