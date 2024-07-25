@@ -12,6 +12,13 @@
   win_chocolatey:
     name: chocolatey
     state: latest
+  register: out
+# NOTE: Update has_choco and choco_source_dir facts if just installed
+- include_role:
+    name: _common
+    tasks_from: checks/check_choco
+  when:
+    out: changed
 
 - name: "Installing Chocolatey-AU"
   win_chocolatey:

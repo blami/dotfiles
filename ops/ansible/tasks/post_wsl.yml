@@ -70,7 +70,7 @@
 # Test WinRM connection
 - include_role:
     name: _common
-    tasks_from: check_winrm
+    tasks_from: checks/check_winrm
   vars:
     winrm_host: "{{ my_facts.wsl_host_ip }}"
     winrm_clientcert: "{{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localclient.crt"
@@ -109,7 +109,7 @@
 # Re-test WinRM connection
 - include_role:
     name: _common
-    tasks_from: check_winrm
+    tasks_from: checks/check_winrm
   vars:
     winrm_host: "{{ my_facts.wsl_host_ip }}"
     winrm_clientcert: "{{ my_facts.wsl_userprofile_dir }}/.ansible/winrm/localclient.crt"

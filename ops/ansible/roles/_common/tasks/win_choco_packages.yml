@@ -22,7 +22,6 @@
   changed_when:
     - out.stdout is search('Successfully created package')
   when:
-    - my_facts.has_choco
     - choco_source_dir
 
 - name: "Installing Local Chocolatey Packages"
@@ -33,5 +32,4 @@
     label: "{{ item }}"
   with_items: "{{ win_choco_packages }}"
   when:
-    - my_facts.has_choco
     - choco_source_dir

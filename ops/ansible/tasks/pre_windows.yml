@@ -1,18 +1,6 @@
 ---
 # Windows-only additional fact gathering and checks.
 
-# NOTE: win_chocolatey_facts takes too long; this is much faster
-- name: "Checking If Chocolatey Is Installed"
-  win_shell: choco --version
-  register: out
-  changed_when: false
-  failed_when: false
-- set_fact:
-    my_facts: >
-      {{ my_facts | xcombine({
-        "has_choco": out.rc == 0
-      }) }}
-
-- name: "Gathering Chocolatey Local Source Location"
-  set_fact:
-    choco_source_dir: "{{ my_facts.wsl_unc_home_dir + '\\ops\\choco' if my_facts.is_wsl else choco_source_dir }}"
+- include_role:
+    name: _common
+    tasks_from: checks/check_choco
