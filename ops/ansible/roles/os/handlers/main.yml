@@ -1,0 +1,23 @@
+---
+# OS-level handlers
+
+# Linux
+- name: "Create bootstrap.ps1 Re-Run Stamp File"
+  shell: |
+    mkdir -p "{{ my_facts.wsl_userprofile_dir }}/.ansible"
+    touch "{{ my_facts.wsl_userprofile_dir }}/.ansible/{{ my_facts.wsl_distro }}.retry"
+  when:
+    - my_facts.has_wsl_interop
+    - my_facts.wsl_userprofile_dir
+    - "'bootstrapps1' in vars"
+    - ansible_facts.system in ("Linux",)
+
+- name: "Restart WSL"
+  command: "{{ my_facts.wsl_windrive_dir }}/Windows/System32/wsl.exe -t {{ my_facts.wsl_distro }}"
+  when:
+    - my_facts.has_wsl_interop
+    - my_facts.wsl_windrive_dir
+    - ansible_facts.system in ("Linux",)
+
+# Windows
+# TODO:

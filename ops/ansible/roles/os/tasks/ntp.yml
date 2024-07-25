@@ -1,20 +1,58 @@
 ---
 # Configure NTP servers
-# NOTE: See group_vars/all.yml
+# NOTE: This file is symlinked and shared by Linux and Windows.
 
-- name: "Configuring NTP Server {{ ntp }}"
-  replace:
-    path: /etc/systemd/timesyncd.conf
-    regexp: '^#?((.*)NTP)=.*$'
-    replace: '\1={{ ntp }}'
-  register: out
-  when:
-    - my_facts.has_systemd
+# Linux
+- block:
+  - name: "Configuring NTP Server {{ ntp }}"
+    replace:
+      path: /etc/systemd/timesyncd.conf
+      regexp: '^#?((.*)NTP)=.*$'
+      replace: '\1={{ ntp }}'
+    register: out
+    when:
+      - my_facts.has_systemd
 
-- name: "Restarting timesyncd"
-  systemd:
-    name: systemd-timesyncd
-    state: restarted
+  - name: "Restarting timesyncd"
+    systemd:
+      name: systemd-timesyncd
+      state: restarted
+    when:
+      - my_facts.has_systemd
+      - out.changed
+
   when:
-    - my_facts.has_systemd
-    - out.changed
+    - ansible_facts.system in ("Linux",)
+
+# Windows
+- block:
+  - name: "Configuring NTP Server {{ ntp }}"
+    win_regedit:
+      path: "{{ item.path }}"
+      name: "{{ item.name }}"
+      data: "{{ item.data }}"
+      type: "string"
+    with_items:
+      - path: "HKLM:\\SYSTEM\\CurrentControlSet\\services\\W32Time\\Parameters"
+        name: "NtpServer"
+        data: "{{ ntp }}"
+      # Fix Control Panel
+      - path: "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\DateTime\\Servers"
+        name: "3"
+        data: "{{ ntp }}"
+      - path: "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\DateTime\\Servers"
+        name: "(Default)"
+        data: "3"
+    register: out
+    loop_control:
+      label: "{{ item.path }}.{{ item.name }}={{ item.data }}"
+
+  - name: "Restarting w32time Service"
+    win_service:
+      name: w32time
+      state: restarted
+    when:
+      - out.changed
+
+  when:
+    - ansible_facts.os_family in ("Windows",)
