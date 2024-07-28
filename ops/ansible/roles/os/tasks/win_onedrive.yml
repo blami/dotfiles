@@ -1,0 +1,54 @@
+---
+# Remove OneDrive
+# NOTE: Not using winget so this works on older versions of Windows 10
+
+- name: "Checking OneDrive Installation"
+  win_reg_stat:
+    path: "{{ item }}"
+    name: "UninstallString"
+  with_items:
+    - "HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OneDriveSetup.exe"
+    - "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OneDriveSetup.exe"
+  register: out
+- set_fact:
+    has_onedrive: "{{ has_onedrive | default([]) + [ item.value ] }}"
+  with_items: "{{ out.results | selectattr('value', 'defined') }}"
+
+- name: "Stopping OneDrive"
+  win_command: "taskkill.exe /F /IM OneDrive.exe"
+  register: out
+  failed_when: false
+  changed_when: "'SUCCESS' in out.stdout"
+  when:
+    - has_onedrive is defined
+
+- name: "Uninstalling OneDrive"
+  win_command: "{{ item }}"
+  with_items: "{{ has_onedrive }}"
+  when:
+    - has_onedrive is defined
+
+- name: "Disabling OneDrive Integration"
+  win_regedit:
+    path: "{{ item.path }}"
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "dword"
+  with_items:
+    # Disable OneDrive group policies
+    - path: "HKLM:\\SOFTWARE\\Wow6432Node\\Policies\\Microsoft\\Windows\\OneDrive"
+      name: "DisableFileSyncNGSC"
+      data: 0x00000001
+    - path: "HKLM:\\SOFTWARE\\Wow6432Node\\Policies\\Microsoft\\Windows\\OneDrive"
+      name: "DisableFileSync"
+      data: 0x00000001
+    # Remove Explorer.exe sidebar
+    - path: "HKCR:\\CLSID\\{018D5C66-4533-4307-9B53-224DE2ED1FE6}"
+      name: "System.IsPinnedToNameSpaceTree"
+      data: 0x00000000
+    - path: "HKCR:\\Wow6432Node\\CLSID\\{018D5C66-4533-4307-9B53-224DE2ED1FE6}"
+      name: "System.IsPinnedToNameSpaceTree"
+      data: 0x00000000
+ 
+# NOTE: Moving content between directories is part of roles/user as that's
+# where user directories are created and deleted.
