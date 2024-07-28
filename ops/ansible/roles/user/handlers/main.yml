@@ -1,0 +1,14 @@
+---
+# User handlers
+
+# Linux
+# TODO:
+
+# Windows
+- name: "Restart Explorer.exe"
+  win_shell: Stop-Process -Name Explorer
+  become: true
+  become_user: "{{ my_user.win_domain_username }}"
+  when:
+    - ansible_facts.os_family in ("Windows",)
+    - my_facts.has_administrator

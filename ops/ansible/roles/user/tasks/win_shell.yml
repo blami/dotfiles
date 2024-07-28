@@ -1,0 +1,168 @@
+---
+# Change various settings related to Windows UI and Explorer.exe
+
+- name: "Enabling Dark Mode"
+  win_regedit:
+    path: "HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"
+    name: "{{ item }}"
+    data: 0
+    type: dword
+  with_items:
+    - "AppsUseLightTheme"
+    - "SystemUsesLightTheme"
+  notify:
+    - "Restart Explorer.exe"
+
+# TODO:
+#- name: "Setting Up Night Light"
+
+# Explorer
+
+- name: "Showing File Extensions, Hidden And System Files"
+  win_regedit:
+    path: "HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced"
+    name: "{{ item.key }}"
+    data: "{{ item.value }}"
+    type: dword
+  loop_control:
+    label: "{{ item.key }}={{ item.value }}"
+  with_dict:
+    HideFileExt: 0
+    Hidden: 1
+    ShowSuperHidden: 0
+    DontPrettyPath: 1
+  notify:
+    - "Restart Explorer.exe"
+
+- name: "Enabling Desktop Icons"
+  win_regedit:
+    path: "HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel"
+    name: "{{ item }}"
+    data: 0
+    type: dword
+  with_items:
+    - "{20D04FE0-3AEA-1069-A2D8-08002B30309D}"
+    - "{59031a47-3f72-44a7-89c5-5595fe6b30ee}"
+  notify:
+    - "Restart Explorer.exe"
+
+# NOTE: Do not auto-add recent and frequent folders to Quick Access
+- name: "Disabling Quick Access Frequent/Recent Folders"
+  win_regedit:
+    path: "HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer"
+    name: "{{ item.key }}"
+    data: "{{ item.value }}"
+    type: dword
+  loop_control:
+    label: "{{ item.key }}={{ item.value }}"
+  with_dict:
+    ShowFrequent: 0
+    ShowRecent: 0
+  notify:
+    - "Restart Explorer.exe"
+
+- name: "Unpinning WSL From Quick Access"
+  win_regedit:
+    path: "HKCU:\\SOFTWARE\\Classes\\CLSID\\{B2B4A4D1-2754-4140-A2EB-9A76D9D7CDC6}"
+    name: "{{ item.key }}"
+    data: "{{ item.value }}"
+    type: "{{ item.type }}"
+  loop_control:
+    label: "{{ item.key }}={{ item.value }}"
+  with_items:
+    - { key: "", value: "Linux", type: string }
+    - { key: "System.IsPinnedToNameSpaceTree", value: 0, type: dword }
+  notify:
+    - "Restart Explorer.exe"
+
+- name: "(Un)Pinning User Quick Access Folders"
+  xwin_quick_access:
+    path: "{{ item.path }}"
+    state: "{{ item.state }}"
+  loop_control:
+    label: "{{ item.path }}"
+  with_items:
+    # Unpin Windows standard locations
+    # NOTE: This is language specific but I always use EN version of Windows
+    - { path: "{{ my_user.win_userprofile }}\\Desktop", state: "absent" }
+    - { path: "{{ my_user.win_userprofile }}\\OneDrive\\Desktop", state: "absent" }
+    - { path: "{{ my_user.win_userprofile }}\\Documents", state: "absent" }
+    - { path: "{{ my_user.win_userprofile }}\\OneDrive\\Documents", state: "absent" }
+    - { path: "{{ my_user.win_userprofile }}\\Downloads", state: "absent" }
+    - { path: "{{ my_user.win_userprofile }}\\Pictures", state: "absent" }
+    - { path: "{{ my_user.win_userprofile }}\\OneDrive\\Pictures", state: "absent" }
+    - { path: "{{ my_user.win_userprofile }}\\Music", state: "absent" }
+    - { path: "{{ my_user.win_userprofile }}\\Videos", state: "absent" }
+    # Pins
+    - { path: "{{ my_user.win_userprofile }}", state: "present" }
+  notify:
+    - "Restart Explorer.exe"
+
+# Taskbar
+
+- name: "Setting Up Taskbar"
+  win_regedit:
+    path: "HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\{{ item.path }}"
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: dword
+  loop_control:
+    label: "{{ item.name }}={{ item.data }}"
+  with_items:
+    # Align taskbar icons to (0-left, 1-center)
+    - path: "Explorer\\Advanced"
+      name: "TaskbarAl"
+      data: 1
+    - path: "Explorer\\Advanced"
+      name: "TaskbarDA"
+      data: 0
+    - path: "Explorer\\Advanced"
+      name: "ShowCopilotButton"
+      data: 0
+    - path: "Explorer\\Advanced"
+      name: "TaskbarMn"
+      data: 0
+    - path: "Explorer\\Advanced"
+      name: "ShowTaskViewButton"
+      data: 1
+    - path: "Search"
+      name: "SearchBoxTaskbarMode"
+      data: 0
+
+# Start Menu
+
+- name: "Setting Up Start Menu Layout"
+  win_regedit:
+    path: "HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced"
+    name: "Start_Layout"
+    # NOTE: More pins and less Recommendations
+    data: 1
+    type: dword
+
+# See:https://ccmexec.com/2021/10/configure-windows-11-start-menu-folders-using-powershell/
+# All folders are:
+# - AllowPinnedFolderDocuments,
+# - AllowPinnedFolderDownloads,
+# - AllowPinnedFolderFileExplorer,
+# - AllowPinnedFolderHomeGroup,
+# - AllowPinnedFolderMusic,
+# - AllowPinnedFolderNetwork,
+# - AllowPinnedFolderPersonalFolder,
+# - AllowPinnedFolderPictures,
+# - AllowPinnedFolderSettings,
+# - AllowPinnedFolderVideos,
+- name: "Setting Up Start Menu Buttons"
+  win_regedit:
+    path: "HKLM:\\Software\\Microsoft\\PolicyManager\\current\\device\\Start"
+    name: "{{ item.key }}"
+    data: "{{ item.value }}"
+    type: dword
+  loop_control:
+    label: "{{ item.key }}={{ item.value }}"
+  with_dict:
+    AllowPinnedFolderSettings: 1
+    AllowPinnedFolderSettings_ProviderSet: 1
+    AllowPinnedFolderPersonalFolder: 1
+    AllowPinnedFolderPersonalFolder_ProviderSet: 1
+  notify:
+    - "Restart Explorer.exe"
