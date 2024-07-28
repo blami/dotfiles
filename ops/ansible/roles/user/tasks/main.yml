@@ -23,6 +23,16 @@
     - ansible_facts.system in ("Linux",)
     - my_facts.has_become_my_user
 
-
 # Windows
-# TODO:
+- block:
+   - import_tasks: win_shell.yml
+  # WARN: 'become' to user itself is required to allow credential delegation;
+  # user is expected to be an Administrator.
+  become: true
+  become_user: "{{ my_user.win_domain_username }}"
+  when:
+    - ansible_facts.os_family in ("Windows",)
+    - my_facts.has_administrator
+
+# NOTE: Run handlers
+- meta: flush_handlers
