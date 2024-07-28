@@ -30,9 +30,11 @@
     group: root
     mode: 0644
     force: true
-  register: out_wsl_wslconf
   when:
     - my_facts.is_wsl
+  notify:
+    - "Create bootstrap.ps1 Re-Run Stamp File"
+    - "Restart WSL"
 
 # NOTE: Instead of relying on WSL to do this properly we protect_binfmt in
 # wsl.conf and install own WSLInterop.conf manually.
@@ -47,9 +49,11 @@
     group: root
     mode: 0644
     force: true
-  register: out_wsl_wslinterop
   when:
     - my_facts.is_wsl
+  notify:
+    - "Create bootstrap.ps1 Re-Run Stamp File"
+    - "Restart WSL"
 
 # NOTE: This can be only done here as os role creates the user.
 - name: "Setting {{ my_user.username }} As Default WSL User"
@@ -60,48 +64,16 @@
       {{ my_facts.wsl_powershell }} -Command "Get-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss\*\ DistributionName | Where-Object -Property DistributionName -eq {{ my_facts.wsl_distro }} | Set-ItemProperty -Name DefaultUid -Value $NEW_UID"
       echo "changed"
     fi
-  register: out_wsl_defaultuid
+  register: out
   changed_when:
-    - out_wsl_defaultuid.stdout is match('changed')
+    - out.stdout is match('changed')
   when:
     - my_facts.is_wsl
     - my_facts.wsl_powershell
     - my_facts.has_wsl_interop
-
-# Restart WSL if needed
-- block:
-  # NOTE: Touch file for bootstrap.ps1 so it knows it should re-run Ansible
-  - name: "Creating bootstrap.ps1 Re-Run Stamp"
-    shell: |
-      mkdir -p "{{ my_facts.wsl_userprofile_dir }}/.ansible"
-      touch "{{ my_facts.wsl_userprofile_dir }}/.ansible/{{ my_facts.wsl_distro }}.retry"
-    when:
-      - my_facts.has_wsl_interop
-      - my_facts.wsl_userprofile_dir
-      - "'bootstrapps1' in vars"
-
-  - name: "Shutting Down WSL for Changes To Take Effect"
-    pause:
-      seconds: 5
-
-  - command: '{{ my_facts.wsl_windrive_dir }}/Windows/System32/wsl.exe --shutdown'
-    when:
-      - my_facts.has_wsl_interop
-      - my_facts.wsl_windrive_dir
-
-  - name: "Shutting Down WSL for Changes To Take Effect"
-    pause:
-      msg: >
-        Ansible is unable to shut down WSL for changes to take effect because
-        WSLInterop is not working. Run: wsl --shutdown in CMD or Powershell.
-        DO NOT press any key now.
-    failed_when: true
-    when:
-      - not my_facts.has_wsl_interop
-
-  when:
-    - my_facts.is_wsl
-    - (out_wsl_tmpfs.changed or out_wsl_wslconf.changed or out_wsl_wslinterop.changed or out_wsl_defaultuid.changed)
+  notify:
+    - "Create bootstrap.ps1 Re-Run Stamp File"
+    - "Restart WSL"
 
 - name: "Enabling systemd-binfmt Unit"
   systemd:
