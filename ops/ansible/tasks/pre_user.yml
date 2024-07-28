@@ -166,7 +166,6 @@
           "has_become_my_user": false if (not my_facts.has_my_user or ("failed" in out and out.failed)) else true
         }) }}
 
-  # TODO: If it is WSL then refresh user facts?
   - name: "Gathering User Facts"
     win_whoami:
     register: out
@@ -176,10 +175,21 @@
     when:
       - my_facts.has_my_user
       - my_facts.has_become_my_user
+  # TODO: Set facts from ^ (e.g. MicrosoftAccount?)
+  # NOTE: This is needed as above does not contain all necessary information
+  - win_shell: |
+      Write-Host $env:USERPROFILE
+    become: true
+    become_user: "{{ my_user.win_domain_username }}"
+    register: out
+    changed_when: false
+    ignore_errors: true
+    when:
+      - my_facts.has_my_user
   - set_fact:
       my_user: >
         {{ my_user | xcombine({
-          "win_userprofile": ansible_facts.env.USERPROFILE,
+          "win_userprofile": out.stdout_lines[0],
         }) }}
     when:
       - my_facts.has_become_my_user
