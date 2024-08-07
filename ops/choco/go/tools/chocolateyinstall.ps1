@@ -9,7 +9,7 @@ $packageArgs = @{
   url           = $url64
   softwareName  = 'Go Programming Language*'
 
-  silentArgs    = "/qn /norestart INSTALLDIR=`"C:\Devel\go`""
+  silentArgs    = '/qn /norestart INSTALLDIR="C:\Devel\go"'
 
   validExitCodes= @(0, 3010, 1641)
 }
