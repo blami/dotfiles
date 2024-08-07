@@ -1,13 +1,12 @@
 ﻿$ErrorActionPreference = 'Stop' # stop on all errors
 $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
-
-$url        = "https://update.code.visualstudio.com/1.91.1/win32-x64/stable"
+$url64      = "https://update.code.visualstudio.com/1.91.1/win32-x64/stable"
 
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
   unzipLocation = $toolsDir
   fileType      = 'EXE'
-  url           = $url
+  url64         = $url64
   softwareName  = 'Microsoft Visual Studio Code'
 
   silentArgs    = "/VERYSILENT /SUPPRESSMSGBOXES /MERGETASKS=!runcode,!desktopicon,!quicklaunchicon,!associatewithfiles /DIR=C:\Devel\vscode"

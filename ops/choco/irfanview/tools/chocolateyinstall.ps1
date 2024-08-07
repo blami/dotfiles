@@ -1,14 +1,14 @@
 ﻿$ErrorActionPreference = 'Stop' # stop on all errors
 $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
-$url        = 'https://www.irfanview.info/files/iview462_x64_setup.exe'
-$checksum   = 'd9d4c5f3120a9420e2dbaf0ee8931556e161787fbc4297d5fb4e4c7616fdd668'
+$url64      = 'https://www.irfanview.info/files/iview462_x64_setup.exe'
+$checksum64 = 'd9d4c5f3120a9420e2dbaf0ee8931556e161787fbc4297d5fb4e4c7616fdd668'
 
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
   unzipLocation = $toolsDir
   fileType      = 'EXE'
-  url           = $url
-  checksum      = $checksum
+  url64         = $url64
+  checksum64    = $checksum64
   checksumType  = 'sha256'
   softwareName  = 'Irfan View*'
 

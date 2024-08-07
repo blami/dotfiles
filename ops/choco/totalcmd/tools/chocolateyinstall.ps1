@@ -1,12 +1,12 @@
 ﻿$ErrorActionPreference = 'Stop' # stop on all errors
 $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
-$url        = 'https://totalcommander.ch/1103/tcmd1103x64.exe'
+$url64      = 'https://totalcommander.ch/1103/tcmd1103x64.exe'
 
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
   unzipLocation = $toolsDir
   fileType      = 'EXE'
-  url           = $url
+  url64         = $url64
   softwareName  = 'Total Commander*'
 
   # https://www.ghisler.ch/wiki/index.php?title=Installer#Description_of_switches_and_parameters

@@ -1,7 +1,6 @@
 ﻿$ErrorActionPreference = 'Stop' # stop on all errors
 $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
-
-$url        = "https://aka.ms/vs/17/release/vs_community.exe"
+$url64      = "https://aka.ms/vs/17/release/vs_community.exe"
 
 # See: https://learn.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-community?view=vs-2022
 @"
@@ -62,7 +61,6 @@ $url        = "https://aka.ms/vs/17/release/vs_community.exe"
     "Microsoft.VisualStudio.Workload.NativeDesktop",
     "Microsoft.VisualStudio.Component.HLSL",
     "Microsoft.Component.HelpViewer",
-    "Microsoft.VisualStudio.Component.Git"
   ],
   "extensions": []
 }
@@ -73,7 +71,7 @@ $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
   unzipLocation = $toolsDir
   fileType      = 'EXE'
-  url           = $url
+  url64         = $url64
   softwareName  = 'Microsoft Visual Studio*'
 
   silentArgs    = "install --installPath `"C:\Devel\msvs`" --quiet --force --norestart --config $toolsDir\.vsconfig"
