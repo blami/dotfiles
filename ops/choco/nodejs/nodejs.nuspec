@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>nodejs</id>
+    <version>20.16.0</version>
+    <title>Node.js</title>
+    <authors>OpenJS Foundation</authors>
+    <summary>Free, open-source, cross-platform JavaScript runtime environment.</summary>
+    <description>-</description>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
