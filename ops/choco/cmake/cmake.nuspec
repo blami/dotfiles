@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>cmake</id>
+    <version>3.30.2</version>
+    <title>CMake</title>
+    <authors>Kitware</authors>
+    <summary>Open-source, cross-platform family of tools designed to build, test and package software.</summary>
+    <description>-</description>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>

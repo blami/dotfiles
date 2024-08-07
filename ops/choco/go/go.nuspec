@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>go</id>
+    <version>1.22.5</version>
+    <title>Go Programming Language</title>
+    <authors>Go Authors</authors>
+    <summary>An open-source programming language supported by Google.</summary>
+    <description>-</description>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
