@@ -2,4 +2,8 @@
 # Chocolatey packages
 
 win_choco_packages:
-  - firefox               # latest
+  - 7-zip
+  - firefox
+  - git
+  - totalcmd
+  - vim
