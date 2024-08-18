@@ -28,6 +28,11 @@
   when:
     - has_onedrive is defined
 
+- name: "Removing OneDriveTemp"
+  win_file:
+    path: "C:\\OneDriveTemp"
+    state: absent
+
 - name: "Disabling OneDrive Integration"
   win_regedit:
     path: "{{ item.path }}"
