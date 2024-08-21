@@ -1,89 +1,81 @@
 ---
 # User-level directories
 
-- name: "Symlinking Windows User Directories To WSL"
-  shell:
-    cmd: |
-      umask {{ my_user.umask }}
-      ln -s "{{ my_facts.wsl_userprofile_dir }}/{{ item.name }}" "{{ my_user.home }}/{{ item.name }}"
-    creates: "{{ my_user.home }}/{{ item.name }}"
-  loop_control:
-    label: "{{ item.name }}"
-  with_items: "{{ user_dirs | selectattr('link', 'defined') | selectattr('link', 'equalto', 'wsl') }}"
+# Linux
+- include_role:
+    name: _common
+    tasks_from: dirs.yml
+  vars:
+    label: "User"
+    # WARN: DO NOT use dirs: {{ dirs }} as variable (recursion)
+    dirs: "{{ user_dirs }}"
+    prefix: "{{ my_user.home }}"
   when:
-    - my_facts.is_wsl
-    - not my_facts.wsl_home_is_userprofile
+    - ansible_facts.system in ("Linux",)
 
-- set_fact:
-  # NOTE: Helper to filter directories and keep them in order
-    user_dirs_filtered: "{{ user_dirs_filtered | default([]) + ([item] if ((('link' not in item) or (item['link'] != 'wsl')) and (('os' not in item) or (item['os'] == 'linux'))) else []) }}"
-  loop_control:
-    label: "{{ item.name }}"
-  loop: "{{ user_dirs }}"
-- name: Creating User Directories
-  shell:
-    cmd: |
-      # Check if any component of path is symlink
-      IFS=/ read -ra name <<< "{{ item.name }}"
-      has_link=false
-      test_path="{{ my_user.home }}"
-      for p in "${name[@]}"; do
-        test_path="$test_path/$p"
-        if [[ -L $test_path ]]; then
-          has_link=true
-          >&2 echo "$test_path is symlink, not creating {{ item.name }}"
-          break
-        fi
-      done
-      # Create directory
-      changed=0
-      if [ "$has_link" = false ] && [ ! -d "{{ my_user.home }}/{{ item.name }}" ]; then
-        umask {{ my_user.umask }}
-        mkdir "{{ my_user.home }}/{{ item.name }}"
-        changed=1
-      fi
+# Windows
+- block:
+  - include_role:
+      name: _common
+      tasks_from: win_dirs.yml
+    vars:
+      label: "User"
+      # WARN: DO NOT use dirs: {{ dirs }} as variable (recursion)
+      dirs: "{{ user_dirs }}"
+      prefix: "{{ my_user.win_userprofile }}\\"
 
-      echo $changed
-    executable: /usr/bin/bash
-  register: result
-  changed_when: result.stdout | int > 0
-  loop_control:
-    label: "{{ item.name }}"
-  # NOTE: DO NOT use multiple with_items as order matters!
-  with_items: "{{ user_dirs_filtered }}"
+  - name: "Creating desktop.ini"
+    xwin_desktop_ini:
+      path: "{{ my_user.win_userprofile }}\\{{ item.path | xwin_path }}"
+      icon: "{{ item.win_icon }}"
+    loop_control:
+      label: "{{ item.path }}"
+    with_items: "{{ user_dirs | selectattr('win_icon', 'defined') }}"
 
-- name: Generating XDG ~/.config/user-dirs.dirs
-  template:
-    src: "{{ role_path }}/files/user-dirs.dirs.j2"
-    dest: "{{ my_user.home }}/.config/user-dirs.dirs"
+  - name: "Relocating User Shell Folders"
+    xwin_shell_folder:
+      guid: "{{ item.win_guid }}"
+      path: "{{ my_user.win_userprofile }}\\{{ item.path | xwin_path }}"
+      move_files: true
+    loop_control:
+      label: "{{ item.path }}"
+    with_items: "{{ user_dirs | selectattr('win_guid', 'defined') }}"
 
-# WSL native directories
+  - name: "Removing Unwanted Directories"
+    win_file:
+      path: "{{ my_user.win_userprofile }}\\{{ item }}"
+      state: "absent"
+    ignore_errors: true
+    with_items:
+      - "ansel"       # Nvidia
+      - "Contacts"
+      - "Desktop"
+      - "Downloads"
+      - "Favorites"
+      - "Links"
+      - "OneDrive"
+      - "Pictures"
+      - "Saved Games"
+      - "Searches"
+      - "source"      # Visual Studio
 
-# Some WSL directories cannot be on NTFS (if that's where HOME is)
-- name: Creating WSL Native Directories
-  file:
-    path: "{{ item.src }}"
-    mode: "{{ item.mode }}"
-    state: directory
-  loop_control:
-    label: "{{ item.src }}"
-  with_items: "{{ wsl_native_dirs }}"
+  # NOTE: These files prevent Windows and apps from creating directories that I
+  # don't want.
+  - name: "Creating Decoy Files"
+    win_shell: |
+      $changed = 0
+      if (!(Test-Path -Path {{ item }} -PathType leaf)) {
+        $f = New-Item -Path {{ item }}
+        $f.Attributes += "Hidden"
+        $changed = 1
+      }
+    args:
+      chdir: "{{ my_user.win_userprofile }}"
+    register: result
+    changed_when: result.stdout | int > 0
+    with_items:
+      - "ansel"
+      - "source"
+
   when:
-    - my_facts.is_wsl
-    - my_facts.wsl_home_is_userprofile
-
-- name: Symlinking WSL Directories to NTFS
-  file:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    state: link
-    # NOTE: This will delete (unlink) the original file if its not a symlink and
-    # create the symlink. This should not be problem as all are transient.
-    force: true
-  loop_control:
-    label: "{{ item.dest }}"
-  with_items: "{{ wsl_native_dirs }}"
-  when:
-    - my_facts.is_wsl
-    - my_facts.wsl_home_is_userprofile
-
+    - ansible_facts.os_family in ("Windows",)

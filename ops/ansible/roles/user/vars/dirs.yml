@@ -7,78 +7,86 @@
 # windocs.
 
 # Properties explanation:
-# path: is relatvie to ~ or %USERPROFILE%
+#   path: is relatvie to ~ or %USERPROFILE%
+#   owner: (Linux only)
+#   group: (Linux only)
+#   mode: (Linux only)
+#   state: directory, absent, link, skip
+#   link: "/mnt/c/..." symlink
+#   win_link: "\\wsl.localhost\debian..." junction link to
+#   win_guid: (Windows only) GUID of special directory
+#   win_icon: (Windows only) icon of directory
+#   xdg: "FOO" will set "XDG_FOO_DIRECTORY" ~/.config/user-dirs.dirs or
+#        environment variable on Windows
+
+#
+#
 # link: "wsl" will link %USERPROFILE%/path to WSL (dirs.yml)
 # link: "windows" will link //wsl.local../path to Windows (win_dirs.yml)
-# xdg: "XDG_FOO_DIR" will put directory to ~/.config/user-dirs.dirs or set
-# environment variable on Windows to point to that directory.
-# win_guid: win_guid of special directory (win_dirs.yml).
-# win_icon: win_icon of directory (win_dirs.yml).
 # os: "windows" (or "linux") will create directory only on given OS
 
-# WARN: When nesting parent directory has to go first!
-
+# WARN: Directories are created and deleted in When nesting parent directory 
+# has to go first.
 user_dirs:
   - path: "bak"                       # backups
-  - path: "desk"                      # desktop
+  - path: "desk"                      # desktop (wsl -> win)
+    state: "{{ 'link' if my_facts.is_wsl and ansible_facts.system in ('Linux',) else 'directory' }}"
+    link: "{{ my_facts.wsl_userprofile_dir + '/desk' if ansible_facts.system in ('Linux',) else omit }}"
     xdg: "XDG_DESKTOP_DIR"
     win_guid: "B4BFCC3A-DB2C-424C-B029-7FE99A87C641"
     win_icon: "%SystemRoot%\\system32\\imageres.dll,-183"
-    link: "wsl"
-  - path: "docs"                      # documents
-    xdg: "XDG_DOCUMENTS_DIR"
-    # NOTE: Not linked with win_guid as Windows apps tend to litter "My Documents" a lot
-    win_icon: "%SystemRoot%\\system32\\imageres.dll,-112"
-    link: "wsl"
-  - path: "downl"                     # downloads
+  - path: "downl"                     # downloads (wsl -> win)
+    state: "{{ 'link' if my_facts.is_wsl and ansible_facts.system in ('Linux',) else 'directory' }}"
+    link: "{{ my_facts.wsl_userprofile_dir + '/downl' if ansible_facts.system in ('Linux',) else omit }}"
     xdg: "XDG_DOWNLOAD_DIR"
     win_guid: "374DE290-123F-4565-9164-39C4925E467B"
     win_icon: "%SystemRoot%\\system32\\imageres.dll,-184"
-    link: "wsl"
-  - path: "downl/arch"                # downloads (archived)
-  - path: "drive"                     # Google Drive
+  - path: "drive"                     # drive (wsl -> win)
+    state: "{{ 'link' if my_facts.is_wsl and ansible_facts.system in ('Linux',) else 'directory' }}"
+    link: "{{ my_facts.wsl_userprofile_dir + '/drive' if ansible_facts.system in ('Linux',) else omit }}"
     win_icon: "%USERPROFILE%\\.local\\share\\pixmaps\\folder_drive.ico,0"
-    link: "wsl"
-  - path: "logs"                      # logs (irc, etc.)
-    link: "windows"
-  - path: "mail"                      # maildir
-    link: "windows"
-  - path: "music"                     # music
+  # Google Drive related directories
+  - path: "docs"                      # docs (drive -> ~/docs)
+    state: "link"
+    link: "{% if ansible_facts.system in ('Linux',)%}drive/docs{% else %}%USERPROFILE%\\drive\\docs{% endif %}"
+  #- path: "logs"                      # logs (irc, etc.)
+  #- path: "mail"                      # maildir
+  - path: "music"                     # music (wsl -> win)
+    state: "{{ 'link' if my_facts.is_wsl and ansible_facts.system in ('Linux',) else 'directory' }}"
+    link: "{{ my_facts.wsl_userprofile_dir + '/music' if ansible_facts.system in ('Linux',) else omit }}"
     xdg: "XDG_MUSIC_DIR"
     win_guid: "4BD8D571-6D19-48D3-BE97-422220080E43"
     win_icon: "%SystemRoot%\\system32\\imageres.dll,-108"
-    link: "wsl"
-  - path: "pics"                      # pictures
+  - path: "pics"                      # pictures (wsl -> win)
+    state: "{{ 'link' if my_facts.is_wsl and ansible_facts.system in ('Linux',) else 'directory' }}"
+    link: "{{ my_facts.wsl_userprofile_dir + '/pics' if ansible_facts.system in ('Linux',) else omit }}"
     xdg: "XDG_PICTURES_DIR"
     win_guid: "33E28130-4E1E-4676-835A-98395C3BC3BB"
     win_icon: "%SystemRoot%\\system32\\imageres.dll,-113"
-    link: "wsl"
-  - path: "pub"                       # public files
-    xdg: "XDG_PUBLICSHARE_DIR"
-    link: "wsl"
-  - path: "public_html"               # local web
-    link: "windows"
-  - path: "src"                       # source code
-    win_icon: "%USERPROFILE%\\.local\\share\\pixmaps\\folder_src.ico,0"
-  - path: "tmpl"                      # WARN: In dotfiles, DO NOT LINK
-    xdg: "XDG_TEMPLATES_DIR"
-  - path: "videos"                    # videos
+  - path: "videos"                    # videos (wsl -> win)
+    state: "{{ 'link' if my_facts.is_wsl and ansible_facts.system in ('Linux',) else 'directory' }}"
+    link: "{{ my_facts.wsl_userprofile_dir + '/videos' if ansible_facts.system in ('Linux',) else omit }}"
     xdg: "XDG_VIDEOS_DIR"
     win_guid: "18989B1D-99B5-455B-841C-AB7C74E4DDFC"
     win_icon: "%SystemRoot%\\system32\\imageres.dll,-189"
-    link: "wsl"
-  - path: "vm"                        # virtual machines
-    link: "wsl"
-  # NOTE: On Windows 11 My Documents live in OneDrive, in order to keep
-  # OneDrive deleted My Documents needs to be relocated.
-  - path: "windocs"                   # my documents
+  - path: "src"                       # source code
+    xdg: "XDG_SRC_DIR"
+    win_icon: "%USERPROFILE%\\.local\\share\\pixmaps\\folder_src.ico,0"
+  # TODO: 
+  #- path: "src\\wsl"                  # linux source code (win -> wsl _ONLY_)
+  #- path: "src\\win"                  # windows source code (wsl -> win _ONLY_)
+  #- path: "pub"                       # public files
+  #  xdg: "XDG_PUBLICSHARE_DIR"
+  #- path: "public_html"               # local web
+  #- path: "tmpl"                      # templates
+    # WARN: This directory is in dotfiles
+    #xdg: "XDG_TEMPLATES_DIR"
+    #
+  # NOTE: Various apps are polluting My Documents with their data so I move the
+  # entire directory to AppData and consider a data directory.
+  - path: "AppData\\Documents"
     win_guid: "FDD39AD0-238F-46AF-ADB4-6C85480369C7"
-    win_icon: "%USERPROFILE%\\.local\\share\\pixmaps\\folder_windocs.ico,0"
-    os: "windows"
 
-# Google Drive symlinks
-# Symlinks to directories and files inside Google Drive to HOME
-drive_links: []
 
 # WSL native directories
 # NOTE: These need to be on native WSL filesystem in case HOME is on NTFS
