@@ -37,3 +37,4 @@
     #- { import_tasks: tasks/debug.yml,          tags: always }
   roles:
     - { role: os,                               tags: [os, windows] }
+    - { role: user,                             tags: [user, windows] }
