@@ -35,22 +35,26 @@ user_dirs:
     xdg: "XDG_DESKTOP_DIR"
     win_guid: "B4BFCC3A-DB2C-424C-B029-7FE99A87C641"
     win_icon: "%SystemRoot%\\system32\\imageres.dll,-183"
+  - path: "docs"                      # docs (docs -> ~/docs)
+    state: "{{ 'link' if my_facts.is_wsl and ansible_facts.system in ('Linux',) else 'directory' }}"
+    link: "{{ my_facts.wsl_userprofile_dir + '/docs' if ansible_facts.system in ('Linux',) else omit }}"
+    xdg: "XDG_DOCUMENTS_DIR"
+    win_icon: "%SystemRoot%\\system32\\imageres.dll,-112"
+  - path: "drive"                     # drive (wsl -> win)
+    state: "{{ 'link' if my_facts.is_wsl and ansible_facts.system in ('Linux',) else 'directory' }}"
+    link: "{{ my_facts.wsl_userprofile_dir + '/drive' if ansible_facts.system in ('Linux',) else omit }}"
+    win_icon: "%USERPROFILE%\\.local\\share\\pixmaps\\folder_drive.ico,0"
+  # Google Drive related directories
+  # TODO:
+  #- path: "logs"                      # logs (irc, etc.)
+  #- path: "mail"                      # maildir
   - path: "downl"                     # downloads (wsl -> win)
     state: "{{ 'link' if my_facts.is_wsl and ansible_facts.system in ('Linux',) else 'directory' }}"
     link: "{{ my_facts.wsl_userprofile_dir + '/downl' if ansible_facts.system in ('Linux',) else omit }}"
     xdg: "XDG_DOWNLOAD_DIR"
     win_guid: "374DE290-123F-4565-9164-39C4925E467B"
     win_icon: "%SystemRoot%\\system32\\imageres.dll,-184"
-  - path: "drive"                     # drive (wsl -> win)
-    state: "{{ 'link' if my_facts.is_wsl and ansible_facts.system in ('Linux',) else 'directory' }}"
-    link: "{{ my_facts.wsl_userprofile_dir + '/drive' if ansible_facts.system in ('Linux',) else omit }}"
-    win_icon: "%USERPROFILE%\\.local\\share\\pixmaps\\folder_drive.ico,0"
-  # Google Drive related directories
-  - path: "docs"                      # docs (drive -> ~/docs)
-    state: "link"
-    link: "{% if ansible_facts.system in ('Linux',)%}drive/docs{% else %}%USERPROFILE%\\drive\\docs{% endif %}"
-  #- path: "logs"                      # logs (irc, etc.)
-  #- path: "mail"                      # maildir
+  - path: "downl/arch"                # downloads archive
   - path: "music"                     # music (wsl -> win)
     state: "{{ 'link' if my_facts.is_wsl and ansible_facts.system in ('Linux',) else 'directory' }}"
     link: "{{ my_facts.wsl_userprofile_dir + '/music' if ansible_facts.system in ('Linux',) else omit }}"

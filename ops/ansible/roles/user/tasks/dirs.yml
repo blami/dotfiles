@@ -42,40 +42,37 @@
     with_items: "{{ user_dirs | selectattr('win_guid', 'defined') }}"
 
   - name: "Removing Unwanted Directories"
-    win_file:
-      path: "{{ my_user.win_userprofile }}\\{{ item }}"
-      state: "absent"
-    ignore_errors: true
-    with_items:
-      - "ansel"       # Nvidia
-      - "Contacts"
-      - "Desktop"
-      - "Downloads"
-      - "Favorites"
-      - "Links"
-      - "OneDrive"
-      - "Pictures"
-      - "Saved Games"
-      - "Searches"
-      - "source"      # Visual Studio
-
-  # NOTE: These files prevent Windows and apps from creating directories that I
-  # don't want.
-  - name: "Creating Decoy Files"
     win_shell: |
       $changed = 0
-      if (!(Test-Path -Path {{ item }} -PathType leaf)) {
-        $f = New-Item -Path {{ item }}
-        $f.Attributes += "Hidden"
+      if (Test-Path -Path "{{ item.key }}" -PathType container) {
+        Remove-Item -Path "{{ item.key }}" -Recurse -Force -EA SilentlyContinue
         $changed = 1
       }
+      if (!(Test-Path -Path "{{ item.key }}" -PathType leaf) -and ${{ item.value }}) {
+        $file = New-Item -Path "{{ item.key }}" -ItemType file
+        $file.Attributes += "Hidden"
+        $file.Attributes += "System"
+        $changed = 1
+      }
+      Write-Host $changed
     args:
       chdir: "{{ my_user.win_userprofile }}"
     register: result
     changed_when: result.stdout | int > 0
-    with_items:
-      - "ansel"
-      - "source"
+    with_dict:
+      # NOTE: Item name and whether to install decoy file; decoy file prevents
+      # app or Windows re-create the directory.
+      "Contacts": false
+      "Desktop": false
+      "Downloads": false
+      "Favorites": false
+      "Links": false
+      "OneDrive": false
+      "Pictures": false
+      "Saved Games": false
+      "Searches": false
+      "ansel": true         # Nvidia
+      "source": true        # Visual Studio
 
   when:
     - ansible_facts.os_family in ("Windows",)
