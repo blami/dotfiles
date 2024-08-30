@@ -25,11 +25,20 @@
           "ansible_user": ansible_facts.user_id
         }) }}
 
+  - name: "Defaulting Bitwarden CLI User On Control Node To {{ my_user.username }}"
+    set_fact:
+      bitwarden: >
+        {{ bitwarden | xcombine({
+          "become_user": my_user.username
+        }) }}
+    when:
+      - not bitwarden.become_user
+
   delegate_to: localhost
 
 # Linux
 - block:
-  - name: "Defaulting User Home to /home/{{ my_user.username }}"
+  - name: "Defaulting User Home To /home/{{ my_user.username }}"
     set_fact:
       my_user: >
         {{ my_user | xcombine({

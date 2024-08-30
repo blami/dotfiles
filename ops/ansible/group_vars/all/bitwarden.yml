@@ -1,0 +1,25 @@
+---
+# Bitwarden facts for all nodes.
+# NOTE: Bitwarden lookup is always done on control node.
+
+bitwarden:
+  # API key and master password to unlock the vault
+  # WARN: NEVER PUT SECRETS HERE, they are loaded in
+  # roles/_common/tasks/bitwarden.yml
+  client_id:
+  client_secret:
+  password:
+  session:
+  # roles/_common/tasks/bitwarden.yml
+  status:
+  # tasks/pre_args.yml
+  # tasks/pre_user.yml
+  become_user:
+  # Directories on control node; where to look for bwsecret.json (as root)
+  secret_dirs:
+    - /boot
+    - /root
+    - /root/secrets
+    - "~"
+    - ~/secrets
+    - /mnt/*

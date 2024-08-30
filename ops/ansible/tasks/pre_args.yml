@@ -4,10 +4,19 @@
 
 - name: "Processing Arguments"
   set_fact:
+    my_facts: >
+      {{ my_facts | xcombine({
+        "personal":     vars.get("personal", my_facts.get("personal", None)),
+      }) }}
     my_user: >
       {{ my_user | xcombine({
         "username":     vars.get("username", my_user.get("username", None)),
         "home":         vars.get("home", my_user.get("home", None)),
+      }) }}
+    # NOTE: See also tasks/pre_user.yml
+    bitwarden: >
+      {{ bitwarden | xcombine({
+        "become_user": vars.get("bitwarden_user", bitwarden.get("become_user", None)),
       }) }}
     env: >
       {{ env | xcombine({

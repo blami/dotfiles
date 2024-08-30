@@ -1,0 +1,118 @@
+---
+# Setup Bitwarden CLI
+#
+# Install Bitwarden CLI to /usr/local on control node using upstream tarball.
+# NOTE: Depends on gzip being installed (usually by os role run prior any roles
+# needing this.
+
+# TODO: Maybe skip everything here if bitwarden.status == "unlocked" so that
+# this can be included multiple times?
+
+# WARN: Needs root on control node
+- name: "Installing Bitwarden CLI"
+  unarchive:
+    src: "https://vault.bitwarden.com/download/?app=cli&platform=linux"
+    dest: "/usr/local/bin"
+    remote_src: true
+    owner: root
+    group: root
+    mode: 0755
+  become: true
+  become_user: root
+  delegate_to: localhost
+  when:
+    - "hostvars['localhost'].ansible_architecture in ('x86_64', )"
+    - my_control_node_facts.has_become_root
+- set_fact:
+    bitwarden: >
+      {{ bitwarden | xcombine({
+        "status": lookup("bitwarden", confdir="~/.config/bw", session=bitwarden.session)
+      }) }}
+  no_log: true
+
+# Lookup bwsecret.json and attempt to login and unlock Bitwarden vault using
+# installed Bitwarden CLI.
+
+# Lookup bwsecret.json on control node.
+# WARN: Needs root on control node
+- name: "Getting bwsecret.json File"
+  shell:
+    cmd: |
+      for d in {{ bitwarden.secret_dirs|join(' ') }} ; do
+        if [ -e $d/bwsecret.json ]; then
+          cat $d/bwsecret.json
+          exit 0
+        fi
+      done
+      exit 1
+  become: true
+  become_user: root
+  delegate_to: localhost
+  register: out
+  changed_when: false
+  ignore_errors: true
+  no_log: true
+- set_fact:
+    bitwarden: >
+      {{ bitwarden | xcombine(out.stdout|from_json) }}
+  no_log: true
+  when:
+    - out.rc|int == 0
+
+- name: "Logging In To Bitwarden CLI"
+  shell:
+    # WARN: BITWARDENCLI_APPDATA_DIR depends on shell ~ expansion so must be
+    # passed in cmd and not environment.
+    cmd: |
+      export BITWARDENCLI_APPDATA_DIR=~/.config/bw
+      /usr/local/bin/bw login --apikey
+  environment:
+    BW_CLIENTID: "{{ bitwarden.client_id }}"
+    BW_CLIENTSECRET: "{{ bitwarden.client_secret }}"
+  become: true
+  become_user: "{{ bitwarden.become_user }}"
+  delegate_to: localhost
+  register: out
+  no_log: true
+  when:
+    - "bitwarden.status == 'unauthenticated'"
+    - "bitwarden.client_id and bitwarden.client_secret"
+    - "hostvars['localhost'].ansible_architecture in ('x86_64', )"
+    - my_control_node_facts.has_become_root
+- set_fact:
+    bitwarden: >
+      {{ bitwarden | xcombine({
+        "status": lookup("bitwarden", confdir="~/.config/bw", session=bitwarden.session)
+      }) }}
+  no_log: true
+  when:
+    - "'skipped' not in out"
+
+- name: "Unlocking Bitwarden CLI"
+  shell:
+    # WARN: BITWARDENCLI_APPDATA_DIR depends on shell ~ expansion so must be
+    # passed in cmd and not environment.
+    cmd: |
+      export BITWARDENCLI_APPDATA_DIR=~/.config/bw
+      /usr/local/bin/bw unlock --passwordenv BW_PASSWORD --raw
+  environment:
+    BW_PASSWORD: "{{ bitwarden.password }}"
+  become: true
+  become_user: "{{ bitwarden.become_user }}"
+  delegate_to: localhost
+  register: out
+  no_log: true
+  when:
+    - "bitwarden.status == 'locked'"
+    - "bitwarden.password"
+    - "hostvars['localhost'].ansible_architecture in ('x86_64', )"
+    - my_control_node_facts.has_become_root
+- set_fact:
+    bitwarden: >
+      {{ bitwarden | xcombine({
+        "session": out.stdout_lines[0],
+        "status": lookup("bitwarden", confdir="~/.config/bw", session=out.stdout_lines[0])
+      }) }}
+  no_log: true
+  when:
+    - "'skipped' not in out"

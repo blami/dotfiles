@@ -53,8 +53,9 @@ EXAMPLES = """
 
 
 class Bitwarden:
-    def __init__(self, path="bw", session=None, timeout=5):
+    def __init__(self, path, confdir=None, session=None, timeout=5):
         self._path = path
+        self._confdir = confdir
         self._session = session
         self._timeout = timeout
         self._status = False
@@ -62,6 +63,8 @@ class Bitwarden:
     def _run(self, args: str, raw=False) -> dict:
         """Run Bitwarden command line tool."""
         env = os.environ.copy()
+        if self._confdir is not None:
+            env["BITWARDENCLI_APPDATA_DIR"] = os.path.expanduser(self._confdir)
         if self._session is not None:
             env["BW_SESSION"] = self._session
 
@@ -113,18 +116,17 @@ class Bitwarden:
         try:
             out = json.loads(self._run(["status"]))
         except:
-            return False
+            return "unavailable"
 
         status = out.get("status")
 
         # BUG: There's a bug in bitwarden that reports vault is locked even if
         # it is not. This is to temporarily workaround it.
-        if status != "unlocked":
+        if status == "unlocked":
             try:
                 self._run(["list", "folders"])
-                unlocked = True
             except:
-                unlocked = False
+                status = "locked"
 
         return status
 
@@ -162,7 +164,8 @@ class LookupModule(LookupBase):
     def run(self, terms, variables=None, **kwargs):
 
         bw = Bitwarden(
-            path=kwargs.get("path", "bw"),
+            path=kwargs.get("path", "/usr/local/bin/bw"),
+            confdir=kwargs.get("confdir"),
             session=kwargs.get("session", os.environ.get("BW_SESSION", None)),
         )
 
