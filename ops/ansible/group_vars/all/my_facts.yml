@@ -12,8 +12,6 @@ my_facts:
   has_administrator: false
   # tasks/pre_linux.yml
   has_systemd: false
-  # roles/user/tasks/secrets.yml
-  has_gpg: false
   # tasks/pre_wsl.yml, roles/os/tasks/wsl.yml
   is_wsl: false
   has_wsl_interop: false
