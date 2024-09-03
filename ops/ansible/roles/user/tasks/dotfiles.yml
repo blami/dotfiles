@@ -48,7 +48,7 @@
 # Windows
 - block:
   - name: "Cloning Dotfiles Repository {{ dotfiles }}"
-    # NOTE: Not using builtin.git as we clone to USERPROFILE which already exists.
+    # NOTE: Not using builtin.git as we clone to %USERPROFILE% which already exists.
     win_shell: |
         git.exe init --separate-git-dir .dfgit -b main
         git.exe --git-dir=.dfgit remote add -f -m main origin https://github.com/{{ dotfiles }}

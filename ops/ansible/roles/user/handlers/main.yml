@@ -2,9 +2,24 @@
 # User handlers
 
 # Linux
-# TODO:
+- name: "Change ~/.dfgit To SSH"
+  shell:
+    chdir: "{{ my_user.home }}"
+    cmd: |
+      umask {{ my_user.umask }}
+      git --git-dir=.dfgit remote set-url --push origin git@github.com:{{ dotfiles }}
+  when:
+    - ansible_facts.system in ("Linux",)
 
 # Windows
+- name: "Change %USERPROFILE%\\.dfgit To SSH"
+  win_shell: |
+      git.exe --git-dir=.dfgit remote set-url --push origin git@github.com:{{ dotfiles }}
+  args:
+    chdir: "{{ my_user.win_userprofile }}"
+  when:
+    - ansible_facts.os_family in ("Windows",)
+
 - name: "Restart Explorer.exe"
   win_shell: Stop-Process -Name Explorer
   become: true

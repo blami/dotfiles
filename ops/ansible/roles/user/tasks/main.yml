@@ -15,10 +15,7 @@
 - block:
     - import_tasks: dotfiles.yml
     - import_tasks: dirs.yml
-      tags: debug
     - import_tasks: secrets.yml
-      when: my_control_node_facts.has_bitwarden
-    - import_tasks: dotfiles_ssh.yml
   become: true
   become_user: "{{ my_user.username }}"
   when:
@@ -29,7 +26,7 @@
 - block:
     - import_tasks: win_dotfiles.yml
     - import_tasks: win_dirs.yml
-      tags: debug
+    - import_tasks: win_secrets.yml
     - import_tasks: win_shell.yml
   # WARN: 'become' to user itself is required to allow credential delegation;
   # user is expected to be an Administrator.
