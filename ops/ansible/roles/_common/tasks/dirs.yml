@@ -2,27 +2,23 @@
 # Create and remove directories
 #
 # NOTE: vars: need to be set for this to work; prefix variable is added in
-# front of each directory path and dirs variable is a list of directories to be
-# created/removed with following properties:
-#
-# vars:
-#   prefix: {{ my_user_facts.home }}
-#   wsl_prefix: {{ my_facts... }}
-#   umask: {{ my_user.umask }}
-#   dirs:
-#     - path: "/dir"              # relative to prefix
-#     - state: (present|absent)   # whether to create or remove directory
-#     - mode: "0755"              # octal mode (Linux)
-#     - owner: "root"             # owner (Linux)
-#     - group: "root"             # group (Linux)
-#     - xdg: "XDG_X_DIR"          # name of XDG to put in user-dirs.dir or set
-#     - win_guid: "12345-...."    # Windows GUID of special directory
-#     - win_icon: "%SystemRoot%\\system32..." # Windows icon path (ico or dll)
-#     - win_hidden: false         # Mark hidden
-#     - link: "/mnt/..."          # make this link to given path (needs state: link)
-#     - wsl_link: "..."
-#     - win_link: "..."           # if WSL make this link to given Windows path
-# 
+# front of each directory path and dirs variable.
+
+# Linux
+- block:
+
+  - name: "Creating {{ label }} Directories"
+    xdir:
+      path: "{{ prefix + item.path }}"
+      state: "{{ item.state | default(omit) }}"
+      link: "{{ item.link | default(omit) }}"
+      move: "{{ item.move | default(omit) }}"
+    loop_control:
+      label: "{{ item.path }}"
+    with_items: "{{ dirs }}"
+
+  when:
+    - ansible_facts.system in ("Linux",)
 
 # Windows
 - block:
@@ -39,4 +35,3 @@
 
   when:
     - ansible_facts.os_family in ("Windows",)
-

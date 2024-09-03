@@ -25,7 +25,9 @@
 # link: "windows" will link //wsl.local../path to Windows (win_dirs.yml)
 # os: "windows" (or "linux") will create directory only on given OS
 
-# WARN: Directories are created and deleted in When nesting parent directory 
+# BUG: This DOES NOT work when my_facts.wsl_home_is_userprofile; if that sweet
+# moment ever comes back, this needs fixing.
+# WARN: Directories are created and deleted in When nesting parent directory
 # has to go first.
 user_dirs:
   - path: "bak"                       # backups
@@ -46,8 +48,10 @@ user_dirs:
     win_icon: "%USERPROFILE%\\.local\\share\\pixmaps\\folder_drive.ico,0"
   # Google Drive related directories
   # TODO:
-  #- path: "logs"                      # logs (irc, etc.)
-  #- path: "mail"                      # maildir
+  - path: "logs"                      # logs (irc, etc.)
+    state: "{{ 'skip' if ansible_facts.os_family in ('Windows',) else 'directory' }}"
+  - path: "mail"                      # maildir
+    state: "{{ 'skip' if ansible_facts.os_family in ('Windows',) else 'directory' }}"
   - path: "downl"                     # downloads (wsl -> win)
     state: "{{ 'link' if my_facts.is_wsl and ansible_facts.system in ('Linux',) else 'directory' }}"
     link: "{{ my_facts.wsl_userprofile_dir + '/downl' if ansible_facts.system in ('Linux',) else omit }}"
@@ -76,19 +80,24 @@ user_dirs:
   - path: "src"                       # source code
     xdg: "XDG_SRC_DIR"
     win_icon: "%USERPROFILE%\\.local\\share\\pixmaps\\folder_src.ico,0"
-  # TODO: 
-  #- path: "src\\wsl"                  # linux source code (win -> wsl _ONLY_)
-  #- path: "src\\win"                  # windows source code (wsl -> win _ONLY_)
-  #- path: "pub"                       # public files
-  #  xdg: "XDG_PUBLICSHARE_DIR"
-  #- path: "public_html"               # local web
-  #- path: "tmpl"                      # templates
+  - path: "src\\wsl"                  # linux source code (win -> wsl _ONLY_)
+    state: "{{ 'link' if my_facts.is_wsl and ansible_facts.os_family in ('Windows',) else 'skip' }}"
+    link: "{{ my_facts.wsl_unc_home_dir + '\\src' }}"
+  - path: "src/win"                   # windows source code (wsl -> win _ONLY_)
+    state: "{{ 'link' if my_facts.is_wsl and ansible_facts.system in ('Linux',) else 'skip' }}"
+    link: "{{ my_facts.wsl_userprofile_dir + '/src' }}"
+  - path: "pub"                       # public files
+    state: "{{ 'skip' if ansible_facts.os_family in ('Windows',) else 'directory' }}"
+    xdg: "XDG_PUBLICSHARE_DIR"
+  - path: "public_html"               # local web
+    state: "{{ 'skip' if ansible_facts.os_family in ('Windows',) else 'directory' }}"
+  - path: "tmpl"                      # templates
     # WARN: This directory is in dotfiles
-    #xdg: "XDG_TEMPLATES_DIR"
-    #
+    xdg: "XDG_TEMPLATES_DIR"
   # NOTE: Various apps are polluting My Documents with their data so I move the
   # entire directory to AppData and consider a data directory.
   - path: "AppData\\Documents"
+    state: "{{ 'directory' if ansible_facts.os_family in ('Windows',) else 'skip' }}"
     win_guid: "FDD39AD0-238F-46AF-ADB4-6C85480369C7"
 
 

@@ -9,7 +9,7 @@
     label: "User"
     # WARN: DO NOT use dirs: {{ dirs }} as variable (recursion)
     dirs: "{{ user_dirs }}"
-    prefix: "{{ my_user.home }}"
+    prefix: "{{ my_user.home }}/"
   when:
     - ansible_facts.system in ("Linux",)
 
