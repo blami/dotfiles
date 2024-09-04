@@ -28,7 +28,7 @@
 
 	; Diff
 	df = diff
-	dc = diff --cached
+	dfc = diff --cached
 	diffc = diff --cached
 	coderev = difftool origin/master...
 
