@@ -18,46 +18,48 @@
 .PARAMETER DistroUri
     URI of distribution rootfs image
 .PARAMETER DistroUser
-    Name of default user of distribution when logging into it (not created automatically!)
+    Name of default user of distribution when logging into it (not created
+    automatically!)
 .PARAMETER DistroCommands
     List of commands to execute as root when distro is installed.
-    NOTE: %VARIABLE% placeholders for variables can be used, these are evaluated at execution.
+    NOTE: %VARIABLE% placeholders for variables can be used, these are
+    evaluated at execution.
+.PARAMETER WSLNatSubnet
+    A subnet that will be used by Hyper-V WSL adapter. Gateway will be the
+    first available IP in that subnet.
 .PARAMETER Ansible
     Whether or not to run AnsibleCommands after distro is installed.
 .PARAMETER AnsibleMyUser
-    Name of user passed to playbook as -e user=... (not user Ansible is run as!)
+    Name of user passed to playbook as -e user=... (not user running Ansible)
 .PARAMETER AnsibleCommands
     List of commands to execute as root to run Ansible.
-    NOTE: %VARIABLE% placeholders for variables can be used, these are evaluated at execution.
+    NOTE: %VARIABLE% placeholders for variables can be used, these are
+    evaluated at execution.
 .PARAMETER Proxy
-    In case proxy is needed inside the WSL this will be exported as http_proxy= and https_proxy= before each 
-    command.
-.INPUTS
-  <Inputs if any, otherwise state None>
-.OUTPUTS
-  <Outputs if any, otherwise state None - example: Log file stored in C:\Windows\Temp\<name>.log>
+    In case proxy is needed inside the WSL this will be exported as
+    http_proxy= and https_proxy= before each command.
 .NOTES
   Version:        1.0
   Author:         Ondrej Balaz
 
-
-  
-  This script is meant for Windows 10 (build >) and Windows 11 so far.
-
-  This script can be run multiple times (even with same -Distro name) in non-destructive manner (unles -Force is set).
+  This script can be run multiple times (even with same -Distro name) in
+  non-destructive manner (unles -Force is set).
 
   There is no point in detecting arch as naming wildly differs not only
   between Windows an Linux; but also on Windows (AMD64 vs x64). To 
   install on arch other than AMD64 simply set different -DistroUri and
   -WSLUpdateUri.
-.TODO
-  Proxy support...
-  
-.EXAMPLE
-  Powershell -ExecutionPolicy Bypass -Command "&{ .\wsl.ps1 }"
-  Powershell -ExecutionPolicy Bypass -Command "&{ .\wsl.ps1 -Distro redhat -DistroCommands 'yum update' -Ansible }"
 
-  NOTE: -Command "&{ ... }" is required to avoid issues with cmd.exe/powershell.exe array parsing.
+.EXAMPLE
+  Execute directly from Github:
+  Invoke-Command -ScriptBlock ([scriptblock]::Create((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/blami/dotfiles/main/ops/scripts/bootstrap.ps1'))) -ArgumentList @("-Ansible")
+
+  Execute locally:
+  powershell.exe -ExecutionPolicy Bypass -Command "&{ .\wsl.ps1 }"
+  powershell.exe -ExecutionPolicy Bypass -Command "&{ .\wsl.ps1 -Distro redhat -DistroCommands 'yum update' -Ansible }"
+
+  NOTE: -Command "&{ ... }" is required to avoid issues with
+  cmd.exe/powershell.exe array parsing.
 #>
 
 param (
@@ -68,11 +70,12 @@ param (
 	[string[]]$WSLDistroCommands = @(
 		"DEBIAN_FRONTEND=noninteractive ; apt-get -o Acquire::ForceIPv4=true update && apt-get -o Acquire::ForceIPv4=true install -y systemd systemd-sysv systemd-timesyncd systemd-resolved libnss-systemd libpam-systemd sudo zsh git"
 	),
-	[string]$WSLUpdateUri = "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_amd64.msi",
+	[string]$WSLUpdateUri = "https://aka.ms/wsl2kernelmsix64",
 	[string]$WSLDir = "$env:USERPROFILE\wsl",
 	[string]$WSLName = (Get-Culture).TextInfo.ToTitleCase($WSLDistro),
 	[string]$WSLIconUri = "https://raw.githubusercontent.com/blami/dotfiles/main/.local/share/pixmaps/debian.ico",
 	[string]$WSLCommandLine = "",
+	[string]$WSLNatSubnet = "172.254.0.0/28"
 	[switch]$Ansible = $false,
 	[string[]]$AnsibleCommands = @(
 		"DEBIAN_FRONTEND=noninteractive ; apt-get -o Acquire::ForceIPv4=true update && apt-get -o Acquire::ForceIPv4=true install -y python3-apt python3-winrm ansible",
@@ -252,9 +255,6 @@ if ($Default) {
 	Write-Host -ForegroundColor DarkYellow "> Setting WSL distribution as default"
 	& wsl -s $WSLDistro
 }
-# TODO: This requires user to exist so its probably not great idea to do it here
-#Write-Host -ForegroundColor DarkYellow "> Setting WSL distribution default user"
-#$_ = (Get-ItemProperty -Path Registry::HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lxss\*\ -Name DistributionName | Where-Object -Property DistributionName -eq $WSLDistro | Set-ItemProperty -Name DefaultUid -Value 1000
 
 
 # Windows Terminal
