@@ -75,7 +75,7 @@ param (
 	[string]$WSLName = (Get-Culture).TextInfo.ToTitleCase($WSLDistro),
 	[string]$WSLIconUri = "https://raw.githubusercontent.com/blami/dotfiles/main/.local/share/pixmaps/debian.ico",
 	[string]$WSLCommandLine = "",
-	[string]$WSLNatSubnet = "172.254.0.0/28"
+	[string]$WSLNatSubnet = "172.251.0.0/28",
 	[switch]$Ansible = $false,
 	[string[]]$AnsibleCommands = @(
 		"DEBIAN_FRONTEND=noninteractive ; apt-get -o Acquire::ForceIPv4=true update && apt-get -o Acquire::ForceIPv4=true install -y python3-apt python3-winrm ansible",
