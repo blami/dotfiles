@@ -75,6 +75,10 @@
     - "Create bootstrap.ps1 Re-Run Stamp File"
     - "Restart WSL"
 
+# NOTE: Run handlers right now, as at this point WSL needs restart; otherwise
+# they would run _after_ all tasks in role.
+- meta: flush_handlers
+
 - name: "Enabling systemd-binfmt Unit"
   systemd:
     name: systemd-binfmt
