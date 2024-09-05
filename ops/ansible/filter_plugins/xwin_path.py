@@ -5,7 +5,7 @@ from ansible.errors import AnsibleFilterError
 def xwin_path(arg, **kw):
     """Convert Unix path to Windows.
 
-    If path starts with / convert that to C:\, then flip all /'s to \\'s.
+    If path starts with / convert that to C:\\, then flip all /'s to \\\\'s.
     """
     drive = kw.get('drive', None)
     if drive:
