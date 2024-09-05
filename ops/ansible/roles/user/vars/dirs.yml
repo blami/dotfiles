@@ -59,6 +59,7 @@ user_dirs:
     win_guid: "374DE290-123F-4565-9164-39C4925E467B"
     win_icon: "%SystemRoot%\\system32\\imageres.dll,-184"
   - path: "downl/arch"                # downloads archive
+    state: "{{ 'link' if my_facts.is_wsl and ansible_facts.system in ('Linux',) else 'directory' }}"
   - path: "music"                     # music (wsl -> win)
     state: "{{ 'link' if my_facts.is_wsl and ansible_facts.system in ('Linux',) else 'directory' }}"
     link: "{{ my_facts.wsl_userprofile_dir + '/music' if ansible_facts.system in ('Linux',) else omit }}"
