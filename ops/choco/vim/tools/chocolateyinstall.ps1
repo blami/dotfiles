@@ -3,7 +3,7 @@ $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 $url64      = 'https://github.com/vim/vim-win32-installer/releases/download/v9.1.0/gvim_9.1.0_x64_signed.zip'
 # Short version used in install path
 $ver        = ''
-if ($url -match 'v([0-9]+).([0-9]+)') {
+if ($url64 -match 'v([0-9]+).([0-9]+)') {
     $ver = "$($matches[1])$($matches[2])"
 }
 
