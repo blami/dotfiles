@@ -69,7 +69,6 @@ $url64      = "https://aka.ms/vs/17/release/vs_community.exe"
 
 $packageArgs = @{
   packageName   = $env:ChocolateyPackageName
-  unzipLocation = $toolsDir
   fileType      = 'EXE'
   url64         = $url64
   softwareName  = 'Microsoft Visual Studio*'
