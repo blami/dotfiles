@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>msoffice</id>
+    <version>2021.0.0</version>
+    <title>Microsoft Office Professional 2021</title>
+    <authors>Microsoft</authors>
+    <summary>Create content, stay organized, and work together with updated versions of Word, Excel, PowerPoint, and other apps.</summary>
+    <description>-</description>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
