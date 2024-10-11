@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>foxitpdfeditor</id>
+    <version>11.2.10.53951</version><!-- Always fetch latest, software auto-updates -->
+    <title>PDF Editor</title>
+    <authors>Foxit</authors>
+    <summary>The all-in-one PDF solution.</summary>
+    <description>-</description>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
