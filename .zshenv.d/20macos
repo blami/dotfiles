@@ -1,0 +1,35 @@
+#~/.zshenv.d/20macos - MacOS specific environment
+
+# only on macos
+[[ $OS == macos ]] || return
+
+SHELL_SESSIONS_DISABLE=1        # disable sessions
+export SHELL_SESSIONS_DISABLE
+disable log                     # conflicts with /usr/bin/log
+
+# path_helper
+# add /etc/{,man}paths[.d] to $path and $manpath
+_path_helper() {
+	for f in $2(rN) $2.d/*(rN); for v in ${(@f)"$(<$f)"}; do
+		eval $1+=$v
+	done
+}
+_path_helper path /etc/paths
+_path_helper manpath /etc/manpaths
+unfunction _path_helper
+
+# homebrew
+HOMEBREW_PREFIX=/opt/homebrew
+HOMEBREW_CELLAR=/opt/homebrew/Cellar
+HOMEBREW_REPOSITORY=/opt/homebrew
+HOMEBREW_NO_ENV_HINTS=1
+export HOMEBREW_PREFIX HOMEBREW_CELLAR HOMEBREW_REPOSITORY HOMEBREW_NO_ENV_HINTS
+path=($HOMEBREW_PREFIX/{sbin,bin} $path)
+manpath=($HOMEBREW_PREFIX/share/man $manpath)
+infopath=($HOMEBREW_PREFIX/share/info $infopath)
+
+# only interactive shells
+#[[ $- == *i* ]] || return
+
+
+# vim:set ft=zsh:

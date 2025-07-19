@@ -1,0 +1,20 @@
+#~/.zshenv.d/50python - Python environment
+
+# local install
+for P in /opt/python \
+	$HOME/.opt/python ; [[ -d $P/bin ]] && path=($P/bin $path)
+unset P
+
+typeset -UTx PYTHON_PATH python_path :
+python_path=($HOME/.local/python $python_path)
+
+# only interactive shells
+[[ $- == *i* ]] || return
+
+PYTHON_HISTORY=$HOME/.python_history
+VIRTUAL_ENV_DISABLE_PROMPT=1
+
+export PYTHON_HISTORY VIRTUAL_ENV_DISABLE_PROMPT
+
+
+# vim:set ft=zsh:

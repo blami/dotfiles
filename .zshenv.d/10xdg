@@ -1,0 +1,23 @@
+#~/.zshenv.d/10xdg - XDG data directories
+# NOTE: other XDG directories are either set by os or in ~/.zshenv
+
+# TODO: source $XDG_CONFIG_HOME/user-dirs.dirs
+
+# XDG defined data directories
+XDG_DESKTOP_DIR=${XDG_DESKTOP_DIR:-$HOME/desktop}
+XDG_DOCUMENTS_DIR=${XDG_DOCUMENTS_DIR:-$HOME/documents}
+XDG_DOWNLOAD_DIR=${XDG_DOWNLOAD_DIR:-$HOME/downloads}
+XDG_MUSIC_DIR=${XDG_MUSIC_DIR:-$HOME/music}
+XDG_PICTURES_DIR=${XDG_PICTURES_DIR:-$HOME/pics}
+XDG_PUBLICSHARE_DIR=${XDG_PUBLICSHARE_DIR:-$HOME/pub}
+XDG_TEMPLATES_DIR=${XDG_TEMPLATES_DIR:-$HOME/tmpl}
+XDG_VIDEOS_DIR=${XDG_VIDEOS_DIR:-$HOME/video}
+
+export XDG_DESKTOP_DIR XDG_DOCUMENTS_DIR XDG_DOWNLOAD_DIR XDG_MUSIC_DIR \
+	XDG_PICTURES_DIR XDG_PUBLICSHARE_DIR XDG_TEMPLATES_DIR XDG_VIDEOS_DIR
+
+# other data directories
+#XDG_BACKUP_DIR=
+
+
+# vim:set ft=zsh:

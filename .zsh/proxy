@@ -1,78 +1,71 @@
-#!/usr/bin/zsh
-# Set proxy based on ~/.proxy contents
+#!/usr/bin/env zsh
+# proxy - set/unset proxies based on ~/.proxy{,_local}
 
-# Usage: proxy PROXY
+# Format of ~/.proxy{,_local}:
+# ID    PROXY                   NOPROXY
+# local http://proxy.local:3125 .local,.nodomain,local.com 
 
-# Format of ~/.proxy
-# id    proxy_host  no_proxy_domains
+# Usage: proxy local
+#        proxy cache >/dev/null
+#        proxy -
+#        proxy
+proxy() {
+	local no_proxy_default='localhost,.localdomain,.local,127.0.0.1'
+	local ok=
+	
+	if [[ $# -gt 1 ]]; then
+		>&2 echo "error: too many arguments"
+		exit 1
 
-proxy () {
-    if [ $# -gt 1 ]; then
-        2>&1 echo "error: too many arguments"
+	elif [[ $# -eq 1 && $1 == '-' ]]; then
+		http_proxy=
+		https_proxy=
+		ftp_proxy=
+		socks_proxy=
+		no_proxy=
 
-    elif [ $# -eq 1 ] && [ "$1" != "-" ]; then
-        # Read ~/.proxy file and set proxy
-        local id host no unused
-        local cur_id
-        if [ ! -r $HOME/.proxy ]; then
-            (>&2 echo "error: ~/.proxy does not exist")
-        fi
-        while read -r id host no unused; do
-            # Skip commented out and empty lines
-            [ -z "$id" ] || [ "${id:0:1}" = "#" ] && continue
-            if [ -z "$host" ]; then
-                (>&2 echo "error: $id record is invalid, skipping")
-                continue
-            fi
-            if [ "$id" = "$1" ]; then
-                http_proxy=$host
-                https_proxy=$host
-                ftp_proxy=$host
-                socks_proxy=$host
-                no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
-                [ ! -z "$no" ] && no_proxy=$no_proxy,$no
+	elif [[ $# -eq 1 ]]; then
+		local file=
+		local line=
+		for file in $HOME/.proxy{,_local}(N); do
+			file=( ${(f@)"$(<$file)"} )
+			for line in $file; do
+				line=( ${(@)=line} )
+				[[ ${#line[@]} -ge 2 ]] || { >&2 echo "error: invalid proxy spec '$line', skipping" ; continue }
+				[[ ${line[2]} =~ "^[a-zA-Z0-9]*://" ]] || line[2]="http://${line[2]}"
+				if [[ ${line[1]:l} == ${1:l} ]]; then
+					http_proxy=${line[2]}
+					https_proxy=$http_proxy
+					ftp_proxy=$http_proxy
+					socks_proxy=$http_proxy
+					no_proxy=${line[3]}
+					[[ -z $no_proxy ]] && no_proxy=$no_proxy_defalt || no_proxy=$no_proxy,$no_proxy_default
+					ok=1
+					break
+				fi
+			done
+			[[ -n $ok ]] && break
+		done
+		if [[ -z $ok ]]; then
+			>&2 echo "error: proxy id '$1' not found"
+			exit 1
+		fi
+	fi
 
-                # Store selected proxy for validation and PS1 purposes
-                cur_id=$id
-                break
-            fi
-        done <$HOME/.proxy
-        if [ -z "$cur_id" ]; then
-            (>&2 echo "error: proxy $1 not found")
-            return 1
-        fi
-        PROXY_ID=$cur_id
+	if [[ -n $ok ]]; then
+		HTTP_PROXY=$http_proxy
+		HTTPS_PROXY=$https_proxy
+		FTP_PROXY=$ftp_proxy
+		SOCKS_PROXY=$socks_proxy
+		NO_PROXY=$no_proxy
+		export http_proxy https_proxy ftp_proxy socks_proxy no_proxy \
+			HTTP_PROXY HTTPS_PROXY FTP_PROXY SOCKS_PROXY NO_PROXY
+	fi
 
-    elif [ $# -eq 1 ] && [ "$1" = "-" ]; then
-        # Clean-up proxy settings
-        http_proxy=
-        https_proxy=
-        ftp_proxy=
-        socks_proxy=
-        no_proxy=
-
-        PROXY_ID=
-    fi
-
-    # Print out proxy settings
-    if [ -z "$http_proxy" ]; then
-        echo "direct://"
-    else
-        echo $http_proxy
-    fi
-
-    # Export information
-    HTTP_PROXY=$http_proxy
-    HTTPS_PROXY=$https_proxy
-    FTP_PROXY=$ftp_proxy
-    SOCKS_PROXY=$socks_proxy
-    NO_PROXY=$no_proxy
-
-    export HTTP_PROXY HTTPS_PROXY FTP_PROXY SOCKS_PROXY NO_PROXY
-    export http_proxy https_proxy ftp_proxy socks_proxy no_proxy
-    export PROXY_ID
-
-    return 0
+	# print
+	for v in http_proxy https_proxy ftp_proxy socks_proxy; \
+		echo "$v:\t${(P)v:-(direct)}"
+	echo "no_proxy:\t${no_proxy}"
 }
 
 proxy $@

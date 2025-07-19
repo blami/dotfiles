@@ -1,0 +1,20 @@
+#/.zshenv.d/50golang - Golang environment
+
+# local install
+for P in /opt/go \
+	$HOME/.opt/go ; [[ -d $P/bin ]] && path=($P/bin $path)
+unset P
+
+# still love GOPATH but only for tools
+GOPATH=$HOME/.local/go
+export GOPATH
+path+=$GOPATH/bin
+
+GO111MODULE=auto                
+export GO111MODULE
+
+# only interactive shells
+#[[ $- == *i* ]] || return
+
+
+# vim:set ft=zsh:

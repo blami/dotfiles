@@ -1,15 +1,12 @@
-#!/usr/bin/zsh
-#  Draw a horizontal red line in terminal window
+#!/usr/bin/env zsh
+# --- - print visual separator
 
-# Usage: ---
-
-autoload -U colors
-colors
-
---- () {
-    [ -z $COLUMNS ] && return
-    printf "$fg[red]-%.0s$fg[default]" {1..$COLUMNS}
-    printf "\n"
+# Usage: --- [1;31]
+---() {
+	[[ -z $COLUMNS ]] && COLUMNS=80
+	printf "\e[${1:-1;31}m"
+	printf "-%0.s" {1..$COLUMNS}
+	printf "\e[0m\n"
 }
 
 --- $@

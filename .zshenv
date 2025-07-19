@@ -1,189 +1,183 @@
-# ~/.zshenv - Z shell environment
-# NOTE: This file is source before everything else and anytime
+# ~/.zshenv - Zsh environment
+# This file is _ALWAYS_ sourced as first, contains basic environment.
 
-# Profiler
-# Run time ZPROF=1 zsh -i -c exit
-if [ -n "${ZPROF+1}" ]; then
-    zmodload zsh/zprof
-fi
+# Config file loading order:
+#             L   N   S   (L=login,N=non-login,S=script)
+# * .zshenv   1   1   1
+#   .zprofile 2
+#   .zshrc    3   2
+#   .zlogin   4
+#   .zlogout  X
 
-# Don't source systemwide config
-unsetopt GLOBAL_RCS
-# Don't run compinit on Debian/Ubuntu
+# {{{ General
+# do not load system-wide configs and completion
+unsetopt global_rcs
 skip_global_compinit=1
 
-# Function path (~/.zsh_local, ~/.zsh) and autoload functions
-# NOTE $fpath isn't inherited between shells but is needed in .zprofile
-# NOTE ~/.zsh_local overrides ~/.zsh
-for p in ~/.zsh ~/.zsh_local; do
-    local_fpath=($p/**/*(N/) $p)
-    for d in $local_fpath; do
-        [ -d $d ] || continue
-        fpath=($d $fpath)
-        for f in $d/*(N-.x:t); autoload -Uz -- $f
-    done
-done
+# NOTE: useful in non-interactive scripts as well
+# globbing and expansion
+setopt unset                    # consider unset vars "" or 0
+setopt extended_glob            # support #,~,^; see: man zshexpn
+setopt case_glob                # *Z does not match zsh/
+setopt glob_dots                # *g includes .git
+setopt nomatch                  # error on no match
 
-builtin unset -v p local_fpath d f
-
-# Environment
-# This used to be .zshprofile but that does not load with non-login shells
-# (e.g. sudo -u USER /usr/bin/zsh).
-
-# ~/.zprofile - Z shell profile
-# NOTE: This file is sourced only for login shells
-
-# {{{ Hostname
-[ -z $HOST ] && HOST=$(hostname)
-[ -z $HOSTNAME ] && HOSTNAME=$HOST
-export HOST HOSTNAME
-
-HOSTNICK=${HOST%%.*}
-# Host status (0-good, 1-bad, unset don't show)
-HOSTOK=
-export HOSTNICK HOSTOK
+# scripting 
+setopt short_loops              # short forms of for,repeat,if,select,function
 # }}}
 
+# {{{ Path-arrays
+# no need to export PATH MANPATH INFOPATH LD_LIBRARY_PATH 
+# NOTE: -U=unique, -x=auto-export, T=tie VAR array sep
+typeset -U fpath cdpath
+typeset -Ux path manpath
+typeset -UxT INFOPATH infopath :
+typeset -UxT LD_LIBRARY_PATH ld_library_path :
+# }}}
 
-# {{{ OS
-# Sets $OS and $OSARCH variables
-OS=$OSTYPE
-case "$OS" in
-    linux*)         OS=linux ;;
-    linux-android)  OS=android ;;
-    darwin*)        OS=mac ;;
-    freebsd*|netbsd*|openbsd*|dragonfly*) OS=bsd ;;
-    win32)          OS=win ;;
-    msys*|cygwin*)  OS=win ;;
+# {{{ fpath
+# add ~/.zsh{,_local} to fpath, autoload -x functions
+for fp in ~/.zsh{,_local}; fpath=($fp{,/**/*(N/)} $fpath); unset fp
+autoload -Uz -- ~/.zsh{,_local}/*^.*(N.^x:t)
+# NOTE: +x funcs autoloaded in "Includes" section of ~/.zshrc
+# }}}
+
+# {{{ Environment
+# see always set vars: man zshparam /PARAMETERS SET BY SHELL
+# hostname					
+HOSTNAME=${HOST%%.*}            # hostname only
+[[ $HOST == *.* ]] && DOMAIN=${HOST#.*}
+export HOSTNAME DOMAIN
+
+# operating system and architecture
+case "${OSTYPE:l}" in
+	linux*)           OS=linux ;;
+	darwin*)          OS=macos ;;
+        *bsd*|dragonfly*) OS=bsd ;;
+	solaris*)         OS=solaris ;;
+        haiku*)           OS=haiku ;;
+	cygwin*|msys*)    OS=win ;;
+	*)                OS="${${OSTYPE:l}%%[0-9.]#}"
 esac
-OSARCH=$OS-$(uname -m)
+case "${CPUTYPE:l}" in
+        i386|x86)         ARCH=i386 ;;
+	amd64|x86_64|x64) ARCH=amd64 ;;
+        arm64|aarch64)    ARCH=arm64 ;;
+	*)                ARCH=${CPUTYPE:l} ;;
+esac
+OSARCH=$OS-$ARCH
+export OS ARCH OSARCH
 
-# Set $WSL to non-zero (WSL version 1 or 2); use WSL exported variables for
-# detection rather than kernel string in uname.
-WSL=
-if [ ! -z "$WSL_DISTRO_NAME" ]; then
-    [ ! -z "$WSL_INTEROP" ] && WSL=2 || WSL=1
+# initial path, manpath and infopath
+path=(/usr/local/sbin /usr/sbin /sbin /usr/local/bin /usr/bin /bin $path)
+manpath=(/usr/local/share/man /usr/share/man $manpath)
+infopath=(/usr/local/share/info /usr/share/info $infopath)
+
+# thread count (make -J $JOBS) 
+case "$OS" in
+	linux)            JOBS=$(nproc --all 2>/dev/null || echo 1) ;;
+        macos|bsd)        JOBS=$(sysctl -n hw.ncpu 2>/dev/null || echo 1) ;;
+        *)                JOBS=1 ;;
+esac
+export JOBS
+
+# systemd and wsl
+if [[ $OS == linux ]]; then
+	[[ $(readlink -f /proc/1/exe) == */systemd ]] && SYSTEMD=1 
+	[[ -n $WSL_DISTRO_NAME ]] && { [[ -n $WSL_INTEROP ]] && WSL=2 || WSL=1 }
 fi
-# If WSL is non-zero set some useful variables
-if [ -z "$WSL" ]; then
-    # TODO:
-    WSLUSER=
-    WSLHOME=
-fi
+export SYSTEMD WSL
 
-unset _uname
-export OS OSARCH WSL
-# }}}
-
-
-# {{{ Umask
-# Set umask 002 for uids >=1000 and having their own group
-[ $UID -ge 1000 ] && [ $UID -eq $GID ] && umask 002 || umask 022
-# }}}
-
-
-# {{{ Super-user
-# If user is not root set $SUDO to 'sudo'
-[ $EUID != 0 ] && SUDO=sudo || SUDO=
-export SUDO
-# }}}
-
-
-# {{{ Temporary directory
-# NOTE: This is for systems without TMPDIR set from PAM (or without PAM)
-if [ -z "$TMPDIR" ]; then
-    # TODO: create safe /tmp/user/$UID if possible?
-    TMPDIR=/tmp
-fi
+# temp dir
+if [[ -z $TMPDIR ]]; then
+	TMPDIR=/tmp/user/$UID
+	mkdir -p -m 700 $TMPDIR 2>/dev/null || TMPDIR=/tmp 
+fi 
 TMP=$TMPDIR
-export TMP TMPDIR
+TEMP=$TMPDIR
+TEMPDIR=$TMPDIR
+export TMPDIR TMP TEMP TEMPDIR
+
+# XDG directories
+# SEE: https://specifications.freedesktop.org/basedir-spec/latest/
+# NOTE: to use XDG dirs in scripts even if not set by OS/pam/systemd
+# NOTE: XDG data dirs are set in ~/.zshenv.d/10xdg 
+# runtime dirs
+XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-$TMPDIR}
+XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
+XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
+XDG_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}
+# config dirs
+XDG_CONFIG_HOME=$HOME/.config
+XDG_CONFIG_DIRS=/etc/xdg
+XDG_DATA_DIRS=/usr/local/share:/usr/share
+export XDG_RUNTIME_DIR XDG_CACHE_DIR XDG_DATA_HOME XDG_STATE_HOME \
+	XDG_CONFIG_HOME XDG_CONFIG_DIRS XDG_DATA_DIRS
 # }}}
 
-
-# {{{ Kerberos directory
-[ ! -d $HOME/.krb5 ] && mkdir -p $HOME/.krb5
-chmod 700 $HOME/.krb5
-KRB5CCNAME=FILE:$HOME/.krb5/cc
-export KRB5CCNAME
+# {{{ Misc
+# umask
+[[ $UID -ge 1000 && $UID -eq $GID ]] && umask 002 || umask 022
 # }}}
 
+# interactive-only shell environment
+# NOTE: this is guard so that includes can be last and in interactive shell
+# rely on variables set here.
+if [[ $- == *i* ]]; then
 
-# {{{ Misc environment
+# {{{ Environment
+# id
+NAME='Ondrej Balaz'
+EMAIL='blami@blami.net'
+NICK='blami'
+GPGKEY='1FCD8C25'
+DEBFULLNAME=$NAME
+DEBEMAIL=$EMAIL
+IRCNICK=$NICK
+IRCUSER=$IRCNICK
+export NAME EMAIL NICK GPGKEY DEBFULLNAME DEBEMAIL IRCNICK IRCUSER
+
+# basics
 EDITOR=vim
 VISUAL=$EDITOR
 PAGER=less
-LESSHISTFILE=-
-export EDITOR VISUAL BROWSER PAGER LESSHISTFILE
+MANPAGER=$PAGER
+DIFFPROG=vimdiff
+GREP=grep
+BROWSER=$HOME/bin/browser
+export EDITOR VISUAL PAGER MANPAGER LESS DIFFPROG GREP
 
-# Irssi variables
-IRCNICK='blami'
-IRCUSER='blami'
-export IRCNICK IRCUSER
+# defaults
+# less
+LESS=-iRQM                      # case insensitive, colors, quiet and prompts
+LESSHISTFILE=-                  # do not store less history
+# NOTE: color settings are in ~/.zshenv.d/80colors
+export LESS LESSHISTFILE
+# xz
+XZ_DEFAULTS='--threads=0'
+export XZ_DEFAULTS
 
-# User (override in ~/.zprofile_local|$HOST)
-MYFULLNAME='Ondrej Balaz'
-MYEMAIL='blami@blami.net'
-export MYFULLNAME MYEMAIL
-
-# Debian development environment
-DEBFULLNAME='Ondrej Balaz'
-DEBEMAIL='blami@blami.net'
-export DEBFULLNAME DEBEMAIL
-
-# CPU cores (useful with make -j)
-CPUS=1
-case "$OS" in
-    linux)
-        CPUS=$(grep '^core id' /proc/cpuinfo | sort -u | wc -l)
-        ;;
-esac
-export CPUS
-
-# Color output on MacOS X
-CLICOLOR=1
-export CLICOLOR
-
-# Screen reader mode (no fancy prompt, per-app settings in nvim, tmux, etc.)
-SCREENREADER=0
-export SCREENREADER
-
-# libvirt (qemu) default connect URI (to see root domains)
-LIBVIRT_DEFAULT_URI=qemu:///system
-export LIBVIRT_DEFAULT_URI
+# sudo (for use in .zalias, vimrc, etc.)
+[[ $EUID != 0 ]] && SUDO=sudo || SUDO=
+export SUDO
 # }}}
 
-
-# {{{ PATH cleaning and profile
-autoload -Uz pathmunge
-
-# In WSL remove native Windows paths from PATH first
-if [ ! -z "$WSL" ]; then
-    PATH=$(echo $PATH | tr ':' '\n' | grep -v '/mnt/[a-z]/' | paste -s -d:)
-fi
-
-# Source snippets in ~/.profile.d
-for s in ~/.profile.d/*.sh(N) ; source $s
-builtin unset -v s
-# }}}
-
+fi # [[ $- == *i* ]]
 
 # {{{ Includes
-# Local configuration
-[ -r ~/.zshenv_local ] && . ~/.zshenv_local || builtin true
-[ -r ~/.zshenv_$HOST ] && . ~/.zshenv_$HOST || builtin true
+# load snippets in ~/.zshenv.d/* (except .* e.g: .bak, .swp, .old)
+for f in $HOME/.zshenv.d/^*.*(rN^/); source $f 
+# include _local* versions (except _local.* e.g.: .bak, .swp, etc.) 
+for f in ${(%):-%N}_local^.*(rN^/); source $f
+unset f
 # }}}
 
-
-# {{{ Custom PATH
-# NOTE: This goes here so it is always in front and not overriden by _local
-# Setup PATH in ~/local
-pathmunge $HOME/local/bin
-# Setup PATH in ~ always as last component
-pathmunge $HOME/bin/$HOSTNICK
-pathmunge $HOME/bin/$OSARCH
-pathmunge $HOME/bin/$OS
-pathmunge $HOME/bin
-export PATH
+# {{{ Path
+# prepend path with $HOME/{bin,.local/bin}
+path=($HOME/{bin,.local/bin} $path)
 # }}}
+
+builtin true
+
 
 # vim:set ft=zsh:

@@ -1,31 +1,29 @@
-#!/usr/bin/zsh
-# Print random fortune from one or more fortune files
+#!/usr/bin/env zsh
+# fortune - print random fortune cookie
 
-# Usage: fortune /path/to/file [/path/to/other_file ...]
+# Usage: fortune ~/.local/share/fortunes/*
+#        fortune -p "\e[1;31m> " -s "\e[0m" ~/.local/share/fortunes/*
+fortune() {
+	local db=()
+        local quote=
+	typeset -A opts
+	zparseopts -D -E -- p:=opts s:=opts
 
-zmodload zsh/mapfile
+	for arg in $@; do
+		local file=( ${(f)"$(<$arg)"} )
+		for line in $file; do
+			if [[ ${line// /} == '%' ]]; then
+				[[ -n $quote ]] && db+=( $quote )
+				quote=
+			else
+				line="${opts[-p]}$line${opts[-s]}"
+				[[ -z $quote ]] && quote=$line || quote+="\n$line"
+			fi
+		done
+	done
 
-fortune () {
-    local db=()
-    local quote
-
-    for arg in $@; do
-        # Process files
-        local file=( "${(f)mapfile[$arg]}" )
-        for line in $file; do
-            if [ "${line// /}" = "%" ]; then
-                [ ! -z "$quote" ] && db+=("$quote")
-                quote=""
-                continue
-            fi
-            [ -z "$quote" ] && quote="$line" || quote="$quote\n$line"
-        done
-    done
-
-    [ ${#db[@]} -ne 0 ] || return
-    quote=$db[${RANDOM}%${#db}+1]
-
-    print "$quote"
+	[ ${#db[@]} -ne 0 ] || return
+	echo ${db[${RANDOM}%${#db}+1]}
 }
 
 fortune $@

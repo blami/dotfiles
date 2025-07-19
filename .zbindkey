@@ -1,51 +1,52 @@
-# ~/.zbindkey - Z shell key bindings
-# NOTE This file is sourced only for interactive shells from .zshrc
+# ~/.zbindkey - Zsh keybindings
+# This file is non-standard and sourced from ~/.zshrc
 
-# Force vi bindings
-bindkey -v
+# I use modified mixed vim and emacs keybindings and not the original map.
 
-# {{{ Scrolling
-function foo {
-    echo -e "\e[20T"
-}
-zle -N foo
-bindkey             '\e[5;2~'   up-line-or-history
-bindkey -s          '\e[6;2~'   '\e['
+# load zle
+zmodload -i zsh/zle
+setopt zle
+KEYTIMEOUT=5                    # wait 0.5s for next key 
+# autoload widgets
+autoload -Uz -- ~/.zsh{,_local}/zle/*^.*(N.:t) >/dev/null
+
+# reset keybindings
+#bindkey -rp ''
+
+# {{{ Compatibility
+# This maps non-xterm sequences to xterm so that bindings below work.
+for map in main viins vicmd visual; do
+# application(smkx) and raw(rmkx) mode same
+bindkey -M $map -s      '^[OA'      '^[[A'  # up
+bindkey -M $map -s      '^[OB'      '^[[B'  # down
+bindkey -M $map -s      '^[OD'      '^[[D'  # left
+bindkey -M $map -s      '^[OC'      '^[[C'  # right
+bindkey -M $map -s      '^[OH'      '^[[H'  # home
+bindkey -M $map -s      '^[OF'      '^[[F'  # end
+# numlock off-on same
+bindkey -M $map -s      '^[OM'      '^M'    # return
+bindkey -M $map -s      '^[Ok'      '+'
+bindkey -M $map -s      '^[Om'      '-'
+bindkey -M $map -s      '^[Oj'      '*'
+bindkey -M $map -s      '^[Oo'      '/'
+bindkey -M $map -s      '^[OX'      '='
+# linux tty to xterm
+bindkey -M $map -s      '^[[1~'     '^[[H'  # home
+bindkey -M $map -s      '^[[4~'     '^[[F'  # end
+# urxvt to xterm
+bindkey -M $map -s      '^[[1~'     '^[[H'  # home
+bindkey -M $map -s      '^[[4~'     '^[[F'  # end
+# tmux to xterm
+bindkey -M $map -s      '^[[7~'     '^[[H'  # home
+bindkey -M $map -s      '^[[8~'     '^[[F'  # end
+# iTerm2 to xterm
+done ; unset map
 # }}}
 
-# {{{ Command line editing
-# Home/End (all terminals)
-bindkey             '\e[1~'     beginning-of-line
-bindkey             '\e[4~'     end-of-line
-bindkey             '\e[7~'     beginning-of-line
-bindkey             '\e[8~'     end-of-line
-bindkey             '\eOH'      beginning-of-line
-bindkey             '\eOF'      end-of-line
-bindkey             '\e[H'      beginning-of-line
-bindkey             '\e[F'      end-of-line
-# Delete
-bindkey             '\e[3~'     delete-char
-# }}}
-
-# {{{ History
-bindkey             '^r'        history-incremental-search-backward
-bindkey             '^p'        up-history
-bindkey             '^n'        down-history
-# }}}
-
-# {{{ Completion
-bindkey             '^i'        expand-or-complete-prefix
-# }}}
-
-
-# {{{ Includes
-# Local configuration
-[ -r ~/.zbindkey_local ] && . ~/.zbindkey_local
-[ -r ~/.zbindkey_$HOSTNICK ] && . ~/.zbindkey_$HOSTNICK
-
-# Clear exit code (if any file doesn't exist)
-builtin true
-# }}}
+# {{{ Bindings
+bindkey         '^R'            history-incremental-pattern-search-backward
+# TODO
+## }}}
 
 
 # vim:set ft=zsh:

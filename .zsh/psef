@@ -1,28 +1,13 @@
-#!/usr/bin/zsh
-# Grep through list of running processes
+#!/usr/bin/env zsh
+# psef - grep ps output
 
-# Usage: psef name[ name...]
-
-psef () {
-    RE=\.\*
-    if [ $# -ne 0 ]; then
-        RE=
-        for N in $@; do
-            [ -z $RE ] && RE=$N || RE=$RE\|$N
-        done
-        RE=\($RE\)
-    fi
-
-    H=
-    ps -e -o user,pid,ppid,stime,time,c,ni,args | while read -r p ; do
-        # print header
-        [ -z $H ] && { echo $p ; H=1 ; continue }
-        # see if line matches
-        pa=(${=p})
-        if [[ ${pa[8]} =~ $RE ]]; then
-            echo $p
-        fi
-    done
+# Usage: psef [rsync xz]
+psef() {
+	local p= h=
+	for p in ${(f@)"$(ps -ecwww -o user,pid,ppid,%cpu,%mem,stime,time,state,ni,comm,args)"}; do
+		[[ -z $h ]] && { echo $p ; h=1 ; continue }
+		[[ ${${=p}:9:l} =~ ^(${${(j:|:)@:l}:-\.\*}) ]] && echo "$p"
+	done
 }
 
 psef $@

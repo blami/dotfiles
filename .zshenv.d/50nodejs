@@ -1,0 +1,20 @@
+#~/.zshenv.d/50node - Node.js environment
+
+# local install
+# NOTE: if node is in ~/.local/node it will be added too
+for P in /opt/node \
+	$HOME/.opt/node ; [[ -d $P/bin ]] && path=($P/bin $path)
+unset P
+
+typeset -UxT NODE_PATH node_path :
+node_path=($HOME/.local/node/lib/node_modules $node_path)
+path+=$HOME/.local/node/bin
+
+# only interactive shells
+[[ $- == *i* ]] || return
+
+NODE_REPL_HISTORY=
+export NODE_REPL_HISTORY
+
+
+# vim:set ft=zsh:

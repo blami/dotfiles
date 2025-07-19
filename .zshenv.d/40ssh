@@ -1,0 +1,39 @@
+#~/.zshenv.d/40ssh - SSH environment
+
+# only interactive shells
+[[ $- == *i* ]] || return
+
+# ssh-agent
+# run agent if needed; otherwise reuse running agent $SSH_AUTH_SOCKET
+# NOTE: systemd user unit would work but not on MacOS/BSD/Haiku
+whence -p ssh-agent >/dev/null || return
+
+SSH_AUTH_SOCK=
+SSH_AGENT_PID=
+
+_ssh_agent_readenv() {
+	[[ -r $XDG_RUNTIME_DIR/ssh-agent ]] || return
+	local l
+	for l in ${(f@)"$(<$XDG_RUNTIME_DIR/ssh-agent)"}; \
+		[[ $l =~ '^(SSH_[A-Z_]+)=([^;]+)' ]] && : ${(P)match[1]::=${match[2]}}
+}
+
+_ssh_agent_ps() {
+	local l
+	# WARN: this must work across platforms
+	for l in ${(f@)"$(ps -u $USER -o pid,comm)"}; \
+		[[ $l == [[:blank:]]#$1[[:blank:]]##"ssh-agent" ]] && return 0
+	return 1	
+}
+
+_ssh_agent_readenv
+[[ -n $SSH_AGENT_PID ]] && _ssh_agent_ps $SSH_AGENT_PID || {
+	ssh-agent -s >$XDG_RUNTIME_DIR/ssh-agent
+	_ssh_agent_readenv
+}
+
+unfunction _ssh_agent_readenv _ssh_agent_ps
+export SSH_AUTH_SOCK SSH_AGENT_PID
+
+
+# vim:set ft=zsh:

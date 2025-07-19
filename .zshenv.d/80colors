@@ -1,0 +1,64 @@
+# ~/.zshenv.d/80colors - color output
+
+# only interactive shells
+[[ $- != *i* ]] && return
+# colors not disabled
+[[ -n $NO_COLORS ]] && return
+
+# enable color cli on MacOS and BSD
+if [[ $OS == (macos|bsd) ]]; then
+	CLICOLOR=1
+	export CLICOLOR
+fi 
+
+# ls
+# NOTE: not a fan of running eval -- dircolors --sh ~/.dotfiles
+typeset -UxT LS_COLORS ls_colors :
+ls_colors=(
+	'rs=0'                  # reset
+	'di=01;34'              # directory
+	'ln=01;36'              # symlink
+	'mh=00;36'              # file 2+ hardlinks
+	'pi=01;35'              # pipe
+	'so=01;35'              # sock
+	'do=01;35'              # door
+	'bd=40;01;33'           # blockdev
+	'cd=40;01;33'           # chardev
+	'or=41;01;36;05'        # orphaned symlink
+	'mi=41;37;05'           # missing file
+	'su=45'                 # u+s file
+	'sg=45'                 # g+s file
+	'ca=00'                 # capability
+	'tw=44;01;34;05'        # +t,o+w dir (sticky public)
+	'ow=44;01;34'           # o+w dir (public)
+	'st=01;34;05'           # +t dir (sticky)
+	'ex=01;32'              # +x file
+	# filetypes '*.ext=00;00'
+)
+ZLS_COLORS=$LS_COLORS
+# non-gnu /bin/ls
+LSCOLORS='ExGxBxDxCxEgEdxbxgxcxd'
+export LSCOLORS
+
+# less
+LESS_TERMCAP_mb=$'\E[01;34m'    # blink
+LESS_TERMCAP_md=$'\E[01;34m'    # bold
+LESS_TERMCAP_me=$'\E[0m'
+LESS_TERMCAP_us=$'\E[01;04;32m' # underline
+LESS_TERMCAP_ue=$'\E[0m'
+LESS_TERMCAP_so=$'\E[7m' # standout
+LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_mb LESS_TERMCAP_md LESS_TERMCAP_me LESS_TERMCAP_se \
+	LESS_TERMCAP_so LESS_TERMCAP_ue LESS_TERMCAP_us
+whence -p src-hilite-lesspipe.sh >/dev/null && {
+	LESSOPEN="| src-hilite-lesspipe.sh %s"
+	export LESSOPEN
+}
+
+# grep
+GREP_COLOR='43;30'
+GREP_COLORS='ms=43;30:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36'
+export GREP_COLOR GREP_COLORS
+
+
+# vim:set ft=zsh:

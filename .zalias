@@ -1,170 +1,94 @@
-# ~/.zalias - Z-shell aliases
+# ~/.zalias - Zsh aliases
+# This file is non-standard and sourced from ~/.zshrc
+# NOTE: carefully use "-vars expand now; vs '-vars expand on run
 
-# {{{ Output redirects
-alias NERR='2>|/dev/null'               # no stderr
-alias NOUT='&>|/dev/null'               # no stdout
-alias NALL='2>&1|/dev/null'             # no stdout+stderr
-alias LOG='2>&1|tee '                   # stdout+stderr also to file (name...)
-
-alias P='2>&1|$PAGER'                   # pipe all to pager (expand in shell)
-alias L='|wc -l'                        # count lines
-alias T='|tail -f'                      # tail and follow
-[ "$OS" != 'sunos' ] && alias G='|grep' || alias G='|ggrep' # pipe to grep
-# }}}
-
-
-# {{{ Directories & Files
-alias rm='rm -i'
-# Check if we have coreutils `ls`, if so order directories first
-if [ ! -z "$(ls --version | grep coreutils)" ]; then
-    # Color ls output if LS_COLOR set
-    [ ! -z $LS_COLORS ] \
-        && alias ls='ls --color=auto --group-directories-first' \
-        || alias ls='ls --group-directories-first'
-fi
-alias l='ls -a'
-alias ll='ls -la'
-alias l.='ls -d .*'
-alias la='ls -a'
-alias lsd='ls -ld *(-/DN)'
-alias lO='ls -At1 && echo "--- Oldest ---"'
-alias lN='ls -Art1 && echo "--- Newest ---"'
-alias lt='tree -L 2 -d'
-alias mkdir='mkdir -p'                  # create parent directories
+# {{{ Files and Directories
+alias path='for p in $path ; [[ -d $p ]] && echo "  $p" || echo "! $p"'
+alias rm='rm -i'                                # ask for confirmation
 alias rf='rm -rf'
-alias path='echo -e ${PATH//:/\\n}'
-
-# Directory shortcuts
-alias src="cd $HOME/src"
-alias doc="cd $HOME/docs"
-alias sb="cd $HOME/sandbox"
-alias etc='cd /etc'
-
-# Disable globbing for some commands
-alias find='noglob find'
-alias grep='noglob grep'
-
-# Checksums
-alias sha='shasum -a 256'
-alias sha1='shasum -a 1'
-alias md5='md5sum'
+alias mkdir='mkdir -p'                          # make parent dirs
+# cd
+alias ..='cd ..'
+# ls
+whence -p gls >/dev/null && ls='gls' || ls='ls'
+[[ $($ls --version 2>&1) =~ 'Free Software Foundation, Inc.' ]] \
+	&& ls="$ls --group-directories-first --color=auto -hF" || ls="$ls -Gp"
+# NOTE: when adding also update HISTORY_IGNORE in .zshrc
+alias ls="$ls"
+alias l="$ls"
+alias la="$ls -a"
+alias ll="$ls -lha"
+alias l.="$ls -d .*(^M)"
+alias lt='$ls -lt'
+# NOTE: mark_dirs is set so ^M to avoid //
+alias ld="$ls -d *(-/DN^M)"
+alias lO="$ls -At1 && echo --\ OLDEST\ --"
+alias lN="$ls -Art1 && echo --\ NEWEST\ --"
+# tree
+alias t='tree'
+alias td='tree -d'
+# df
+whence -p gdf >/dev/null && df='gdf -T' || df='df'
+alias df="$df -h"
 # }}}
 
-
-# {{{ Command history
-alias c='clear'
-alias clr='clear'
-alias h='history'                       # list history
-alias he='history -a'                   # export history
-alias hi='history -n'                   # import history
+# {{{ Text
+alias trn='tr -d\\n'
+# grep
+whence -p ggrep >/dev/null && grep='ggrep' || grep='grep'
+grep="$grep --color=auto"
+alias grep="$grep"
+# find
+# vim
+alias v=vim
+alias vi=vim
+alias vdiff=vimdiff
 # }}}
-
-
-# {{{ Grep
-# Color grep output if GREP_COLORS set
-if [ ! -z $GREP_COLORS ]; then
-    greps=('grep' 'egrep' 'fgrep')
-    [ $OS = 'sunos' ] && greps=('ggrep' 'gegrep' 'gfgrep')
-    for grep in $greps; do
-        alias $grep="$grep --color=auto"
-    done
-    unset grep greps
-fi
-# }}}
-
-
-# {{{ Text editing
-alias tn='tr -d "\n"'                   # trim newlines
-alias vi='vim'
-alias v='vim'
-alias nvimdiff='vim -d'
-alias vimdiff='vim -d'
-alias vd='vim -d'
-alias vN='vim --clean'
-alias e='vim'
-# }}}
-
-
-# {{{ Date and time
-alias d='date +"%a, %b %d, %Y %H:%M:%S%z%Z (day:%j, week:%V) %t%s"'
-alias dutc='TZ=UTC d'
-alias dcz='TZ=Europe/Prague d'
-alias dny='TZ=America/New_York d'
-alias djp='TZ=Asia/Tokyo d'
-# }}}
-
-
-# {{{ Processes
-alias psmem10='ps aux | sort -nr -k 4 | head -10'
-alias pscpu10='ps aux | sort -nr -k 3 | head -10'
-                                        # top 10 mem/cpu eating processes
-alias j='jobs -l'                       # list shell background jobs
-alias q='exit'
-# }}}
-
 
 # {{{ Network
-alias curl='curl -w "\nstatus=%{http_code} %{redirect_url} size=%{size_download} time=%{time_total} content-type=%{content_type}\n"'
-alias ports='netstat -tulanp'           # show listen ports
-alias httph='curl -I -L'                # show HTTP headers (URL must follow)
-alias serve='python3 -m http.server'    # serve current directory on port 8000
-
-alias wget='wget -c'                    # resume downloads
-
-# OpenSSL Certificates
-# See: https://www.sslshopper.com/article-most-common-openssl-commands.html
-# Print details about PEM/CSR
-alias pem='openssl x509 -noout -text -in'
-alias csr='openssl req -noout -text -verify -in'
-# Explode PKCS7 and PKCS12 bundles to PEM
-alias p7b='openssl pkcs7 -inform der -noout -text -in'
-alias p12b='openssl pkcs12 -inform der -noout -text -in'
+# openssl 
 # }}}
 
+# {{{
+alias irssi='weechat'
 
-# {{{ Admin commands
-alias tmux='tmux -u'
-alias t='tmux'
-alias ta='tmux a'
-
-# System commands (systemctl, etc.)
-# }}}
-
-
-# {{{ Coding
-# VCS
-# Git
-alias g='git'
-alias dfgit="git --git-dir=$HOME/.dfgit --work-tree=$HOME -c core.excludesfile=$HOME/.dfgitignore" # dfgit for .dfgit
-
-alias dk='docker'
-# }}}
-
+# }}} 
 
 # {{{ Misc
-alias irc='weechat'
+# terminal
+alias rst=reset
+alias cls=clear
+# jobs
+alias j=builtin jobs -l
+# history
+alias h=builtin history
+# typos
+alias :q=exit
+alias :wq=exit
+alias exot=exit
+alias sl="$ls"
 # }}}
 
-
-# {{{ Typos
-# NOTE These are only typo corrections for typos I do very often
-alias :q='exit'
-alias :wq='exit'
-alias exot='exit'
-alias exut='exit'
-alias ccd='cd'
-alias sl='ls'
+# {{{ Redirects
+# command | othercommand NERR, command E, etc.
+# NOTE: use "" where are variables so they expand at alias and not runtime!
+alias -g NERR='2>/dev/null'
+alias -g NOUT='&>/dev/null'
+alias -g NALL='2>&1 >/dev/null'
+alias -g G="2>&1 | $grep"
+alias -g L="2>&1 | ${PAGER:-less}"
+alias -g TF='2>&1 | tail -f'
+alias -g LOG='2>&1 | tee'
+alias -g V="|& ${EDITOR:-vim}"
 # }}}
 
-
-# {{{ Includes
-# Local configuration
-[ -r $HOME/.zalias_local ] && . $HOME/.zalias_local
-[ -r $HOME/.zalias_$HOSTNICK ] && . $HOME/.zalias_$HOSTNICK
-
-# Clear exit code (if any optional file doesn't exist)
-builtin true
+# {{{ Suffixes
+alias -s md=vim
 # }}}
+
+# cleanup
+# unset tool variables
+unset ls grep
 
 
 # vim:set ft=zsh:

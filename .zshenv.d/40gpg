@@ -1,0 +1,15 @@
+#~/.zshenv.d/40gpg - GnuPG environment
+
+# only interactive shells
+[[ $- == *i* ]] || return
+
+GPG_TTY=$(tty)
+export GPG_TTY
+
+[[ -d $HOME/.gnupg ]] || return
+whence -p gpg-connect-agent  >/dev/null || return
+
+# start agent
+gpg-connect-agent /bye 2>/dev/null
+
+# vim:set ft=zsh:
