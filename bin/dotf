@@ -1,0 +1,12 @@
+#!/bin/sh
+# dotf - git wrapper for managing dotfiles
+
+# Allows to have multiple overlaying dotfile repos overlaying in $HOME by
+# symlinking this script.
+DOTF="$(basename "$0")"
+
+git \
+	--git-dir="$HOME/.$DOTF" \
+	 --work-tree="$HOME" \
+	 -c core.excludesFile="${HOME}/.${DOTF}ignore" \
+	"$@"
