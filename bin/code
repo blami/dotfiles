@@ -1,7 +1,38 @@
-#!/bin/sh
-# code - VS Code wrapper
+#!/usr/bin/env zsh
+# code - Visual Studio Code wrapper
+# NOTE: depends on ~/.zshenv, particularly $OS, $WSL, $WSL_USER and $WSL_MOUNT
 
-# TODO: Find right version of VSCode
+VSCODE=
+find_vscode() {
+	for p in "$@"; do
+		if [ -x "$p" ]; then
+			VSCODE="$p" ; break
+		fi
+	done
+}
 
-VSCODE="/mnt/c/Program Files/Microsoft VS Code/bin/code"
-exec "$VSCODE" $@
+case "$OS" in
+	linux|bsd)
+		if [[ -z $WSL ]]; then
+			find_vscode \
+				{/usr,/usr/local}/bin/code
+		else 
+			# inside WSL run Windows wrapper
+			find_vscode \
+				"$WSL_MOUNT"/c/{Program\ Files,Users/"$WSL_USER"/AppData/Local/Programs}/Microsoft\ VS\ Code/bin/code
+		fi	
+		;;
+	macos) 
+		find_vscode \
+			/usr/local/bin/code \
+			{/Users/"$USER",}/Applications/{,Developer/}Visual\ Studio\ Code.app/Contents/Resources/app/bin/code
+		;;
+	*)
+		echo >&2 "${0##*/}: unsupported OS=${OS:-unset}" ; exit 1
+		;;
+esac
+
+if [[ -z $VSCODE ]]; then
+	echo >&2 "${0##*/}: Microsoft VS Code not found" ; exit 1
+fi
+exec "$VSCODE" "$@"
