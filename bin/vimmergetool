@@ -1,0 +1,4 @@
+#!/bin/sh
+# vimmergetool - Vim as git mergetool
+
+exec vim -d "$1" "$2" "$3" -c "\$wincmd w" -c "\$wincmd J"
