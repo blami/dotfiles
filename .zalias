@@ -83,7 +83,8 @@ alias -g V="|& ${EDITOR:-vim}"
 # }}}
 
 # {{{ Suffixes
-alias -s md=vim
+alias -s md=${EDITOR:-vim}
+alias -s txt=${EDITOR:-vim}
 # }}}
 
 # cleanup

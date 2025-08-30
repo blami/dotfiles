@@ -86,6 +86,7 @@ if [[ $OS == linux ]]; then
 	[[ $(readlink -f /proc/1/exe) == */systemd ]] && SYSTEMD=1 
 	[[ -n $WSL_DISTRO_NAME ]] && { [[ -n $WSL_INTEROP ]] && WSL=2 || WSL=1 }
 fi
+# NOTE: for WSL_* see ~/.zshenv.d/10wsl
 export SYSTEMD WSL
 
 # temp dir
