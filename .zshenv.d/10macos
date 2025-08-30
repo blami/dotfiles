@@ -1,4 +1,4 @@
-#~/.zshenv.d/20macos - MacOS specific environment
+#~/.zshenv.d/10macos - MacOS specific environment
 
 # only on macos
 [[ $OS == macos ]] || return

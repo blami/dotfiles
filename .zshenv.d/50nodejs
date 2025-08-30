@@ -1,7 +1,6 @@
-#~/.zshenv.d/50node - Node.js environment
+#~/.zshenv.d/50nodejs - Node.js environment
 
 # local install
-# NOTE: if node is in ~/.local/node it will be added too
 for P in /opt/node \
 	$HOME/.opt/node ; [[ -d $P/bin ]] && path=($P/bin $path)
 unset P

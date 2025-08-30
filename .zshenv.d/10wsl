@@ -1,10 +1,9 @@
-#~/.zshenv.d/20wsl - Windows Subsystem for Linux environment
+#~/.zshenv.d/10wsl - Windows Subsystem for Linux environment
 
 # only on wsl
 [[ -n $WSL ]] || return
 
 # TODO: figure this out
-
 WSL_MOUNT=/mnt
 WSL_USER=blami
 

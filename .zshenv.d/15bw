@@ -1,0 +1,14 @@
+#~/.zshenv.d/15bw - Bitwarden environment
+
+whence -p bw >/dev/null || return
+
+BITWARDEN_CLI_APPDATA=$HOME/.config/bw
+[[ -r $XDG_RUNTIME_DIR/bwsession ]] && BWSESSION=
+
+export BITWARDEN_CLI_APPDATA BWSESSION
+
+# only interactive shells
+#[[ $- == *i* ]] || return
+
+
+# vim:set ft=zsh:

@@ -1,4 +1,4 @@
-#~/.zshenv.d/40gpg - GnuPG environment
+#~/.zshenv.d/20gpg - GnuPG environment
 
 # only interactive shells
 [[ $- == *i* ]] || return

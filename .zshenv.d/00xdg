@@ -1,4 +1,4 @@
-#~/.zshenv.d/10xdg - XDG data directories
+#~/.zshenv.d/00xdg - XDG data directories
 # NOTE: other XDG directories are either set by os or in ~/.zshenv
 
 # TODO: source $XDG_CONFIG_HOME/user-dirs.dirs
