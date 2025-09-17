@@ -5,6 +5,7 @@ for P in /opt/node \
 	$HOME/.opt/node ; [[ -d $P/bin ]] && path=($P/bin $path)
 unset P
 
+# NOTE: requires prefix=$HOME/.local/node in ~/.npmrc
 typeset -UxT NODE_PATH node_path :
 node_path=($HOME/.local/node/lib/node_modules $node_path)
 path+=$HOME/.local/node/bin
