@@ -1,3 +1,0 @@
-[mypy]
-# Do not cache between runs, slower but doesn't garbage filesystem
-cache_dir=/dev/null
