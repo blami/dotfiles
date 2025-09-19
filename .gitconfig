@@ -1,75 +1,93 @@
-; ~/.gitconfig - Git configuration
+# ~/.gitconfig - git configuration
 
 [user]
 	name = Ondrej Balaz
 	email = blami@blami.net
-	signingkey = 1FCD8C25
-
+	signingKey = 1FCD8C25
+	# this allows: git config get user.github
+	github = blami
+	codeberg = blami
 [sendemail]
 	from = Ondrej Balaz <blami@blami.net>
-
 [init]
-	defaultbranch = main
-
+	defaultBranch = main
 [core]
-	; Always exclude globally ignored files
-	excludesfile = ~/.gitignore_global
-	; DO NOT mess with CRLF on Windows
-	autocrlf = false
-
-[color]
-	filemode = false
-	branch = auto
-	diff = auto
-	interactive = auto
-	status = auto
-	ui = auto
-	pager = true
-
+	editor = ${EDITOR:-vim}
+	pager = ${PAGER:-less -F}
+	whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+	# DO NOT change CRLF, mark .files/.dirs as hidden on Windows
+	autoCrlf = false
+	hideDotFiles = true
+	# global ignore
+	excludesFile = ~/.gitignore_global
 [commit]
 	template = ~/.gitmessage
-
-[merge]
-	tool = git-mergetool
-
-[mergetool "git-mergetool"]
-	# NOTE: git-mergetool uses nvimdiff and fallbacks to vimdiff
-	cmd = ~/bin/mergetool $LOCAL $REMOTE $MERGED
-
 [rebase]
-	autosquash = true
-
+	autoSquash = true
+	updateRefs = true
+	abbreviateCommands = true
+[merge]
+	tool = ~/bin/vimmergetool
 [push]
+	autoSetupRemote = true
+	followTags = true
 	default = current
-
 [pull]
 	ff = only
-
-[pack]
-	packSizeLimit = 2g
-
-[http]
-	cookiefile = ~/.gitcookies
-
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
-
-[url "git+ssh://blami@git.launchpad.net/"]
-    insteadof = lp:
-
+[alias]
+	ap = apply2                             # NOTE: see ~/bin/git-apply2
+	bl = blame -w
+	br = branch
+	brd = "!git symbolic-ref refs/remotes/origin/HEAD --short | sed 's/^.*\\///'"
+	brrm = "!git branch --merged | grep -v \"\\*\" | grep -v $(git brd) | grep -v dev | xargs -n 1 git branch -d"
+	ci = commit
+	cia = ci --amend
+	cis = ci --signoff
+	ciS = ci --amend --signoff --noedit
+	cl = clone
+	cl1 = clone --depth 1
+	co = checkout
+	cp = cherry-pick
+	df = diff
+	dfc = df --cached
+	dfst = df --stat
+	dt = difftool
+	dtc = difftool --cached 
+	fe = fetch
+	slog = shortlog
+	lol = log --graph --decorate --pretty=oneline --abbrev-commit
+	lola = lol --all
+	me = merge
+	pl = pull
+	pu = push
+	re = rebase
+	st = status -s -b
+	sto = "!git fe origin && git show origin && :"
+	un = reset -q HEAD --
+	unci = reset --mixed HEAD~
+	up = "!f() {git fe && git re upstream/"$1";} f" 
+	# submodules
+	sub = submodule
+	subu = sub update --init --recursive
+	subs = sub sync --recursive
+	# misc
+	ours = "!f() { git co --ours $@ && git add $@; }; f"
+	theirs = "!f() { git co --theirs $@ && git add $@; }; f"
+	unmerged = diff --name-only --diff-filter=U
+[url "ssh://git@github.com/"]
+	insteadOf=gh:
+[url "ssh://git@codeberg.org/"]
+	insteadOf=cb:
+[url "ssh://git@salsa.debian.org/"]
+	insteadOf=deb:
 [include]
-	path = ~/.gitaliases
-	; Include local configuration file
-	path = ~/.gitconfig_local
-	; Include ~/.gitdirs file
-	; NOTE: ~/.gitdirs contains ONLY includeIf statemens pointing to a 
-	; per-directory configs:
-	; [includeIf "gitdir:~/ws/work/"]
-	;     path = ~/.gitconfig_work
-	path = ~/.gitdirs
+	path=~/.gitconfig_local
+	path=~/.gitdirs
 
 
-; vim:set ft=gitconfig:
+# vim:set ft=gitconfig:

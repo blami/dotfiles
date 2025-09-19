@@ -1,12 +1,44 @@
-# ~/.gitignore_global: Global .gitignore file
+# ~/.gitignore_global - global .gitignore file
+
 *.bak
-*.log
+*.lock
 *~
+*#*
+*.sw[op]
+tmp/
+temp/
+*.log
+*.svn
+*.orig
+*.rej
+*.coverage
+*.coveragexml
+covcounters.*
+covmeta.*
+coverage/
+*.py[co]
+__pycache__/
+venv*/
+node_modules/
+
+# MacOS
 ._*
-.DS_Store
+.fseventsd
+.DS_Store*
 .Spotlight-V100
+.DocumentRevisions-V100
+Icon?
+.VolumeIcon.icns
 .Trashes
-__pycache__
+.LSOverride
+.AppleDouble
+.AppleDB
+.AppleDesktop
+Network\ Trash\ Folder
+Temporary\ Items
+.apdisk
+
+# Windows
 Desktop.ini
 Thumbs.db
-venv*
+ehthumbs.db
