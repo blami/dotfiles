@@ -15,15 +15,19 @@ whence -p gls >/dev/null && ls='gls' || ls='ls'
 	&& ls="$ls --group-directories-first --color=auto -hF" || ls="$ls -Gp"
 # NOTE: when adding also update HISTORY_IGNORE in .zshrc
 alias ls="$ls"
-alias l="$ls"
-alias la="$ls -a"
-alias ll="$ls -lha"
-alias l.="$ls -d .*(^M)"
-alias lt='$ls -lt'
+alias lsr='ls -R'
+alias l='ls'
+alias lr='lsr'
+alias la='ls -a'
+alias lar='la -R'
+alias ll='ls -lha'
+alias llr='ll -R'
+alias l.='ls -d .*(^M)'
+alias lt='ls -lt'
 # NOTE: mark_dirs is set so ^M to avoid //
-alias ld="$ls -d *(-/DN^M)"
-alias lO="$ls -At1 && echo --\ OLDEST\ --"
-alias lN="$ls -Art1 && echo --\ NEWEST\ --"
+alias ld='ls -d *(-/DN^M)'
+alias lO='ls -At1 && echo --\ OLDEST\ --'
+alias lN='ls -Art1 && echo --\ NEWEST\ --'
 # tree
 alias t='tree'
 alias td='tree -d'
@@ -46,13 +50,7 @@ alias vdiff=vimdiff
 # }}}
 
 # {{{ Network
-# openssl 
 # }}}
-
-# {{{
-alias irssi='weechat'
-
-# }}} 
 
 # {{{ Misc
 # terminal
@@ -66,7 +64,8 @@ alias h=builtin history
 alias :q=exit
 alias :wq=exit
 alias exot=exit
-alias sl="$ls"
+alias bye=exit
+alias sl=ls
 # }}}
 
 # {{{ Redirects
