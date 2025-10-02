@@ -1,0 +1,82 @@
+# dotf --gitdir
+/.dotf
+
+# user directories
+/icloud
+/internxt
+/public_html
+
+# local configs
+*_local*
+
+# sensitive
+/.aws
+/.azure
+/.cache
+/.config/Bitwarden*
+/.config/git/credentials
+/.config/weechat/certs/*
+!/.config/weechat/certs/.keep
+/.git-credentials
+/.gitcookies
+/.gnupg
+/.krb5
+/.netrc
+/.proxy
+/.rnd
+/.ssh/authorized_keys
+/.ssh/id_*
+/.ssh/keys/*
+!/.ssh/keys/.keep
+/.ssh/known_hosts*
+
+# history
+/.*_history*
+/.lesshst*
+/.vim/.netrwhist
+/.viminfo
+/.wget-hsts
+
+# os-related and local
+/.ccache
+/.cinderclient
+/.hushlogin
+/.landscape
+/.motd_shown
+/.npm
+/.oracle_jre_usage
+/.solstudio
+/.subversion
+/.sudo_as_admin_succesful
+/.sunstudio
+
+# local
+/.local/bin
+/.local/sbin
+/.local/lib
+/.local/include
+/.local/go
+/.local/node
+/.local/python
+/.local/state
+# TODO:
+/.local/share/
+/.opt
+/.run
+/.tmp
+
+# local ~/.config
+/.config/yarn
+/.config/iterm2
+/.config/rclone
+
+
+
+/.vim/pack/*
+!/.vim/pack/vim
+!/.vim/pack/vim9
+/.vim/spell/*
+!/.vim/spell/*.add
+
+
+
