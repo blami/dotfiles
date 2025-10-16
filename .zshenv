@@ -22,12 +22,12 @@ setopt case_glob                # *Z does not match zsh/
 setopt glob_dots                # *g includes .git
 setopt nomatch                  # error on no match
 
-# scripting 
+# scripting
 setopt short_loops              # short forms of for,repeat,if,select,function
 # }}}
 
 # {{{ Path-arrays
-# no need to export PATH MANPATH INFOPATH LD_LIBRARY_PATH 
+# no need to export PATH MANPATH INFOPATH LD_LIBRARY_PATH
 # NOTE: -U=unique, -x=auto-export, T=tie VAR array sep
 typeset -U fpath cdpath
 typeset -Ux path manpath
@@ -44,7 +44,7 @@ autoload -Uz -- ~/.zsh{,_local}/*^.*(N.^x:t)
 
 # {{{ Environment
 # see always set vars: man zshparam /PARAMETERS SET BY SHELL
-# hostname					
+# hostname
 HOSTNAME=${HOST%%.*}            # hostname only
 [[ $HOST == *.* ]] && DOMAIN=${HOST#.*}
 export HOSTNAME DOMAIN
@@ -53,16 +53,16 @@ export HOSTNAME DOMAIN
 case "${OSTYPE:l}" in
 	linux*)           OS=linux ;;
 	darwin*)          OS=macos ;;
-        *bsd*|dragonfly*) OS=bsd ;;
+	*bsd*|dragonfly*) OS=bsd ;;
 	solaris*)         OS=solaris ;;
-        haiku*)           OS=haiku ;;
+	haiku*)           OS=haiku ;;
 	cygwin*|msys*)    OS=win ;;
 	*)                OS="${${OSTYPE:l}%%[0-9.]#}"
 esac
 case "${CPUTYPE:l}" in
-        i386|x86)         ARCH=i386 ;;
+	i386|x86)         ARCH=i386 ;;
 	amd64|x86_64|x64) ARCH=amd64 ;;
-        arm64|aarch64)    ARCH=arm64 ;;
+	arm64|aarch64)    ARCH=arm64 ;;
 	*)                ARCH=${CPUTYPE:l} ;;
 esac
 OSARCH=$OS-$ARCH
@@ -73,11 +73,11 @@ path=(/usr/local/sbin /usr/sbin /sbin /usr/local/bin /usr/bin /bin $path)
 manpath=(/usr/local/share/man /usr/share/man $manpath)
 infopath=(/usr/local/share/info /usr/share/info $infopath)
 
-# thread count (make -J $JOBS) 
+# thread count (make -J $JOBS)
 case "$OS" in
 	linux)            JOBS=$(nproc --all 2>/dev/null || echo 1) ;;
-        macos|bsd)        JOBS=$(sysctl -n hw.ncpu 2>/dev/null || echo 1) ;;
-        *)                JOBS=1 ;;
+	macos|bsd)        JOBS=$(sysctl -n hw.ncpu 2>/dev/null || echo 1) ;;
+	*)                JOBS=1 ;;
 esac
 export JOBS
 
@@ -92,8 +92,8 @@ export SYSTEMD WSL
 # temp dir
 if [[ -z $TMPDIR ]]; then
 	TMPDIR=/tmp/user/$UID
-	mkdir -p -m 700 $TMPDIR 2>/dev/null || TMPDIR=/tmp 
-fi 
+	mkdir -p -m 700 $TMPDIR 2>/dev/null || TMPDIR=/tmp
+fi
 TMP=$TMPDIR
 TEMP=$TMPDIR
 TEMPDIR=$TMPDIR
@@ -102,7 +102,7 @@ export TMPDIR TMP TEMP TEMPDIR
 # XDG directories
 # SEE: https://specifications.freedesktop.org/basedir-spec/latest/
 # NOTE: to use XDG dirs in scripts even if not set by OS/pam/systemd
-# NOTE: XDG data dirs are set in ~/.zshenv.d/10xdg 
+# NOTE: XDG data dirs are set in ~/.zshenv.d/00xdg
 # runtime dirs
 XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-$TMPDIR}
 XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
@@ -112,8 +112,12 @@ XDG_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}
 XDG_CONFIG_HOME=$HOME/.config
 XDG_CONFIG_DIRS=/etc/xdg
 XDG_DATA_DIRS=/usr/local/share:/usr/share
-export XDG_RUNTIME_DIR XDG_CACHE_DIR XDG_DATA_HOME XDG_STATE_HOME \
+export XDG_RUNTIME_DIR XDG_CACHE_HOME XDG_DATA_HOME XDG_STATE_HOME \
 	XDG_CONFIG_HOME XDG_CONFIG_DIRS XDG_DATA_DIRS
+
+# symlinks
+ln -sfn $TMPDIR ~/.tmp
+ln -sfn $XDG_RUNTIME_DIR ~/.run
 # }}}
 
 # {{{ Misc
@@ -141,7 +145,7 @@ export NAME EMAIL NICK GPGKEY DEBFULLNAME DEBEMAIL IRCNICK IRCUSER
 # basics
 EDITOR=vim
 VISUAL=$EDITOR
-PAGER=less
+PAGER='less -F'
 MANPAGER=$PAGER
 DIFFPROG=vimdiff
 GREP=grep

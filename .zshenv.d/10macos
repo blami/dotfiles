@@ -3,6 +3,7 @@
 # only on macos
 [[ $OS == macos ]] || return
 
+# TODO: seems to not work investigate
 SHELL_SESSIONS_DISABLE=1        # disable sessions
 export SHELL_SESSIONS_DISABLE
 disable log                     # conflicts with /usr/bin/log
