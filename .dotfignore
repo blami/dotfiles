@@ -42,6 +42,7 @@
 /.cinderclient
 /.hushlogin
 /.landscape
+/.lldb
 /.motd_shown
 /.npm
 /.oracle_jre_usage
@@ -49,6 +50,7 @@
 /.subversion
 /.sudo_as_admin_succesful
 /.sunstudio
+/.swiftpm
 
 # local
 /.local/bin
