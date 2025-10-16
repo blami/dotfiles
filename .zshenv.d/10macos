@@ -12,7 +12,7 @@ disable log                     # conflicts with /usr/bin/log
 # add /etc/{,man}paths[.d] to $path and $manpath
 _path_helper() {
 	for f in $2(rN) $2.d/*(rN); for v in ${(@f)"$(<$f)"}; do
-		eval $1+=$v
+		eval $1+=\"$v\"
 	done
 }
 _path_helper path /etc/paths
