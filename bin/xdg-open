@@ -1,0 +1,16 @@
+#!/bin/sh
+# xdg-open - WSL/MacOS xdg-open wrapper
+# NOTE: Depends on my ~/.zsh* for $OS, $WSL
+
+case "$OS" in
+	linux|bsd)
+		if [ -z "$WSL" ]; then
+			/usr/bin/xdg-open "$@"
+		else
+			rundll32.exe url.dll,FileProtocolHandler "$1"
+		fi
+		;;
+	macos)
+		/usr/bin/open "$@"
+		;;
+esac
