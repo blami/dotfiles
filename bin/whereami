@@ -1,69 +1,74 @@
-#!/bin/bash
-# Geolocate by external IP
+#!/bin/sh
+# whereami - find current country code
 
-# Output: COUNTRY or exit 1 in case of failure
-# Arguments:
-#   -c d|w|m        cache result for day, week or month
-#   -d COUNTRY      default to COUNTRY in case of retrieval error
-#
-# NOTE: This is mostly for use in my other scripts such as SSH jumps or VPNs
-# and its not particularly user or debug friendly. 
+WHEREAMI_CACHE=${WHEREAMI_CACHE:-${XDG_CACHE_HOME:-$HOME/.cache}/$(basename "$0")}
 
-command -v curl >/dev/null 2>&1 || exit 1
+HELP=$(cat <<EOF
+whereami - find current country code
+Usage: whereami [-cdh]
+  -c N      use cached value if no older than N days
+  -f CC     force country code (e.g. when offline)
+  -h        show this message and exit
 
-http_request() {
-    RESP=$(curl -sL -H "$2" -w "\n%{response_code}" "$1") || return 1
-    CODE=$(tail -n1 <<< "$RESP")
-    if [ "$CODE" -lt 200 ] || [ "$CODE" -gt 299 ]; then
-        return 1
-    fi
-    sed '$ d' <<< "$RESP"
-    return 0
-}
+Cache is written to \$WHEREAMI_CACHE=$WHEREAMI_CACHE and has format
+'TIMESTAMP COUNTRY'.
+EOF
+)
 
-CACHE_EXP=
-DEFAULT=
-while getopts "c:d:" OPT; do
-    case "$OPT" in
-    c)
-        case "$OPTARG" in
-        d)  CACHE_EXP=0 ;;
-        w)  CACHE_EXP=1 ;;
-        m)  CACHE_EXP=2 ;;
-        *)
-            >&2 echo "$(basename "$0"): -c takes only d,w or m"
-            exit 1
-        esac ;;
-    d)
-        DEFAULT=$OPTARG ;;
-    \?)
-        exit 1 ;;
-    esac
-done; shift $((OPTIND-1))
+CACHE_EXPIRY=
+CC=
+while getopts :c:f:h OPT; do
+	case "$OPT" in
+	c)	case "$OPTARG" in
+			''|*[!0-9]*) echo >&2 "error: -c must be number" ; exit 1 ;;
+			*) CACHE_EXPIRY=$OPTARG ;;
+		esac
+		;;
+	f)	case "$OPTARG" in
+			[A-Z][A-Z])
+				echo "$OPTARG"
+				echo "$(date +%s) $OPTARG" > "$WHEREAMI_CACHE"
+				exit 0
+				;;
+			*) echo >&2 "error: -f must be 2 uppercase letters" ; exit 1 ;;
+		esac
+		;;
+	h)	echo "$HELP" ; exit ;;
+	*)	echo >&2 "error: unknown option -$OPTARG" ; exit 1 ;;
+	esac
+done
 
-# Cache
-# NOTE: Can't rely on mtime as some systems don't update it
-# CUR_DATE is array in format: "DoY WoY MoY"
-IFS=" " read -ra CUR_DATE <<<"$(date +'%j %U %m')"
-CACHE=${XDG_CACHE_HOME:-~/.cache}/whereami
-[ ! -d "$(dirname "$CACHE")" ] && mkdir -p "$(dirname "$CACHE")"
-if [ -r "$CACHE" ] && [ -n "$CACHE_EXP" ] ; then
-    OUT=$(head -1 "$CACHE")
-    IFS=" " read -ra CACHE_DATE <<<"$(tail -1 "$CACHE")"
-    if [ "${CUR_DATE[$CACHE_EXP]}" -eq "${CACHE_DATE[$CACHE_EXP]}" ]; then
-        echo "$OUT"
-        exit 0
-    fi
+# read cached value if any
+if [ -z "$CC" ] && [ -r "$WHEREAMI_CACHE" ]; then
+	read -r TS CC < "$WHEREAMI_CACHE"
+	[ -n "$CACHE_EXPIRY" ] \
+		&& [ $(( TS + CACHE_EXPIRY*24*3600 )) -lt "$(date +%s)" ] \
+		&& CC=
 fi
 
-# Get current country code from ifconfig.io
-OUT=$(http_request "https://ifconfig.io/country_code") || [ -n "$DEFAULT" ] || exit 12
-OUT=${OUT:-$DEFAULT}
-[ -z "$OUT" ] && exit 13
+if [ -z "$CC" ]; then
+	echo nocache
+	command -v curl >/dev/null 2>&1 \
+		&& for URL in \
+			"https://ipinfo.io/country" \
+			"https://ifconfig.io/country_code" \
+			"https://api.country.is" ; do
 
-# Write to cache and output
-cat >"$CACHE" <<EOF
-$OUT
-${CUR_DATE[*]}
-EOF
-echo "$OUT"
+			# TODO: add reasonable --connect-timeout
+			R=$(curl -sLf "$URL") || continue
+			case "$URL" in
+			*api.country.is*)
+				R=$(echo "$R" | sed 's/.*"country":"\([^"]*\)".*/\1/') ;;
+			esac
+			CC=$(echo "$R" | tr '[:lower:]' '[:upper:]')
+			echo "$(date +%s) $CC" > "$WHEREAMI_CACHE"
+			break
+		done
+fi
+
+if [ -z "$CC" ]; then
+	echo >&2 "error: unable to get country code, use -f if offline"
+	exit 1
+fi
+
+echo "$CC"
