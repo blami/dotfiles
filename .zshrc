@@ -20,13 +20,14 @@ setopt mark_dirs                # add / to dirs
 
 # redirection
 setopt noclobber clobber_empty  # do not > overwrite non-empty files
-setopt multios                  # allow cmd >foo >bar |baz 
+setopt append_create            # >> creates file
+setopt multios                  # allow cmd >foo >bar |baz
 
 # commands
 setopt path_dirs                # look for foo/bar in $PATH/foo/bar
 setopt hash_cmds hash_dirs      # hash cmds and dirs to avoid PATH lookups
 precmd() {
-	builtin hash -r         # rehash cmds (add to PATH) on every prompt
+	builtin hash -r             # rehash cmds (add to PATH) on every prompt
 }
 
 # changing directories
@@ -73,8 +74,8 @@ setopt list_types              # file types
 
 # {{{ History
 HISTFILE=~/.zsh_history.$HOST
-HISTSIZE=100000
-SAVEHIST=100000
+HISTSIZE=1000000
+SAVEHIST=1000000
 setopt extended_history         # save in : start:elapsed:command format
 setopt hist_ignore_all_dups hist_expire_dups_first
 setopt hist_find_no_dups
