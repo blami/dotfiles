@@ -21,16 +21,16 @@ case "$OS" in
 				"$HOME"/.opt/vscode/bin/code
 		else 
 			find_vscode \
-				"$WSL_MOUNT"/c/Program\ Files/Microsoft\ VS\ Code/bin/code
+				"$WSL_MOUNT"/c/Program\ Files/Microsoft\ VS\ Code/bin/code \
 				"$WSL_MOUNT"/c/Users/"$WSL_USER"/AppData/Local/Programs/Microsoft\ VS\ Code/bin/code
 		fi
 		;;
 	macos)
 		find_vscode \
 			/usr/local/bin/code \
-			/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code
-			/Applications/Developer/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code
-			/Users/"$USER"/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code
+			/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code \
+			/Applications/Developer/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code \
+			/Users/"$USER"/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code \
 			/Users/"$USER"/Applications/DeveloperVisual\ Studio\ Code.app/Contents/Resources/app/bin/code
 		;;
 	*)
