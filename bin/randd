@@ -1,0 +1,12 @@
+#!/bin/sh
+# randd - randomized dd to block device
+
+[ -e "$1" ] || exit 1
+for c in openssl dd; do
+    command -v $c >/dev/null 2>&1 || exit 1
+done
+
+echo 2>&1 "randd: writing random bytes to: $1 (^T to see status)"
+openssl enc -aes-256-cbc -md sha512 -pbkdf2 -nosalt -pass \
+    pass:"$(dd if=/dev/urandom bs=128 count=1 2>/dev/null | base64)" \
+    < /dev/zero | dd of="$1" bs=2M
