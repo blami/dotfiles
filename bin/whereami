@@ -17,7 +17,7 @@ EOF
 
 CACHE_EXPIRY=
 CC=
-while getopts :c:f:h OPT; do
+while getopts :c:f:h OPT ; do
 	case "$OPT" in
 	c)	case "$OPTARG" in
 			''|*[!0-9]*) echo >&2 "error: -c must be number" ; exit 1 ;;
@@ -28,7 +28,7 @@ while getopts :c:f:h OPT; do
 			[A-Z][A-Z])
 				echo "$OPTARG"
 				echo "$(date +%s) $OPTARG" > "$WHEREAMI_CACHE"
-				exit 0
+				exit
 				;;
 			*) echo >&2 "error: -f must be 2 uppercase letters" ; exit 1 ;;
 		esac
