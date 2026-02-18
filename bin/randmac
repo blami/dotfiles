@@ -1,14 +1,13 @@
 #!/bin/sh
 # randmac - generate random MAC address(es)
 
-# TODO: add -E "MAC1,MAC2,MAC3..." exclude list
-
 HELP=$(cat <<EOF
 randmac - generate random MAC address(es)
 Usage: randmac [options]
   -O 54:42:12   MAC vendor prefix (OUI)
   -n 1          number of generated MAC addresses
-  -w            print generated MAC address(es) and wait for key
+  -E MAC,MAC... exclude given MAC address(es)
+  -w            print generated MAC address(es) and wait
   -h            show this message and exit
 EOF
 )
@@ -16,10 +15,12 @@ EOF
 OUI=54:42:12
 N=1
 WAIT=
-while getopts :O:n:wh OPT ; do
+EXCL=
+while getopts :O:n:E:wh OPT ; do
 	case "$OPT" in
 	O)	OUI=$OPTARG ;;
 	n)	N=$OPTARG ;;
+	E)	EXCL=$(echo "$OPTARG" | tr '[:upper:]' '[:lower:]') ;;
 	w)	WAIT=1 ;;
 	h)	echo "$HELP" ; exit ;;
 	*)	echo >&2 "error: unknown option -$OPTARG" ; exit 1 ;; 
@@ -39,7 +40,17 @@ while [ "$N" -gt 0 ]; do
 		MAC=$MAC$(printf "$D%02x" "$(dd if=/dev/urandom bs=1 count=1 2>/dev/null | od -An -tu1 | sed 's/ //g')")
 		I=$(( I - 1 ))
 	done
-	
+	if [ -n "$EXCL" ]; then
+		SKIP=
+		OLDIFS=$IFS ; IFS=',' ; for EMAC in $EXCL ; do
+			if [ "$EMAC" = "$MAC" ]; then
+				SKIP=1
+				break
+			fi
+		done ; IFS=$OLDIFS
+		[ -n "$SKIP" ] && continue
+	fi
+
 	echo "$MAC"
 	N=$(( N - 1 ))
 done
