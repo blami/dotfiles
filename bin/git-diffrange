@@ -1,0 +1,31 @@
+#!/bin/sh
+# git-diffrange - print all modified line ranges
+
+HELP=$(cat <<EOF
+git diffrange - print all modified line ranges
+Usage: git diffr [options] [FILE FILE...]
+  -c COMMIT     diff between HEAD and COMMIT (default: main)
+EOF
+)
+
+COMMIT=main
+while getopts :c:h OPT ; do
+	case "$OPT" in
+	c)	COMMIT=$OPTARG ;;
+	h)	echo "$HELP" ; exit ;;
+	*)	echo >&2 "error: unknown option -$OPTARG" ; exit 1 ;;
+	esac
+done
+shift "$((OPTIND-1))"
+
+git diff -U0 "$COMMIT" -- "$@" | awk '
+/^\+\+\+ b\// { file = substr($0, 7) }
+/^@@/ {
+    gsub(/.*\+/, "", $3);
+    gsub(/[^0-9,].*/, "", $3);
+    split($3, a, ",");
+    start = a[1];
+    count = (a[2] ? a[2] : 1);
+    end = start + count - 1;
+    print file " " start " " end
+}'
