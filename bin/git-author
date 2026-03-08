@@ -1,0 +1,42 @@
+#!/bin/sh
+# git-reauthor - change author through the repository history
+
+HELP=$(cat <<EOF
+git author - rewrite author name and email in repository
+Usage: git author [options] "Old <old@author>" "New <new@author>"
+EOF
+)
+
+while getopts :c:h: OPT ; do
+	case "$OPT" in
+	h)	echo "$HELP" ; exit ;;
+	*)	echo >&2 "error: unknown option -$OPTARG" ; exit 1 ;;
+	esac
+done
+shift "$((OPTIND-1))"
+if [ $# -ne 2 ]; then
+	echo >&2 "error: 2 arguments expected" ; exit 1
+fi
+
+parse_author() {
+	case "$1" in
+	*" <"*">")
+		NAME=${1%% <*}
+		EMAIL=${1##*<} ; EMAIL=${EMAIL%>} ;;
+	*)
+		echo >&2 "error: invalid author format \"$1\"" ; exit 1 ;;
+	esac
+}
+parse_author "$1" ; OLD_EMAIL="$EMAIL"
+parse_author "$2" ; NEW_NAME="$NAME" ; NEW_EMAIL="$EMAIL"
+
+FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch -f --env-filter "
+    if [ \"\$GIT_COMMITTER_EMAIL\" = \"$OLD_EMAIL\" ]; then
+        export GIT_COMMITTER_NAME=\"$NEW_NAME\"
+        export GIT_COMMITTER_EMAIL=\"$NEW_EMAIL\"
+    fi
+    if [ \"\$GIT_AUTHOR_EMAIL\" = \"$OLD_EMAIL\" ]; then
+        export GIT_AUTHOR_NAME=\"$NEW_NAME\"
+        export GIT_AUTHOR_EMAIL=\"$NEW_EMAIL\"
+    fi
+" --tag-name-filter cat -- --branches --tags
