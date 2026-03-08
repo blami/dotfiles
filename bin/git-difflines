@@ -1,8 +1,8 @@
 #!/bin/sh
-# git-diffrange - print all modified line ranges
+# git-difflines - print all modified line ranges
 
 HELP=$(cat <<EOF
-git diffrange - print all modified line ranges
+git difflines - print all modified line ranges
 Usage: git diffr [options] [FILE FILE...]
   -c COMMIT     diff between HEAD and COMMIT (default: main)
 EOF
