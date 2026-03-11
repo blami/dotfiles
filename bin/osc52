@@ -36,22 +36,25 @@ case "$OP" in
 		;;
 	p)	# Windows Terminal does not support paste for security reasons
 		# see: https://github.com/microsoft/terminal/issues/9479
+
+		BEL=$(printf '\007')
+		ESC=$(printf '\033')
+
 		OLD_STTY=$(stty -g)
-		TXT=
 		stty raw -echo min 0 time 5
 		printf "\e]52;c;?\a"
-		while IFS= read -r -d '' -n 1 C 2>/dev/null; do
-			TXT="$TXT$C"
-			echo $TXT >> test.txt
+		TXT=
+		while true; do
+			TXT="$TXT$(dd bs=1 count=1 2>/dev/null)"
 			case "$TXT" in
 				# remove initial escape
-				$'\033']52\;c\;)	TXT= ; continue ;;
+				"$ESC"]52\;c\;)	TXT= ; continue ;;
 				# remove tail escape(s)
 				# NOTE: the moment first escape is seen remove it and break
-				*$'\033'\\)			TXT=${TXT%??} ; break ;;
-				*$'\a')				TXT=${TXT%?} ; break ;;
+				*"$ESC"\\)		TXT=${TXT%??} ; break ;;
+				*"$BEL")		TXT=${TXT%?} ; break ;;
 			esac
 		done
 		stty "$OLD_STTY"
-		[ -n "$TXT" ] && echo $TXT | base64 -d 2>/dev/null
+		[ -n "$TXT" ] && echo "$TXT" | base64 -d 2>/dev/null
 esac
