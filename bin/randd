@@ -1,12 +1,79 @@
 #!/bin/sh
-# randd - randomized dd to block device
+# randd - randomized dd
 
-[ -e "$1" ] || exit 1
-for c in openssl dd; do
-    command -v $c >/dev/null 2>&1 || exit 1
+HELP=$(cat <<EOF
+randd - randomized dd
+Usage: randd [options] PATH [PATH...]
+  -N 100m   if file not exists, create one of given size
+  -b 4m     block size for writes (defaults to 4m)
+EOF
+)
+
+bytes() {
+	N="${1%[bBkKmMgGtTpPeE]*}"
+	case "${1#"$N"}" in
+		'')		echo "$N" ;;
+		b|B)	echo $(( N * 512 )) ;;
+		k|K)	echo $(( N * 1024 )) ;;
+		m|M)	echo $(( N * 1048576 )) ;;
+		g|G)	echo $(( N * 1073741824 )) ;;
+		t|T)	echo $(( N * 1099511627776 )) ;;
+		p|P)	echo $(( N * 112589990684262 )) ;;
+		e|E)	echo $(( N * 1152921504606846976 )) ;;
+	esac
+}
+
+FILESIZE=
+BS=4194304
+while getopts :N:b:h OPT ; do
+	case "$OPT" in
+	N)	FILESIZE=$(bytes "$OPTARG")
+		case "$FILESIZE" in
+			*[!0-9]*|'')	echo >&2 "error: invalid size $OPTARG" ; exit 1 ;;
+		esac ;;
+	b)	BS=$(bytes "$OPTARG")
+		case "$BS" in
+			*[!0-9]*|'')	echo >&2 "error: invalid blocksize $OPTARG" ; exit 1 ;;
+		esac ;;
+	h)	echo "$HELP" ; exit ;;
+	*)	echo >&2 "error: unknown option -$OPTARG"; exit 1 ;;
+	esac
 done
+shift "$((OPTIND-1))"
+if [ $# -lt 1 ]; then
+	echo >&2 "error: path expected" ; exit 1
+fi
 
-echo 2>&1 "randd: writing random bytes to: $1 (^T to see status)"
-openssl enc -aes-256-cbc -md sha512 -pbkdf2 -nosalt -pass \
-    pass:"$(dd if=/dev/urandom bs=128 count=1 2>/dev/null | base64)" \
-    < /dev/zero | dd of="$1" bs=2M
+for F in "$@"; do
+	if [ -b "$F" ] || [ -c "$F" ]; then
+		# device
+		echo "randd device: $F bs=$BS"
+		openssl enc -aes-256-ctr \
+			-pass pass:"$(openssl rand -hex 32)" \
+			-nosalt \
+			< /dev/zero \
+			2>/dev/null \
+		| dd of="$F" bs="$BS" \
+			iflag=fullblock conv=notrunc status=progress 2>&1 || true
+
+	elif { [ -e "$F" ] && [ -f "$(realpath "$F")" ] && [ -z "$FILESIZE" ]; } \
+		|| { [ ! -e "$F" ] && [ -n "$FILESIZE" ]; }; then
+		# file (existing or new)
+
+		if [ -e "$F" ]; then
+			FILESIZE=$(wc -c < "$F" | tr -d '[:space:]')
+		fi
+		COUNT=$(( (FILESIZE + BS - 1) / BS ))
+		echo "randd file: $F size=$FILESIZE bs=$BS count=$COUNT"
+		openssl enc -aes-256-ctr \
+			-pass pass:"$(openssl rand -hex 32)" \
+			-nosalt \
+			< /dev/zero \
+			2>/dev/null \
+		| dd of="$F" bs="$BS" count="$COUNT" \
+			iflag=fullblock conv=notrunc status=progress 2>&1
+		truncate -s "$FILESIZE" "$F"
+	else
+		echo >&2 "error: target not device or file, or -N not used" ; exit 1
+	fi
+done
