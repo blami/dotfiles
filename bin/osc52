@@ -1,0 +1,57 @@
+#!/bin/sh
+# osc52 - interact with clipboard using OSC52
+
+# TODO support DCS in screen,tmux,etc.
+# TODO check osc52 support Ms=\E]52%p1%s;%p2%s\007
+
+HELP=$(cat <<EOF
+osc52 - interact with clipboard using OSC52
+Usage: osc52 [options] [--] text
+  -c            copy text to clipboard
+  -p            paste text from clipboard
+EOF
+)
+
+OP=
+while getopts :hpc OPT; do
+	case "$OPT" in
+	c|p)	if [ -n "$OP" ]; then
+				echo >&2 "$PROG: -p and -c are mutually exclusive" ; exit 1
+			fi
+			OP=$OPT ;;
+	h)	echo "$HELP"; exit ;;
+	*)	echo >&2 "error: unknown option -$OPTARG"; exit 1 ;;
+    esac
+done
+shift "$((OPTIND-1))"
+
+if [ -z "$OP" ]; then
+    >&2 echo "$PROG: -p or -c expected" ; exit 1
+fi
+
+case "$OP" in
+	c)	[ $# -gt 0 ] && TXT="$*" || TXT=$(cat)
+		# shellcheck disable=SC1003
+		printf "\e]52;c;%s\a" "$(echo "$TXT" | base64 | tr -d '\n')"
+		;;
+	p)	# Windows Terminal does not support paste for security reasons
+		# see: https://github.com/microsoft/terminal/issues/9479
+		OLD_STTY=$(stty -g)
+		TXT=
+		stty raw -echo min 0 time 5
+		printf "\e]52;c;?\a"
+		while IFS= read -r -d '' -n 1 C 2>/dev/null; do
+			TXT="$TXT$C"
+			echo $TXT >> test.txt
+			case "$TXT" in
+				# remove initial escape
+				$'\033']52\;c\;)	TXT= ; continue ;;
+				# remove tail escape(s)
+				# NOTE: the moment first escape is seen remove it and break
+				*$'\033'\\)			TXT=${TXT%??} ; break ;;
+				*$'\a')				TXT=${TXT%?} ; break ;;
+			esac
+		done
+		stty "$OLD_STTY"
+		[ -n "$TXT" ] && echo $TXT | base64 -d 2>/dev/null
+esac
