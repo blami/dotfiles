@@ -1,0 +1,45 @@
+#!/bin/sh
+# sleepc - sleep with countdown
+
+HELP=$(cat <<EOF
+sleepc - sleep with countdown
+Usage: sleepc TIME [TIME...]
+EOF
+)
+
+seconds() {
+	N="${1%[smhd]*}"
+	case "${1#"$N"}" in
+		''|s)	echo "$N" ;;
+		m)		echo $(( N * 60 )) ;;
+		h)		echo $(( N * 3600 )) ;;
+		d)		echo $(( N * 216000 )) ;;
+	esac
+}
+
+while getopts :h OPT ; do
+	case "$OPT" in
+	h)	echo "$HELP" ; exit ;;
+	*)	echo >&2 "error: unknown option -$OPTARG"; exit 1 ;;
+	esac
+done
+shift "$((OPTIND-1))"
+if [ $# -lt 1 ]; then
+	echo >&2 "error: time expected" ; exit 1
+fi
+
+TIME=0
+for ARG in "$@"; do
+	ARG="$(seconds "$ARG")"
+	case "$ARG" in
+		*[!0-9]*|'')	echo >&2 "error: invalid time $ARG" ; exit 1 ;;
+	esac;
+	TIME=$(( TIME + ARG ))
+done
+
+while [ "$TIME" -gt 0 ]; do
+	printf "%ss\r" "$TIME"
+	sleep 1
+	printf "\033[2K" # clear line
+	TIME=$(( TIME - 1 ))
+done
