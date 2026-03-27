@@ -23,7 +23,7 @@ while getopts :O:n:E:wh OPT ; do
 	E)	EXCL=$(echo "$OPTARG" | tr '[:upper:]' '[:lower:]') ;;
 	w)	WAIT=1 ;;
 	h)	echo "$HELP" ; exit ;;
-	*)	echo >&2 "error: unknown option -$OPTARG" ; exit 1 ;; 
+	*)	echo >&2 "error: unknown option -$OPTARG" ; exit 1 ;;
 	esac
 done
 
