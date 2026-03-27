@@ -1,0 +1,14 @@
+#!/bin/sh
+# iommuls - list devices in IOMMU groups
+
+[ -e /sys/kernel/iommu_groups ] || {
+	echo 2>&1 "error: missing /sys/kernel/iommu_groups"
+	exit 1
+}
+
+for GROUP in /sys/kernel/iommu_groups/*; do
+    echo "IOMMU Group ${GROUP##*/}:"
+    for DEV in "$GROUP"/devices/*; do
+        printf "\t%s" "$(lspci -nns "${DEV##*/}")"
+    done;
+done;
