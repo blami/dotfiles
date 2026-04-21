@@ -1,0 +1,90 @@
+#!/bin/sh
+# morse - spell in Morse alphabet
+
+PROG=$(basename $0)
+HELP=$(cat <<EOF
+$PROG - spell in $PROG
+Usage: morse [options] [--] [TEXT TEXT...]
+  -c            column mode
+
+In case no TEXT is provided it is read from STDIN until ^D.
+EOF
+)
+
+MORSE=
+NATO=
+[ $PROG == "morse" ] && MORSE=1
+[ $PROG == "nato" ] && NATO=1
+INLINE=
+while getopts :mnhi OPT; do
+	case "$OPT" in
+	m)	MORSE=1 ;;
+	n)	NATO=1 ;;
+	i)	INLINE=1 ;;
+	h)	echo "$HELP"; exit ;;
+	*)	echo >&2 "error: unknown option -$OPTARG"; exit 1 ;;
+    esac
+done
+shift "$((OPTIND-1))"
+
+IN="$*"
+[ $# -eq 0 ] && IN=$(cat)
+
+POS=0
+while [ $POS -lt ${#IN} ]; do
+	M=
+	N=
+	CHAR="$(printf "%s" "$IN" | cut -c$((POS + 1)))"
+	case "$CHAR" in
+		a|A)	N="alpha"	M=".-" ;;
+		b|B)	N="bravo"	M="-..." ;;
+		c|C)	N="charlie"	M="-.-." ;;
+		d|D)	N="delta"	M="-.." ;;
+		e|E)	N="echo"	M="." ;;
+		f|F)	N="foxtrot"	M="..-." ;;
+		g|G)	N="golf"	M="--." ;;
+		h|H)	N="hotel"	M="...." ;;
+		i|I)	N="india"	M=".." ;;
+		j|J)	N="juliett"	M=".---" ;;
+		k|K)	N="kilo"	M="-.-" ;;
+		l|L)	N="lima"	M=".-.." ;;
+		m|M)	N="mike"	M="--" ;;
+		n|N)	N="november"	M="-." ;;
+		o|O)	N="oscar"	M="---" ;;
+		p|P)	N="papa"	M=".--." ;;
+		q|Q)	N="quebec"	M="--.-" ;;
+		r|R)	N="romeo"	M=".-." ;;
+		s|S)	N="sierra"	M="..." ;;
+		t|T)	N="tango"	M="-" ;;
+		u|U)	N="uniform"	M="..-" ;;
+		v|V)	N="victor"	M="...-" ;;
+		w|W)	N="whiskey"	M=".--" ;;
+		x|X)	N="xray"	M="-..-" ;;
+		y|Y)	N="yankee"	M="-.--" ;;
+		z|Z)	N="zulu"	M="--.." ;;
+		' ')	N=" " M=" " ;;
+	esac
+
+	if [ -z "$INLINE" ]; then
+		# columns
+		printf "%s" "$CHAR"
+		[ -n "$MORSE" ] && printf "\t%s" "$M"
+		[ -n "$NATO" ] && printf "\t%s" "$N"
+		printf "\n"
+	else
+		# inline
+		PAD=1
+		[ -n "$MORSE" ] && PAD=${#M} || PAD=${#N}
+		[ -n "$MORSE" ] && [ -n "$NATO" ] && [ ${#N} -gt ${#M} ] && PAD=${#N}
+		LINE1="$LINE1$(printf "%-*s" "${PAD}" "$CHAR") "
+		[ -n "$MORSE" ] && LINE2="$LINE2$(printf "%-*s" "${PAD}" "$M") "
+		[ -n "$NATO" ] && LINE3="$LINE3$(printf "%-*s" "${PAD}" "$N") "
+	fi
+	POS=$((POS + 1))
+done
+
+if [ -n "$INLINE" ]; then
+	echo "$LINE1"
+	[ -n "$MORSE" ] && echo "$LINE2"
+	[ -n "$NATO" ] && echo "$LINE3"
+fi
