@@ -60,6 +60,7 @@
 	dtc = difftool --cached 
 	fe = fetch
 	slog = shortlog
+	la = log -1 HEAD
 	lol = log --graph --decorate --pretty=oneline --abbrev-commit
 	lola = lol --all
 	me = merge
@@ -68,6 +69,7 @@
 	re = rebase
 	st = status -s -b
 	sto = "!git fe origin && git show origin && :"
+	su = submodule update --remote --merge
 	un = reset -q HEAD --
 	unci = reset --mixed HEAD~
 	up = "!f() {git fe && git re upstream/"$1";} f" 
