@@ -10,6 +10,7 @@
 *_local*
 
 # sensitive
+/.hwid
 /.aws
 /.azure
 /.cache
