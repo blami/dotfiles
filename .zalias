@@ -7,8 +7,10 @@ alias path='for p in $path ; [[ -d $p ]] && echo "  $p" || echo "! $p"'
 alias rm='rm -i'                                # ask for confirmation
 alias rf='rm -rf'
 alias mkdir='mkdir -p'                          # make parent dirs
+alias p='pwd'
 # cd
 alias ..='cd ..'
+alias tmp='cd $TMPDIR'
 # ls
 whence -p gls >/dev/null && ls='gls' || ls='ls'
 [[ $($ls --version 2>&1) =~ 'Free Software Foundation, Inc.' ]] \
