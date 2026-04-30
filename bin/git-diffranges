@@ -1,14 +1,14 @@
 #!/bin/sh
-# git-difflines - print all modified line ranges
+# git-diffranges - print all modified line ranges in a diff
 
 HELP=$(cat <<EOF
-git difflines - print all modified line ranges
-Usage: git diffr [options] [FILE FILE...]
+git diffranges - print all modified line ranges in a diff
+Usage: git diffranges [options] [FILE FILE...]
   -c COMMIT     diff between HEAD and COMMIT (default: main)
 EOF
 )
 
-COMMIT=main
+COMMIT=
 while getopts :c:h OPT ; do
 	case "$OPT" in
 	c)	COMMIT=$OPTARG ;;
@@ -17,6 +17,9 @@ while getopts :c:h OPT ; do
 	esac
 done
 shift "$((OPTIND-1))"
+
+git status || exit $?
+[ -z "$COMMIT" ] && COMMIT=main
 
 git diff -U0 "$COMMIT" -- "$@" | awk '
 /^\+\+\+ b\// { file = substr($0, 7) }
