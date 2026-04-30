@@ -1,0 +1,29 @@
+#!/bin/sh
+# after - run command after
+
+HELP=$(cat <<EOF
+after - run COMMAND after
+Usage: after [options] [--] COMMAND
+  -p PID    after PID exits (can be used multiple times)
+EOF
+)
+
+PIDS=
+while getopts :p:h OPT; do
+	case "$OPT" in
+	p)	PIDS="$PIDS $OPTARG" ;;
+	h)	echo "$HELP"; exit ;;
+	*)	echo >&2 "error: unknown option -$OPTARG"; exit 1 ;;
+    esac
+done
+shift "$((OPTIND-1))"
+
+while [ ! -z "$PIDS" ]; do
+	sleep 1
+	NEWPIDS=
+	for PID in $PIDS; do
+		[ ! -z "$(ps -o pid= "$PID")" ] && NEWPIDS="$NEWPIDS $PID"
+	done
+	PIDS="$NEWPIDS"
+done
+"$@"
