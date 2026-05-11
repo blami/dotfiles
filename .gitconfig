@@ -66,13 +66,14 @@
 	me = merge
 	pl = pull
 	pu = push
-	re = rebase
+	rem = remote -v
+	rb = rebase
 	st = status -s -b
 	sto = "!git fe origin && git show origin && :"
 	su = submodule update --remote --merge
 	un = reset -q HEAD --
 	unci = reset --mixed HEAD~
-	up = "!f() {git fe && git re upstream/"$1";} f" 
+	up = "!f() {git fe && git rb upstream/"$1";} f"
 	# submodules
 	sub = submodule
 	subu = sub update --init --recursive
