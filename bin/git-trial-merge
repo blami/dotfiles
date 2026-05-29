@@ -1,6 +1,0 @@
-#!/bin/sh -e
-# Attempt to merge
-# usage: git trial-merge
-
-git checkout --detach HEAD
-git merge --no-edit -- "$@"
