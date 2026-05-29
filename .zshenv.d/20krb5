@@ -1,0 +1,9 @@
+#~/.zshenv.d/20krb5 - Kerberos environment
+
+# only interactive shells
+[[ $- == *i* ]] || return
+
+KRB5CCNAME=DIR:$XDG_RUNTIME_DIR/krb5cc
+export KRB5CCNAME
+
+# vim:set ft=zsh:
