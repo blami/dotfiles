@@ -4,6 +4,7 @@
 # user directories
 /icloud
 /internxt
+/synct
 /public_html
 
 # local configs
@@ -13,6 +14,7 @@
 /.hwid
 /.aws
 /.azure
+/.config/scw
 /.cache
 /.config/Bitwarden*
 /.config/git/credentials
@@ -52,6 +54,7 @@
 /.sudo_as_admin_succesful
 /.sunstudio
 /.swiftpm
+.DS_Store
 
 # local
 /.local/bin
@@ -68,18 +71,13 @@
 /.run
 /.tmp
 
+# TODO:
 # local ~/.config
 /.config/yarn
 /.config/iterm2
 /.config/rclone
-
-
-
 /.vim/pack/*
 !/.vim/pack/vim
 !/.vim/pack/vim9
 /.vim/spell/*
 !/.vim/spell/*.add
-
-
-
