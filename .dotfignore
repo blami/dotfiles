@@ -43,6 +43,7 @@
 # os-related and local
 /.ccache
 /.cinderclient
+/.cups
 /.hushlogin
 /.landscape
 /.lldb
