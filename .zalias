@@ -46,9 +46,9 @@ grep="$grep --color=auto"
 alias grep="$grep"
 # find
 # vim
-alias v=vim
-alias vi=vim
-alias vdiff=vimdiff
+alias v=nvim
+alias vi=nvim
+alias vdiff=nvim -d
 # }}}
 
 # {{{ Network
