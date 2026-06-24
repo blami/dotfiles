@@ -20,7 +20,7 @@ setopt unset                    # consider unset vars "" or 0
 setopt extended_glob            # support #,~,^; see: man zshexpn
 setopt case_glob                # *Z does not match zsh/
 setopt glob_dots                # *g includes .git
-setopt nomatch                  # error on no match
+unsetopt nomatch                # no error on no match
 
 # scripting
 setopt short_loops              # short forms of for,repeat,if,select,function
