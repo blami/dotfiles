@@ -1,8 +1,0 @@
----
-# OS-level directories
-
-os_dirs:
-  - path: "/bak"
-    mode: "0700"
-  - path: "/mnt/media"
-  - path: "/mnt/net"

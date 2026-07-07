@@ -1,6 +1,0 @@
----
-# Windows-only additional fact gathering and checks.
-
-- include_role:
-    name: _common
-    tasks_from: checks/check_choco

@@ -1,9 +1,0 @@
----
-# Chocolatey packages
-
-win_choco_packages:
-  - 7-zip
-  - firefox
-  - git
-  - totalcmd
-  - vim
