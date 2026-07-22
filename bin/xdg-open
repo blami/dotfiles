@@ -1,16 +1,28 @@
 #!/bin/sh
-# xdg-open - WSL/MacOS xdg-open wrapper
+# xdg-open - Linux/WSL/MacOS multi file xdg-open wrapper
 # NOTE: Depends on my ~/.zsh* for $OS, $WSL
 
-case "$OS" in
-	linux|bsd)
-		if [ -z "$WSL" ]; then
-			/usr/bin/xdg-open "$@"
-		else
-			rundll32.exe url.dll,FileProtocolHandler "$1"
-		fi
-		;;
-	macos)
-		/usr/bin/open "$@"
-		;;
-esac
+[ $# -ge 1 ] || exit 1
+BASENAME=$(basename "$0")
+
+for FILE in $@; do
+	if [ "$BASENAME" = "browser" ]; then
+		case "$FILE" in
+			*://*)  ;;
+			*)      FILE="https://$FILE" ;;
+		esac
+	fi
+
+	case "$OS" in
+		linux|bsd)
+			if [ -z "$WSL" ]; then
+				/usr/bin/xdg-open "$FILE"
+			else
+				rundll32.exe url.dll,FileProtocolHandler "$FILE"
+			fi
+			;;
+		macos)
+			/usr/bin/open "$FILE"
+			;;
+	esac
+done
